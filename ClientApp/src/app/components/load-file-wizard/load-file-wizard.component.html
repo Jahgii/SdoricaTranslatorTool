@@ -1,0 +1,70 @@
+<main class="main-wizard">
+    <tui-stepper #stepper class="wizard-stepper" orientation="vertical" [activeItemIndex]="activeItemIndex">
+        <button tuiStep [stepState]="(fileReader.fileProgressState$ | async) == 'finish' ? 'pass': 'normal'">
+            Load File
+        </button>
+        <button tuiStep disabled>
+            Choose languages
+        </button>
+        <button tuiStep disabled>
+            Uploading data
+        </button>
+        <button tuiStep disabled>
+            Creating Main Groups and Groups
+        </button>
+        <button tuiStep disabled>
+            Let's translate!
+        </button>
+    </tui-stepper>
+
+    <div class="wizard-content">
+        <ng-container [ngTemplateOutlet]="{
+            '0': stepperLoadFile,
+            '1': stepperChooseLanguage,
+            '2': stepperUploadingData,
+            '3': stepperCreatingGroups,
+            '4': stepperFinish,
+         }[stepper.activeItemIndex] ?? stepperDefault">
+        </ng-container>
+    </div>
+</main>
+
+<ng-template #stepperLoadFile>
+    <app-load-file-input></app-load-file-input>
+</ng-template>
+
+<ng-template #stepperChooseLanguage>
+    <p>Choose languages</p>
+    <div class="wizard-choose-lang">
+        <tui-checkbox-block *ngFor="let language of fileReader.dialogAssets | keyvalue" size="l"
+            [(ngModel)]="fileReader.dialogAssetsInclude[language.key]" (ngModelChange)="onSelectLanguage(language.key, $event)">
+            <div class="content">
+                <div>
+                    <div class="label">{{language.key}}</div>
+                    Files: {{language.value.length}}
+                </div>
+            </div>
+        </tui-checkbox-block>
+    </div>
+    <div class="tui-space_top-2" style="display: flex; flex-direction: row-reverse;">
+        <button tuiIconButton [iconRight]="'tuiIconArrowRightCircleLarge'" [disabled]="!languageSelected"
+            (click)="activeItemIndex = 2">
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #stepperUploadingData>
+    <app-load-file-wizard-uploading></app-load-file-wizard-uploading>
+</ng-template>
+
+<ng-template #stepperCreatingGroups>
+    <p>Creating Main Groups and Groups</p>
+</ng-template>
+
+<ng-template #stepperFinish>
+    <p>Let's translate!</p>
+</ng-template>
+
+<ng-template #stepperDefault>
+    <p>DEFAULT TEMPLATE</p>
+</ng-template>

@@ -1,0 +1,11 @@
+<tui-theme-night *ngIf="!(nightMode$ | async)"></tui-theme-night>
+<header class="header">
+    <h1 style="margin-right: auto;">Sdorica Translator Tool</h1>
+
+    <a href="https://github.com/Jahgii" target="_blank">
+        <tui-svg src="tuiIconGithub"></tui-svg>
+    </a>
+    <button tuiIconButton appearance="icon" [icon]="(nightMode$ | async)? 'tuiIconMoon' : 'tuiIconSun'"
+        (click)="switchTheme()">
+    </button>
+</header>

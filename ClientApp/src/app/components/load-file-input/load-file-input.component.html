@@ -1,0 +1,39 @@
+<ng-container *ngIf="(fileReader.fileProgressState$ | async) == 'finish'; else uploadFile">
+    <tui-block-status>
+        <h4>File Loaded</h4>
+
+        <button tuiButton appearance="secondary">
+            Remove
+        </button>
+    </tui-block-status>
+</ng-container>
+<ng-template #uploadFile>
+    <tui-input-files *ngIf="!fileControl.value" class="control" [formControl]="fileControl" [accept]="'.obb'"
+        [maxFileSize]="(1024*1024*1024*2)" [multiple]="false" (reject)="onRejectFile($event)">
+        <ng-template let-dragged>
+            <div *ngIf="dragged; else base" class="content">
+                <tui-marker-icon mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
+                <div>Drop it like it's hot!</div>
+            </div>
+            <ng-template #base>
+                <div class="content">
+                    <tui-marker-icon mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
+                    <div>
+                        Drag and drop OBB file here or
+                        <a tuiLink>click to upload</a>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-template>
+    </tui-input-files>
+
+    <ng-container *ngIf="loadedFile$ | async as file">
+        {{fileReader.fileProgressState$ | async}}
+        <progress tuiProgressBar [value]="fileReader.fileProgressBar$ | async"
+            [max]="fileReader.fileProgressBarMax$ | async"></progress>
+    </ng-container>
+
+    <ng-template #content>
+        <tui-svg src="tuiIconClockLarge"></tui-svg>
+    </ng-template>
+</ng-template>

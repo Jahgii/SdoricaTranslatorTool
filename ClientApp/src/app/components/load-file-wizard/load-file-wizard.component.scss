@@ -1,0 +1,21 @@
+.main-wizard {
+    display: flex;
+}
+
+.wizard-stepper {
+    border: 1px solid var(--tui-base-03);
+    border-radius: var(--tui-radius-l) 0 0 var(--tui-radius-l);
+}
+
+.wizard-content {
+    flex: 1;
+    border: 1px solid var(--tui-base-03);
+    border-radius: 0 var(--tui-radius-l) var(--tui-radius-l) 0;
+}
+
+.wizard-choose-lang {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-gap: 0.5em;
+    grid-auto-rows: minmax(100px, auto);
+}

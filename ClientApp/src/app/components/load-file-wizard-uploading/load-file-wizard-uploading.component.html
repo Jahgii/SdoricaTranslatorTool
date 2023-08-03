@@ -1,0 +1,26 @@
+<ul class="tui-list tui-list_small">
+    <ng-container *ngFor="let language of fileReader.dialogAssetsUploading | keyvalue">
+        <tui-loader class="loader" [showLoader]="language.value.Uploading" [inheritColor]="true" [overlay]="true">
+            <li class="tui-list__item">
+                <div class="tui-list__item-title" style="display: flex; gap: 0.5rem;">
+                    <p>{{language.key}}</p>
+                    <tui-svg [src]="language.value.Uploaded ? 'tuiIconCheckCircle' : 'tuiIconArchive'"></tui-svg>
+                </div>
+                <div class="tui-list__description">
+                    <span>Files: {{fileReader.dialogAssets[language.key].length}}</span>
+                    <span *ngIf="language.value.FileSkip > 0">Skip Files: {{language.value.FileSkip}}</span>
+                    <div class="tui-space_top-2">
+                        <button *ngIf="language.value.UploadError && !language.value.Uploading" tuiIconButton
+                            [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'" (click)="onRetryUpload(language)">
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </tui-loader>
+    </ng-container>
+</ul>
+
+<div class="tui-space_top-2" style="display: flex; flex-direction: row-reverse;">
+    <button tuiIconButton [iconRight]="'tuiIconArrowRightCircleLarge'" (click)="onUpload()">
+    </button>
+</div>
