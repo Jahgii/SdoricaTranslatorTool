@@ -1,7 +1,9 @@
+import { BehaviorSubject } from "rxjs";
+
 export interface IWizardUpload {
-    Uploading: boolean;
-    Uploaded: boolean;
-    UploadError: boolean;
-    FileSkip: number;
+    Uploading: BehaviorSubject<boolean>;
+    Uploaded: BehaviorSubject<boolean>;
+    UploadError: BehaviorSubject<boolean>;
+    FileSkip: BehaviorSubject<number>;
     Language: string;
 }

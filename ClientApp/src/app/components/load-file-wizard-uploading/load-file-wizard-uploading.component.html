@@ -1,17 +1,34 @@
 <ul class="tui-list tui-list_small">
     <ng-container *ngFor="let language of fileReader.dialogAssetsUploading | keyvalue">
-        <tui-loader class="loader" [showLoader]="language.value.Uploading" [inheritColor]="true" [overlay]="true">
+        <tui-loader class="loader" [showLoader]="(language.value.Uploading | async) ?? false" [inheritColor]="true"
+            [overlay]="true">
             <li class="tui-list__item">
                 <div class="tui-list__item-title" style="display: flex; gap: 0.5rem;">
                     <p>{{language.key}}</p>
-                    <tui-svg [src]="language.value.Uploaded ? 'tuiIconCheckCircle' : 'tuiIconArchive'"></tui-svg>
+                    <tui-svg
+                        [src]="(language.value.Uploaded | async) ? 'tuiIconCheckCircle' : 'tuiIconArchive'"></tui-svg>
                 </div>
                 <div class="tui-list__description">
                     <span>Files: {{fileReader.dialogAssets[language.key].length}}</span>
-                    <span *ngIf="language.value.FileSkip > 0">Skip Files: {{language.value.FileSkip}}</span>
+                    <span *ngIf="(language.value.FileSkip | async) ?? 0 > 0">
+                        Skip Files:{{(language.value.FileSkip | async)}}
+                    </span>
+                    <ng-container *ngIf="fileReader.dialogAssetsUploadingError[language.key]">
+                        <p>ERRORS: </p>
+                        <ng-container *ngFor="let error of fileReader.dialogAssetsUploadingError[language.key]">
+                            <div class="tui-space_top-2">
+                                {{error.range}} ---
+                                <button *ngIf="(error.uploadStateError$ | async) && !(language.value.Uploading | async)"
+                                    tuiIconButton [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'" size="s"
+                                    [disabled]="(error.uploading$ | async) ?? false" (click)="error.retry(error)">
+                                </button>
+                            </div>
+                        </ng-container>
+                    </ng-container>
                     <div class="tui-space_top-2">
-                        <button *ngIf="language.value.UploadError && !language.value.Uploading" tuiIconButton
-                            [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'" (click)="onRetryUpload(language)">
+                        <button *ngIf="(language.value.UploadError | async) && !(language.value.Uploading | async)"
+                            tuiIconButton [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'"
+                            [disabled]="(uploading$ | async) ?? false" (click)="onRetryUpload(language)">
                         </button>
                     </div>
                 </div>

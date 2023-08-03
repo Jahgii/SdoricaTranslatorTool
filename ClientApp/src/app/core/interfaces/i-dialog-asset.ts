@@ -6,6 +6,7 @@ export interface IDialogAsset {
     Group: string;
     Number: number;
     Language: string;
+    Translated: boolean;
     Model: {
         $content: IDialog[]
     }

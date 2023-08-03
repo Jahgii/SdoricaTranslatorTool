@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TuiStepperComponent } from '@taiga-ui/kit';
+import { BehaviorSubject } from 'rxjs';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 
 @Component({
@@ -29,10 +30,10 @@ export class LoadFileWizardComponent {
 
   public onSelectLanguage(language: string, $event: boolean) {
     if ($event) this.fileReader.dialogAssetsUploading[language] = {
-      Uploading: false,
-      Uploaded: false,
-      UploadError: false,
-      FileSkip: 0,
+      Uploading: new BehaviorSubject(false),
+      Uploaded: new BehaviorSubject(false),
+      UploadError: new BehaviorSubject(false),
+      FileSkip: new BehaviorSubject(0),
       Language: language
     };
     else delete (this.fileReader.dialogAssetsUploading[language]);

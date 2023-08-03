@@ -8,13 +8,14 @@ namespace SdoricaTranslatorTool
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? DialogAssetId { get; set; }
-        public string? OriginalFilename { get; set; }
-        public string? Filename { get; set; }
-        public string? MainGroup { get; set; }
-        public string? Group { get; set; }
+        public string? Id { get; set; }
+        public required string OriginalFilename { get; set; }
+        public required string Filename { get; set; }
+        public required string MainGroup { get; set; }
+        public required string Group { get; set; }
         public int Number { get; set; }
-        public string? Language { get; set; }
+        public required string Language { get; set; }
+        public bool Translated {  get; set; }
         public DialogAssetModel? Model { get; set; }
         public DialogAssetArray? ReferenceAavatarImage { get; set; }
         public DialogAssetArray? ReferenceDialogAudio { get; set; }

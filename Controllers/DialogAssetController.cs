@@ -5,11 +5,11 @@ namespace SdoricaTranslatorTool.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DialogAssetController : Controller
+    public class DialogAssetsController : Controller
     {
-        ICustomMongoClient _cMongoClient;
+        readonly ICustomMongoClient _cMongoClient;
 
-        public DialogAssetController(ICustomMongoClient cMongoClient)
+        public DialogAssetsController(ICustomMongoClient cMongoClient)
         {
             _cMongoClient = cMongoClient;
         }
@@ -17,6 +17,7 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<DialogAsset> dialogAssets)
         {
+            return StatusCode(500);
             int FileSkip = 0;
             using (var session = await _cMongoClient.StartSessionAsync())
             {
@@ -25,8 +26,11 @@ namespace SdoricaTranslatorTool.Controllers
                 try
                 {
                     FileSkip = await SkipAssets(dialogAssets);
-                    await _cMongoClient.Create<DialogAsset>(session, dialogAssets);
-                    await session.CommitTransactionAsync();
+                    if(dialogAssets.Count > 0)
+                    {
+                        await _cMongoClient.Create<DialogAsset>(session, dialogAssets);
+                        await session.CommitTransactionAsync();
+                    }
                 }
                 catch
                 {
@@ -56,11 +60,11 @@ namespace SdoricaTranslatorTool.Controllers
 
         private async Task<bool> SkipAsset(DialogAsset dialogAssets)
         {
-            var filter = Builders<DialogAsset>.Filter.Eq<string>("FileName", dialogAssets.Filename ?? "");
+            var filter = Builders<DialogAsset>.Filter.Eq(d => d.Filename, dialogAssets.Filename ?? "");
             var query = await _cMongoClient.GetCollection<DialogAsset>().FindAsync<DialogAsset>(filter);
             var skip = await query.FirstOrDefaultAsync();
-0
-            return (skip == null ? false : true);
+
+            return skip != null;
         }
     }
 }
