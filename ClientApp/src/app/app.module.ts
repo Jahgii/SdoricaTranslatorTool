@@ -1,5 +1,5 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule } from "@taiga-ui/core";
+import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule } from "@taiga-ui/core";
 import { TuiCheckboxBlockModule, TuiInputFilesModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiStepperModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -47,6 +47,7 @@ import { LoadFileWizardUploadingComponent } from './components/load-file-wizard-
     TuiBlockStatusModule,
     TuiCheckboxBlockModule,
     TuiLoaderModule,
+    TuiScrollbarModule,
   ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }],
   bootstrap: [AppComponent]

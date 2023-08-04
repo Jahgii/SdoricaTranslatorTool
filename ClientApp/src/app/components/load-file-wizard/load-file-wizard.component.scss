@@ -3,14 +3,13 @@
 }
 
 .wizard-stepper {
-    border: 1px solid var(--tui-base-03);
-    border-radius: var(--tui-radius-l) 0 0 var(--tui-radius-l);
+    // border-right: 1px solid var(--tui-base-03);
+    padding: 1em;
 }
 
 .wizard-content {
     flex: 1;
-    border: 1px solid var(--tui-base-03);
-    border-radius: 0 var(--tui-radius-l) var(--tui-radius-l) 0;
+    padding: 1em;
 }
 
 .wizard-choose-lang {

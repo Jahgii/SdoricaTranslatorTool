@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { IDialogAsset } from '../interfaces/i-dialog-asset';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, map } from 'rxjs';
 import { ApiService } from './api.service';
 import * as JSZip from 'jszip';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { IWizardUpload } from '../interfaces/i-wizard-upload';
 import { IGroup, IMainGroup } from '../interfaces/i-dialog-group';
+import { error } from 'console';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class FileReaderService {
   public fileProgressState$: BehaviorSubject<'reading' | 'reading content' | 'finish' | undefined> = new BehaviorSubject<'reading' | 'reading content' | 'finish' | undefined>(undefined);
   public fileProgressBarMax$: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   public fileProgressBar$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  public uploadingFinish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public dialogAssets: { [language: string]: IDialogAsset[] } = {};
   public dialogAssetsInclude: { [language: string]: boolean } = {};
@@ -129,6 +131,17 @@ export class FileReaderService {
         );
     }
 
+    if (!this.dialogAssetsUploadingError[language]) {
+      (this.dialogAssetsUploading[language].Uploaded as BehaviorSubject<boolean>).next(true);
+    }
+    else {
+      this.dialogAssetsUploading[language].Uploaded = combineLatest(this.dialogAssetsUploadingError[language]
+        .flatMap(e => e.uploadStateError$))
+        .pipe(
+          map((results) => results.every(e => e === false))
+        );
+    }
+
     this.dialogAssetsUploading[language].Uploading.next(false);
   }
 
@@ -181,7 +194,7 @@ export class FileReaderService {
 
     let errors: UploadingError = {
       data: dialogAssets,
-      range: `${this.dialogAssets[language].length} - ${this.dialogAssets[language].length + this.uploadStackSize}`,
+      range: `${this.dialogAssets[language].length == 0 ? 1 : this.dialogAssets[language].length} - ${this.dialogAssets[language].length + this.uploadStackSize}`,
       uploading$: new BehaviorSubject<boolean>(false),
       uploadStateError$: new BehaviorSubject<boolean>(true),
       retry: async (selfO) => {
@@ -196,10 +209,13 @@ export class FileReaderService {
             }
           );
         selfO.uploading$.next(false);
+      },
+      skip: async (selfO) => {
+        selfO.uploadStateError$.next(false);
       }
     }
 
-    this.dialogAssetsUploadingError[language].push(errors)
+    this.dialogAssetsUploadingError[language].push(errors);
   }
   //#endregion
 }
@@ -210,4 +226,5 @@ export interface UploadingError {
   uploading$: BehaviorSubject<boolean>;
   uploadStateError$: BehaviorSubject<boolean>;
   retry: (selfO: UploadingError) => void
+  skip: (selfO: UploadingError) => void
 }

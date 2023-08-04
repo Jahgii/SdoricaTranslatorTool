@@ -1,43 +1,91 @@
 <ul class="tui-list tui-list_small">
     <ng-container *ngFor="let language of fileReader.dialogAssetsUploading | keyvalue">
-        <tui-loader class="loader" [showLoader]="(language.value.Uploading | async) ?? false" [inheritColor]="true"
-            [overlay]="true">
-            <li class="tui-list__item">
-                <div class="tui-list__item-title" style="display: flex; gap: 0.5rem;">
-                    <p>{{language.key}}</p>
-                    <tui-svg
-                        [src]="(language.value.Uploaded | async) ? 'tuiIconCheckCircle' : 'tuiIconArchive'"></tui-svg>
-                </div>
-                <div class="tui-list__description">
-                    <span>Files: {{fileReader.dialogAssets[language.key].length}}</span>
+        <li class="tui-list__item">
+            <tui-loader class="loader" [showLoader]="(language.value.Uploading | async) ?? false" [inheritColor]="true"
+                [overlay]="true">
+                {{language.key}}
+                <div style="display: flex; flex-direction: column;">
+                    <span>
+                        Status:
+                        <tui-svg [src]="(language.value.Uploaded | async) ? 'tuiIconCheckCircle' : 'tuiIconArchive'"
+                            [ngStyle]="{'color': (language.value.Uploaded | async) ? 'var(--tui-success-fill)' : ''}">
+                        </tui-svg>
+                    </span>
+                    <span>Pending Files: {{fileReader.dialogAssets[language.key].length}}</span>
                     <span *ngIf="(language.value.FileSkip | async) ?? 0 > 0">
                         Skip Files:{{(language.value.FileSkip | async)}}
                     </span>
                     <ng-container *ngIf="fileReader.dialogAssetsUploadingError[language.key]">
-                        <p>ERRORS: </p>
-                        <ng-container *ngFor="let error of fileReader.dialogAssetsUploadingError[language.key]">
-                            <div class="tui-space_top-2">
-                                {{error.range}} ---
-                                <button *ngIf="(error.uploadStateError$ | async) && !(language.value.Uploading | async)"
-                                    tuiIconButton [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'" size="s"
-                                    [disabled]="(error.uploading$ | async) ?? false" (click)="error.retry(error)">
-                                </button>
-                            </div>
-                        </ng-container>
+                        <span>ERRORS: </span>
+                        <tui-scrollbar class="file-error">
+                            <table class="tui-table">
+                                <tr class="tui-table__tr tui-table__tr_border_none">
+                                    <th class="tui-table__th">Files Range</th>
+                                    <th class="tui-table__th">Actions</th>
+                                </tr>
+                                <ng-container *ngFor="let error of fileReader.dialogAssetsUploadingError[language.key]">
+                                    <tr class="tui-table__tr tui-table__tr_border_none">
+                                        <td class="tui-table__td">
+                                            {{error.range}}
+                                        </td>
+                                        <td class="tui-table__td">
+                                            <button class="tui-space_right-2"
+                                                *ngIf="(error.uploadStateError$ | async) && !(language.value.Uploading | async)"
+                                                tuiIconButton [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'"
+                                                size="xs" [disabled]="(error.uploading$ | async) ?? false"
+                                                (click)="error.retry(error)">
+                                            </button>
+                                            <button
+                                                *ngIf="(error.uploadStateError$ | async) && !(language.value.Uploading | async)"
+                                                tuiIconButton [iconRight]="'tuiIconXCircle'" [appearance]="'accent'"
+                                                size="xs" [disabled]="(error.uploading$ | async) ?? false"
+                                                (click)="error.skip(error)">
+                                            </button>
+                                            <tui-svg *ngIf="!(error.uploadStateError$ | async)"
+                                                [src]="'tuiIconCheckCircle'" style="color: var(--tui-success-fill);">
+                                            </tui-svg>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </table>
+                            <!-- <ul class="tui-list tui-list_linear tui-list_nested">
+                                <ng-container *ngFor="let error of fileReader.dialogAssetsUploadingError[language.key]">
+                                    <li class="tui-list__item">
+                                        {{error.range}}
+                                        <button
+                                            *ngIf="(error.uploadStateError$ | async) && !(language.value.Uploading | async)"
+                                            tuiIconButton [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'"
+                                            size="xs" [disabled]="(error.uploading$ | async) ?? false"
+                                            (click)="error.retry(error)">
+                                        </button>
+                                        <button
+                                            *ngIf="(error.uploadStateError$ | async) && !(language.value.Uploading | async)"
+                                            tuiIconButton [iconRight]="'tuiIconXCircle'" [appearance]="'accent'"
+                                            size="xs" [disabled]="(error.uploading$ | async) ?? false"
+                                            (click)="error.skip(error)">
+                                        </button>
+                                    </li>
+                                </ng-container>
+                            </ul> -->
+                        </tui-scrollbar>
                     </ng-container>
-                    <div class="tui-space_top-2">
-                        <button *ngIf="(language.value.UploadError | async) && !(language.value.Uploading | async)"
-                            tuiIconButton [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'"
-                            [disabled]="(uploading$ | async) ?? false" (click)="onRetryUpload(language)">
-                        </button>
-                    </div>
                 </div>
-            </li>
-        </tui-loader>
+            </tui-loader>
+        </li>
     </ng-container>
 </ul>
 
 <div class="tui-space_top-2" style="display: flex; flex-direction: row-reverse;">
-    <button tuiIconButton [iconRight]="'tuiIconArrowRightCircleLarge'" (click)="onUpload()">
-    </button>
+    <ng-container *ngIf="uploadingFinish$ == null; else next">
+        <button tuiIconButton [iconRight]="'tuiIconUploadCloud'" (click)="onUpload()"
+            [disabled]="(uploading$ | async) ?? true">
+        </button>
+    </ng-container>
+
+    <ng-template #next>
+        <button tuiIconButton [iconRight]="'tuiIconArrowRightCircle'"
+            [disabled]="((uploadingFinish$ | async) ?? false) === false" (click)="onNext()">
+        </button>
+    </ng-template>
+
 </div>

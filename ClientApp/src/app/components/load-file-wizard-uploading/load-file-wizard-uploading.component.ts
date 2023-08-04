@@ -1,6 +1,6 @@
 import { KeyValue } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 import { IWizardUpload } from 'src/app/core/interfaces/i-wizard-upload';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 
@@ -12,21 +12,27 @@ import { FileReaderService } from 'src/app/core/services/file-reader.service';
 })
 export class LoadFileWizardUploadingComponent {
   public uploading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public uploadingFinish$!: Observable<boolean>;
 
   constructor(public fileReader: FileReaderService) {
   }
 
   async onUpload() {
     this.uploading$.next(true);
+    let uploadingStatus: Observable<boolean>[] = [];
     for (let key in this.fileReader.dialogAssetsUploading) {
       await this.fileReader.onUploadLanguage(key);
+      uploadingStatus.push(this.fileReader.dialogAssetsUploading[key].Uploaded);
     }
+    this.uploadingFinish$ = combineLatest(uploadingStatus)
+      .pipe(
+        map((results) => results.every(e => e === true))
+      );
+
     this.uploading$.next(false);
   }
 
-  onRetryUpload(language: KeyValue<string, IWizardUpload>) {
-    language.value.UploadError.next(false);
-    language.value.Uploaded.next(false);
-    language.value.Uploading.next(true);
+  onNext() {
+    this.fileReader.uploadingFinish$.next(true);
   }
 }

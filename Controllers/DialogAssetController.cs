@@ -17,7 +17,7 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<DialogAsset> dialogAssets)
         {
-            return StatusCode(500);
+            return Ok(new { FileSkip = 0 });
             int FileSkip = 0;
             using (var session = await _cMongoClient.StartSessionAsync())
             {
