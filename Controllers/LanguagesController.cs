@@ -6,25 +6,25 @@ namespace SdoricaTranslatorTool.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MainGroupsController : Controller
+    public class LanguagesController : Controller
     {
         readonly ICustomMongoClient _cMongoClient;
 
-        public MainGroupsController(ICustomMongoClient cMongoClient)
+        public LanguagesController(ICustomMongoClient cMongoClient)
         {
             _cMongoClient = cMongoClient;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get([FromHeader] string language)
+        public async Task<ActionResult> Get([FromHeader]string? id)
         {
-            var cursor = await _cMongoClient.GetCollection<MainGroup>().FindAsync(e => e.Language == language);
+            var cursor = await _cMongoClient.GetCollection<Languages>().FindAsync(_ => true);
             var data = await cursor.ToListAsync();
             return Ok(data);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(List<MainGroup> mainGroups)
+        public async Task<ActionResult> Post(List<Languages> languages)
         {
             using (var session = await _cMongoClient.StartSessionAsync())
             {
@@ -32,11 +32,11 @@ namespace SdoricaTranslatorTool.Controllers
 
                 try
                 {
-                    foreach (var mG in mainGroups)
+                    foreach (var l in languages)
                     {
-                        if (await VerifiedMainGroups(mG.OriginalName, mG.Language)) continue;
+                        if (await VerifiedLanguage(l.Name)) continue;
 
-                        await _cMongoClient.Create<MainGroup>(session, mG);
+                        await _cMongoClient.Create<Languages>(session, l);
                     }
 
                     await session.CommitTransactionAsync();
@@ -52,12 +52,13 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok();
         }
 
-        private async Task<bool> VerifiedMainGroups(string mainGroup, string language)
+        private async Task<bool> VerifiedLanguage(string language)
         {
-            var query = await _cMongoClient.GetCollection<MainGroup>().FindAsync<MainGroup>(e => e.OriginalName == mainGroup && e.Language == language);
+            var query = await _cMongoClient.GetCollection<Languages>().FindAsync<Languages>(e => e.Name == language);
             var skip = await query.FirstOrDefaultAsync();
 
             return skip != null;
         }
+
     }
 }

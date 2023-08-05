@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, firstValueFrom, map } from 'rxjs';
 import { ApiService } from './api.service';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { IWizardUpload } from '../interfaces/i-wizard-upload';
-import { IGroup, IMainGroup } from '../interfaces/i-dialog-group';
+import { IGroup, ILanguage, IMainGroup } from '../interfaces/i-dialog-group';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import * as JSZip from 'jszip';
 
@@ -154,6 +154,7 @@ export class FileReaderService {
   }
 
   async onUploadGroups() {
+    var languages = [];
     for (let language in this.dialogAssetsInclude) {
       if (this.dialogAssetsInclude[language] === true) {
         let mainGroups = [];
@@ -168,12 +169,7 @@ export class FileReaderService {
             (error) => {
             }
           );
-      }
-    }
 
-
-    for (let language in this.dialogAssetsInclude) {
-      if (this.dialogAssetsInclude[language] === true) {
         let groups = [];
         for (let key in this.dialogAssetsGroups[language]) {
           groups.push(this.dialogAssetsGroups[language][key]);
@@ -186,8 +182,19 @@ export class FileReaderService {
             (error) => {
             }
           );
+        var languageO: ILanguage = { Name: language };
+        languages.push(languageO);
       }
     }
+
+    await firstValueFrom(this.api.post('languages', languages))
+      .then(
+        (result) => {
+        },
+        (error) => {
+        }
+      );
+
   }
 
   //#region Dictionary CRUD
@@ -229,6 +236,7 @@ export class FileReaderService {
     if (this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.Group] == null) {
       this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.Group] = {
         Language: dialogAsset.Language,
+        MainGroup: dialogAsset.MainGroup,
         OriginalName: dialogAsset.Group,
         Name: dialogAsset.Group,
         ImageLink: '',

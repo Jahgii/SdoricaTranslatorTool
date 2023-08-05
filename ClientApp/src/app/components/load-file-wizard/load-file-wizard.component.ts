@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angul
 import { TuiStepperComponent } from '@taiga-ui/kit';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
   selector: 'app-load-file-wizard',
@@ -23,7 +24,7 @@ export class LoadFileWizardComponent implements OnDestroy {
   public multiLanguage$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 
-  constructor(public fileReader: FileReaderService) {
+  constructor(public fileReader: FileReaderService, private storage: LocalStorageService) {
     this.onFileReader();
   }
 
@@ -88,6 +89,11 @@ export class LoadFileWizardComponent implements OnDestroy {
 
     this.fileReader.defaultLanguage.patchValue(undefined);
     this.languageSelected = false;
+  }
+
+  public onSelectLanguageEnd() {
+    this.storage.setDefaultLang(this.fileReader.defaultLanguage.value);
+    this.activeItemIndex = 2
   }
 
 }

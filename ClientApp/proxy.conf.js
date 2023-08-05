@@ -8,7 +8,8 @@ const PROXY_CONFIG = [
     context: [
       "/dialogassets",
       "/maingroups",
-      "/groups"
+      "/groups",
+      "/languages"
    ],
     proxyTimeout: 10000,
     target: target,

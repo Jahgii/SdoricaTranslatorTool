@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -11,6 +11,12 @@ export class ApiService {
 
   public get<T>(endpoint: string): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}${endpoint}`);
+  }
+
+  public getWithHeaders<T>(endpoint: string, headers: { [key: string]: any }) {
+    const HEADERS = new HttpHeaders(headers);
+
+    return this.http.get<T>(`${this.baseUrl}${endpoint}`, { headers: HEADERS });
   }
 
   public post<T>(endpoint: string, body: Object): Observable<T> {

@@ -16,9 +16,9 @@ namespace SdoricaTranslatorTool.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get([FromHeader]string? id)
+        public async Task<ActionResult> Get([FromHeader] string language, [FromHeader] string mainGroup)
         {
-            var cursor = await _cMongoClient.GetCollection<Group>().FindAsync(_ => true);
+            var cursor = await _cMongoClient.GetCollection<Group>().FindAsync(e => e.Language == language && e.MainGroup == mainGroup);
             var data = await cursor.ToListAsync();
             return Ok(data);
         }

@@ -1,5 +1,5 @@
 export interface IMainGroup {
-    Language: string
+    Language: string;
     OriginalName: string;
     Name: string;
     ImageLink: string;
@@ -9,11 +9,16 @@ export interface IMainGroup {
 }
 
 export interface IGroup {
-    Language: string
+    Language: string;
+    MainGroup: string;
     OriginalName: string;
     Name: string;
     ImageLink: string;
     Files: number;
     TranslatedFiles: number;
     Order: number;
+}
+
+export interface ILanguage {
+    Name: string;
 }
