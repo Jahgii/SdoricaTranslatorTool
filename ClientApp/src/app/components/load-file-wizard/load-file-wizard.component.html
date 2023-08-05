@@ -37,7 +37,8 @@
     <p>Choose languages</p>
     <div class="wizard-choose-lang">
         <tui-checkbox-block *ngFor="let language of fileReader.dialogAssets | keyvalue" size="l"
-            [(ngModel)]="fileReader.dialogAssetsInclude[language.key]" (ngModelChange)="onSelectLanguage(language.key, $event)">
+            [(ngModel)]="fileReader.dialogAssetsInclude[language.key]"
+            (ngModelChange)="onSelectLanguage(language.key, $event)">
             <div class="content">
                 <div>
                     <div class="label">{{language.key}}</div>
@@ -58,11 +59,17 @@
 </ng-template>
 
 <ng-template #stepperCreatingGroups>
-    <p>Creating Main Groups and Groups</p>
+    <app-load-file-wizard-groups></app-load-file-wizard-groups>
 </ng-template>
 
 <ng-template #stepperFinish>
-    <p>Let's translate!</p>
+    <tui-block-status>
+        <h4>Let's translate!</h4>
+
+        <button tuiButton appearance="secondary" [routerLink]="['/']">
+            Guide me
+        </button>
+    </tui-block-status>
 </ng-template>
 
 <ng-template #stepperDefault>

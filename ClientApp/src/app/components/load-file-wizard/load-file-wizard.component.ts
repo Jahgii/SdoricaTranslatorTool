@@ -31,7 +31,13 @@ export class LoadFileWizardComponent {
       if (next === false) return;
       this.activeItemIndex = 3;
       this.stepper.activate(3);
-    })
+    });
+
+    this.fileReader.uploadingGroupsFinish$.subscribe(next => {
+      if (next === false) return;
+      this.activeItemIndex = 4;
+      this.stepper.activate(4);
+    });
   }
 
   public onSelectLanguage(language: string, $event: boolean) {

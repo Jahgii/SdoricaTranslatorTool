@@ -1,7 +1,9 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule } from "@taiga-ui/core";
-import { TuiCheckboxBlockModule, TuiInputFilesModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiStepperModule } from '@taiga-ui/kit';
+import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule } from "@taiga-ui/core";
+import { TuiCheckboxBlockModule, TuiInputFilesModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiStepperModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { TuiTableModule } from "@taiga-ui/addon-table";
+import { ScrollingModule } from "@angular/cdk/scrolling";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -15,6 +17,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { LoadFileWizardComponent } from './components/load-file-wizard/load-file-wizard.component';
 import { LoadFileInputComponent } from './components/load-file-input/load-file-input.component';
 import { LoadFileWizardUploadingComponent } from './components/load-file-wizard-uploading/load-file-wizard-uploading.component';
+import { LoadFileWizardGroupsComponent } from './components/load-file-wizard-groups/load-file-wizard-groups.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,8 @@ import { LoadFileWizardUploadingComponent } from './components/load-file-wizard-
     NavMenuComponent,
     LoadFileWizardComponent,
     LoadFileInputComponent,
-    LoadFileWizardUploadingComponent
+    LoadFileWizardUploadingComponent,
+    LoadFileWizardGroupsComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +52,10 @@ import { LoadFileWizardUploadingComponent } from './components/load-file-wizard-
     TuiCheckboxBlockModule,
     TuiLoaderModule,
     TuiScrollbarModule,
+    TuiInputModule,
+    TuiTextfieldControllerModule,
+    TuiTableModule,
+    ScrollingModule,
   ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }],
   bootstrap: [AppComponent]

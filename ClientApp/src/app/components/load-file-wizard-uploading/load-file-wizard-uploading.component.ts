@@ -1,7 +1,5 @@
-import { KeyValue } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
-import { IWizardUpload } from 'src/app/core/interfaces/i-wizard-upload';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 
 @Component({

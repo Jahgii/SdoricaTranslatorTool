@@ -4,6 +4,8 @@ using SdoricaTranslatorTool.Entities;
 
 namespace SdoricaTranslatorTool.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class MainGroupsController : Controller
     {
         readonly ICustomMongoClient _cMongoClient;

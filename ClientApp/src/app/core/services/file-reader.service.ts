@@ -16,6 +16,7 @@ export class FileReaderService {
   public fileProgressBarMax$: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   public fileProgressBar$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public uploadingFinish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public uploadingGroupsFinish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public dialogAssets: { [language: string]: IDialogAsset[] } = {};
   public dialogAssetsInclude: { [language: string]: boolean } = {};
@@ -143,6 +144,34 @@ export class FileReaderService {
     }
 
     this.dialogAssetsUploading[language].Uploading.next(false);
+  }
+
+  async onUploadGroups() {
+    let mainGroups = [];
+    for (let key in this.dialogAssetsMainGroups) {
+      mainGroups.push(this.dialogAssetsMainGroups[key]);
+    }
+
+    await firstValueFrom(this.api.post('maingroups', mainGroups))
+      .then(
+        (result) => {
+        },
+        (error) => {
+        }
+      );
+
+    let groups = [];
+    for (let key in this.dialogAssetsGroups) {
+      groups.push(this.dialogAssetsGroups[key]);
+    }
+
+    await firstValueFrom(this.api.post('groups', groups))
+      .then(
+        (result) => {
+        },
+        (error) => {
+        }
+      );
   }
 
   //#region Dictionary CRUD

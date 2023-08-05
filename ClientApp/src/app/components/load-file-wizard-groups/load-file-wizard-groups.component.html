@@ -1,0 +1,93 @@
+<p>Creating Main Groups and Groups</p>
+<p>You can edit the names later if you want</p>
+uploading$
+<tui-loader class="loader" [showLoader]="(uploading$ | async) ?? false" [inheritColor]="true" [overlay]="true">
+    <ul class="tui-list tui-list_small">
+        <li class="tui-list__item">
+            Main Groups
+            <tui-scrollbar class="group-container">
+                <form #formMainGroup>
+                    <table class="tui-table" tuiTable>
+                        <thead>
+                            <tr>
+                                <th tuiTh class="sticky-header">Real Name</th>
+                                <th tuiTh class="sticky-header">User Defined Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let mainGroup of fileReader.dialogAssetsMainGroups | keyvalue">
+                                <td tuiTd class="name-column">
+                                    {{mainGroup.value.OriginalName}}
+                                </td>
+                                <td tuiTd>
+                                    <tui-input [(ngModel)]="mainGroup.value.Name" tuiTextfieldSize="m"
+                                        [tuiTextfieldLabelOutside]="true" type="text"
+                                        [name]="mainGroup.value.OriginalName" (ngModelChange)="onGroupChange()"
+                                        required>
+                                        Name
+                                        <input tuiTextfield required placeholder="..." />
+                                    </tui-input>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </tui-scrollbar>
+        </li>
+        <li class="tui-list__item">
+            Groups
+            <tui-scrollbar>
+                <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="30"
+                    [maxBufferPx]="500" [minBufferPx]="400">
+                    <form #formGroup>
+                        <table class="tui-table" tuiTable [columns]="['OriginalName', 'Name']">
+                            <thead>
+                                <tr tuiThGroup>
+                                    <th *tuiHead="'OriginalName'" tuiTh [sticky]="true" [sorter]="null"
+                                        [style.top.px]="-viewport['_renderedContentOffset']">
+                                        Real Name
+                                    </th>
+                                    <th *tuiHead="'Name'" tuiTh [sticky]="true" [sorter]="null"
+                                        [style.top.px]="-viewport['_renderedContentOffset']">
+                                        User Defined Name
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody tuiTbody>
+                                <tr *cdkVirtualFor="let group of fileReader.dialogAssetsGroups | keyvalue" tuiTr>
+                                    <td *tuiCell="'OriginalName'" class="name-column" tuiTd>
+                                        {{group.value.OriginalName}}
+                                    </td>
+                                    <td *tuiCell="'Name'" tuiTd>
+                                        <tui-input [(ngModel)]="group.value.Name" tuiTextfieldSize="m"
+                                            [tuiTextfieldLabelOutside]="true" type="text"
+                                            [name]="group.value.OriginalName" (ngModelChange)="onGroupChange()"
+                                            required>
+                                            Name
+                                            <input tuiTextfield required placeholder="..." />
+                                        </tui-input>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </cdk-virtual-scroll-viewport>
+            </tui-scrollbar>
+        </li>
+    </ul>
+</tui-loader>
+
+<div class="tui-space_top-2" style="display: flex; flex-direction: row-reverse;">
+    <ng-container *ngIf="!(uploadingFinish$ | async); else next">
+        <button tuiIconButton [iconRight]="'tuiIconUploadCloud'" (click)="onUpload()"
+            [disabled]="(uploading$ | async) ?? true || (invalidForm$ | async) ?? true">
+        </button>
+    </ng-container>
+
+    <ng-template #next>
+        <button tuiIconButton [iconRight]="'tuiIconArrowRightCircle'"
+            [disabled]="((uploadingFinish$ | async) ?? false) === false" (click)="onNext()">
+        </button>
+    </ng-template>
+
+</div>
