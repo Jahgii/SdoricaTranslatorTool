@@ -18,6 +18,7 @@ import { LoadFileWizardComponent } from './components/load-file-wizard/load-file
 import { LoadFileInputComponent } from './components/load-file-input/load-file-input.component';
 import { LoadFileWizardUploadingComponent } from './components/load-file-wizard-uploading/load-file-wizard-uploading.component';
 import { LoadFileWizardGroupsComponent } from './components/load-file-wizard-groups/load-file-wizard-groups.component';
+import { GroupsComponent } from './components/groups/groups.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { LoadFileWizardGroupsComponent } from './components/load-file-wizard-gro
     LoadFileWizardComponent,
     LoadFileInputComponent,
     LoadFileWizardUploadingComponent,
-    LoadFileWizardGroupsComponent
+    LoadFileWizardGroupsComponent,
+    GroupsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,12 +1,4 @@
 <div class="container-m">
-    <tui-block-status *ngIf="showBlockStatus | async">
-        <h4>Its seem is your first time here, let's create all the necessary to begin the translation</h4>
-
-        <button tuiButton appearance="secondary" [routerLink]="['/loading']">
-            Guide me
-        </button>
-    </tui-block-status>
-
     <div class="tui-space_top-3" style="display: flex; flex-direction: row-reverse;"
         *ngIf="languages && languages.length > 1">
         <tui-select style="width: 180px;" tuiTextfieldSize="m" [formControl]="language">
@@ -17,11 +9,11 @@
         </tui-select>
     </div>
     <ng-container *ngIf="(language.valueChanges | async)">
-        <ng-container *ngIf="(mainGroups$ | async) as data; else loading">
+        <ng-container *ngIf="(groups$ | async) as data; else loading">
             <tui-tiles class="tiles tui-space_top-3" [debounce]="100" [(order)]="order" [@popIn]>
                 <tui-tile *ngFor="let item of data; let index = index" class="tile" [style.order]="order.get(index)"
                     [width]="1" [height]="1" [@popIn]>
-                    <div class="content" [routerLink]="['/group', item.OriginalName]">
+                    <div class="content">
                         <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
                         <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
                         <h2 class="title">{{ item.Name }}</h2>
