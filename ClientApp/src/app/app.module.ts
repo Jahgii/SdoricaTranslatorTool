@@ -1,6 +1,6 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule } from "@taiga-ui/core";
-import { TuiCheckboxBlockModule, TuiInputFilesModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiStepperModule } from '@taiga-ui/kit';
+import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule } from "@taiga-ui/core";
+import { TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiInputFilesModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiSelectModule, TuiStepperModule, TuiTilesModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiTableModule } from "@taiga-ui/addon-table";
 import { ScrollingModule } from "@angular/cdk/scrolling";
@@ -56,6 +56,10 @@ import { LoadFileWizardGroupsComponent } from './components/load-file-wizard-gro
     TuiTextfieldControllerModule,
     TuiTableModule,
     ScrollingModule,
+    TuiTilesModule,
+    TuiSelectModule,
+    TuiDataListModule,
+    TuiDataListWrapperModule,
   ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }],
   bootstrap: [AppComponent]

@@ -1,6 +1,6 @@
 <main class="main-wizard">
     <tui-stepper #stepper class="wizard-stepper" orientation="vertical" [activeItemIndex]="activeItemIndex">
-        <button tuiStep [stepState]="(fileReader.fileProgressState$ | async) == 'finish' ? 'pass': 'normal'">
+        <button tuiStep [stepState]="(fileReader.fileProgressState$ | async) == 'finish' ? 'pass': 'normal'" disabled>
             Load File
         </button>
         <button tuiStep disabled>
@@ -35,6 +35,13 @@
 
 <ng-template #stepperChooseLanguage>
     <p>Choose languages</p>
+    <ng-container *ngIf="multiLanguage$ | async">
+        <tui-select tuiTextfieldSize="s" [formControl]="fileReader.defaultLanguage" class="tui-space_bottom-3">
+            Default Language
+            <input tuiTextfield placeholder="..." />
+            <tui-data-list-wrapper *tuiDataList [items]="languagesSelected"></tui-data-list-wrapper>
+        </tui-select>
+    </ng-container>
     <div class="wizard-choose-lang">
         <tui-checkbox-block *ngFor="let language of fileReader.dialogAssets | keyvalue" size="l"
             [(ngModel)]="fileReader.dialogAssetsInclude[language.key]"
@@ -48,7 +55,7 @@
         </tui-checkbox-block>
     </div>
     <div class="tui-space_top-2" style="display: flex; flex-direction: row-reverse;">
-        <button tuiIconButton [iconRight]="'tuiIconArrowRightCircleLarge'" [disabled]="!languageSelected"
+        <button tuiIconButton [iconRight]="'tuiIconArrowRightCircleLarge'" [disabled]="!languageSelected || fileReader.defaultLanguage.invalid"
             (click)="activeItemIndex = 2">
         </button>
     </div>

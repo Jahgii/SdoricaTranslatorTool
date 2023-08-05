@@ -1,6 +1,5 @@
 <p>Creating Main Groups and Groups</p>
 <p>You can edit the names later if you want</p>
-uploading$
 <tui-loader class="loader" [showLoader]="(uploading$ | async) ?? false" [inheritColor]="true" [overlay]="true">
     <ul class="tui-list tui-list_small">
         <li class="tui-list__item">
@@ -15,7 +14,7 @@ uploading$
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let mainGroup of fileReader.dialogAssetsMainGroups | keyvalue">
+                            <tr *ngFor="let mainGroup of fileReader.dialogAssetsMainGroups[fileReader.defaultLanguage.value] | keyvalue">
                                 <td tuiTd class="name-column">
                                     {{mainGroup.value.OriginalName}}
                                 </td>
@@ -54,7 +53,7 @@ uploading$
                                 </tr>
                             </thead>
                             <tbody tuiTbody>
-                                <tr *cdkVirtualFor="let group of fileReader.dialogAssetsGroups | keyvalue" tuiTr>
+                                <tr *cdkVirtualFor="let group of fileReader.dialogAssetsGroups[fileReader.defaultLanguage.value] | keyvalue" tuiTr>
                                     <td *tuiCell="'OriginalName'" class="name-column" tuiTd>
                                         {{group.value.OriginalName}}
                                     </td>

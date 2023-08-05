@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { IDialogAsset } from '../interfaces/i-dialog-asset';
 import { BehaviorSubject, combineLatest, firstValueFrom, map } from 'rxjs';
 import { ApiService } from './api.service';
-import * as JSZip from 'jszip';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { IWizardUpload } from '../interfaces/i-wizard-upload';
 import { IGroup, IMainGroup } from '../interfaces/i-dialog-group';
-import { error } from 'console';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import * as JSZip from 'jszip';
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +22,14 @@ export class FileReaderService {
   public dialogAssetsInclude: { [language: string]: boolean } = {};
   public dialogAssetsUploading: { [language: string]: IWizardUpload } = {};
   public dialogAssetsUploadingError: { [language: string]: UploadingError[] } = {};
-  public dialogAssetsMainGroups: { [mainGroup: string]: IMainGroup } = {};
-  public dialogAssetsGroups: { [group: string]: IGroup } = {};
+  public dialogAssetsMainGroups: { [language: string]: { [mainGroup: string]: IMainGroup } } = {};
+  public dialogAssetsGroups: { [language: string]: { [group: string]: IGroup } } = {};
   public file: TuiFileLike | null = null;
+  public defaultLanguage: FormControl = this.fB.control(undefined, Validators.required);
 
   private uploadStackSize = 50;
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private fB: FormBuilder) { }
 
   //#region ReadFile Logic
   public onReadFile(file: File) {
@@ -63,7 +64,7 @@ export class FileReaderService {
   }
 
   private onReadFileDialog(reader: FileReader, fileName: string, ev: ProgressEvent<FileReader>) {
-    var dialogAsset: IDialogAsset;
+    var dialogAsset: IDialogAsset | undefined;
     var fileContent = reader.result?.toString() ?? "";
     var fileNameSplit: string[] = fileName.split("_");
 
@@ -71,17 +72,23 @@ export class FileReaderService {
   }
 
   private onReadFileDialogFromObb(fileContent: string, fileName: string) {
-    var dialogAsset: IDialogAsset;
+    var dialogAsset: IDialogAsset | undefined;
     var fileNameSplit: string[] = fileName.replace("assets/DialogAssets/", "").split("_");
 
     dialogAsset = this.onSetDialogAsset(fileNameSplit, fileName.replace("assets/DialogAssets/", ""), fileContent);
+
+    if (!dialogAsset) return;
 
     this.addDialogAsset(dialogAsset);
     this.addDialogAssetGroup(dialogAsset);
   }
 
   private onSetDialogAsset(fileNameSplit: string[], fileName: string, fileContent: string) {
-    let dialogAsset = JSON.parse(this.onFixDialogAssetJsonParse(fileContent));
+    let dialogAsset: IDialogAsset = JSON.parse(this.onFixDialogAssetJsonParse(fileContent));
+
+    dialogAsset.Model.$content.forEach(dialog => {
+      dialog.originalText = dialog.text;
+    });
 
     if (fileNameSplit.length == 5) {
       dialogAsset.OriginalFilename = fileName;
@@ -147,31 +154,40 @@ export class FileReaderService {
   }
 
   async onUploadGroups() {
-    let mainGroups = [];
-    for (let key in this.dialogAssetsMainGroups) {
-      mainGroups.push(this.dialogAssetsMainGroups[key]);
+    for (let language in this.dialogAssetsInclude) {
+      if (this.dialogAssetsInclude[language] === true) {
+        let mainGroups = [];
+        for (let key in this.dialogAssetsMainGroups[language]) {
+          mainGroups.push(this.dialogAssetsMainGroups[language][key]);
+        }
+
+        await firstValueFrom(this.api.post('maingroups', mainGroups))
+          .then(
+            (result) => {
+            },
+            (error) => {
+            }
+          );
+      }
     }
 
-    await firstValueFrom(this.api.post('maingroups', mainGroups))
-      .then(
-        (result) => {
-        },
-        (error) => {
-        }
-      );
 
-    let groups = [];
-    for (let key in this.dialogAssetsGroups) {
-      groups.push(this.dialogAssetsGroups[key]);
+    for (let language in this.dialogAssetsInclude) {
+      if (this.dialogAssetsInclude[language] === true) {
+        let groups = [];
+        for (let key in this.dialogAssetsGroups[language]) {
+          groups.push(this.dialogAssetsGroups[language][key]);
+        }
+
+        await firstValueFrom(this.api.post('groups', groups))
+          .then(
+            (result) => {
+            },
+            (error) => {
+            }
+          );
+      }
     }
-
-    await firstValueFrom(this.api.post('groups', groups))
-      .then(
-        (result) => {
-        },
-        (error) => {
-        }
-      );
   }
 
   //#region Dictionary CRUD
@@ -187,8 +203,13 @@ export class FileReaderService {
   }
 
   private addDialogAssetGroup(dialogAsset: IDialogAsset) {
-    if (this.dialogAssetsMainGroups[dialogAsset.MainGroup] == null) {
-      this.dialogAssetsMainGroups[dialogAsset.MainGroup] = {
+    if (this.dialogAssetsMainGroups[dialogAsset.Language] == null) {
+      this.dialogAssetsMainGroups[dialogAsset.Language] = {};
+    }
+
+    if (this.dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup] == null) {
+      this.dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup] = {
+        Language: dialogAsset.Language,
         OriginalName: dialogAsset.MainGroup,
         Name: dialogAsset.MainGroup,
         ImageLink: '',
@@ -198,11 +219,16 @@ export class FileReaderService {
       }
     }
     else {
-      this.dialogAssetsMainGroups[dialogAsset.MainGroup].Files += 1;
+      this.dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup].Files += 1;
     }
 
-    if (this.dialogAssetsGroups[dialogAsset.Group] == null) {
-      this.dialogAssetsGroups[dialogAsset.Group] = {
+    if (this.dialogAssetsGroups[dialogAsset.Language] == null) {
+      this.dialogAssetsGroups[dialogAsset.Language] = {};
+    }
+
+    if (this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.Group] == null) {
+      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.Group] = {
+        Language: dialogAsset.Language,
         OriginalName: dialogAsset.Group,
         Name: dialogAsset.Group,
         ImageLink: '',
@@ -212,7 +238,7 @@ export class FileReaderService {
       }
     }
     else {
-      this.dialogAssetsGroups[dialogAsset.Group].Files += 1;
+      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.Group].Files += 1;
     }
   }
 

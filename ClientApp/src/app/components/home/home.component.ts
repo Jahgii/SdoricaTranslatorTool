@@ -1,47 +1,20 @@
-import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { TuiFileLike } from '@taiga-ui/kit';
-import { Observable, Subject, finalize, map, of, switchMap } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
+import { ApiService } from 'src/app/core/services/api.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  readonly control = new FormControl();
-  readonly rejectedFiles$ = new Subject<TuiFileLike | null>();
-  readonly loadingFiles$ = new Subject<TuiFileLike | null>();
-  readonly loadedFiles$ = this.control.valueChanges.pipe(
-    switchMap(file => (file ? this.makeRequest(file) : of(null))),
-  );
+  public mainGroups$: Observable<IMainGroup[]> = this.api.get('maingroups');
+  public order = new Map();
 
-  constructor() { }
+  constructor(private api: ApiService) { }
 
-  onReject(file: TuiFileLike | readonly TuiFileLike[]): void {
-    this.rejectedFiles$.next(file as TuiFileLike);
-  }
 
-  removeFile(): void {
-    this.control.setValue(null);
-  }
-
-  clearRejected(): void {
-    this.removeFile();
-    this.rejectedFiles$.next(null);
-  }
-
-  makeRequest(file: TuiFileLike): Observable<TuiFileLike | null> {
-    this.loadingFiles$.next(file);
-
-    // this.onReadFile(file as File);
-
-    return of(
-      map(() => {
-        return file;
-      }),
-      finalize(() => this.loadingFiles$.next(null)),
-    );
-  }
 
 }

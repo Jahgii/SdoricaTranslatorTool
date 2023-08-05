@@ -33,6 +33,7 @@ export interface IDialog {
     speakerAssetName: string;
     iconName: string;
     iconLocate: number;
+    originalText: string;
     text: string;
     sfxName: string;
     sfxVolume: number;

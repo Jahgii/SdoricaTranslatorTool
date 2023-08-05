@@ -1,13 +1,19 @@
-<tui-input-files *ngIf="!control.value" [formControl]="control" (reject)="onReject($event)"
-    [maxFileSize]="(1024*1024*1024*2)"></tui-input-files>
+<!-- <tui-block-status>
+    <h4>Its seem is your first time here, let's create all the necessary to begin the translation</h4>
 
-<tui-files class="tui-space_top-1">
-    <tui-file *ngIf="loadedFiles$ | async as file" [file]="file" [showDelete]="control.enabled"
-        (removed)="removeFile()"></tui-file>
-
-    <tui-file *ngIf="rejectedFiles$ | async as file" state="error" [file]="file" [showDelete]="control.enabled"
-        (removed)="clearRejected()"></tui-file>
-
-    <tui-file *ngIf="loadingFiles$ | async as file" state="loading" [file]="file"
-        [showDelete]="control.enabled"></tui-file>
-</tui-files>
+    <button tuiButton appearance="secondary" [routerLink]="['/loading']">
+        Guide me
+    </button>
+</tui-block-status> -->
+<tui-tiles class="tiles" [debounce]="100" [(order)]="order">
+    <tui-tile *ngFor="let item of (mainGroups$ | async); let index = index" class="tile"
+        [style.order]="order.get(index)" [width]="1" [height]="1">
+        <div class="content">
+            <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
+            <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
+            <h2 class="title">{{ item.Name }}</h2>
+            <h4 class="title">Files: {{ item.Files }}</h4>
+            <!-- Order - {{ order.get(index) ?? index }} -->
+        </div>
+    </tui-tile>
+</tui-tiles>

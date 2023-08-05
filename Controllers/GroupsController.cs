@@ -15,6 +15,14 @@ namespace SdoricaTranslatorTool.Controllers
             _cMongoClient = cMongoClient;
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Get([FromHeader]string? id)
+        {
+            var cursor = await _cMongoClient.GetCollection<Group>().FindAsync(_ => true);
+            var data = await cursor.ToListAsync();
+            return Ok(data);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(List<Group> groups)
         {
@@ -26,7 +34,7 @@ namespace SdoricaTranslatorTool.Controllers
                 {
                     foreach (var g in groups)
                     {
-                        if (await VerifiedGroup(g.OriginalName)) continue;
+                        if (await VerifiedGroup(g.OriginalName, g.Language)) continue;
 
                         await _cMongoClient.Create<Group>(session, g);
                     }
@@ -44,10 +52,9 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok();
         }
 
-        private async Task<bool> VerifiedGroup(string group)
+        private async Task<bool> VerifiedGroup(string group, string language)
         {
-            var filter = Builders<Group>.Filter.Eq(d => d.OriginalName, group);
-            var query = await _cMongoClient.GetCollection<Group>().FindAsync<Group>(filter);
+            var query = await _cMongoClient.GetCollection<Group>().FindAsync<Group>(e => e.OriginalName == group && e.Language == language);
             var skip = await query.FirstOrDefaultAsync();
 
             return skip != null;

@@ -1,4 +1,5 @@
 export interface IMainGroup {
+    Language: string
     OriginalName: string;
     Name: string;
     ImageLink: string;
@@ -8,6 +9,7 @@ export interface IMainGroup {
 }
 
 export interface IGroup {
+    Language: string
     OriginalName: string;
     Name: string;
     ImageLink: string;

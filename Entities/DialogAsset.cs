@@ -45,6 +45,7 @@ namespace SdoricaTranslatorTool
         public string? SpeakerAssetName { get; set; }
         public string? IconName { get; set; }
         public int IconLocate { get; set; }
+        public string? OriginalText { get; set; }
         public string? Text { get; set; }
         public string? SfxName { get; set; }
         public decimal SfxVolume { get; set; }

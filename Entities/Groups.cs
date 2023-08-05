@@ -8,6 +8,7 @@ namespace SdoricaTranslatorTool.Entities
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
+        public required string Language { get; set; }
         public required string OriginalName { get; set; }
         public required string Name { get; set; }
         public string? ImageLink { get; set; }
@@ -21,6 +22,7 @@ namespace SdoricaTranslatorTool.Entities
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
+        public required string Language { get; set; }
         public required string OriginalName { get; set; }
         public required string Name { get; set; }
         public string? ImageLink { get; set; }
