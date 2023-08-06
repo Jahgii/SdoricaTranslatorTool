@@ -14,6 +14,15 @@ namespace SdoricaTranslatorTool.Controllers
             _cMongoClient = cMongoClient;
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Get([FromHeader] string language, [FromHeader] string mainGroup, [FromHeader] string group)
+        {
+            var cursor = await _cMongoClient.GetCollection<DialogAsset>().FindAsync(e => e.Language == language && e.MainGroup == mainGroup && e.Group == group);
+            var data = await cursor.ToListAsync();
+            return Ok(data);
+        }
+
+
         [HttpPost]
         public async Task<ActionResult> Post(List<DialogAsset> dialogAssets)
         {

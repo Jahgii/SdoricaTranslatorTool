@@ -21,7 +21,7 @@
             <tui-tiles class="tiles tui-space_top-3" [debounce]="100" [(order)]="order" [@popIn]>
                 <tui-tile *ngFor="let item of data; let index = index" class="tile" [style.order]="order.get(index)"
                     [width]="1" [height]="1" [@popIn]>
-                    <div class="content" [routerLink]="['/group', item.OriginalName]">
+                    <div class="content" [routerLink]="['/main', item.OriginalName]">
                         <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
                         <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
                         <h2 class="title">{{ item.Name }}</h2>

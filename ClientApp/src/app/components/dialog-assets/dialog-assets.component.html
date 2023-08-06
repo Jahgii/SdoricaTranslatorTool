@@ -1,0 +1,29 @@
+<div class="container-m">
+    <div class="tui-space_top-3" style="display: flex; flex-direction: row-reverse;"
+        *ngIf="languages && languages.length > 1">
+        <tui-select style="width: 180px;" tuiTextfieldSize="m" [formControl]="language">
+            Language
+            <input tuiTextfield placeholder="..." />
+            <tui-data-list-wrapper *tuiDataList [items]="languages">
+            </tui-data-list-wrapper>
+        </tui-select>
+    </div>
+    <ng-container *ngIf="(language.valueChanges | async)">
+        <ng-container *ngIf="(dialogAssets$ | async) as data; else loading">
+            <ol class="tui-list tui-list_ordered tui-list_nested">
+                <li *ngFor="let item of data;" class="tui-list__item">{{item.Filename}}</li>
+            </ol>
+            <!-- <ng-container *ngFor="let item of data;">
+                {{item.OriginalFilename}}
+            </ng-container> -->
+            
+        </ng-container>
+        <ng-template #loading>
+            <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">
+                <tui-block-status>
+                    <h4>...Loading...</h4>
+                </tui-block-status>
+            </tui-loader>
+        </ng-template>
+    </ng-container>
+</div>

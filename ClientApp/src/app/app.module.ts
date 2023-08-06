@@ -1,6 +1,6 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
 import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule } from "@taiga-ui/core";
-import { TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiInputFilesModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiSelectModule, TuiStepperModule, TuiTilesModule } from '@taiga-ui/kit';
+import { TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiInputFilesModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTilesModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiTableModule } from "@taiga-ui/addon-table";
 import { ScrollingModule } from "@angular/cdk/scrolling";
@@ -8,17 +8,18 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AppRoutingModule } from "./app-routing.module";
+import { HttpClientModule } from "@angular/common/http";
 
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from "./app-routing.module";
 import { HomeComponent } from "./components/home/home.component";
 import { NavMenuComponent } from "./components/nav-menu/nav-menu.component";
-import { HttpClientModule } from "@angular/common/http";
 import { LoadFileWizardComponent } from './components/load-file-wizard/load-file-wizard.component';
 import { LoadFileInputComponent } from './components/load-file-input/load-file-input.component';
 import { LoadFileWizardUploadingComponent } from './components/load-file-wizard-uploading/load-file-wizard-uploading.component';
 import { LoadFileWizardGroupsComponent } from './components/load-file-wizard-groups/load-file-wizard-groups.component';
 import { GroupsComponent } from './components/groups/groups.component';
+import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { GroupsComponent } from './components/groups/groups.component';
     LoadFileInputComponent,
     LoadFileWizardUploadingComponent,
     LoadFileWizardGroupsComponent,
-    GroupsComponent
+    GroupsComponent,
+    DialogAssetsComponent
   ],
   imports: [
     BrowserModule,
@@ -62,6 +64,7 @@ import { GroupsComponent } from './components/groups/groups.component';
     TuiSelectModule,
     TuiDataListModule,
     TuiDataListWrapperModule,
+    TuiTabsModule,
   ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }],
   bootstrap: [AppComponent]

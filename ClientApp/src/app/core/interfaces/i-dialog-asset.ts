@@ -28,13 +28,13 @@ export interface IDialogAsset {
 }
 
 export interface IDialog {
-    id: string;
-    speakerName: string;
-    speakerAssetName: string;
-    iconName: string;
-    iconLocate: number;
-    originalText: string;
-    text: string;
-    sfxName: string;
-    sfxVolume: number;
+    _id: string;
+    SpeakerName: string;
+    SpeakerAssetName: string;
+    IconName: string;
+    IconLocate: number;
+    OriginalText: string;
+    Text: string;
+    SfxName: string;
+    SfxVolume: number;
 }

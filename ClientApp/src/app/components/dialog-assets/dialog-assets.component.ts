@@ -1,23 +1,19 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription, firstValueFrom } from 'rxjs';
-import { popinAnimation } from 'src/app/core/animations/popin';
+import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { IGroup, ILanguage } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
-  selector: 'app-groups',
-  templateUrl: './groups.component.html',
-  styleUrls: ['./groups.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    popinAnimation
-  ],
+  selector: 'app-dialog-assets',
+  templateUrl: './dialog-assets.component.html',
+  styleUrls: ['./dialog-assets.component.scss']
 })
-export class GroupsComponent {
-  public groups$!: Observable<IGroup[]>;
+export class DialogAssetsComponent {
+  public dialogAssets$!: Observable<IDialogAsset[]>;
   public languages!: string[];
   public language: FormControl = new FormControl('', Validators.required);
   private subsLanguage!: Subscription;
@@ -31,10 +27,11 @@ export class GroupsComponent {
 
   ngOnInit(): void {
     let mainGroup = this.route.snapshot.params['mid'];
+    let group = this.route.snapshot.params['gid'];
 
     this.subsLanguage = this.language.valueChanges.subscribe((lang: string) => {
       this.local.setDefaultLang(lang);
-      this.groups$ = this.api.getWithHeaders('groups', { language: lang, mainGroup: mainGroup });
+      this.dialogAssets$ = this.api.getWithHeaders('dialogassets', { language: lang, mainGroup: mainGroup, group: group });
     });
 
     firstValueFrom(this.api.get<ILanguage[]>('languages'))

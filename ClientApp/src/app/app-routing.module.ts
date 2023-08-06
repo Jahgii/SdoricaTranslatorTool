@@ -3,10 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoadFileWizardComponent } from './components/load-file-wizard/load-file-wizard.component';
 import { HomeComponent } from './components/home/home.component';
 import { GroupsComponent } from './components/groups/groups.component';
+import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'group/:id', component: GroupsComponent },
+  { path: 'main/:mid', component: GroupsComponent },
+  { path: 'main/:mid/group/:gid', component: DialogAssetsComponent },
   { path: 'loading', component: LoadFileWizardComponent },
 ];
 

@@ -87,7 +87,7 @@ export class FileReaderService {
     let dialogAsset: IDialogAsset = JSON.parse(this.onFixDialogAssetJsonParse(fileContent));
 
     dialogAsset.Model.$content.forEach(dialog => {
-      dialog.originalText = dialog.text;
+      dialog.OriginalText = dialog.Text;
     });
 
     if (fileNameSplit.length == 5) {
