@@ -20,6 +20,7 @@ import { LoadFileWizardUploadingComponent } from './components/load-file-wizard-
 import { LoadFileWizardGroupsComponent } from './components/load-file-wizard-groups/load-file-wizard-groups.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.component';
+import { LoadFileLocalizationComponent } from './components/load-file-localization/load-file-localization.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.
     LoadFileWizardUploadingComponent,
     LoadFileWizardGroupsComponent,
     GroupsComponent,
-    DialogAssetsComponent
+    DialogAssetsComponent,
+    LoadFileLocalizationComponent
   ],
   imports: [
     BrowserModule,

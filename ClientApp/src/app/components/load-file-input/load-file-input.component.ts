@@ -21,7 +21,6 @@ export class LoadFileInputComponent {
 
   onReadFile(file: TuiFileLike) {
     this.fileReader.onReadFile(file as File);
-    console.log("Trigger");
     return of(file);
   }
 

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
 import { TuiStepperComponent } from '@taiga-ui/kit';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { FileReaderLocalizationService } from 'src/app/core/services/file-reader-localization.service';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
@@ -16,15 +17,20 @@ export class LoadFileWizardComponent implements OnDestroy {
   private subsStepperOne!: Subscription;
   private subsStepperthree!: Subscription;
   private subsStepperfour!: Subscription;
+  private subsStepperfive!: Subscription;
 
-  public activeItemIndex = 0;
+  public activeItemIndex = 4;
   public languageSelected = false;
 
   public languagesSelected!: string[];
   public multiLanguage$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 
-  constructor(public fileReader: FileReaderService, private storage: LocalStorageService) {
+  constructor(
+    public fileReader: FileReaderService,
+    public fileLocalizationReader: FileReaderLocalizationService,
+    private storage: LocalStorageService,
+  ) {
     this.onFileReader();
   }
 
@@ -32,6 +38,7 @@ export class LoadFileWizardComponent implements OnDestroy {
     this.subsStepperOne.unsubscribe();
     this.subsStepperthree.unsubscribe();
     this.subsStepperfour.unsubscribe();
+    this.subsStepperfive.unsubscribe();
   }
 
   private onFileReader() {
@@ -53,6 +60,13 @@ export class LoadFileWizardComponent implements OnDestroy {
       this.activeItemIndex = 4;
       this.stepper.activate(4);
     });
+
+    this.subsStepperfive = this.fileLocalizationReader.fileProgressState$.subscribe(state => {
+      if (state == 'finish') {
+        this.activeItemIndex = 5;
+        this.stepper.activate(5);
+      }
+    });
   }
 
   public onSelectLanguage(language: string, $event: boolean) {
@@ -73,7 +87,6 @@ export class LoadFileWizardComponent implements OnDestroy {
         this.languageSelected = true;
         this.languagesSelected.push(key);
         index += 1;
-        console.log(index, key);
         if (index == 1) {
           this.fileReader.defaultLanguage.patchValue(key);
         }

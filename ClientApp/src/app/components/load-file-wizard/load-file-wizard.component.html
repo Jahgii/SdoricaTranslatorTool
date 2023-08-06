@@ -1,7 +1,7 @@
 <main class="main-wizard">
     <tui-stepper #stepper class="wizard-stepper" orientation="vertical" [activeItemIndex]="activeItemIndex">
         <button tuiStep [stepState]="(fileReader.fileProgressState$ | async) == 'finish' ? 'pass': 'normal'" disabled>
-            Load File
+            Load OBB File
         </button>
         <button tuiStep disabled>
             Choose languages
@@ -11,6 +11,9 @@
         </button>
         <button tuiStep disabled>
             Creating Main Groups and Groups
+        </button>
+        <button tuiStep disabled>
+            Load Localization File
         </button>
         <button tuiStep disabled>
             Let's translate!
@@ -23,7 +26,8 @@
             '1': stepperChooseLanguage,
             '2': stepperUploadingData,
             '3': stepperCreatingGroups,
-            '4': stepperFinish,
+            '4': stepperLoadLocalization,
+            '5': stepperFinish,
          }[stepper.activeItemIndex] ?? stepperDefault">
         </ng-container>
     </div>
@@ -55,8 +59,8 @@
         </tui-checkbox-block>
     </div>
     <div class="tui-space_top-2" style="display: flex; flex-direction: row-reverse;">
-        <button tuiIconButton [iconRight]="'tuiIconArrowRightCircleLarge'" [disabled]="!languageSelected || fileReader.defaultLanguage.invalid"
-            (click)="onSelectLanguageEnd()">
+        <button tuiIconButton [iconRight]="'tuiIconArrowRightCircleLarge'"
+            [disabled]="!languageSelected || fileReader.defaultLanguage.invalid" (click)="onSelectLanguageEnd()">
         </button>
     </div>
 </ng-template>
@@ -67,6 +71,10 @@
 
 <ng-template #stepperCreatingGroups>
     <app-load-file-wizard-groups></app-load-file-wizard-groups>
+</ng-template>
+
+<ng-template #stepperLoadLocalization>
+    <app-load-file-localization></app-load-file-localization>
 </ng-template>
 
 <ng-template #stepperFinish>

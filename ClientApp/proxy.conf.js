@@ -9,7 +9,9 @@ const PROXY_CONFIG = [
       "/dialogassets",
       "/maingroups",
       "/groups",
-      "/languages"
+      "/languages",
+      "/localizationcategories",
+      "/localizationkeys"
    ],
     proxyTimeout: 10000,
     target: target,

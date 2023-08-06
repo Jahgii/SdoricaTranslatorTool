@@ -31,7 +31,7 @@ export class FileReaderService {
 
   constructor(private api: ApiService, private fB: FormBuilder) { }
 
-  //#region ReadFile Logic
+  //#region ReadFile OBB Logic
   public onReadFile(file: File) {
     this.file = file;
     this.fileProgressState$.next('reading');
@@ -121,12 +121,13 @@ export class FileReaderService {
   }
   //#endregion
 
+  //#region Upload Logic
   async onUploadLanguage(language: string) {
     this.dialogAssetsUploading[language].Uploading.next(true);
     let dialogAssets = this.dialogAssets[language];
 
     while (dialogAssets.length > 0) {
-      let dialogsSet = dialogAssets.splice(0, 50);
+      let dialogsSet = dialogAssets.splice(0, this.uploadStackSize);
       await firstValueFrom(this.api.post<{ FileSkip: number }>('dialogassets', dialogsSet))
         .then(
           (result) => {
@@ -196,6 +197,7 @@ export class FileReaderService {
       );
 
   }
+  //#endregion
 
   //#region Dictionary CRUD
   private addDialogAsset(dialogAsset: IDialogAsset) {
