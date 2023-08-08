@@ -1,0 +1,185 @@
+<div class="localization-container">
+    <tui-scrollbar class="localization-categories tui-space_right-3">
+        <table class="tui-table tui-table_font-size_s tui-table_layout_fixed" *ngIf="categories$ | async as categories">
+            <thead>
+                <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled sticky-header"
+                    style="background: var(--tui-base-01);">
+                    <th class="tui-table__th sticky-header" style="width: 100px;">Category</th>
+                    <th class="tui-table__th sticky-header"><tui-svg src="tuiIconCheckCircle"></tui-svg></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let category of categories; index as i"
+                    [ngClass]="{'row-selected': selectedCategoryIndex == i}" (click)="onSelectCategory(category, i)"
+                    class="tui-table__tr_cursor_pointer">
+                    <td #categoryCell class="tui-table__td_text_overflow tui-table__td"
+                        tuiHint="{{(categoryCell.offsetWidth < categoryCell.scrollWidth) ? category.Name : null}}"
+                        tuiHintDirection="right" [tuiHintAppearance]="'onDark'" [tuiHintShowDelay]="200">
+                        <span>{{category.Name}}</span>
+                    </td>
+                    <td class="tui-table__td">
+                        <ng-container *ngIf="(category.KeysTranslated/category.Keys) < 1; else completed">
+                            {{category.KeysTranslated}}/{{category.Keys}}
+                        </ng-container>
+                        <ng-template #completed>
+                            <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                        </ng-template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </tui-scrollbar>
+    <div class="localization-keys">
+        <ng-container *ngIf="keys$; else selectCategory">
+            <ng-container tuiTableFilters>
+                <tui-scrollbar *ngIf="keys$ | async as keys; else loading">
+                    <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar"
+                        [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
+                        <table class="tui-table" style="table-layout: fixed;" tuiTable
+                            [columns]="['Language', 'Translation', 'Translated']" [@popIn]>
+                            <thead>
+                                <tr tuiThGroup>
+                                    <th tuiTh *tuiHead="'Language'" [sticky]="true"
+                                        [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+                                        Original
+                                    </th>
+                                    <th tuiTh *tuiHead="'Translation'" [sticky]="true"
+                                        [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null"
+                                        style="width: 60%; max-width: 60%;">
+                                        Translation
+                                        <tui-toggle class="tui-space_left-2" [showIcons]="true"
+                                            [(ngModel)]="propagateTranslation"></tui-toggle>
+                                        <tui-tooltip
+                                            content="Propagation: When editing, propagates the changes made to all keys with the same values, in the current language, applies to the Translation and Translated(checkbox) columns."
+                                            direction="right">
+                                        </tui-tooltip>
+                                    </th>
+                                    <th tuiTh *tuiHead="'Translated'" [sticky]="true"
+                                        [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null"
+                                        style="width: 32px;">
+                                        <tui-svg style="display: inherit;" src="tuiIconCheckCircle"></tui-svg>
+                                    </th>
+                                </tr>
+                                <!-- <tr tuiThGroup>
+                                    <th tuiTh>
+                                        <div>
+                                            <tui-input tuiTableFilter="Translations"
+                                                [formControl]="filterForm.controls['original']"
+                                                [tuiGenericFilter]="filterOriginalColumn" [tuiTextfieldSize]="'s'"
+                                                [tuiTextfieldIconLeft]="'tuiIconFilter'">
+                                                Search by Original Column
+                                            </tui-input>
+                                        </div>
+                                    </th>
+                                    <th tuiTh>
+                                        <div>
+                                            <tui-input tuiTableFilter="Translations"
+                                                [formControl]="filterForm.controls['translation']"
+                                                [tuiGenericFilter]="filterTranslationColumn" [tuiTextfieldSize]="'s'"
+                                                [tuiTextfieldIconLeft]="'tuiIconFilter'"
+                                                class="tui-group__inherit-item">
+                                                Search by Translation Column
+                                            </tui-input>
+                                        </div>
+                                    </th>
+                                    <th tuiTh>
+                                        <div
+                                            style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                                            <tui-checkbox [formControl]="filterForm.controls['translated']"
+                                                tuiTableFilter="Translated" [tuiGenericFilter]="filterTranslatedColumn"
+                                                contentAlign="right">
+                                            </tui-checkbox>
+                                        </div>
+                                    </th>
+                                </tr> -->
+                            </thead>
+                            <tbody tuiTbody>
+                                <tr tuiTr>
+                                    <td *tuiCell="'Language'" tuiTd>
+                                        <tui-input tuiTableFilter="Translations"
+                                            [formControl]="filterForm.controls['original']"
+                                            [tuiGenericFilter]="filterOriginalColumn" [tuiTextfieldSize]="'m'"
+                                            [tuiTextfieldIconLeft]="'tuiIconFilter'">
+                                            Search by Original Column
+                                        </tui-input>
+                                    </td>
+                                    <td *tuiCell="'Translation'" tuiTd>
+                                        <tui-input tuiTableFilter="Translations"
+                                            [formControl]="filterForm.controls['translation']"
+                                            [tuiGenericFilter]="filterTranslationColumn" [tuiTextfieldSize]="'m'"
+                                            [tuiTextfieldIconLeft]="'tuiIconFilter'">
+                                            Search by Translation Column
+                                        </tui-input>
+                                    </td>
+                                    <td *tuiCell="'Translated'" tuiTd>
+                                        <div
+                                            style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                                            <tui-checkbox [formControl]="filterForm.controls['translated']"
+                                                tuiTableFilter="Translated" [tuiGenericFilter]="filterTranslatedColumn"
+                                                contentAlign="right">
+                                            </tui-checkbox>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *cdkVirtualFor="let item of keys | tuiTableFilters | async" tuiTr>
+                                    <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintAppearance]="'onDark'"
+                                        [tuiHintShowDelay]="200" class="tooltip-name-cell">
+                                        {{onRenderDefaultLanguage(item.Translations)}}
+                                        <span class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
+                                            {{item.Name}}
+                                        </span>
+                                    </td>
+                                    <ng-template #tooltip>
+                                        <tui-scrollbar #scrollTooltip class="tooltip-original-cell" [hidden]="true"
+                                            (mouseenter)="onTooltipCheck(scrollTooltip)"
+                                            (mouseleave)="onTooltipCheck()">
+                                            <ul>
+                                                <li class="tooltip-important-text tui-text_body-xs"
+                                                    style="text-align: right;">{{item.Name}}</li>
+                                                <li *ngFor="let key of item.Translations | keyvalue | slice:0:-1">
+                                                    <span class="tooltip-important-text">
+                                                        {{key.key}}:
+                                                    </span>
+                                                    {{key.value}}
+                                                </li>
+                                            </ul>
+                                        </tui-scrollbar>
+                                        <tui-svg *ngIf="showTooltipArrow$ | async"
+                                            style="position: absolute; left: -1px; bottom: -1px; color: var(--tui-warning-fill);"
+                                            src="tuiIconArrowDown" [@popIn]></tui-svg>
+                                    </ng-template>
+                                    <td *tuiCell="'Translation'" tuiTd>
+                                        <tui-text-area [(ngModel)]="item.Translations['ReplaceLang']"
+                                            [expandable]="true" [tuiTextfieldSize]="'m'"
+                                            (ngModelChange)="onTranslationChange($event, keys, item)">
+                                            ......
+                                        </tui-text-area>
+                                    </td>
+                                    <td *tuiCell="'Translated'" tuiTd>
+                                        <div
+                                            style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                                            <tui-checkbox [(ngModel)]="item.Translated"
+                                                (ngModelChange)="onTranslatedCheck($event, keys, item)"></tui-checkbox>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </cdk-virtual-scroll-viewport>
+                </tui-scrollbar>
+                <ng-template #loading>
+                    <tui-block-status>
+                        <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" [@popIn]>
+                            <h4 style="margin-top: revert; margin-bottom: revert;">...Loading...</h4>
+                        </tui-loader>
+                    </tui-block-status>
+                </ng-template>
+            </ng-container>
+        </ng-container>
+        <ng-template #selectCategory>
+            <tui-block-status>
+                <h4>Select One Category</h4>
+            </tui-block-status>
+        </ng-template>
+    </div>
+</div>

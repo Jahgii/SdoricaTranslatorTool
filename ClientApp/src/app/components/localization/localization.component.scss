@@ -1,0 +1,52 @@
+.localization-container {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    padding: 1em;
+    height: calc(100% - var(--header-height) - 6em);
+}
+
+.localization-categories {
+    height: 100%
+}
+
+.localization-keys {
+    grid-column: 2;
+}
+
+.localization-keys-toolbar {
+}
+
+.sticky-header {
+    top: 0;
+    position: sticky;
+}
+
+.viewport {
+    height: calc(100vh - var(--header-height) - 6em);
+}
+
+.row-selected {
+    background: var(--tui-neutral-bg-hover);
+}
+
+.tooltip-original-cell {
+    max-height: 15rem;
+}
+
+.tooltip-name-cell:hover .tooltip-span-name-cell {
+    opacity: 0;
+}
+
+.tooltip-span-name-cell {
+    text-align: right;
+    position: absolute;
+    right: 0.5em;
+    bottom: 0.1em;
+    background: var(--tui-base-01);
+    transition: opacity 300ms;
+}
+
+.tooltip-important-text {
+    font-weight: bold;
+    color: var(--tui-warning-fill);
+}

@@ -2,7 +2,7 @@
     box-shadow: 0 0.125rem 1rem #00000014;
     z-index: 1;
     display: flex;
-    height: 3.9375rem;
+    height: var(--header-height);
     align-items: center;
     padding: 0 1.25rem;
     background: var(--tui-base-01);
