@@ -5,11 +5,14 @@ import { HomeComponent } from './components/home/home.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.component';
 import { LocalizationComponent } from './components/localization/localization.component';
+import { MainGroupsComponent } from './components/main-groups/main-groups.component';
 
 const routes: Routes = [
-  { path: '', component: LocalizationComponent },
-  { path: 'main/:mid', component: GroupsComponent },
-  { path: 'main/:mid/group/:gid', component: DialogAssetsComponent },
+  { path: '', component: HomeComponent },
+  { path: 'localization', component: LocalizationComponent },
+  { path: 'dialogsAsset', component: MainGroupsComponent },
+  { path: 'dialogsAsset/:mid', component: GroupsComponent },
+  { path: 'dialogsAsset/:mid/:gid', component: DialogAssetsComponent },
   { path: 'loading', component: LoadFileWizardComponent },
 ];
 

@@ -22,6 +22,7 @@ import { GroupsComponent } from './components/groups/groups.component';
 import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.component';
 import { LoadFileLocalizationComponent } from './components/load-file-localization/load-file-localization.component';
 import { LocalizationComponent } from './components/localization/localization.component';
+import { MainGroupsComponent } from './components/main-groups/main-groups.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { LocalizationComponent } from './components/localization/localization.co
     GroupsComponent,
     DialogAssetsComponent,
     LoadFileLocalizationComponent,
-    LocalizationComponent
+    LocalizationComponent,
+    MainGroupsComponent
   ],
   imports: [
     BrowserModule,

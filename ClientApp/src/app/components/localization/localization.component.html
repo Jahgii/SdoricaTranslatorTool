@@ -49,10 +49,15 @@
                                         Translation
                                         <tui-toggle class="tui-space_left-2" [showIcons]="true"
                                             [(ngModel)]="propagateTranslation"></tui-toggle>
-                                        <tui-tooltip
-                                            content="Propagation: When editing, propagates the changes made to all keys with the same values, in the current language, applies to the Translation and Translated(checkbox) columns."
-                                            direction="right">
+                                        <tui-tooltip [content]="propagationTooltip" direction="right"
+                                            [appearance]="'onDark'">
                                         </tui-tooltip>
+                                        <ng-template #propagationTooltip>
+                                            Propagation: When editing, propagates the changes made to all <span
+                                                class="tooltip-important-text">KEYS</span> with the same
+                                            <strong>Original</strong> value, in the current language, applies to the
+                                            Translation and Translated(checkbox) columns.
+                                        </ng-template>
                                     </th>
                                     <th tuiTh *tuiHead="'Translated'" [sticky]="true"
                                         [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null"
@@ -94,7 +99,7 @@
                                 </tr> -->
                             </thead>
                             <tbody tuiTbody>
-                                <tr tuiTr>
+                                <tr tuiTr class="sticky-header">
                                     <td *tuiCell="'Language'" tuiTd>
                                         <tui-input tuiTableFilter="Translations"
                                             [formControl]="filterForm.controls['original']"
@@ -126,7 +131,7 @@
                                         [tuiHintShowDelay]="200" class="tooltip-name-cell">
                                         {{onRenderDefaultLanguage(item.Translations)}}
                                         <span class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
-                                            {{item.Name}}
+                                            <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>{{item.Name}}
                                         </span>
                                     </td>
                                     <ng-template #tooltip>
@@ -135,7 +140,10 @@
                                             (mouseleave)="onTooltipCheck()">
                                             <ul>
                                                 <li class="tooltip-important-text tui-text_body-xs"
-                                                    style="text-align: right;">{{item.Name}}</li>
+                                                    style="text-align: right;">
+                                                    <tui-svg src="tuiIconKey"
+                                                        style="font: inherit;"></tui-svg>{{item.Name}}
+                                                </li>
                                                 <li *ngFor="let key of item.Translations | keyvalue | slice:0:-1">
                                                     <span class="tooltip-important-text">
                                                         {{key.key}}:

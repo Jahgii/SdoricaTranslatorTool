@@ -7,35 +7,42 @@
         </button>
     </tui-block-status>
 
-    <div class="tui-space_top-3" style="display: flex; flex-direction: row-reverse;"
-        *ngIf="languages && languages.length > 1">
-        <tui-select style="width: 180px;" tuiTextfieldSize="m" [formControl]="language">
-            Language
-            <input tuiTextfield placeholder="..." />
-            <tui-data-list-wrapper *tuiDataList [items]="languages">
-            </tui-data-list-wrapper>
-        </tui-select>
-    </div>
     <ng-container *ngIf="(language.valueChanges | async)">
-        <ng-container *ngIf="(mainGroups$ | async) as data; else loading">
-            <tui-tiles class="tiles tui-space_top-3" [debounce]="100" [(order)]="order" [@popIn]>
-                <tui-tile *ngFor="let item of data; let index = index" class="tile" [style.order]="order.get(index)"
-                    [width]="1" [height]="1" [@popIn]>
-                    <div class="content" [routerLink]="['/main', item.OriginalName]">
-                        <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
-                        <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
-                        <h2 class="title">{{ item.Name }}</h2>
-                        <h4 class="title">Files: {{ item.Files }}</h4>
-                    </div>
-                </tui-tile>
-            </tui-tiles>
-        </ng-container>
-        <ng-template #loading>
-            <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" [@popIn]>
-                <tui-block-status>
-                    <h4>...Loading...</h4>
-                </tui-block-status>
-            </tui-loader>
-        </ng-template>
+        <div *ngIf="size$ | async as size" class="container">
+            <tui-block-status class="card" [card]="true">
+                <img tuiSlot="top" alt="hidden content" src="./assets/images/localization.svg" class="image" />
+
+                Main Game Localization
+
+                <button tuiButton appearance="secondary" [size]="size" [routerLink]="['/localization']">
+                    GO
+                </button>
+            </tui-block-status>
+            <tui-block-status class="card" [card]="true">
+                <img tuiSlot="top" alt="something wrong" src="./assets/images/dialog-assets.svg" class="image" />
+
+                Chapters Dialog Localization
+
+                <button tuiButton appearance="secondary" [size]="size" [routerLink]="['/dialogsAsset']">
+                    GO
+                </button>
+            </tui-block-status>
+            <tui-block-status class="card" [card]="true">
+                <img tuiSlot="top" alt="something wrong" src="./assets/images/import-translation.svg" class="image" />
+                Re/Import Files
+                <button tuiButton appearance="secondary" [size]="size">
+                    GO
+                </button>
+            </tui-block-status>
+            <tui-block-status class="card" [card]="true">
+                <img tuiSlot="top" alt="something wrong" src="./assets/images/export-translation.svg" class="image" />
+
+                The moment of truth
+
+                <button tuiButton appearance="secondary" [size]="size">
+                    I'm Scared
+                </button>
+            </tui-block-status>
+        </div>
     </ng-container>
 </div>
