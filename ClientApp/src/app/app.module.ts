@@ -1,6 +1,6 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
 import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiTooltipModule, TuiHintModule, TuiGroupModule, TuiDropdownModule } from "@taiga-ui/core";
-import { TuiCheckboxBlockModule, TuiCheckboxModule, TuiDataListWrapperModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
+import { TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiDataListWrapperModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiTableFiltersModule, TuiTableModule } from "@taiga-ui/addon-table";
 import { ScrollingModule } from "@angular/cdk/scrolling";
@@ -23,6 +23,8 @@ import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.
 import { LoadFileLocalizationComponent } from './components/load-file-localization/load-file-localization.component';
 import { LocalizationComponent } from './components/localization/localization.component';
 import { MainGroupsComponent } from './components/main-groups/main-groups.component';
+import { TuiSidebarModule } from "@taiga-ui/addon-mobile";
+import { TuiActiveZoneModule, TuiLetModule } from "@taiga-ui/cdk";
 
 @NgModule({
   declarations: [
@@ -81,6 +83,10 @@ import { MainGroupsComponent } from './components/main-groups/main-groups.compon
     TuiToggleModule,
     TuiInputInlineModule,
     TuiDropdownModule,
+    TuiSidebarModule,
+    TuiActiveZoneModule,
+    TuiLetModule,
+    TuiBadgeModule,
   ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }],
   bootstrap: [AppComponent]

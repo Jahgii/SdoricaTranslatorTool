@@ -2,10 +2,91 @@
 <header class="header">
     <h1 style="margin-right: auto;">Sdorica Translator Tool</h1>
 
-    <a href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank">
-        <tui-svg src="tuiIconGithub"></tui-svg>
+    <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
+        appearance="icon" [icon]="'tuiIconGithub'">
+        <!-- <tui-svg src="tuiIconGithub"></tui-svg> -->
     </a>
     <button tuiIconButton appearance="icon" [icon]="(nightMode$ | async)? 'tuiIconMoon' : 'tuiIconSun'"
         (click)="switchTheme()">
+    </button>
+    <button tuiIconButton appearance="icon" [icon]="'tuiIconSettings'" (click)="onToogleSettings()"
+        (tuiActiveZoneChange)="onToogleSettings()">
+        <div *tuiSidebar="openSetting; direction: 'right'" style="padding: 1em;">
+            <h3 style="text-align: center;"> LibreTranslate Configuration </h3>
+            <hr>
+            <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.url" tuiTextfieldSize="s"
+                (ngModelChange)="libreTranslate.onUrlChange($event)">
+                Libre Translate Url
+                <input tuiTextfield type="url" />
+            </tui-input>
+            <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.apiKey" tuiTextfieldSize="s">
+                Api key (if need)
+                <input tuiTextfield />
+            </tui-input>
+            <button class="tui-space_top-2 w-100" tuiButton [icon]="'tuiIconActivity'" size="s"
+                (click)="libreTranslate.isAlive()"
+                [disabled]="((libreTranslate.testing$ | async) ?? true) || !libreTranslate.url">
+                Test Server
+            </button>
+            <div *ngIf="(libreTranslate.errors$ | async) as error" class="tui-space_top-2">
+                <tui-badge status="error" [value]="error" class="w-100"></tui-badge>
+            </div>
+            <ng-container *ngIf="(libreTranslate.serverAlive$ | async)">
+                <div class="tui-space_top-2">
+                    <tui-badge status="success" value="Server Alive" class="w-100"></tui-badge>
+                </div>
+
+                <ng-container *ngIf="libreTranslate.languages">
+                    <div tuiGroup class="tui-space_top-2">
+                        <div>
+                            <tui-select *tuiLet="libreTranslate.languages as languages" tuiTextfieldSize="s"
+                                [(ngModel)]="libreTranslate.source" class="tui-group__inherit-item"
+                                (ngModelChange)="libreTranslate.onSourceChange($event)"
+                                [tuiTextfieldLabelOutside]="true"
+                                [valueContent]="languages ? stringify(languages) : undefined">
+                                <input tuiTextfield placeholder="Source" />
+                                Source
+                                <ng-template tuiDataList>
+                                    <tui-data-list>
+                                        <button *ngFor="let language of languages" tuiOption [value]="language.code">
+                                            {{ language.name }}
+                                        </button>
+                                    </tui-data-list>
+                                </ng-template>
+                            </tui-select>
+                        </div>
+                        <div *ngIf="libreTranslate.targetLanguages">
+                            <tui-select tuiTextfieldSize="s" [(ngModel)]="libreTranslate.target"
+                                class="tui-group__inherit-item" [tuiTextfieldLabelOutside]="true"
+                                (ngModelChange)="libreTranslate.onTargetChange($event)">
+                                <input tuiTextfield placeholder="Target" />
+                                Target
+                                <tui-data-list-wrapper *tuiDataList [items]="libreTranslate.targetLanguages">
+                                </tui-data-list-wrapper>
+                                <ng-template #selectSource>
+                                    Select Source
+                                </ng-template>
+                            </tui-select>
+                        </div>
+                    </div>
+                    <div class="tui-space_top-2" *ngIf="libreTranslate.target">
+                        <button tuiButton class="w-100" [icon]="'tuiIconActivity'" size="s"
+                            (click)="libreTranslate.onTestTranslate()" [disabled]="
+                            ((libreTranslate.testing$ | async) ?? true) 
+                            || !libreTranslate.url 
+                            || !libreTranslate.source 
+                            || !libreTranslate.target">
+                            Test Translation
+                        </button>
+                    </div>
+                </ng-container>
+                <div *ngIf="libreTranslate.serverReady$ | async" class="tui-space_top-2">
+                    <tui-badge status="success" value="Ready" class="w-100"></tui-badge>
+                </div>
+                <div *ngIf="(libreTranslate.errorServer$ | async) as error" class="tui-space_top-2">
+                    <tui-badge status="error" [value]="error" class="w-100"></tui-badge>
+                </div>
+            </ng-container>
+        </div>
     </button>
 </header>
