@@ -1,0 +1,102 @@
+.localization-container {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    padding: 1em;
+    height: calc(100% - var(--header-height) - 6em);
+}
+
+.localization-categories {
+    height: 100%
+}
+
+.localization-keys {
+    grid-column: 2;
+}
+
+.localization-keys-toolbar {}
+
+.sticky-header {
+    top: 0;
+    position: sticky;
+}
+
+.viewport {
+    height: calc(100vh - var(--header-height) - 12em);
+}
+
+.row-selected {
+    background: var(--tui-neutral-bg-hover);
+}
+
+.tooltip-original-cell {
+    max-height: 15rem;
+}
+
+.tooltip-name-cell:hover .tooltip-span-name-cell {
+    opacity: 0;
+}
+
+.tooltip-span-name-cell {
+    text-align: right;
+    position: absolute;
+    right: 0.5em;
+    bottom: 0.1em;
+    background: var(--tui-base-01);
+    transition: opacity 300ms;
+}
+
+.tooltip-important-text {
+    font-weight: bold;
+    color: var(--tui-warning-fill);
+}
+
+.dialog-speaker-name {
+    width: 425px;
+    font-size: 22px;
+    font-family: dialog-font;
+    font-weight: bold;
+    color: #e48e45;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    transition: all 500ms;
+
+    &:focus {
+        border: none;
+        outline: none;
+    }
+
+    &:hover {
+        background-color: var(--tui-base-02);
+    }
+}
+
+.dialog-translation {
+    font-size: 17px;
+    font-family: dialog-font;
+    line-height: initial;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    width: 425px;
+    height: 90px;
+    resize: none;
+    overflow: hidden;
+    transition: all 500ms;
+
+    &:focus {
+        border: none;
+        outline: none;
+    }
+
+    &:hover {
+        background-color: var(--tui-base-02);
+    }
+}
+
+.dialog-translation-background {
+    width: 320px;
+    filter: brightness(0);
+    opacity: 0.1;
+    // mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 1)));
+}

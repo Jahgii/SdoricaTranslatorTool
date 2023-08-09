@@ -113,7 +113,6 @@ export class LocalizationComponent implements OnInit, OnDestroy {
 
   public onTooltipCheck(scrollTooltip?: TuiScrollbarComponent) {
     let show = false;
-    console.log(scrollTooltip);
     if (scrollTooltip)
       show = scrollTooltip['el']['nativeElement']['offsetHeight'] < scrollTooltip['el']['nativeElement']['scrollHeight'];
 

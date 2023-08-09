@@ -65,41 +65,9 @@
                                         <tui-svg style="display: inherit;" src="tuiIconCheckCircle"></tui-svg>
                                     </th>
                                 </tr>
-                                <!-- <tr tuiThGroup>
-                                    <th tuiTh>
-                                        <div>
-                                            <tui-input tuiTableFilter="Translations"
-                                                [formControl]="filterForm.controls['original']"
-                                                [tuiGenericFilter]="filterOriginalColumn" [tuiTextfieldSize]="'s'"
-                                                [tuiTextfieldIconLeft]="'tuiIconFilter'">
-                                                Search by Original Column
-                                            </tui-input>
-                                        </div>
-                                    </th>
-                                    <th tuiTh>
-                                        <div>
-                                            <tui-input tuiTableFilter="Translations"
-                                                [formControl]="filterForm.controls['translation']"
-                                                [tuiGenericFilter]="filterTranslationColumn" [tuiTextfieldSize]="'s'"
-                                                [tuiTextfieldIconLeft]="'tuiIconFilter'"
-                                                class="tui-group__inherit-item">
-                                                Search by Translation Column
-                                            </tui-input>
-                                        </div>
-                                    </th>
-                                    <th tuiTh>
-                                        <div
-                                            style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                            <tui-checkbox [formControl]="filterForm.controls['translated']"
-                                                tuiTableFilter="Translated" [tuiGenericFilter]="filterTranslatedColumn"
-                                                contentAlign="right">
-                                            </tui-checkbox>
-                                        </div>
-                                    </th>
-                                </tr> -->
                             </thead>
                             <tbody tuiTbody>
-                                <tr tuiTr class="sticky-header">
+                                <tr tuiTr>
                                     <td *tuiCell="'Language'" tuiTd>
                                         <tui-input tuiTableFilter="Translations"
                                             [formControl]="filterForm.controls['original']"

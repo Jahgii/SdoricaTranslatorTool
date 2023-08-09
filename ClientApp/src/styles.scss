@@ -1,7 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
-:root{
+:root {
   --header-height: 3.9375rem;
 }
+
+@font-face {
+  font-family: "dialog-font";
+  src: url("/assets/fonts/NotoSansJP-VariableFont_wght.ttf") format("truetype");
+}
+
 /* Provide sufficient contrast against white background */
 a {
   color: #0366d6;

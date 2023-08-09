@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription, firstValueFrom } from 'rxjs';
+import { popinAnimation } from 'src/app/core/animations/popin';
 import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { IGroup, ILanguage } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -10,9 +11,25 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 @Component({
   selector: 'app-dialog-assets',
   templateUrl: './dialog-assets.component.html',
-  styleUrls: ['./dialog-assets.component.scss']
+  styleUrls: ['./dialog-assets.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    popinAnimation
+  ],
 })
 export class DialogAssetsComponent {
+  readonly filterForm = new FormGroup({
+    originalText: new FormControl(undefined),
+  });
+
+  readonly filterOriginalColumn = (text: string, value: string): boolean => {
+    if (!value) value = "";
+    return text.toLowerCase().includes(value.toLowerCase());
+  };
+
+  public propagateTranslation: boolean = true;
+  public previousPropagationValue: string = "";
+  public activeItemIndex: number = 0;
   public dialogAssets$!: Observable<IDialogAsset[]>;
   public languages!: string[];
   public language: FormControl = new FormControl('', Validators.required);
@@ -55,5 +72,14 @@ export class DialogAssetsComponent {
 
   ngOnDestroy(): void {
     this.subsLanguage.unsubscribe();
+  }
+
+  public onSpeakerNameChange(name: string, data: IDialogAsset[]) {
+    if (this.propagateTranslation)
+      data[this.activeItemIndex].Model.$content.forEach(e => {
+        if (e.SpeakerName == this.previousPropagationValue) e.SpeakerName = name;
+
+      });
+    this.previousPropagationValue = name;
   }
 }
