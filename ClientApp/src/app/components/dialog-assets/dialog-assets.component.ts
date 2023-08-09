@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, firstValueFrom } from 'rxjs';
+import { TuiBreakpointService } from '@taiga-ui/core';
+import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { IGroup, ILanguage } from 'src/app/core/interfaces/i-dialog-group';
@@ -27,6 +28,7 @@ export class DialogAssetsComponent {
     return text.toLowerCase().includes(value.toLowerCase());
   };
 
+  public openOption: boolean = false;
   public propagateTranslation: boolean = true;
   public previousPropagationValue: string = "";
   public activeItemIndex: number = 0;
@@ -34,12 +36,12 @@ export class DialogAssetsComponent {
   public languages!: string[];
   public language: FormControl = new FormControl('', Validators.required);
   private subsLanguage!: Subscription;
-  public order = new Map();
 
   constructor(
     private api: ApiService,
     private local: LocalStorageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) { }
 
   ngOnInit(): void {

@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { TuiBreakpointService, TuiSizeL } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, Subscription, firstValueFrom, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
-import { ILanguage, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
+import { ILanguage } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 

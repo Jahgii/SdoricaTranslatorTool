@@ -3,7 +3,7 @@
 .tiles {
     gap: 1rem;
     grid-auto-rows: minmax(180px, auto);
-    grid-template-columns: repeat(auto-fit, minmax(400px, auto));
+    grid-template-columns: repeat(auto-fit, minmax(320px, auto));
 }
 
 .tile:before {
