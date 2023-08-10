@@ -1,0 +1,23 @@
+<main class="main-wizard">
+    <tui-stepper #stepper class="wizard-stepper" orientation="vertical" [activeItemIndex]="activeItemIndex">
+        <button tuiStep disabled>
+            Load Localization File
+        </button>
+    </tui-stepper>
+
+    <div class="wizard-content">
+        <ng-container [ngTemplateOutlet]="{
+            '0': stepperLoadLocalization,
+         }[stepper.activeItemIndex] ?? stepperDefault">
+        </ng-container>
+    </div>
+</main>
+
+<ng-template #stepperLoadLocalization>
+    <app-load-file-localization [mode]="'export'"></app-load-file-localization>
+</ng-template>
+
+
+<ng-template #stepperDefault>
+    <p>DEFAULT TEMPLATE</p>
+</ng-template>

@@ -25,6 +25,7 @@ import { LocalizationComponent } from './components/localization/localization.co
 import { MainGroupsComponent } from './components/main-groups/main-groups.component';
 import { TuiSidebarModule } from "@taiga-ui/addon-mobile";
 import { TuiActiveZoneModule, TuiLetModule } from "@taiga-ui/cdk";
+import { ExportTranslationComponent } from './components/export-translation/export-translation.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { TuiActiveZoneModule, TuiLetModule } from "@taiga-ui/cdk";
     DialogAssetsComponent,
     LoadFileLocalizationComponent,
     LocalizationComponent,
-    MainGroupsComponent
+    MainGroupsComponent,
+    ExportTranslationComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { switchMap, of } from 'rxjs';
@@ -11,6 +11,8 @@ import { FileReaderLocalizationService } from 'src/app/core/services/file-reader
   styleUrls: ['./load-file-localization.component.scss']
 })
 export class LoadFileLocalizationComponent {
+  @Input() mode: 'import' | 'export' = 'import';
+
   readonly fileControl: FormControl<TuiFileLike | null> = new FormControl();
   readonly loadedFile$ = this.fileControl.valueChanges.pipe(
     switchMap(file => (file ? this.onReadFile(file) : of(null)))
@@ -20,7 +22,14 @@ export class LoadFileLocalizationComponent {
   }
 
   onReadFile(file: TuiFileLike) {
-    this.fileLocalizationReader.onReadFile(file as File);
+    switch (this.mode) {
+      case 'import':
+        this.fileLocalizationReader.onReadFile(file as File);
+        break;
+      case 'export':
+        this.fileLocalizationReader.onExportFile(file as File);
+        break;
+    }
     return of(file);
   }
 

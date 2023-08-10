@@ -23,6 +23,23 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(data);
         }
 
+        [HttpGet("verified")]
+        public async Task<ActionResult> Veried()
+        {
+            var data = await _cMongoClient.GetCollection<LocalizationKey>().Find(_ => true).FirstOrDefaultAsync();
+            if (data == null) return Ok(new { Bulk = true });
+            return Ok(new { Bulk = false });
+        }
+
+
+        [HttpGet("export")]
+        public async Task<ActionResult> GetExport()
+        {
+            var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Translated == true);
+            var data = await cursor.ToListAsync();
+            return Ok(data);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(List<LocalizationKey> keys)
         {
