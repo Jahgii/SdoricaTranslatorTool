@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TuiBreakpointService } from '@taiga-ui/core';
-import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
-import { IGroup, ILanguage } from 'src/app/core/interfaces/i-dialog-group';
+import { ILanguage } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
+import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
@@ -41,6 +42,7 @@ export class DialogAssetsComponent {
     private api: ApiService,
     private local: LocalStorageService,
     private route: ActivatedRoute,
+    public libreTranslate: LibreTranslateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) { }
 
@@ -83,5 +85,9 @@ export class DialogAssetsComponent {
 
       });
     this.previousPropagationValue = name;
+  }
+
+  public onMachineTranslate(data: IDialogAsset[]) {
+    this.libreTranslate.onTranslateDialogs(data[this.activeItemIndex].Model.$content);
   }
 }

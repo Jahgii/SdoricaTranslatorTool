@@ -33,6 +33,16 @@
         <ng-container *ngIf="keys$; else selectCategory">
             <ng-container tuiTableFilters>
                 <tui-scrollbar *ngIf="keys$ | async as keys; else loading">
+                    <div>
+                        <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
+                            [overlay]="true">
+                            <button tuiIconButton type="button" appearance="icon" shape="square"
+                                tuiHint="Translate all dialog with Libre Translate" [tuiHintAppearance]="'onDark'"
+                                (click)="onMachineTranslate(keys)" icon="tuiIconBox"
+                                [disabled]="!(libreTranslate.serverReady$ | async)">
+                            </button>
+                        </tui-loader>
+                    </div>
                     <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar"
                         [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
                         <table class="tui-table" style="table-layout: fixed;" tuiTable
@@ -127,7 +137,8 @@
                                     <td *tuiCell="'Translation'" tuiTd>
                                         <tui-text-area [(ngModel)]="item.Translations['ReplaceLang']"
                                             [expandable]="true" [tuiTextfieldSize]="'m'"
-                                            (ngModelChange)="onTranslationChange($event, keys, item)">
+                                            (ngModelChange)="onTranslationChange($event, keys, item)"
+                                            >
                                             ......
                                         </tui-text-area>
                                     </td>

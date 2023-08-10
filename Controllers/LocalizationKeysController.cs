@@ -63,10 +63,6 @@ namespace SdoricaTranslatorTool.Controllers
 
                 try
                 {
-                    //var keyCollection = _cMongoClient.GetCollection<LocalizationKey>();
-                    //list.AddRange(keys);
-                    //var resultWrites = await keyCollection.BulkWriteAsync(list);
-
                     await _cMongoClient.Create<LocalizationKey>(session, keys);
 
                     await session.CommitTransactionAsync();
@@ -80,6 +76,46 @@ namespace SdoricaTranslatorTool.Controllers
 
 
             return Ok();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(LocalizationKey key)
+        {
+            using (var session = await _cMongoClient.StartSessionAsync())
+            {
+                session.StartTransaction();
+
+                try
+                {
+                    var category = await _cMongoClient.GetCollection<LocalizationCategory>().Find(e => e.Name == key.Category).FirstOrDefaultAsync();
+                    var oldKey = await _cMongoClient.GetCollection<LocalizationKey>().Find(e => e.Name == key.Name).FirstOrDefaultAsync();
+
+                    if (oldKey.Translated != key.Translated) {
+                        category.KeysTranslated += key.Translated ? 1 : -1;
+                    }
+
+                    var updateKeyTranslated = Builders<LocalizationCategory>.Update.Set(e => e.KeysTranslated, category.KeysTranslated);
+                    var updateTranslations = Builders<LocalizationKey>.Update.Set(e => e.Translations, key.Translations);
+                    var updateTranslated = Builders<LocalizationKey>.Update.Set(e => e.Translated, key.Translated);
+
+                    await _cMongoClient.Update<LocalizationCategory>(session, e => e.Name == key.Category, updateKeyTranslated);
+                    await _cMongoClient.Update<LocalizationKey>(session, e => e.Name == key.Name, updateTranslations);
+                    await _cMongoClient.Update<LocalizationKey>(session, e => e.Name == key.Name, updateTranslated);
+
+                    
+
+
+                    await session.CommitTransactionAsync();
+                }
+                catch
+                {
+                    await session.AbortTransactionAsync();
+                    return StatusCode(500);
+                }
+            }
+
+
+            return Ok(key);
         }
 
         private async Task<bool> VerifiedKey(string category, string name)

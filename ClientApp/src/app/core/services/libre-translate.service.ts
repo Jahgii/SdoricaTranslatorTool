@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ILibreTranslateError, ILibreTranslateLanguages, ILibreTranslateResponse } from '../interfaces/i-libre-translate';
 import { LocalStorageService } from './local-storage.service';
+import { IDialog } from '../interfaces/i-dialog-asset';
+import { ILocalizationKey } from '../interfaces/i-localizations';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class LibreTranslateService {
   public testing$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public serverAlive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public serverReady$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public translating$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public languages!: ILibreTranslateLanguages[];
   public targetLanguages: string[] | undefined;
   public url: string | undefined;
@@ -102,6 +105,43 @@ export class LibreTranslateService {
 
   public onTargetChange(code: string) {
     this.local.setLibreTranslateTarget(code);
+  }
+
+  public async onTranslateDialogs(dialogs: IDialog[]) {
+    this.translating$.next(true);
+    for (let index = 0; index < dialogs.length; index++) {
+      let translatedText = await this.onTranslate(dialogs[index].OriginalText);
+      if (translatedText) dialogs[index].Text = translatedText;
+    }
+    this.translating$.next(false);
+  }
+
+  public async onTranslateKeys(keys: ILocalizationKey[], currentLang: string) {
+    this.translating$.next(true);
+    for (let index = 0; index < keys.length; index++) {
+      keys[index].Translations[currentLang]
+
+      var key = Object.keys(keys[index].Translations).find(key => key.toLowerCase() === currentLang);
+      if (!key) return;
+
+      let translatedText = await this.onTranslate(keys[index].Translations[key]);
+      if (translatedText) keys[index].Translations['ReplaceLang'] = translatedText;
+    }
+    this.translating$.next(false);
+  }
+
+  public async onTranslate(text: string) {
+    let body = this.getTranslationBody(text);
+    return await firstValueFrom(this.http.post<ILibreTranslateResponse>(`${this.url}translate`, body))
+      .then(
+        r => {
+          if (r.translatedText) return r.translatedText;
+          return undefined;
+        },
+        (r: HttpErrorResponse) => {
+          return undefined;
+        }
+      );
   }
 
 }

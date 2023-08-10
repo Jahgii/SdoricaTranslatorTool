@@ -12,11 +12,23 @@
         <ng-container *ngIf="breakpointService$ | async as breakpoint">
             <ng-container *ngIf="(dialogAssets$ | async) as data; else loading;">
                 <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
-                    <tui-tabs [(activeItemIndex)]="activeItemIndex" class="tui-space_bottom-2">
-                        <button *ngFor="let item of data" tuiTab>
-                            {{item.Number}}
-                        </button>
-                    </tui-tabs>
+                    <div style="position: relative;">
+                        <tui-tabs [(activeItemIndex)]="activeItemIndex" class="tui-space_bottom-2">
+                            <button *ngFor="let item of data" tuiTab>
+                                {{item.Number}}
+                            </button>
+                        </tui-tabs>
+                        <div style="position: absolute; right: 0; bottom: 0;">
+                            <tui-loader class="loader" [showLoader]="(libreTranslate.translating$ | async) ?? false"
+                                [inheritColor]="true" [overlay]="true">
+                                <button tuiIconButton type="button" appearance="icon" shape="square"
+                                    tuiHint="Translate all dialog with Libre Translate" [tuiHintAppearance]="'onDark'"
+                                    (click)="onMachineTranslate(data)" icon="tuiIconBox"
+                                    [disabled]="!(libreTranslate.serverReady$ | async)">
+                                </button>
+                            </tui-loader>
+                        </div>
+                    </div>
                     <ng-container *ngIf="data[activeItemIndex] as dialogAsset">
                         <table style="table-layout: fixed;" tuiTable [columns]="['OriginalText', 'Translation']"
                             [@popIn]>
@@ -67,8 +79,10 @@
                                                     class="dialog-speaker-name" />
                                             </div>
                                             <div style="position: absolute; top: 64px; left: 168px; max-width: 450px;">
-                                                <textarea [(ngModel)]="item.Text" cols="4" class="dialog-translation">
-                                                                </textarea>
+                                                <textarea [(ngModel)]="item.Text"
+                                                    [disabled]="(libreTranslate.translating$ | async) ?? true" cols="4"
+                                                    class="dialog-translation">
+                                                </textarea>
                                             </div>
                                         </div>
                                     </td>
@@ -100,6 +114,14 @@
                                     <tui-tooltip [content]="propagationTooltip" direction="right"
                                         [appearance]="'onDark'">
                                     </tui-tooltip>
+                                    <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false"
+                                        [inheritColor]="true" [overlay]="true">
+                                        <button tuiIconButton type="button" appearance="icon" shape="square"
+                                            tuiHint="Translate all dialog with Libre Translate"
+                                            [tuiHintAppearance]="'onDark'" (click)="onMachineTranslate(data)"
+                                            icon="tuiIconBox" [disabled]="!(libreTranslate.serverReady$ | async)">
+                                        </button>
+                                    </tui-loader>
                                 </div>
                             </ng-template>
                         </div>
@@ -134,8 +156,10 @@
                                                 class="dialog-speaker-name" />
                                         </div>
                                         <div style="position: absolute; top: 64px; left: 168px; max-width: 450px;">
-                                            <textarea [(ngModel)]="item.Text" cols="4" class="dialog-translation">
-                                                </textarea>
+                                            <textarea [(ngModel)]="item.Text"
+                                                [disabled]="(libreTranslate.translating$ | async) ?? true" cols="4"
+                                                class="dialog-translation">
+                                            </textarea>
                                         </div>
                                     </div>
                                     <hr class="tui-space_top-2">

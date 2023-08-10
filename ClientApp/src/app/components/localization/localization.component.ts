@@ -6,6 +6,7 @@ import { popinAnimation } from 'src/app/core/animations/popin';
 import { ILanguage } from 'src/app/core/interfaces/i-dialog-group';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
+import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
@@ -49,7 +50,11 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   public selectedCategoryIndex!: number;
   public selectedCategory!: ILocalizationCategory;
 
-  constructor(private api: ApiService, private local: LocalStorageService) { }
+  constructor(
+    private api: ApiService,
+    private local: LocalStorageService,
+    public libreTranslate: LibreTranslateService
+  ) { }
 
   ngOnInit(): void {
     this.subsLanguage = this.language.valueChanges.subscribe((lang: string) => {
@@ -97,18 +102,24 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     return translations[key];
   }
 
-  public onTranslatedCheck(check: boolean, keys: ILocalizationKey[], key: ILocalizationKey) {
+  public async onTranslatedCheck(check: boolean, keys: ILocalizationKey[], key: ILocalizationKey) {
     if (check) this.selectedCategory.KeysTranslated += 1;
     else this.selectedCategory.KeysTranslated -= 1;
 
+    await this.onKeyTranslated(key);
+
     if (!this.propagateTranslation) return;
-    this.getPropagateKeys(keys, key).forEach(key => {
-      if (key.Translated === check) return;
-      
+
+    let propagateKeys = this.getPropagateKeys(keys, key);
+
+    for (let index = 0; index < propagateKeys.length; index++) {
+      let keyToPropagate = propagateKeys[index];
+      if (keyToPropagate.Translated === check) return;
       if (check) this.selectedCategory.KeysTranslated += 1;
       else this.selectedCategory.KeysTranslated -= 1;
-      key.Translated = check;
-    });
+      keyToPropagate.Translated = check;
+      await this.onKeyTranslated(keyToPropagate);
+    }
   }
 
   public onTooltipCheck(scrollTooltip?: TuiScrollbarComponent) {
@@ -133,6 +144,21 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     keysToPropagate.splice(keyIndex, 1);
 
     return keysToPropagate;
+  }
+
+  public async onKeyTranslated(key: ILocalizationKey) {
+    await firstValueFrom(this.api.put('localizationkeys', key))
+      .then(
+        r => {
+
+        },
+        error => {
+        }
+      );
+  }
+
+  public onMachineTranslate(keys: ILocalizationKey[]) {
+    this.libreTranslate.onTranslateKeys(keys, this.language.value);
   }
 
 }
