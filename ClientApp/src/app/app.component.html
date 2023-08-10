@@ -1,5 +1,5 @@
 <tui-root style="height: 100%;">
   <app-nav-menu>
   </app-nav-menu>
-  <router-outlet></router-outlet>
+  <router-outlet *ngIf="(languageOrigin.ready$ | async)"></router-outlet>
 </tui-root>

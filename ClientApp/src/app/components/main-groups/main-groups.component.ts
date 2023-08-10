@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
-import { IMainGroup, ILanguage } from 'src/app/core/interfaces/i-dialog-group';
+import { IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 
 @Component({
   selector: 'app-main-groups',
@@ -16,39 +15,19 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
   ],
 })
 export class MainGroupsComponent {
-  public showBlockStatus: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public mainGroups$!: Observable<IMainGroup[]>;
-  public languages!: string[];
-  public language: FormControl = new FormControl('', Validators.required);
-  private subsLanguage!: Subscription;
   public order = new Map();
+  private subsLanguage!: Subscription;
 
-  constructor(private api: ApiService, private local: LocalStorageService) { }
+  constructor(
+    private api: ApiService,
+    readonly languageOrigin: LanguageOriginService
+  ) { }
 
   ngOnInit(): void {
-    this.subsLanguage = this.language.valueChanges.subscribe((lang: string) => {
-      this.local.setDefaultLang(lang);
+    this.subsLanguage = this.languageOrigin.language$.subscribe((lang: string) => {
       this.mainGroups$ = this.api.getWithHeaders('maingroups', { language: lang });
     });
-
-    firstValueFrom(this.api.get<ILanguage[]>('languages'))
-      .then(r => {
-        if (r.length == 0) {
-          this.showBlockStatus.next(true);
-          return;
-        }
-
-        this.languages = r.map(e => e.Name);
-
-        let defaultLang = this.local.getDefaultLang();
-        let lang = r.find(e => e.Name == defaultLang);
-
-        if (!lang) {
-          lang = r[0];
-          this.local.setDefaultLang(lang.Name);
-        }
-        this.language.patchValue(lang.Name);
-      });
   }
 
   ngOnDestroy(): void {

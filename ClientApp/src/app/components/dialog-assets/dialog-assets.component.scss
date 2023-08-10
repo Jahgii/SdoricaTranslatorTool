@@ -1,3 +1,5 @@
+@import 'node_modules/@taiga-ui/core/styles/taiga-ui-local.scss';
+
 .localization-container {
     display: grid;
     grid-template-columns: 200px 1fr;
@@ -98,5 +100,17 @@
     width: 320px;
     filter: brightness(0);
     opacity: 0.1;
-    // mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 1)));
+}
+
+.wrapper {
+    @include inset-border(bottom, light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tabs {
+    width: 'calc(100% - 15.625rem)';
+    justify-content: flex-end;
+    box-shadow: none;
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { tuiPure, TuiStringHandler, TuiContextWithImplicit } from '@taiga-ui/cdk';
 import { BehaviorSubject } from 'rxjs';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
+import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 
 @Component({
@@ -13,7 +14,10 @@ export class NavMenuComponent {
   public openSetting: boolean = false;
   public nightMode$ = new BehaviorSubject<boolean>(false);
 
-  constructor(public libreTranslate: LibreTranslateService) { }
+  constructor(
+    public libreTranslate: LibreTranslateService,
+    readonly languageOrigin: LanguageOriginService
+  ) { }
 
   public switchTheme(): void {
     this.nightMode$.next(!this.nightMode$.value);

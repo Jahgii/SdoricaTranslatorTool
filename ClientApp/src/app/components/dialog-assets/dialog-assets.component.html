@@ -1,25 +1,23 @@
 <div style="padding: 1em;">
-    <div class="tui-space_top-3" style="display: flex; flex-direction: row-reverse;"
-        *ngIf="languages && languages.length > 1">
-        <tui-select style="width: 180px;" tuiTextfieldSize="m" [formControl]="language">
-            Language
-            <input tuiTextfield placeholder="..." />
-            <tui-data-list-wrapper *tuiDataList [items]="languages">
-            </tui-data-list-wrapper>
-        </tui-select>
-    </div>
-    <ng-container *ngIf="(language.valueChanges | async)">
+    <ng-container *ngIf="(languageOrigin.language$ | async)">
         <ng-container *ngIf="breakpointService$ | async as breakpoint">
             <ng-container *ngIf="(dialogAssets$ | async) as data; else loading;">
                 <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
-                    <div style="position: relative;">
-                        <tui-tabs [(activeItemIndex)]="activeItemIndex" class="tui-space_bottom-2">
-                            <button *ngFor="let item of data" tuiTab>
-                                {{item.Number}}
-                            </button>
-                        </tui-tabs>
-                        <div style="position: absolute; right: 0; bottom: 0;">
-                            <tui-loader class="loader" [showLoader]="(libreTranslate.translating$ | async) ?? false"
+                    <div class="wrapper tui-space_bottom-2">
+                        <div style="display: flex; align-items: center;">
+                            <span class="tui-text_h6 tui-space_right-4">File Number: </span>
+                            <tui-tabs [(activeItemIndex)]="activeItemIndex" class="tabs">
+                                <button *ngFor="let item of data" tuiTab>
+                                    {{item.Number}}
+                                </button>
+                            </tui-tabs>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span class="tui-space_right-1">Propagation:</span>
+                            <tui-toggle [showIcons]="true" [(ngModel)]="propagateTranslation"></tui-toggle>
+                            <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
+                            </tui-tooltip>
+                            <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false"
                                 [inheritColor]="true" [overlay]="true">
                                 <button tuiIconButton type="button" appearance="icon" shape="square"
                                     tuiHint="Translate all dialog with Libre Translate" [tuiHintAppearance]="'onDark'"
@@ -40,11 +38,6 @@
                                     </th>
                                     <th tuiTh *tuiHead="'Translation'" [sticky]="true" [sorter]="null">
                                         Translation
-                                        <tui-toggle class="tui-space_left-2" [showIcons]="true"
-                                            [(ngModel)]="propagateTranslation"></tui-toggle>
-                                        <tui-tooltip [content]="propagationTooltip" direction="right"
-                                            [appearance]="'onDark'">
-                                        </tui-tooltip>
                                     </th>
                                 </tr>
                             </thead>

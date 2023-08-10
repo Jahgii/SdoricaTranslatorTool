@@ -7,7 +7,7 @@
         </button>
     </tui-block-status>
 
-    <ng-container *ngIf="(language.valueChanges | async)">
+    <ng-container *ngIf="(languageOrigin.language.value)">
         <div *ngIf="size$ | async as size" class="container">
             <tui-block-status class="card" [card]="true">
                 <img tuiSlot="top" alt="hidden content" src="./assets/images/localization.svg" class="image" />
