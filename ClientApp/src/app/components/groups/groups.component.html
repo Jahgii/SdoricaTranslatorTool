@@ -8,7 +8,12 @@
                         <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
                         <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
                         <h2 class="title">{{ item.Name }}</h2>
-                        <h4 class="title">Files: {{ item.Files }}</h4>
+                        <ng-container *ngIf="(item.TranslatedFiles/item.Files) < 1; else completed">
+                            Translated: {{ item.TranslatedFiles }} / {{ item.Files }}
+                        </ng-container>
+                        <ng-template #completed>
+                            Translated: <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                        </ng-template>
                     </div>
                 </tui-tile>
             </tui-tiles>

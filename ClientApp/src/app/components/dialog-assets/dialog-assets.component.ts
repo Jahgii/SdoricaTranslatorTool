@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TuiBreakpointService } from '@taiga-ui/core';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -28,6 +28,9 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
     return text.toLowerCase().includes(value.toLowerCase());
   };
 
+  public pendingChanges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public changes$: BehaviorSubject<IDialogAsset | undefined> = new BehaviorSubject<IDialogAsset | undefined>(undefined);
+  private subsChanges!: Subscription;
   public openOption: boolean = false;
   public propagateTranslation: boolean = true;
   public previousPropagationValue: string = "";
@@ -49,10 +52,29 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
     this.subsLanguage = this.languageOrigin.language$.subscribe((lang: string) => {
       this.dialogAssets$ = this.api.getWithHeaders('dialogassets', { language: lang, mainGroup: mainGroup, group: group });
     });
+    this.subsChanges = this.changes$.pipe(
+      debounceTime(1000)
+    ).subscribe(async dialogAsset => {
+      if (!dialogAsset) return;
+      await firstValueFrom(this.api.put('dialogassets', dialogAsset))
+        .then(
+          r => {
+
+          },
+          error => { console.log("CANT SAVE DATA"); }
+        );
+      this.pendingChanges$.next(false);
+    });
   }
 
   ngOnDestroy(): void {
     this.subsLanguage.unsubscribe();
+    this.subsChanges.unsubscribe();
+  }
+
+  public onTranslatedChange(data: IDialogAsset[]) {
+    this.pendingChanges$.next(true);
+    this.changes$.next(data[this.activeItemIndex]);
   }
 
   public onSpeakerNameChange(name: string, data: IDialogAsset[]) {
@@ -62,9 +84,18 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
 
       });
     this.previousPropagationValue = name;
+    this.pendingChanges$.next(true);
+    this.changes$.next(data[this.activeItemIndex]);
   }
 
-  public onMachineTranslate(data: IDialogAsset[]) {
-    this.libreTranslate.onTranslateDialogs(data[this.activeItemIndex].Model.$content);
+  public onTextChange(dialogAsset: IDialogAsset) {
+    this.pendingChanges$.next(true);
+    this.changes$.next(dialogAsset);
+  }
+
+  public async onMachineTranslate(data: IDialogAsset[]) {
+    await this.libreTranslate.onTranslateDialogs(data[this.activeItemIndex].Model.$content);
+    this.pendingChanges$.next(true);
+    this.changes$.next(data[this.activeItemIndex]);
   }
 }

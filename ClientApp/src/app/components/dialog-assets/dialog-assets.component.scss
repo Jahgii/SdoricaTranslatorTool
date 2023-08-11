@@ -23,7 +23,7 @@
 }
 
 .viewport {
-    height: calc(100vh - var(--header-height) - 12em);
+    height: calc(100vh - var(--header-height) - 8em);
 }
 
 .row-selected {
@@ -110,7 +110,10 @@
 }
 
 .tabs {
-    width: 'calc(100% - 15.625rem)';
     justify-content: flex-end;
     box-shadow: none;
+}
+
+.tabs-mobil {
+    width: 15.625rem;
 }

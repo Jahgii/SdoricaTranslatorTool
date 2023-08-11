@@ -31,7 +31,6 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(new { Bulk = false });
         }
 
-
         [HttpGet("export")]
         public async Task<ActionResult> GetExport()
         {
