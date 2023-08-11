@@ -23,6 +23,15 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(data);
         }
 
+        [HttpGet("search")]
+        public async Task<ActionResult> Search([FromHeader] string language, [FromHeader] string text)
+        {
+            var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Translations[language].ToLower().Contains(text.ToLower()));
+            var data = await cursor.ToListAsync();
+            return Ok(data);
+        }
+
+
         [HttpGet("verified")]
         public async Task<ActionResult> Veried()
         {

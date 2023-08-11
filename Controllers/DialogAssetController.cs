@@ -63,7 +63,7 @@ namespace SdoricaTranslatorTool.Controllers
 
                 try
                 {
-                    var group = await _cMongoClient.GetCollection<Group>().Find(e => e.OriginalName == dialogAsset.Group && e.Language == dialogAsset.Language).FirstOrDefaultAsync();
+                    var group = await _cMongoClient.GetCollection<Group>().Find(e => e.OriginalName == dialogAsset.Group && e.Language == dialogAsset.Language && e.MainGroup == dialogAsset.MainGroup).FirstOrDefaultAsync();
                     var mainGroup = await _cMongoClient.GetCollection<MainGroup>().Find(e => e.OriginalName == dialogAsset.MainGroup && e.Language == dialogAsset.Language).FirstOrDefaultAsync();
                     var oldDialog = await _cMongoClient.GetCollection<DialogAsset>().Find(e => e.OriginalFilename == dialogAsset.OriginalFilename).FirstOrDefaultAsync();
 

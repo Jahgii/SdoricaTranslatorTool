@@ -14,7 +14,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let mainGroup of fileReader.dialogAssetsMainGroups[fileReader.defaultLanguage.value] | keyvalue">
+                            <tr
+                                *ngFor="let mainGroup of fileReader.dialogAssetsMainGroups[fileReader.defaultLanguage.value] | keyvalue">
                                 <td tuiTd class="name-column">
                                     {{mainGroup.value.OriginalName}}
                                 </td>
@@ -33,7 +34,7 @@
                 </form>
             </tui-scrollbar>
         </li>
-        <li class="tui-list__item">
+        <li class="tui-list__item" *ngIf="groups">
             Groups
             <tui-scrollbar>
                 <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="30"
@@ -53,14 +54,14 @@
                                 </tr>
                             </thead>
                             <tbody tuiTbody>
-                                <tr *cdkVirtualFor="let group of fileReader.dialogAssetsGroups[fileReader.defaultLanguage.value] | keyvalue" tuiTr>
+                                <tr *cdkVirtualFor="let group of groups" tuiTr>
                                     <td *tuiCell="'OriginalName'" class="name-column" tuiTd>
-                                        {{group.value.OriginalName}}
+                                        {{group.OriginalName}}
                                     </td>
                                     <td *tuiCell="'Name'" tuiTd>
-                                        <tui-input [(ngModel)]="group.value.Name" tuiTextfieldSize="m"
+                                        <tui-input [(ngModel)]="group.Name" tuiTextfieldSize="m"
                                             [tuiTextfieldLabelOutside]="true" type="text"
-                                            [name]="group.value.OriginalName" (ngModelChange)="onGroupChange()"
+                                            [name]="group.OriginalName" (ngModelChange)="onGroupChange()"
                                             required>
                                             Name
                                             <input tuiTextfield required placeholder="..." />

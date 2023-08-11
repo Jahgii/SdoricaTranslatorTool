@@ -24,8 +24,9 @@ import { LoadFileLocalizationComponent } from './components/load-file-localizati
 import { LocalizationComponent } from './components/localization/localization.component';
 import { MainGroupsComponent } from './components/main-groups/main-groups.component';
 import { TuiSidebarModule } from "@taiga-ui/addon-mobile";
-import { TuiActiveZoneModule, TuiLetModule } from "@taiga-ui/cdk";
+import { TuiActiveZoneModule, TuiAutoFocusModule, TuiLetModule } from "@taiga-ui/cdk";
 import { ExportTranslationComponent } from './components/export-translation/export-translation.component';
+import { LocalizationSearchComponent } from './components/localization-search/localization-search.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ExportTranslationComponent } from './components/export-translation/expo
     LoadFileLocalizationComponent,
     LocalizationComponent,
     MainGroupsComponent,
-    ExportTranslationComponent
+    ExportTranslationComponent,
+    LocalizationSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -84,6 +86,7 @@ import { ExportTranslationComponent } from './components/export-translation/expo
     TuiGroupModule,
     TuiToggleModule,
     TuiInputInlineModule,
+    TuiAutoFocusModule,
     TuiDropdownModule,
     TuiSidebarModule,
     TuiActiveZoneModule,

@@ -2,18 +2,32 @@
     <ng-container *ngIf="(languageOrigin.language$ | async)">
         <ng-container *ngIf="(groups$ | async) as data; else loading">
             <tui-tiles class="tiles tui-space_top-3" [debounce]="100" [(order)]="order" [@popIn]>
-                <tui-tile *ngFor="let item of data; let index = index" class="tile" [style.order]="order.get(index)"
+                <tui-tile *ngFor="let group of data; let index = index" class="tile" [style.order]="order.get(index)"
                     [width]="1" [height]="1" [@popIn]>
-                    <div class="content" routerLink="{{item.OriginalName}}">
-                        <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
-                        <tui-svg tuiTileHandle src="tuiIconDragLarge" class="handle"></tui-svg>
-                        <h2 class="title">{{ item.Name }}</h2>
-                        <ng-container *ngIf="(item.TranslatedFiles/item.Files) < 1; else completed">
-                            Translated: {{ item.TranslatedFiles }} / {{ item.Files }}
+                    <div class="content">
+                        <h2>
+                            <tui-input-inline *ngIf="group.editing; else groupName;" tuiAutoFocus
+                                [(ngModel)]="group.Name" (focusedChange)="onFocusedChange($any($event), group)"
+                                (keydown.enter.prevent)="onEditGroupName(group)">
+                                Type a name
+                            </tui-input-inline>
+                            <ng-template #groupName>
+                                <div style="display: flex;">
+                                    <span>{{ group.Name }}</span>
+                                    <button tuiIconButton type="button" title="Edit heading" size="xs" appearance="icon"
+                                        icon="tuiIconEdit2" class="tui-space_left-1" (click)="toogle(group)"></button>
+                                </div>
+                            </ng-template>
+                        </h2>
+                        <ng-container *ngIf="(group.TranslatedFiles/group.Files) < 1; else completed">
+                            Translated: {{ group.TranslatedFiles }} / {{ group.Files }}
                         </ng-container>
                         <ng-template #completed>
                             Translated: <tui-svg src="tuiIconCheckCircle"></tui-svg>
                         </ng-template>
+                        <button style="position: absolute; bottom: 0; right: 0;" tuiIconButton
+                            icon="tuiIconArrowRightCircle" appearance="icon" shape="square"
+                            routerLink="{{group.OriginalName}}"></button>
                     </div>
                 </tui-tile>
             </tui-tiles>

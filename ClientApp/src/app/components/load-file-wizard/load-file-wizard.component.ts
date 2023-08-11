@@ -3,13 +3,15 @@ import { TuiStepperComponent } from '@taiga-ui/kit';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FileReaderLocalizationService } from 'src/app/core/services/file-reader-localization.service';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
+import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
   selector: 'app-load-file-wizard',
   templateUrl: './load-file-wizard.component.html',
   styleUrls: ['./load-file-wizard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [FileReaderService, FileReaderLocalizationService]
 })
 export class LoadFileWizardComponent implements OnDestroy {
   @ViewChild(TuiStepperComponent) stepper!: TuiStepperComponent;
@@ -19,7 +21,7 @@ export class LoadFileWizardComponent implements OnDestroy {
   private subsStepperfour!: Subscription;
   private subsStepperfive!: Subscription;
 
-  public activeItemIndex = 4;
+  public activeItemIndex = 0;
   public languageSelected = false;
 
   public languagesSelected!: string[];
@@ -29,6 +31,7 @@ export class LoadFileWizardComponent implements OnDestroy {
   constructor(
     public fileReader: FileReaderService,
     public fileLocalizationReader: FileReaderLocalizationService,
+    public languageOrigin: LanguageOriginService,
     private storage: LocalStorageService,
   ) {
     this.onFileReader();
@@ -64,6 +67,7 @@ export class LoadFileWizardComponent implements OnDestroy {
     this.subsStepperfive = this.fileLocalizationReader.fileProgressState$.subscribe(state => {
       if (state == 'finish') {
         this.activeItemIndex = 5;
+        this.languageOrigin.onRetriveLanguages();
         this.stepper.activate(5);
       }
     });

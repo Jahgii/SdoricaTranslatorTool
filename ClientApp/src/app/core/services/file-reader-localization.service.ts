@@ -4,9 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { decode, encode } from '@msgpack/msgpack';
 import { ApiService } from './api.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class FileReaderLocalizationService {
   public fileProgressState$: BehaviorSubject<'reading' | 'reading content' | 'uploading categories' | 'uploading keys' | 'finish' | undefined> =
     new BehaviorSubject<'reading' | 'reading content' | 'uploading categories' | 'uploading keys' | 'finish' | undefined>(undefined);
@@ -88,7 +86,6 @@ export class FileReaderLocalizationService {
   }
 
   public async onExportFile(file: File) {
-    console.log(file.type);
     this.fileExportProgressState$.next('reading');
     var reader = new FileReader();
     reader.onload = (ev: ProgressEvent<FileReader>) => this.onDecodeFileExport(reader, file.name, ev);

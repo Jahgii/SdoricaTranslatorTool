@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TuiScrollbarComponent } from '@taiga-ui/core';
-import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, firstValueFrom, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { ILanguage } from 'src/app/core/interfaces/i-dialog-group';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
@@ -45,10 +45,24 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   public languages!: string[];
   public language: FormControl = new FormControl('', Validators.required);
   private subsLanguage!: Subscription;
-  public categories$: Observable<ILocalizationCategory[]> = this.api.get('localizationcategories');
+  public categories$: Observable<ILocalizationCategory[]> = this.api.get<ILocalizationCategory[]>('localizationcategories')
+    .pipe(map(r => {
+      let searchCategory: ILocalizationCategory = {
+        Name: "SEARCH",
+        Keys: r.reduce((ac, v) => {
+          return ac + v.Keys;
+        }, 0),
+        KeysTranslated: r.reduce((ac, v) => {
+          return ac + v.KeysTranslated;
+        }, 0)
+      }
+      r.unshift(searchCategory);
+      return r;
+    }));
   public keys$!: Observable<ILocalizationKey[]>;
   public selectedCategoryIndex!: number;
   public selectedCategory!: ILocalizationCategory;
+  public searchCategory$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private api: ApiService,
@@ -94,6 +108,9 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     this.selectedCategory = category;
     this.selectedCategoryIndex = index;
     this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
+
+    if (category.Name == 'SEARCH') this.searchCategory$.next(true);
+    else this.searchCategory$.next(false);
   }
 
   public onRenderDefaultLanguage(translations: { [language: string]: string }): string {

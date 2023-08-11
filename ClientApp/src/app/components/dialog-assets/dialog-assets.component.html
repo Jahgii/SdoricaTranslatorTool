@@ -40,11 +40,10 @@
                                     [@popIn]>
                                     <thead>
                                         <tr tuiThGroup>
-                                            <th tuiTh *tuiHead="'OriginalText'" [sticky]="true" [sorter]="null"
-                                                style="width: 100%;">
+                                            <th tuiTh *tuiHead="'OriginalText'" [sorter]="null" style="width: 100%;">
                                                 Original
                                             </th>
-                                            <th tuiTh *tuiHead="'Translation'" [sticky]="true" [sorter]="null">
+                                            <th tuiTh *tuiHead="'Translation'" [sorter]="null">
                                                 Translation
                                             </th>
                                         </tr>
@@ -55,7 +54,7 @@
                                                 {{item.OriginalText}}
                                             </td>
                                             <td *tuiCell="'Translation'" tuiTd>
-                                                <div [ngStyle]="{'zoom': breakpoint === 'desktopSmall' ? '0.9' : 1}">
+                                                <div [ngStyle]="{'zoom': breakpoint === 'desktopSmall' ? '0.8' : 1}">
                                                     <div style="display: flex;">
                                                         <img class="dialog-translation-background"
                                                             src="/assets/images/dialog_paper.png" alt="dialot_paper">
@@ -68,8 +67,8 @@
                                                             src="/assets/images/figure_base2.png" alt="base"
                                                             loading="lazy">
                                                         <img style="width: 128px; height: 128px; position: absolute; bottom: 24px; left: 24px;"
-                                                            src="/assets/images/portraits/{{item.IconName}}"
-                                                            onerror="this.onerror=null; this.src='/assets/images/portrait-miss.svg'"
+                                                            src="/assets/images/portraits/{{item.IconName}}.png"
+                                                            onerror="this.src='/assets/images/portrait-miss.svg'"
                                                             alt="portrait not found" width="100" height="120"
                                                             loading="lazy">
                                                         <img style="width: 148px; height: 148px; position: absolute; bottom: 12px; left: 18px; opacity: 0.50;"
@@ -165,7 +164,7 @@
                                             <img style="width: 128px; height: 128px; position: absolute; bottom: 24px; left: 24px;"
                                                 src="/assets/images/figure_base2.png" alt="base" loading="lazy">
                                             <img style="width: 128px; height: 128px; position: absolute; bottom: 24px; left: 24px;"
-                                                src="/assets/images/portraits/{{item.IconName}}"
+                                                src="/assets/images/portraits/{{item.IconName}}.png"
                                                 onerror="this.src='/assets/images/portrait-miss.svg';"
                                                 alt="portrait not found" width="100" height="120" loading="lazy">
                                             <img style="width: 148px; height: 148px; position: absolute; bottom: 12px; left: 18px; opacity: 0.50;"

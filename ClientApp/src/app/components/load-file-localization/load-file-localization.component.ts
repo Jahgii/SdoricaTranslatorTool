@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { switchMap, of } from 'rxjs';
-import { encode, decode } from "@msgpack/msgpack";
 import { FileReaderLocalizationService } from 'src/app/core/services/file-reader-localization.service';
 
 @Component({

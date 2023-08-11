@@ -8,9 +8,7 @@ import { IGroup, ILanguage, IMainGroup } from '../interfaces/i-dialog-group';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import * as JSZip from 'jszip';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class FileReaderService {
   public fileProgressState$: BehaviorSubject<'reading' | 'reading content' | 'finish' | undefined> = new BehaviorSubject<'reading' | 'reading content' | 'finish' | undefined>(undefined);
   public fileProgressBarMax$: BehaviorSubject<number> = new BehaviorSubject<number>(100);
@@ -23,7 +21,7 @@ export class FileReaderService {
   public dialogAssetsUploading: { [language: string]: IWizardUpload } = {};
   public dialogAssetsUploadingError: { [language: string]: UploadingError[] } = {};
   public dialogAssetsMainGroups: { [language: string]: { [mainGroup: string]: IMainGroup } } = {};
-  public dialogAssetsGroups: { [language: string]: { [group: string]: IGroup } } = {};
+  public dialogAssetsGroups: { [language: string]: { [mainGroup: string]: { [group: string]: IGroup } } } = {};
   public file: TuiFileLike | null = null;
   public defaultLanguage: FormControl = this.fB.control(undefined, Validators.required);
 
@@ -77,7 +75,9 @@ export class FileReaderService {
 
     dialogAsset = this.onSetDialogAsset(fileNameSplit, fileName.replace("assets/DialogAssets/", ""), fileContent);
 
-    if (!dialogAsset) return;
+    if (!dialogAsset) {
+      return;
+    }
 
     this.addDialogAsset(dialogAsset);
     this.addDialogAssetGroup(dialogAsset);
@@ -172,8 +172,10 @@ export class FileReaderService {
           );
 
         let groups = [];
-        for (let key in this.dialogAssetsGroups[language]) {
-          groups.push(this.dialogAssetsGroups[language][key]);
+        for (let keyMainGroup in this.dialogAssetsGroups[language]) {
+          for (let keyGroup in this.dialogAssetsGroups[language][keyMainGroup]) {
+            groups.push(this.dialogAssetsGroups[language][keyMainGroup][keyGroup]);
+          }
         }
 
         await firstValueFrom(this.api.post('groups', groups))
@@ -235,8 +237,13 @@ export class FileReaderService {
       this.dialogAssetsGroups[dialogAsset.Language] = {};
     }
 
-    if (this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.Group] == null) {
-      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.Group] = {
+    if (this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup] == null) {
+      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup] = {};
+    }
+
+
+    if (this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup][dialogAsset.Group] == null) {
+      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup][dialogAsset.Group] = {
         Language: dialogAsset.Language,
         MainGroup: dialogAsset.MainGroup,
         OriginalName: dialogAsset.Group,
@@ -248,7 +255,7 @@ export class FileReaderService {
       }
     }
     else {
-      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.Group].Files += 1;
+      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup][dialogAsset.Group].Files += 1;
     }
   }
 

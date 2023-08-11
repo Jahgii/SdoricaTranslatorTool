@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 
 @Component({
@@ -15,9 +16,19 @@ export class LoadFileWizardGroupsComponent implements OnDestroy {
   public uploading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public invalidForm$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public uploadingFinish$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public groups!: IGroup[];
 
   constructor(public fileReader: FileReaderService) {
     document.addEventListener('invalid', this.onInvalid, true);
+    let groupsTemp = [];
+    let groupsService = fileReader.dialogAssetsGroups[fileReader.defaultLanguage.value];
+    for (let mainGroup in groupsService) {
+      for (let group in groupsService[mainGroup]) {
+        groupsTemp.push(groupsService[mainGroup][group]);
+      }
+    }
+
+    this.groups = groupsTemp;
   }
 
   ngOnDestroy(): void {

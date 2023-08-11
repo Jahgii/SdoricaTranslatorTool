@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable, Subscription, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, firstValueFrom, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -26,11 +26,43 @@ export class MainGroupsComponent {
 
   ngOnInit(): void {
     this.subsLanguage = this.languageOrigin.language$.subscribe((lang: string) => {
-      this.mainGroups$ = this.api.getWithHeaders('maingroups', { language: lang });
+      this.mainGroups$ = this.api.getWithHeaders<IMainGroup[]>('maingroups', { language: lang })
+        .pipe(
+          map(array => array.map(
+            g => {
+              g.editing = false;
+              return g;
+            }
+          ))
+        );
     });
   }
 
   ngOnDestroy(): void {
     this.subsLanguage.unsubscribe();
+  }
+
+  public onFocusedChange(focused: boolean, mainGroup: IMainGroup): void {
+    if (!focused) {
+      mainGroup.editing = false;
+      this.updateGroup(mainGroup);
+    }
+  }
+
+  public toogle(mainGroup: IMainGroup) {
+    mainGroup.editing = !mainGroup.editing
+  }
+
+  public onEditGroupName(mainGroup: IMainGroup) {
+    mainGroup.editing = false;
+    this.updateGroup(mainGroup);
+  }
+
+  private async updateGroup(mainGroup: IMainGroup) {
+    await firstValueFrom(this.api.put('maingroups', mainGroup))
+      .then(
+        r => { },
+        error => { }
+      );
   }
 }

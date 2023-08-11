@@ -18,7 +18,8 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpGet]
         public async Task<ActionResult> Get([FromHeader] string language, [FromHeader] string mainGroup)
         {
-            var cursor = await _cMongoClient.GetCollection<Group>().FindAsync(e => e.Language == language && e.MainGroup == mainGroup);
+            var cursor = _cMongoClient.GetCollection<Group>().Find(e => e.Language == language && e.MainGroup == mainGroup)
+                .SortBy(e => e.Name);
             var data = await cursor.ToListAsync();
             return Ok(data);
         }
@@ -50,6 +51,32 @@ namespace SdoricaTranslatorTool.Controllers
 
 
             return Ok();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(Group group)
+        {
+            using (var session = await _cMongoClient.StartSessionAsync())
+            {
+                session.StartTransaction();
+
+                try
+                {
+                    var updateGroupName = Builders<Group>.Update.Set(e => e.Name, group.Name);
+
+                    await _cMongoClient.Update<Group>(session, e => e.Id == group.Id, updateGroupName);
+
+                    await session.CommitTransactionAsync();
+                }
+                catch
+                {
+                    await session.AbortTransactionAsync();
+                    return StatusCode(500);
+                }
+            }
+
+
+            return Ok(group);
         }
 
         private async Task<bool> VerifiedGroup(string group, string language)

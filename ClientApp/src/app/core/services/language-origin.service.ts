@@ -20,6 +20,7 @@ export class LanguageOriginService {
     return await firstValueFrom(this.api.get<ILanguage[]>('languages'))
       .then(r => {
         if (r.length == 0) {
+          this.ready$.next(true);
           return false;
         }
 

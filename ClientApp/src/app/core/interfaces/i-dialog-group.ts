@@ -6,6 +6,9 @@ export interface IMainGroup {
     Files: number;
     TranslatedFiles: number;
     Order: number;
+
+    /** Only on UI */
+    editing?: boolean;
 }
 
 export interface IGroup {
@@ -17,6 +20,9 @@ export interface IGroup {
     Files: number;
     TranslatedFiles: number;
     Order: number;
+
+    /** Only on UI */
+    editing?: boolean;
 }
 
 export interface ILanguage {

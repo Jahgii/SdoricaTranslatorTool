@@ -1,5 +1,5 @@
 <div class="container-m">
-    <tui-block-status *ngIf="showBlockStatus | async">
+    <tui-block-status *ngIf="!(languageOrigin.language.value)">
         <h4>Its seem is your first time here, let's create all the necessary to begin the translation</h4>
 
         <button tuiButton appearance="secondary" [routerLink]="['/loading']">
@@ -30,7 +30,7 @@
             <tui-block-status class="card" [card]="true">
                 <img tuiSlot="top" alt="something wrong" src="./assets/images/import-translation.svg" class="image" />
                 Re/Import Files
-                <button tuiButton appearance="secondary" [size]="size">
+                <button tuiButton appearance="secondary" [size]="size" [routerLink]="['/loading']">
                     GO
                 </button>
             </tui-block-status>
