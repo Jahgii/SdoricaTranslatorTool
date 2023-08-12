@@ -26,6 +26,15 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(data);
         }
 
+        [HttpGet("export")]
+        public async Task<ActionResult> GetTranslated()
+        {
+            var cursor = _cMongoClient.GetCollection<DialogAsset>()
+                .Find(e => e.Translated == true);
+            var data = await cursor.ToListAsync();
+            return Ok(data);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> Post(List<DialogAsset> dialogAssets)
