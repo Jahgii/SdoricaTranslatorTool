@@ -11,6 +11,8 @@ import * as JSZip from 'jszip';
 @Injectable()
 export class FileReaderService {
   public fileProgressState$: BehaviorSubject<'reading' | 'reading content' | 'finish' | undefined> = new BehaviorSubject<'reading' | 'reading content' | 'finish' | undefined>(undefined);
+  public exportProgressState$: BehaviorSubject<'retriving-data' | 'replacing' | 'finish' | undefined> =
+    new BehaviorSubject<'retriving-data' | 'replacing' | 'finish' | undefined>(undefined);
   public fileProgressBarMax$: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   public fileProgressBar$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public uploadingFinish$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -198,6 +200,24 @@ export class FileReaderService {
         }
       );
 
+  }
+
+  async onExport() {
+    this.exportProgressState$.next('retriving-data');
+    firstValueFrom(this.api.get<IDialogAsset[]>('dialogassets/export'))
+      .then(
+        r => {
+          this.exportProgressState$.next('replacing');
+        },
+        error => {
+        }
+      );
+  }
+
+  private replaceDialogFiles(dialogs: IDialogAsset[]) {
+    dialogs.forEach(dialog => {
+      
+    });
   }
   //#endregion
 

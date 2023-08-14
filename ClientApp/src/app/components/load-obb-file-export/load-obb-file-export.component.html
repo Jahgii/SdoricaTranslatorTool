@@ -1,0 +1,40 @@
+<ng-container *ngIf="(fileReader.fileProgressState$ | async) == 'finish'; else uploadFile">
+    <tui-block-status>
+        <h4>File Export</h4>
+
+        <h6>{{fileReader.exportProgressState$ | async}}</h6>
+    </tui-block-status>
+</ng-container>
+<ng-template #uploadFile>
+    <tui-input-files *ngIf="!fileControl.value" class="file-upload-input" [formControl]="fileControl" [accept]="'.obb'"
+        [maxFileSize]="(1024*1024*1024*2)" [multiple]="false" (reject)="onRejectFile($event)">
+        <ng-template let-dragged>
+            <div *ngIf="dragged; else base" class="content">
+                <tui-marker-icon mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
+                <div>Drop it like it's hot!</div>
+            </div>
+            <ng-template #base>
+                <tui-marker-icon mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
+                <div>
+                    Drag and drop OBB file here or
+                    <a tuiLink>click to upload</a>
+                </div>
+            </ng-template>
+        </ng-template>
+    </tui-input-files>
+
+    <ng-container *ngIf="loadedFile$ | async as file">
+        <tui-block-status>
+            <h4 class="tui-space_bottom-3" style="display: flex; flex-direction: column;">
+                <span>Status: {{fileReader.fileProgressState$ | async}}</span>
+            </h4>
+            <ng-container *ngIf="(fileReader.fileProgressBarMax$ | async) as max">
+                <label *ngIf="(fileReader.fileProgressBar$ | async) as value" tuiProgressLabel>
+                    <span class="text">COMPLETED</span>
+                    <span class="percent">{{ (value / max * 100) | number : '1.2-2' }}%</span>
+                    <tui-progress-circle [value]="value" [max]="max" size="xl"></tui-progress-circle>
+                </label>
+            </ng-container>
+        </tui-block-status>
+    </ng-container>
+</ng-template>

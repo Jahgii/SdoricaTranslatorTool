@@ -1,17 +1,25 @@
 <main class="main-wizard">
     <tui-stepper #stepper class="wizard-stepper" orientation="vertical" [activeItemIndex]="activeItemIndex">
         <button tuiStep disabled>
+            Load Obb File
+        </button>
+        <button tuiStep disabled>
             Load Localization File
         </button>
     </tui-stepper>
 
     <div class="wizard-content">
         <ng-container [ngTemplateOutlet]="{
-            '0': stepperLoadLocalization,
+            '0': stepperLoadFile,
+            '1': stepperLoadLocalization,
          }[stepper.activeItemIndex] ?? stepperDefault">
         </ng-container>
     </div>
 </main>
+
+<ng-template #stepperLoadFile>
+    <app-load-obb-file-export></app-load-obb-file-export>
+</ng-template>
 
 <ng-template #stepperLoadLocalization>
     <app-load-file-localization [mode]="'export'"></app-load-file-localization>
