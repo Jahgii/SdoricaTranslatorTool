@@ -9,7 +9,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AppRoutingModule } from "./app-routing.module";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { TuiSidebarModule } from "@taiga-ui/addon-mobile";
+import { TuiActiveZoneModule, TuiAutoFocusModule, TuiLetModule } from "@taiga-ui/cdk";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from "./components/home/home.component";
@@ -23,11 +27,13 @@ import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.
 import { LoadFileLocalizationComponent } from './components/load-file-localization/load-file-localization.component';
 import { LocalizationComponent } from './components/localization/localization.component';
 import { MainGroupsComponent } from './components/main-groups/main-groups.component';
-import { TuiSidebarModule } from "@taiga-ui/addon-mobile";
-import { TuiActiveZoneModule, TuiAutoFocusModule, TuiLetModule } from "@taiga-ui/cdk";
 import { ExportTranslationComponent } from './components/export-translation/export-translation.component';
 import { LocalizationSearchComponent } from './components/localization-search/localization-search.component';
 import { LoadObbFileExportComponent } from './components/load-obb-file-export/load-obb-file-export.component';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -94,6 +100,14 @@ import { LoadObbFileExportComponent } from './components/load-obb-file-export/lo
     TuiActiveZoneModule,
     TuiLetModule,
     TuiBadgeModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }],
   bootstrap: [AppComponent]

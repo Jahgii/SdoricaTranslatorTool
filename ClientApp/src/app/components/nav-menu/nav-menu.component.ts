@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { tuiPure, TuiStringHandler, TuiContextWithImplicit } from '@taiga-ui/cdk';
 import { BehaviorSubject } from 'rxjs';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
@@ -16,7 +17,8 @@ export class NavMenuComponent {
 
   constructor(
     public libreTranslate: LibreTranslateService,
-    readonly languageOrigin: LanguageOriginService
+    readonly languageOrigin: LanguageOriginService,
+    readonly translate: TranslateService
   ) { }
 
   public switchTheme(): void {
@@ -25,6 +27,10 @@ export class NavMenuComponent {
 
   public onToogleSettings() {
     this.openSetting = !this.openSetting;
+  }
+
+  public onChangeAppLanguage() {
+
   }
 
   @tuiPure

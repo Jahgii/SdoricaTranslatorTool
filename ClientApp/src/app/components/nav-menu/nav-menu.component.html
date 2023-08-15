@@ -14,10 +14,10 @@
             <h3 style="text-align: center;">Language Configuration</h3>
             <hr>
             <p>App Language</p>
-            <tui-select class="tui-space_top-2" tuiTextfieldSize="s" [formControl]="languageOrigin.language">
+            <tui-select class="tui-space_top-2" tuiTextfieldSize="s" [(ngModel)]="translate.currentLang">
                 Language
                 <input tuiTextfield placeholder="..." />
-                <tui-data-list-wrapper *tuiDataList [items]="languageOrigin.languages">
+                <tui-data-list-wrapper *tuiDataList [items]="translate.langs">
                 </tui-data-list-wrapper>
             </tui-select>
             <p>Origin Language</p>

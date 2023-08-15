@@ -1,6 +1,6 @@
 <div class="container-m">
     <tui-block-status *ngIf="!(languageOrigin.language.value)">
-        <h4>Its seem is your first time here, let's create all the necessary to begin the translation</h4>
+        <h4>{{'empty_db' | translate}}</h4>
 
         <button tuiButton appearance="secondary" [routerLink]="['/loading']">
             Guide me
@@ -12,7 +12,7 @@
             <tui-block-status class="card" [card]="true">
                 <img tuiSlot="top" alt="hidden content" src="./assets/images/localization.svg" class="image" />
 
-                Main Game Localization
+                {{'main_localization' | translate}}
 
                 <button tuiButton appearance="secondary" [size]="size" [routerLink]="['/localization']">
                     GO
