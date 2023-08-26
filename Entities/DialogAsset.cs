@@ -51,4 +51,28 @@ namespace SdoricaTranslatorTool
         public decimal SfxVolume { get; set; }
 
     }
+
+    public class DialogAssetExport : DialogAsset
+    {
+        
+    }
+
+    public class DialogAssetModelExport
+    {
+        [BsonElement("$content")]
+        [JsonPropertyName("$content")]
+        public List<DialogExport>? Content { get; set; }
+    }
+
+    public class DialogExport : Dialog
+    {
+        public new string? Id { get; set; }
+        public new string? SpeakerName { get; set; }
+        public new string? SpeakerAssetName { get; set; }
+        public new string? IconName { get; set; }
+        public new int IconLocate { get; set; }
+        public new string? Text { get; set; }
+        public new string? SfxName { get; set; }
+        public new decimal SfxVolume { get; set; }
+    }
 }

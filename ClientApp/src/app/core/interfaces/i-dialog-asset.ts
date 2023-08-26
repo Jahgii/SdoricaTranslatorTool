@@ -27,6 +27,35 @@ export interface IDialogAsset {
     }
 }
 
+export interface IDialogAssetExport {
+    DialogAssetId?: string;
+    OriginalFilename?: string;
+    Filename?: string;
+    MainGroup?: string;
+    Group?: string;
+    Number?: number;
+    Language?: string;
+    Translated?: boolean;
+    Model: {
+        $content: IDialog[]
+    }
+    ReferenceAavatarImage: {
+        $content: string[]
+    }
+    ReferenceDialogAudio: {
+        $content: string[]
+    }
+    _objectReferences: {
+        $content: string[]
+    }
+    _serializedStateKeys: {
+        $content: string[]
+    }
+    _serializedStateValues: {
+        $content: string[]
+    }
+}
+
 export interface IDialog {
     _id: string;
     SpeakerName: string;

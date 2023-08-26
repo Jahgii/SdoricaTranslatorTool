@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IDialogAsset } from '../interfaces/i-dialog-asset';
+import { IDialogAsset, IDialogAssetExport } from '../interfaces/i-dialog-asset';
 import { BehaviorSubject, combineLatest, firstValueFrom, map } from 'rxjs';
 import { ApiService } from './api.service';
 import { TuiFileLike } from '@taiga-ui/kit';
@@ -7,10 +7,12 @@ import { IWizardUpload } from '../interfaces/i-wizard-upload';
 import { IGroup, ILanguage, IMainGroup } from '../interfaces/i-dialog-group';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import * as JSZip from 'jszip';
+import { blob } from 'stream/consumers';
 
 @Injectable()
 export class FileReaderService {
-  public fileProgressState$: BehaviorSubject<'reading' | 'reading content' | 'finish' | undefined> = new BehaviorSubject<'reading' | 'reading content' | 'finish' | undefined>(undefined);
+  public fileProgressState$: BehaviorSubject<'reading' | 'reading content' | 'generating-new-file' | 'finish' | undefined> =
+    new BehaviorSubject<'reading' | 'reading content' | 'generating-new-file' | 'finish' | undefined>(undefined);
   public exportProgressState$: BehaviorSubject<'retriving-data' | 'replacing' | 'finish' | undefined> =
     new BehaviorSubject<'retriving-data' | 'replacing' | 'finish' | undefined>(undefined);
   public fileProgressBarMax$: BehaviorSubject<number> = new BehaviorSubject<number>(100);
@@ -202,22 +204,66 @@ export class FileReaderService {
 
   }
 
-  async onExport() {
+  async onExportFile(file: File) {
     this.exportProgressState$.next('retriving-data');
-    firstValueFrom(this.api.get<IDialogAsset[]>('dialogassets/export'))
+    firstValueFrom(this.api.get<IDialogAssetExport[]>('dialogassets/export'))
       .then(
-        r => {
+        async dialogs => {
           this.exportProgressState$.next('replacing');
+          var zipBuffer = await this.replaceDialogFilesContent(file, dialogs);
+          this.onDownloadObb(zipBuffer, file.name)
         },
         error => {
         }
       );
   }
 
-  private replaceDialogFiles(dialogs: IDialogAsset[]) {
-    dialogs.forEach(dialog => {
-      
+  private async replaceDialogFilesContent(file: File, dialogs: IDialogAssetExport[]) {
+    const zip = new JSZip();
+    await zip.loadAsync(file);
+    this.fileProgressBarMax$.next(dialogs.length);
+    for (var index = 0; index < dialogs.length; index++) {
+      var dialog = dialogs[index];
+      var dialogFileName = dialog.OriginalFilename;
+
+      delete (dialog.DialogAssetId);
+      delete (dialog.OriginalFilename);
+      delete (dialog.Filename);
+      delete (dialog.MainGroup);
+      delete (dialog.Group);
+      delete (dialog.Number);
+      delete (dialog.Language);
+      delete (dialog.Translated);
+
+      zip.file(`assets/DialogAssets/${dialogFileName}`, JSON.stringify(dialog));
+      this.fileProgressBar$.next(index + 1);
+    }
+
+    this.fileProgressState$.next('finish');
+
+    this.fileProgressState$.next('generating-new-file');
+    this.fileProgressBarMax$.next(100);
+    this.fileProgressBar$.next(0);
+    return await zip.generateAsync({ type: 'blob' }, (metadata) => {
+      this.fileProgressBar$.next(metadata.percent);
     });
+  }
+
+  public async onDownloadObb(result: Blob, fileName: string) {
+    const url = window.URL.createObjectURL(result)
+
+    this.downloadURL(url, fileName);
+  }
+
+  downloadURL = (data: any, fileName: string) => {
+    const a = document.createElement('a');
+    a.href = data;
+    a.download = fileName;
+    a.type = '';
+    document.body.appendChild(a);
+    a.style.display = 'none';
+    a.click();
+    a.remove();
   }
   //#endregion
 

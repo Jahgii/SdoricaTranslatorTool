@@ -17,15 +17,15 @@ export class LoadObbFileExportComponent {
   );
 
   constructor(public fileReader: FileReaderService) {
-    this.exportSubs = this.fileReader.fileProgressState$.subscribe(e => {
-      if (e === 'finish') {
-        this.fileReader.onExport();
-      }
-    });
+    // this.exportSubs = this.fileReader.fileProgressState$.subscribe(e => {
+    //   if (e === 'finish') {
+    //     this.fileReader.onExport();
+    //   }
+    // });
   }
 
   async onReadFile(file: TuiFileLike) {
-    this.fileReader.onReadFile(file as File);
+    this.fileReader.onExportFile(file as File);
     return of(file);
   }
 
