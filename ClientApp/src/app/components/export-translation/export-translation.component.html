@@ -18,7 +18,7 @@
 </main>
 
 <ng-template #stepperLoadFile>
-    <app-load-obb-file-export></app-load-obb-file-export>
+    <app-load-obb-file-export (next)="activeItemIndex = 1"></app-load-obb-file-export>
 </ng-template>
 
 <ng-template #stepperLoadLocalization>

@@ -7,7 +7,6 @@ import { IWizardUpload } from '../interfaces/i-wizard-upload';
 import { IGroup, ILanguage, IMainGroup } from '../interfaces/i-dialog-group';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import * as JSZip from 'jszip';
-import { blob } from 'stream/consumers';
 
 @Injectable()
 export class FileReaderService {
@@ -28,6 +27,8 @@ export class FileReaderService {
   public dialogAssetsGroups: { [language: string]: { [mainGroup: string]: { [group: string]: IGroup } } } = {};
   public file: TuiFileLike | null = null;
   public defaultLanguage: FormControl = this.fB.control(undefined, Validators.required);
+
+  public url: string | undefined;
 
   private uploadStackSize = 50;
 
@@ -205,13 +206,32 @@ export class FileReaderService {
   }
 
   async onExportFile(file: File) {
+    this.file = file;
     this.exportProgressState$.next('retriving-data');
-    firstValueFrom(this.api.get<IDialogAssetExport[]>('dialogassets/export'))
+    await firstValueFrom(this.api.get<IDialogAssetExport[]>('dialogassets/export'))
       .then(
         async dialogs => {
-          this.exportProgressState$.next('replacing');
-          var zipBuffer = await this.replaceDialogFilesContent(file, dialogs);
-          this.onDownloadObb(zipBuffer, file.name)
+          if (typeof Worker !== 'undefined') {
+            const worker = new Worker(new URL('../../file.worker', import.meta.url));
+            worker.onmessage = ({ data }) => {
+              if (this.fileProgressBarMax$.value != data.maxPg)
+                this.fileProgressBarMax$.next(data.maxPg);
+              if (this.fileProgressState$.value != data.pgState)
+                this.fileProgressState$.next(data.pgState);
+              if (this.fileProgressBar$.value != Math.trunc(data.pg))
+                this.fileProgressBar$.next(Math.trunc(data.pg));
+
+              if (data.zipBlob) {
+                this.downloadURL(data.zipBlob, file.name);
+              }
+            };
+
+            worker.postMessage({ dialogs, file });
+          } else {
+            this.exportProgressState$.next('replacing');
+            var zip = await this.replaceDialogFilesContent(file, dialogs);
+            this.onDownloadObb(zip, file.name);
+          }
         },
         error => {
         }
@@ -235,35 +255,41 @@ export class FileReaderService {
       delete (dialog.Language);
       delete (dialog.Translated);
 
+      // dialog.Model.$content.forEach(e => delete (e.OriginalText));
+
       zip.file(`assets/DialogAssets/${dialogFileName}`, JSON.stringify(dialog));
       this.fileProgressBar$.next(index + 1);
     }
 
-    this.fileProgressState$.next('finish');
+    return zip;
+  }
 
+  public async onDownloadObb(zip: JSZip, fileName: string) {
     this.fileProgressState$.next('generating-new-file');
     this.fileProgressBarMax$.next(100);
     this.fileProgressBar$.next(0);
-    return await zip.generateAsync({ type: 'blob' }, (metadata) => {
+
+    var zipBlob = await zip.generateAsync({ type: 'blob' }, (metadata) => {
       this.fileProgressBar$.next(metadata.percent);
     });
+
+    this.downloadURL(zipBlob, fileName);
   }
 
-  public async onDownloadObb(result: Blob, fileName: string) {
-    const url = window.URL.createObjectURL(result)
+  downloadURL = (zipBlob: Blob, fileName: string) => {
+    this.url = window.URL.createObjectURL(zipBlob);
 
-    this.downloadURL(url, fileName);
-  }
-
-  downloadURL = (data: any, fileName: string) => {
     const a = document.createElement('a');
-    a.href = data;
+    a.href = this.url;
     a.download = fileName;
     a.type = '';
     document.body.appendChild(a);
     a.style.display = 'none';
-    a.click();
+    // a.click();
     a.remove();
+
+    this.exportProgressState$.next('finish');
+    this.fileProgressState$.next('finish');
   }
   //#endregion
 

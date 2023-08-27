@@ -1,8 +1,16 @@
 <ng-container *ngIf="(fileReader.fileProgressState$ | async) == 'finish'; else uploadFile">
     <tui-block-status>
-        <h4>File Export</h4>
+        <h4>Process completed</h4>
 
-        <h6>{{fileReader.exportProgressState$ | async}}</h6>
+        <p>To apply the translation only replace your obb file with the new one, remember to make a backup, just in
+            case you need</p>
+        <p>The obb file will automatically been download if not <a href="{{fileReader.url}}"
+                download="{{fileReader.file?.name}}">click here</a>
+        </p>
+
+        <button tuiButton appearance="secondary" (click)="onNext()">
+            {{'next' | translate }}
+        </button>
     </tui-block-status>
 </ng-container>
 <ng-template #uploadFile>
@@ -31,8 +39,8 @@
             <ng-container *ngIf="(fileReader.fileProgressBarMax$ | async) as max">
                 <label *ngIf="(fileReader.fileProgressBar$ | async) as value" tuiProgressLabel>
                     <span class="text">COMPLETED</span>
-                    <span class="percent">{{ (value / max * 100) | number : '1.2-2' }}%</span>
-                    <tui-progress-circle [value]="value" [max]="max" size="xl"></tui-progress-circle>
+                    <span class="percent">{{ (value / max * 100) | number : '1.0' }}%</span>
+                    <tui-progress-circle [max]="max" [value]="value" size="xl"></tui-progress-circle>
                 </label>
             </ng-container>
         </tui-block-status>

@@ -3,6 +3,7 @@ import { ILocalization, ILocalizationCategory, ILocalizationKey } from '../inter
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { decode, encode } from '@msgpack/msgpack';
 import { ApiService } from './api.service';
+import { TuiFileLike } from '@taiga-ui/kit';
 
 @Injectable()
 export class FileReaderLocalizationService {
@@ -16,6 +17,8 @@ export class FileReaderLocalizationService {
   public localizationCategories: ILocalizationCategory[] = [];
   public localizationKeys: ILocalizationKey[] = [];
   public uploadKeysUrl: 'localizationkeys/bulk' | 'localizationkeys' | undefined;
+  public file: TuiFileLike | null = null;
+  public url: string | undefined;
 
   private uploadStackSize = 1000;
 
@@ -86,6 +89,7 @@ export class FileReaderLocalizationService {
   }
 
   public async onExportFile(file: File) {
+    this.file = file;
     this.fileExportProgressState$.next('reading');
     var reader = new FileReader();
     reader.onload = (ev: ProgressEvent<FileReader>) => this.onDecodeFileExport(reader, file.name, ev);
@@ -157,6 +161,8 @@ export class FileReaderLocalizationService {
     });
 
     const url = window.URL.createObjectURL(blob)
+
+    this.url = url;
 
     this.downloadURL(url, fileName);
   }
