@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TuiScrollbarComponent } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
@@ -20,6 +20,27 @@ export class LocalizationSearchComponent {
   @Output() onTranslated = new EventEmitter<{ check: boolean, keys: ILocalizationKey[], key: ILocalizationKey }>();
   public search: FormControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
   public searchKey: FormControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
+
+  readonly filterForm = new FormGroup({
+    original: new FormControl(undefined),
+    translation: new FormControl(undefined),
+    translated: new FormControl(false)
+  });
+
+  readonly filterOriginalColumn = (item: { [language: string]: string }, value: string): boolean => {
+    if (!value) value = "";
+    return this.onRenderDefaultLanguage(item).toLowerCase().includes(value?.toLowerCase());
+  };
+
+  readonly filterTranslationColumn = (item: { [language: string]: string }, value: string): boolean => {
+    if (!value) value = "";
+    return item['ReplaceLang'].toLowerCase().includes(value?.toLowerCase());
+  };
+
+  readonly filterTranslatedColumn = (item: boolean, value: boolean): boolean => {
+    return true;
+  };
+
   public results$!: Observable<ILocalizationKey[]>;
   public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public propagateTranslation: boolean = true;

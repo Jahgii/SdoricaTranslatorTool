@@ -50,7 +50,7 @@
                     </tr>
                 </thead>
                 <tbody tuiTbody>
-                    <!-- <tr tuiTr>
+                    <tr tuiTr>
                         <td *tuiCell="'Language'" tuiTd>
                             <tui-input tuiTableFilter="Translations" [formControl]="filterForm.controls['original']"
                                 [tuiGenericFilter]="filterOriginalColumn" [tuiTextfieldSize]="'m'"
@@ -67,12 +67,13 @@
                         </td>
                         <td *tuiCell="'Translated'" tuiTd>
                             <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                <tui-checkbox [formControl]="filterForm.controls['translated']" tuiTableFilter="Translated"
-                                    [tuiGenericFilter]="filterTranslatedColumn" contentAlign="right">
+                                <tui-checkbox [formControl]="filterForm.controls['translated']"
+                                    tuiTableFilter="Translated" [tuiGenericFilter]="filterTranslatedColumn"
+                                    contentAlign="right">
                                 </tui-checkbox>
                             </div>
                         </td>
-                    </tr> -->
+                    </tr>
                     <tr *cdkVirtualFor="let item of keys | tuiTableFilters | async" tuiTr>
                         <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintAppearance]="'onDark'"
                             [tuiHintShowDelay]="200" class="tooltip-name-cell">
