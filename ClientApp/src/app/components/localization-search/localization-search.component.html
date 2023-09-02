@@ -6,8 +6,17 @@
             <input tuiTextfield type="text" />
         </tui-input>
         <button tuiButton (click)="onSearch()" [disabled]="search.invalid" size="m">Search</button>
+
+        <span class="tui-space_right-3"></span>
+
+        <tui-input class="tui-space_right-3" style="width: 200px;" [formControl]="searchKey" [tuiTextfieldSize]="'m'"
+            [tuiTextfieldCustomContent]="'tuiIconSearch'">
+            Search by Key
+            <input tuiTextfield type="text" />
+        </tui-input>
+        <button tuiButton (click)="onSearchKey()" [disabled]="searchKey.invalid" size="m">Search</button>
     </div>
-    
+
     <ng-container *ngIf="results$ | async as keys; else searchTemplate">
         <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="45"
             [maxBufferPx]="500" [minBufferPx]="400">
@@ -15,8 +24,8 @@
                 [columns]="['Language', 'Translation', 'Translated']" [@popIn]>
                 <thead>
                     <tr tuiThGroup>
-                        <th tuiTh *tuiHead="'Language'" [sticky]="true" [style.top.px]="-viewport['_renderedContentOffset']"
-                            [sorter]="null">
+                        <th tuiTh *tuiHead="'Language'" [sticky]="true"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
                             Original
                         </th>
                         <th tuiTh *tuiHead="'Translation'" [sticky]="true"
@@ -108,7 +117,7 @@
             </table>
         </cdk-virtual-scroll-viewport>
     </ng-container>
-    
+
     <ng-template #searchTemplate>
         <tui-block-status>
             <h4>...Type your search...</h4>

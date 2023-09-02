@@ -31,6 +31,14 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(data);
         }
 
+        [HttpGet("searchkey")]
+        public async Task<ActionResult> SearchByKey([FromHeader] string key)
+        {
+            var cursor = _cMongoClient.GetCollection<LocalizationKey>().Find(e => e.Name.Contains(key.ToLower())).SortBy(e => e.Name);
+            var data = await cursor.ToListAsync();
+            return Ok(data);
+        }
+
 
         [HttpGet("verified")]
         public async Task<ActionResult> Veried()
@@ -115,7 +123,8 @@ namespace SdoricaTranslatorTool.Controllers
                     var category = await _cMongoClient.GetCollection<LocalizationCategory>().Find(e => e.Name == key.Category).FirstOrDefaultAsync();
                     var oldKey = await _cMongoClient.GetCollection<LocalizationKey>().Find(e => e.Name == key.Name).FirstOrDefaultAsync();
 
-                    if (oldKey.Translated != key.Translated) {
+                    if (oldKey.Translated != key.Translated)
+                    {
                         category.KeysTranslated += key.Translated ? 1 : -1;
                     }
 
@@ -127,7 +136,7 @@ namespace SdoricaTranslatorTool.Controllers
                     await _cMongoClient.Update<LocalizationKey>(session, e => e.Name == key.Name, updateTranslations);
                     await _cMongoClient.Update<LocalizationKey>(session, e => e.Name == key.Name, updateTranslated);
 
-                    
+
 
 
                     await session.CommitTransactionAsync();
