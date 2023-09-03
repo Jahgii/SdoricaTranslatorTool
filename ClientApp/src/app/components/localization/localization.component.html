@@ -32,7 +32,7 @@
     <div class="localization-keys">
         <ng-container *ngIf="keys$; else selectCategory">
             <ng-container tuiTableFilters>
-                <tui-scrollbar *ngIf="keys$ | async as keys; else loading">
+                <ng-container *ngIf="keys$ | async as keys; else loading">
                     <ng-container *ngIf="searchCategory$ | async; else normal;">
                         <app-localization-search
                             (onTranslated)="onTranslatedCheck($event.check, $event.keys, $event.key)">
@@ -71,7 +71,8 @@
                                             <ng-template #propagationTooltip>
                                                 Propagation: When editing, propagates the changes made to all <span
                                                     class="tooltip-important-text">KEYS</span> with the same
-                                                <strong>Original</strong> value, in the current language, applies to the
+                                                <strong>Original</strong> value, in the current language, applies to
+                                                the
                                                 Translation and Translated(checkbox) columns.
                                             </ng-template>
                                         </th>
@@ -161,7 +162,7 @@
                             </table>
                         </cdk-virtual-scroll-viewport>
                     </ng-template>
-                </tui-scrollbar>
+                </ng-container>
                 <ng-template #loading>
                     <tui-block-status>
                         <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" [@popIn]>
