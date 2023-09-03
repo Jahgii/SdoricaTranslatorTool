@@ -90,7 +90,7 @@
                                     <li class="tooltip-important-text tui-text_body-xs" style="text-align: right;">
                                         <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>{{item.Name}}
                                     </li>
-                                    <li *ngFor="let key of item.Original| keyvalue | slice:0:-1">
+                                    <li *ngFor="let key of item.Original| keyvalue">
                                         <span class="tooltip-important-text">
                                             {{key.key}}:
                                         </span>
