@@ -18,8 +18,9 @@
                         <span>{{category.Name}}</span>
                     </td>
                     <td class="tui-table__td">
-                        <ng-container *ngIf="(category.KeysTranslated/category.Keys) < 1; else completed">
-                            {{category.KeysTranslated}}/{{category.Keys}}
+                        <ng-container
+                            *ngIf="(category.KeysTranslated[language]/category.Keys[language]) < 1; else completed">
+                            {{category.KeysTranslated[language]}}/{{category.Keys[language]}}
                         </ng-container>
                         <ng-template #completed>
                             <tui-svg src="tuiIconCheckCircle"></tui-svg>
@@ -86,7 +87,7 @@
                                 <tbody tuiTbody>
                                     <tr tuiTr>
                                         <td *tuiCell="'Language'" tuiTd>
-                                            <tui-input tuiTableFilter="Translations"
+                                            <tui-input tuiTableFilter="Original"
                                                 [formControl]="filterForm.controls['original']"
                                                 [tuiGenericFilter]="filterOriginalColumn" [tuiTextfieldSize]="'m'"
                                                 [tuiTextfieldIconLeft]="'tuiIconFilter'">
@@ -115,7 +116,7 @@
                                         <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip"
                                             [tuiHintAppearance]="'onDark'" [tuiHintShowDelay]="200"
                                             class="tooltip-name-cell">
-                                            {{onRenderDefaultLanguage(item.Translations)}}
+                                            {{onRenderDefaultLanguage(item.Original)}}
                                             <span
                                                 class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
                                                 <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>{{item.Name}}
@@ -131,7 +132,7 @@
                                                         <tui-svg src="tuiIconKey"
                                                             style="font: inherit;"></tui-svg>{{item.Name}}
                                                     </li>
-                                                    <li *ngFor="let key of item.Translations | keyvalue | slice:0:-1">
+                                                    <li *ngFor="let key of item.Original | keyvalue | slice:0:-1">
                                                         <span class="tooltip-important-text">
                                                             {{key.key}}:
                                                         </span>
@@ -144,8 +145,8 @@
                                                 src="tuiIconArrowDown" [@popIn]></tui-svg>
                                         </ng-template>
                                         <td *tuiCell="'Translation'" tuiTd>
-                                            <tui-text-area [(ngModel)]="item.Translations['ReplaceLang']"
-                                                [expandable]="true" [tuiTextfieldSize]="'m'"
+                                            <tui-text-area [(ngModel)]="item.Translations[language]" [expandable]="true"
+                                                [tuiTextfieldSize]="'m'"
                                                 (ngModelChange)="onTranslationChange($event, keys, item)">
                                                 ......
                                             </tui-text-area>
@@ -153,7 +154,7 @@
                                         <td *tuiCell="'Translated'" tuiTd>
                                             <div
                                                 style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                                <tui-checkbox [(ngModel)]="item.Translated"
+                                                <tui-checkbox [(ngModel)]="item.Translated[language]"
                                                     (ngModelChange)="onTranslatedCheck($event, keys, item)"></tui-checkbox>
                                             </div>
                                         </td>

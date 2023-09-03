@@ -26,7 +26,7 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpGet("search")]
         public async Task<ActionResult> Search([FromHeader] string language, [FromHeader] string text)
         {
-            var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Translations[language].ToLower().Contains(text.ToLower()));
+            var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Original[language].ToLower().Contains(text.ToLower()));
             var data = await cursor.ToListAsync();
             return Ok(data);
         }
@@ -49,9 +49,9 @@ namespace SdoricaTranslatorTool.Controllers
         }
 
         [HttpGet("export")]
-        public async Task<ActionResult> GetExport()
+        public async Task<ActionResult> GetExport([FromHeader] string language)
         {
-            var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Translated == true);
+            var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Translated[language] == true);
             var data = await cursor.ToListAsync();
             return Ok(data);
         }
@@ -112,7 +112,7 @@ namespace SdoricaTranslatorTool.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(LocalizationKey key)
+        public async Task<ActionResult> Put([FromHeader] string language, [FromBody] LocalizationKey key)
         {
             using (var session = await _cMongoClient.StartSessionAsync())
             {
@@ -125,7 +125,7 @@ namespace SdoricaTranslatorTool.Controllers
 
                     if (oldKey.Translated != key.Translated)
                     {
-                        category.KeysTranslated += key.Translated ? 1 : -1;
+                        category.KeysTranslated[language] += key.Translated[language] ? 1 : -1;
                     }
 
                     var updateKeyTranslated = Builders<LocalizationCategory>.Update.Set(e => e.KeysTranslated, category.KeysTranslated);

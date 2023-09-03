@@ -4,6 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { decode, encode } from '@msgpack/msgpack';
 import { ApiService } from './api.service';
 import { TuiFileLike } from '@taiga-ui/kit';
+import { LanguageOriginService } from './language-origin.service';
 
 @Injectable()
 export class FileReaderLocalizationService {
@@ -22,7 +23,7 @@ export class FileReaderLocalizationService {
 
   private uploadStackSize = 1000;
 
-  constructor(private api: ApiService) {
+  constructor(private api: ApiService, private languageOrigin: LanguageOriginService) {
     this.switchUploadKeysUrl();
   }
 
@@ -50,9 +51,14 @@ export class FileReaderLocalizationService {
     for (let categoryName in decodeResult.C) {
       var new_category: ILocalizationCategory = {
         Name: categoryName,
-        Keys: decodeResult.C[categoryName].D.length,
-        KeysTranslated: 0
+        Keys: {},
+        KeysTranslated: {}
       }
+
+      decodeResult.C[categoryName].K.forEach(k => {
+        new_category.Keys[k] = decodeResult.C[categoryName].D.length
+        new_category.KeysTranslated[k] = 0
+      });
 
       this.localizationCategories.push(new_category);
 
@@ -71,17 +77,18 @@ export class FileReaderLocalizationService {
             new_key = {
               Category: categoryName,
               Name: keyName,
-              Translated: false,
+              Translated: {},
+              Original: {},
               Translations: {}
             }
           }
 
-          new_key.Translations[langName] = text
+          new_key.Translated[langName] = false;
+          new_key.Original[langName] = text;
+          new_key.Translations[langName] = "";
         }
-        if (new_key) {
-          new_key.Translations['ReplaceLang'] = '';
-          this.localizationKeys.push(new_key);
-        }
+
+        if (new_key) this.localizationKeys.push(new_key);
       }
     }
 
@@ -99,7 +106,7 @@ export class FileReaderLocalizationService {
   private async onDecodeFileExport(reader: FileReader, fileName: string, ev: ProgressEvent<FileReader>) {
     var decodeResult = decode(reader.result as ArrayBuffer) as ILocalization;
     this.fileExportProgressState$.next('retriving-server-keys');
-    await firstValueFrom(this.api.get<ILocalizationKey[]>('localizationkeys/export'))
+    await firstValueFrom(this.api.getWithHeaders<ILocalizationKey[]>('localizationkeys/export', { language: this.languageOrigin.localizationLang }))
       .then(
         r => {
           this.localizationKeys = r;
@@ -111,12 +118,26 @@ export class FileReaderLocalizationService {
 
     this.fileExportProgressState$.next('replacing-content');
 
-    for (let key of this.localizationKeys) {
-      let keyIndexPosition = decodeResult.C[key.Category].K.findIndex(e => e === 'Key');
-      let keyIndex = decodeResult.C[key.Category].D.findIndex(e => e[keyIndexPosition] === key.Name);
-      /** @TODO Dynamic language on service */
-      let languageIndex = decodeResult.C[key.Category].K.findIndex(e => e === 'English');
-      decodeResult.C[key.Category].D[keyIndex][languageIndex] = key.Translations['ReplaceLang'];
+    for (let serverKey of this.localizationKeys) {
+      let keyIndexPosition = decodeResult.C[serverKey.Category].K.findIndex(e => e === 'Key');
+      let keyIndex = decodeResult.C[serverKey.Category].D.findIndex(e => e[keyIndexPosition] === serverKey.Name);
+
+      if (keyIndex == -1) {
+        let customLocalizationKey: string[] = [];
+        decodeResult.C[serverKey.Category].K.forEach((keys, index) => {
+          if (index != keyIndexPosition)
+            customLocalizationKey.push(serverKey.Translations[keys]);
+          else
+            customLocalizationKey.push(serverKey.Name);
+        });
+        decodeResult.C[serverKey.Category].D.push(customLocalizationKey);
+        keyIndex = decodeResult.C[serverKey.Category].D.length - 1;
+
+        console.log(customLocalizationKey);
+      }
+
+      let languageIndex = decodeResult.C[serverKey.Category].K.findIndex(e => e === this.languageOrigin.localizationLang);
+      decodeResult.C[serverKey.Category].D[keyIndex][languageIndex] = serverKey.Translations[this.languageOrigin.localizationLang];
     }
     this.fileExportProgressState$.next('finish');
 

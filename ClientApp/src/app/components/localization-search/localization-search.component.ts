@@ -29,27 +29,28 @@ export class LocalizationSearchComponent {
 
   readonly filterOriginalColumn = (item: { [language: string]: string }, value: string): boolean => {
     if (!value) value = "";
-    return this.onRenderDefaultLanguage(item).toLowerCase().includes(value?.toLowerCase());
+    return item[this.languageOrigin.localizationLang].toLowerCase().includes(value?.toLowerCase());
   };
 
   readonly filterTranslationColumn = (item: { [language: string]: string }, value: string): boolean => {
     if (!value) value = "";
-    return item['ReplaceLang'].toLowerCase().includes(value?.toLowerCase());
+    return item[this.languageOrigin.localizationLang].toLowerCase().includes(value?.toLowerCase());
   };
 
-  readonly filterTranslatedColumn = (item: boolean, value: boolean): boolean => {
+  readonly filterTranslatedColumn = (item: { [language: string]: boolean }, value: boolean): boolean => {
     return true;
   };
 
   public results$!: Observable<ILocalizationKey[]>;
   public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public propagateTranslation: boolean = true;
+  public language: string = '';
 
   constructor(
     private api: ApiService,
     private languageOrigin: LanguageOriginService
   ) {
-
+    this.language = this.languageOrigin.localizationLang;
   }
 
   public onSearch() {
@@ -80,9 +81,7 @@ export class LocalizationSearchComponent {
   }
 
   public onRenderDefaultLanguage(translations: { [language: string]: string }): string {
-    var key = Object.keys(translations).find(key => key.toLowerCase() === this.languageOrigin.language.value);
-    if (!key) return 'LANGUAGE NOT FOUND';
-    return translations[key];
+    return translations[this.languageOrigin.localizationLang];
   }
 
   public onTooltipCheck(scrollTooltip?: TuiScrollbarComponent) {
@@ -97,7 +96,7 @@ export class LocalizationSearchComponent {
     if (!this.propagateTranslation) return;
 
     this.getPropagateKeys(keys, key).forEach(key => {
-      key.Translations['ReplaceLang'] = translation;
+      key.Translations[this.languageOrigin.localizationLang] = translation;
     });
   }
 
@@ -110,7 +109,7 @@ export class LocalizationSearchComponent {
   }
 
   public async onKeyTranslated(key: ILocalizationKey) {
-    await firstValueFrom(this.api.put('localizationkeys', key))
+    await firstValueFrom(this.api.putWithHeaders('localizationkeys', { language: this.language }, key))
       .then(
         r => {
 

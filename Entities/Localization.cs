@@ -9,8 +9,8 @@ namespace SdoricaTranslatorTool.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
         public required string Name { get; set; }
-        public int Keys { get; set; }
-        public int KeysTranslated { get; set; }
+        public required Dictionary<string, int> Keys { get; set; }
+        public required Dictionary<string, int> KeysTranslated { get; set; }
     }
 
     public class LocalizationKey {
@@ -19,7 +19,8 @@ namespace SdoricaTranslatorTool.Entities
         public string? Id { get; set; }
         public required string Category { get; set; }
         public required string Name { get; set; }
-        public bool Translated { get; set; }
+        public required Dictionary<string, bool> Translated { get; set; }
+        public required Dictionary<string, string> Original { get; set; }
         public required Dictionary<string, string> Translations { get; set; }
     }
 }

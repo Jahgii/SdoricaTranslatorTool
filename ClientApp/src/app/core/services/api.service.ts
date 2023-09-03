@@ -26,4 +26,10 @@ export class ApiService {
   public put<T>(endpoint: string, body: Object): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}${endpoint}`, body);
   }
+
+  public putWithHeaders<T>(endpoint: string, headers: { [key: string]: any }, body: Object): Observable<T> {
+    const HEADERS = new HttpHeaders(headers);
+
+    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body, { headers: HEADERS });
+  }
 }

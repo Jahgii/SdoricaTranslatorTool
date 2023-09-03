@@ -1,14 +1,15 @@
 export interface ILocalizationCategory {
     Name: string;
-    Keys: number;
-    KeysTranslated: number;
+    Keys: { [language: string]: number };
+    KeysTranslated: { [language: string]: number };
 }
 
 export interface ILocalizationKey {
     Category: string;
     Name: string;
-    Translated: boolean;
-    Translations: { [language: string]: string }
+    Translated: { [language: string]: boolean };
+    Original: { [language: string]: string };
+    Translations: { [language: string]: string };
 }
 
 export interface ILocalization {

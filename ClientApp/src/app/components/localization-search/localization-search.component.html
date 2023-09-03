@@ -52,7 +52,7 @@
                 <tbody tuiTbody>
                     <tr tuiTr>
                         <td *tuiCell="'Language'" tuiTd>
-                            <tui-input tuiTableFilter="Translations" [formControl]="filterForm.controls['original']"
+                            <tui-input tuiTableFilter="Original" [formControl]="filterForm.controls['original']"
                                 [tuiGenericFilter]="filterOriginalColumn" [tuiTextfieldSize]="'m'"
                                 [tuiTextfieldIconLeft]="'tuiIconFilter'">
                                 Search by Original Column
@@ -77,7 +77,7 @@
                     <tr *cdkVirtualFor="let item of keys | tuiTableFilters | async" tuiTr>
                         <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintAppearance]="'onDark'"
                             [tuiHintShowDelay]="200" class="tooltip-name-cell">
-                            {{onRenderDefaultLanguage(item.Translations)}}
+                            {{onRenderDefaultLanguage(item.Original)}}
                             <span class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
                                 <tui-svg src="tuiIconBox" style="font: inherit;"></tui-svg>{{item.Category}}
                                 <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>{{item.Name}}
@@ -90,7 +90,7 @@
                                     <li class="tooltip-important-text tui-text_body-xs" style="text-align: right;">
                                         <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>{{item.Name}}
                                     </li>
-                                    <li *ngFor="let key of item.Translations | keyvalue | slice:0:-1">
+                                    <li *ngFor="let key of item.Original| keyvalue | slice:0:-1">
                                         <span class="tooltip-important-text">
                                             {{key.key}}:
                                         </span>
@@ -103,14 +103,14 @@
                                 src="tuiIconArrowDown" [@popIn]></tui-svg>
                         </ng-template>
                         <td *tuiCell="'Translation'" tuiTd>
-                            <tui-text-area [(ngModel)]="item.Translations['ReplaceLang']" [expandable]="true"
+                            <tui-text-area [(ngModel)]="item.Translations[language]" [expandable]="true"
                                 [tuiTextfieldSize]="'m'" (ngModelChange)="onTranslationChange($event, keys, item)">
                                 ......
                             </tui-text-area>
                         </td>
                         <td *tuiCell="'Translated'" tuiTd>
                             <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                <tui-checkbox [(ngModel)]="item.Translated"
+                                <tui-checkbox [(ngModel)]="item.Translated[language]"
                                     (ngModelChange)="onTranslatedCheck($event, keys, item)"></tui-checkbox>
                             </div>
                         </td>

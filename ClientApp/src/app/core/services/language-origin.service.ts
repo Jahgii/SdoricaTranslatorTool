@@ -4,6 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { ApiService } from './api.service';
 import { ILanguage } from '../interfaces/i-dialog-group';
+import { LanguageType } from '../interfaces/i-dialog-asset';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class LanguageOriginService {
   public language$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public languages!: string[];
   public language: FormControl = new FormControl(undefined);
+  public localizationLang: string = '';
 
   constructor(private api: ApiService, private local: LocalStorageService) { }
 
@@ -36,6 +38,8 @@ export class LanguageOriginService {
 
         this.language.valueChanges.subscribe(lang => {
           this.local.setDefaultLang(lang);
+          const languageIndex = Object.keys(LanguageType).indexOf(this.language.value);
+          this.localizationLang = Object.values(LanguageType)[languageIndex];
           this.language$.next(lang);
         });
 

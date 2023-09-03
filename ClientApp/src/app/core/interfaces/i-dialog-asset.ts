@@ -67,3 +67,11 @@ export interface IDialog {
     SfxName: string;
     SfxVolume: number;
 }
+
+export enum LanguageType {
+    english = 'English',
+    japanese = 'Japanese',
+    chinesetraditional = 'Chinese',
+    chinesesimplified = 'ChineseSimplified',
+    korean = 'Korean'
+}
