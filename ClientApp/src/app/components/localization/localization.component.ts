@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { TuiScrollbarComponent } from '@taiga-ui/core';
-import { BehaviorSubject, Observable, Subscription, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
-import { LanguageType } from 'src/app/core/interfaces/i-dialog-asset';
-import { ILanguage } from 'src/app/core/interfaces/i-dialog-group';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
   selector: 'app-localization',

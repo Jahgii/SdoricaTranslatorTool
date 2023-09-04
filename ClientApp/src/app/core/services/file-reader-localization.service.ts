@@ -124,16 +124,16 @@ export class FileReaderLocalizationService {
 
       if (keyIndex == -1) {
         let customLocalizationKey: string[] = [];
+
         decodeResult.C[serverKey.Category].K.forEach((keys, index) => {
           if (index != keyIndexPosition)
             customLocalizationKey.push(serverKey.Translations[keys]);
           else
             customLocalizationKey.push(serverKey.Name);
         });
+        
         decodeResult.C[serverKey.Category].D.push(customLocalizationKey);
         keyIndex = decodeResult.C[serverKey.Category].D.length - 1;
-
-        console.log(customLocalizationKey);
       }
 
       let languageIndex = decodeResult.C[serverKey.Category].K.findIndex(e => e === this.languageOrigin.localizationLang);

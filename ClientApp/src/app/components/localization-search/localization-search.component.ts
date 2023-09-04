@@ -54,20 +54,10 @@ export class LocalizationSearchComponent {
   }
 
   public onSearch() {
-    let language = this.languageOrigin.language.value as string;
-    switch (language) {
-      case 'chinesesimplified':
-        language = 'ChineseSimplified';
-        break;
-      case 'chinesetraditional':
-        language = 'Chinese';
-        break;
-    }
-
     this.results$ = this.api
       .getWithHeaders('localizationkeys/search',
         {
-          language: language.charAt(0).toUpperCase() + language.slice(1),
+          language: this.languageOrigin.localizationLang,
           text: this.search.value
         });
   }
