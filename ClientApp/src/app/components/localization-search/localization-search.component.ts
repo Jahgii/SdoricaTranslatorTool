@@ -91,7 +91,7 @@ export class LocalizationSearchComponent {
   }
 
   private getPropagateKeys(keys: ILocalizationKey[], key: ILocalizationKey) {
-    var keysToPropagate = keys.filter(e => this.onRenderDefaultLanguage(e.Translations) === this.onRenderDefaultLanguage(key.Translations));
+    var keysToPropagate = keys.filter(e => e.Original[this.languageOrigin.localizationLang] === key.Original[this.languageOrigin.localizationLang]);
     var keyIndex = keysToPropagate.findIndex(e => e === key);
     keysToPropagate.splice(keyIndex, 1);
 
