@@ -12,7 +12,7 @@ addEventListener('message', ({ data }) => {
       var dialog = data.dialogs[index];
       var dialogFileName = dialog.OriginalFilename;
 
-      delete (dialog.DialogAssetId);
+      delete (dialog.Id);
       delete (dialog.OriginalFilename);
       delete (dialog.Filename);
       delete (dialog.MainGroup);

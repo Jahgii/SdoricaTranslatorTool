@@ -1,5 +1,5 @@
 export interface IDialogAsset {
-    DialogAssetId: string;
+    Id: string;
     OriginalFilename: string;
     Filename: string;
     MainGroup: string;
@@ -28,7 +28,7 @@ export interface IDialogAsset {
 }
 
 export interface IDialogAssetExport {
-    DialogAssetId?: string;
+    Id?: string;
     OriginalFilename?: string;
     Filename?: string;
     MainGroup?: string;

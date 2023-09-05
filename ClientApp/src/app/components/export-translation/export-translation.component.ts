@@ -10,7 +10,7 @@ import { FileReaderService } from 'src/app/core/services/file-reader.service';
   providers: [FileReaderService, FileReaderLocalizationService]
 })
 export class ExportTranslationComponent {
-  public activeItemIndex = 1;
+  public activeItemIndex = 0;
   public languageSelected = false;
 
   

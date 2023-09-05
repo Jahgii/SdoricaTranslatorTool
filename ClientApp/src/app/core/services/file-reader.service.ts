@@ -204,7 +204,9 @@ export class FileReaderService {
       );
 
   }
-
+  //#endregion
+  
+  //#region OBB Export
   async onExportFile(file: File) {
     this.file = file;
     this.exportProgressState$.next('retriving-data');
@@ -246,7 +248,7 @@ export class FileReaderService {
       var dialog = dialogs[index];
       var dialogFileName = dialog.OriginalFilename;
 
-      delete (dialog.DialogAssetId);
+      delete (dialog.Id);
       delete (dialog.OriginalFilename);
       delete (dialog.Filename);
       delete (dialog.MainGroup);
