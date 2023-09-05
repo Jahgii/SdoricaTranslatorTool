@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TuiFileLike } from '@taiga-ui/kit';
-import { switchMap, of, Observable, Subscription } from 'rxjs';
+import { switchMap, of } from 'rxjs';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 
 @Component({

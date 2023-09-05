@@ -57,15 +57,15 @@ export interface IDialogAssetExport {
 }
 
 export interface IDialog {
-    _id: string;
+    ID: string;
     SpeakerName: string;
     SpeakerAssetName: string;
     IconName: string;
     IconLocate: number;
     OriginalText: string;
     Text: string;
-    SfxName: string;
-    SfxVolume: number;
+    sfxName: string;
+    sfxVolume: number;
 }
 
 export enum LanguageType {

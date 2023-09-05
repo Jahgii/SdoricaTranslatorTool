@@ -23,6 +23,7 @@ namespace SdoricaTranslatorTool.Controllers
                 .Find(e => e.Language == language && e.MainGroup == mainGroup && e.Group == group)
                 .SortBy(e => e.Number);
             var data = await cursor.ToListAsync();
+
             return Ok(data);
         }
 
@@ -32,6 +33,7 @@ namespace SdoricaTranslatorTool.Controllers
             var cursor = _cMongoClient.GetCollection<DialogAsset>()
                 .Find(e => e.Translated == true);
             var data = await cursor.ToListAsync();
+            
             return Ok(data);
         }
 
@@ -47,7 +49,7 @@ namespace SdoricaTranslatorTool.Controllers
                 try
                 {
                     FileSkip = await SkipAssets(dialogAssets);
-                    if(dialogAssets.Count > 0)
+                    if (dialogAssets.Count > 0)
                     {
                         await _cMongoClient.Create<DialogAsset>(session, dialogAssets);
                         await session.CommitTransactionAsync();
@@ -62,7 +64,7 @@ namespace SdoricaTranslatorTool.Controllers
 
             return Ok(new { FileSkip = FileSkip });
         }
-        
+
         [HttpPut]
         public async Task<ActionResult> Put(DialogAsset dialogAsset)
         {
@@ -85,7 +87,7 @@ namespace SdoricaTranslatorTool.Controllers
                     var updateGroupTranslated = Builders<Group>.Update.Set(e => e.TranslatedFiles, group.TranslatedFiles);
                     var updateMainTranslated = Builders<MainGroup>.Update.Set(e => e.TranslatedFiles, mainGroup.TranslatedFiles);
 
-                    await _cMongoClient.Replace<DialogAsset>(session, e=> e.OriginalFilename == dialogAsset.OriginalFilename, dialogAsset);
+                    await _cMongoClient.Replace<DialogAsset>(session, e => e.OriginalFilename == dialogAsset.OriginalFilename, dialogAsset);
                     await _cMongoClient.Update<Group>(session, e => e.Id == group.Id, updateGroupTranslated);
                     await _cMongoClient.Update<MainGroup>(session, e => e.Id == mainGroup.Id, updateMainTranslated);
 

@@ -40,21 +40,15 @@ namespace SdoricaTranslatorTool
 
     public class Dialog
     {
-        public string? Id { get; set; }
+        public string? ID { get; set; }
         public string? SpeakerName { get; set; }
         public string? SpeakerAssetName { get; set; }
         public string? IconName { get; set; }
         public int IconLocate { get; set; }
         public string? OriginalText { get; set; }
         public string? Text { get; set; }
-        public string? SfxName { get; set; }
-        public decimal SfxVolume { get; set; }
-
-    }
-
-    public class DialogAssetExport : DialogAsset
-    {
-        
+        public string? sfxName { get; set; }
+        public double sfxVolume { get; set; }
     }
 
     public class DialogAssetModelExport
@@ -72,7 +66,7 @@ namespace SdoricaTranslatorTool
         public new string? IconName { get; set; }
         public new int IconLocate { get; set; }
         public new string? Text { get; set; }
-        public new string? SfxName { get; set; }
-        public new decimal SfxVolume { get; set; }
+        public new string? sfxName { get; set; }
+        public new decimal sfxVolume { get; set; }
     }
 }
