@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
-import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
+import { IDialogAsset, IDialogAssetExport } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
@@ -98,4 +98,42 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
     this.pendingChanges$.next(true);
     this.changes$.next(data[this.activeItemIndex]);
   }
+
+  public onDownload(dialogAsset: IDialogAsset) {
+    var dialog = JSON.parse(JSON.stringify(dialogAsset)) as IDialogAssetExport;
+    var dialogFileName = dialog.OriginalFilename;
+
+    delete (dialog.Id);
+    delete (dialog.OriginalFilename);
+    delete (dialog.Filename);
+    delete (dialog.MainGroup);
+    delete (dialog.Group);
+    delete (dialog.Number);
+    delete (dialog.Language);
+    delete (dialog.Translated);
+
+    (dialog.Model.$content as any[]).forEach(e => delete (e.OriginalText));
+
+    var exportDialog = JSON.stringify(dialog);
+
+    const blob = new Blob([exportDialog], {
+      type: 'dialog'
+    });
+
+    const url = window.URL.createObjectURL(blob)
+
+    this.downloadURL(url, dialogFileName ?? "RENAME THE FILE TO CORRECT DIALOG NAME FILE");
+  }
+
+  downloadURL = (data: any, fileName: string) => {
+    const a = document.createElement('a');
+    a.href = data;
+    a.download = fileName;
+    a.type = '';
+    document.body.appendChild(a);
+    a.style.display = 'none';
+    a.click();
+    a.remove();
+  }
+
 }

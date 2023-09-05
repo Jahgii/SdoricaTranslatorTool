@@ -22,6 +22,10 @@
                             <tui-toggle [showIcons]="true" [(ngModel)]="propagateTranslation"></tui-toggle>
                             <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
                             </tui-tooltip>
+                            <button tuiIconButton type="button" appearance="icon" shape="square"
+                                tuiHint="Download Dialog File" [tuiHintAppearance]="'onDark'"
+                                (click)="onDownload(data[activeItemIndex])" icon="tuiIconDownload">
+                            </button>
                             <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false"
                                 [inheritColor]="true" [overlay]="true">
                                 <button tuiIconButton type="button" appearance="icon" shape="square"
