@@ -53,6 +53,53 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok();
         }
 
+        [HttpPost("reset")]
+        public async Task<ActionResult> ResetCategories()
+        {
+            var categories = await _cMongoClient
+                .GetCollection<LocalizationCategory>()
+                .Find(_ => true)
+                .ToListAsync();
+
+            categories.ForEach(async c =>
+            {
+                foreach (var keyLang in c.Keys)
+                {
+                    c.Keys[keyLang.Key] = (int)await _cMongoClient
+                        .GetCollection<LocalizationKey>()
+                        .Find(e => e.Category == c.Name)
+                        .CountDocumentsAsync();
+
+                    c.KeysTranslated[keyLang.Key] = (int)await _cMongoClient
+                        .GetCollection<LocalizationKey>()
+                        .Find(e => e.Category == c.Name && e.Translated[keyLang.Key])
+                        .CountDocumentsAsync();
+                }
+            });
+
+            using (var session = await _cMongoClient.StartSessionAsync())
+            {
+                session.StartTransaction();
+
+                try
+                {
+                    foreach (var c in categories)
+                    {
+                        await _cMongoClient.Replace<LocalizationCategory>(session, e => e.Id == c.Id, c);
+                    }
+
+                    await session.CommitTransactionAsync();
+                }
+                catch
+                {
+                    await session.AbortTransactionAsync();
+                    return StatusCode(500);
+                }
+            }
+
+            return Ok();
+        }
+
         private async Task<bool> VerifiedCategory(string name)
         {
             var query = await _cMongoClient.GetCollection<LocalizationCategory>().FindAsync<LocalizationCategory>(e => e.Name == name);
