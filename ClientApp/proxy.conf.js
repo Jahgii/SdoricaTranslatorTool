@@ -13,7 +13,7 @@ const PROXY_CONFIG = [
       "/localizationcategories",
       "/localizationkeys"
    ],
-    proxyTimeout: 10000,
+    proxyTimeout: 30000,
     target: target,
     secure: false,
     headers: {

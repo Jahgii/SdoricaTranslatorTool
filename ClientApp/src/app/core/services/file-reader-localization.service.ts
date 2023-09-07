@@ -17,11 +17,12 @@ export class FileReaderLocalizationService {
 
   public localizationCategories: ILocalizationCategory[] = [];
   public localizationKeys: ILocalizationKey[] = [];
-  public uploadKeysUrl: 'localizationkeys/bulk' | 'localizationkeys' | undefined;
+  public uploadKeysUrl: 'localizationkeys/bulk' | 'localizationkeys/import' | undefined;
   public file: TuiFileLike | null = null;
   public url: string | undefined;
 
   private uploadStackSize = 1000;
+  private maxThreads = 5;
 
   constructor(private api: ApiService, private languageOrigin: LanguageOriginService) {
     this.switchUploadKeysUrl();
@@ -31,7 +32,7 @@ export class FileReaderLocalizationService {
     await firstValueFrom(this.api.get<{ Bulk: boolean }>('localizationkeys/verified'))
       .then(
         r => {
-          this.uploadKeysUrl = r.Bulk ? 'localizationkeys/bulk' : 'localizationkeys';
+          this.uploadKeysUrl = r.Bulk ? 'localizationkeys/bulk' : 'localizationkeys/import';
           this.uploadStackSize = r.Bulk ? 1000 : 25;
         },
         error => { console.error("CANT CONNECT TO SERVER"); }
@@ -131,7 +132,7 @@ export class FileReaderLocalizationService {
           else
             customLocalizationKey.push(serverKey.Name);
         });
-        
+
         decodeResult.C[serverKey.Category].D.push(customLocalizationKey);
         keyIndex = decodeResult.C[serverKey.Category].D.length - 1;
       }
@@ -148,7 +149,7 @@ export class FileReaderLocalizationService {
     if (!this.uploadKeysUrl) return;
 
     this.fileProgressState$.next('uploading categories');
-    await firstValueFrom(this.api.post<{ FileSkip: number }>('localizationcategories', this.localizationCategories))
+    await firstValueFrom(this.api.post('localizationcategories', this.localizationCategories))
       .then(
         (result) => {
 
@@ -160,18 +161,40 @@ export class FileReaderLocalizationService {
 
     this.fileProgressState$.next('uploading keys');
     this.fileProgressBarMax$.next(this.localizationKeys.length);
-    while (this.localizationKeys.length > 0) {
-      let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
-      await firstValueFrom(this.api.post<{ FileSkip: number }>(this.uploadKeysUrl, keysSet))
-        .then(
-          (result) => {
-            this.fileProgressBar$.next(this.fileProgressBar$.value + this.uploadStackSize);
-            if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
-          },
-          (error) => {
+
+    if (typeof Worker !== 'undefined') {
+      var spliceCount = Math.ceil(this.localizationKeys.length / this.maxThreads);
+      var workers: Worker[] = [];
+      for (var threadIndex = 0; threadIndex < this.maxThreads; threadIndex++) {
+        workers.push(new Worker(new URL('../../keys.worker', import.meta.url)));
+        workers[threadIndex].onmessage = ({ data }) => {
+          if (data.finish) {
+            workers[data.i].terminate();
+            return;
           }
-        );
+          this.fileProgressBar$.next(this.fileProgressBar$.value + data.keysUploaded);
+          if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
+        };
+
+        var keys = this.localizationKeys.splice(0, spliceCount);
+        var uploadStackSize = this.uploadStackSize;
+        var url = this.uploadKeysUrl;
+        workers[threadIndex].postMessage({ keys, uploadStackSize, url, threadIndex });
+      }
     }
+    else
+      while (this.localizationKeys.length > 0) {
+        let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
+        await firstValueFrom(this.api.post<string[]>(this.uploadKeysUrl, keysSet))
+          .then(
+            (result) => {
+              this.fileProgressBar$.next(this.fileProgressBar$.value + this.uploadStackSize);
+              if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
+            },
+            (error) => {
+            }
+          );
+      }
   }
 
   public async onDownloadLocalization(result: ILocalization, fileName: string) {

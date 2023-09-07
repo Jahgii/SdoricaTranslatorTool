@@ -56,9 +56,10 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
+        [HttpPost("import")]
         public async Task<ActionResult> Post(List<LocalizationKey> keys)
         {
+            List<string> KeysToReplaced = new List<string>();
             using (var session = await _cMongoClient.StartSessionAsync())
             {
                 session.StartTransaction();
@@ -67,7 +68,14 @@ namespace SdoricaTranslatorTool.Controllers
                 {
                     foreach (var k in keys)
                     {
-                        if (await VerifiedKey(k.Category, k.Name)) continue;
+                        if (await VerifiedIfKeyExist(k.Category, k.Name))
+                        {
+                            var kToReplace = await UpdateKey(k);
+                            if (kToReplace == null) continue;
+                            KeysToReplaced.Add($"Category: {kToReplace.Category} | Key: {kToReplace.Name}");
+                            await _cMongoClient.Replace<LocalizationKey>(session, e => e.Id == kToReplace.Id, kToReplace);
+                            continue;
+                        };
 
                         await _cMongoClient.Create<LocalizationKey>(session, k);
                     }
@@ -81,8 +89,7 @@ namespace SdoricaTranslatorTool.Controllers
                 }
             }
 
-
-            return Ok();
+            return Ok(KeysToReplaced);
         }
 
         [HttpPost("bulk")]
@@ -149,12 +156,36 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(key);
         }
 
-        private async Task<bool> VerifiedKey(string category, string name)
+        private async Task<bool> VerifiedIfKeyExist(string category, string name)
         {
             var query = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync<LocalizationKey>(e => e.Category == category && e.Name == name);
             var skip = await query.FirstOrDefaultAsync();
 
             return skip != null;
+        }
+
+        private async Task<LocalizationKey?> UpdateKey(LocalizationKey key)
+        {
+            LocalizationKey OldKey = await _cMongoClient
+                .GetCollection<LocalizationKey>()
+                .Find(e => e.Category == key.Category && e.Name == key.Name)
+                .FirstOrDefaultAsync();
+
+            if (OldKey == null) return null;
+
+            var updated = false;
+
+            foreach (var original in OldKey.Original)
+            {
+                if (original.Value != key.Original[original.Key])
+                {
+                    OldKey.Original[original.Key] = key.Original[original.Key];
+                    key.Translated[original.Key] = false;
+                    updated = true;
+                }
+            }
+
+            return updated ? OldKey : null;
         }
 
     }
