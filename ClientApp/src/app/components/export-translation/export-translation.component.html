@@ -6,12 +6,16 @@
         <button tuiStep disabled>
             Load Localization File
         </button>
+        <button tuiStep disabled>
+            Load Gamedata File
+        </button>
     </tui-stepper>
 
     <div class="wizard-content">
         <ng-container [ngTemplateOutlet]="{
             '0': stepperLoadFile,
             '1': stepperLoadLocalization,
+            '2': stepperLoadGamedata,
          }[stepper.activeItemIndex] ?? stepperDefault">
         </ng-container>
     </div>
@@ -23,6 +27,10 @@
 
 <ng-template #stepperLoadLocalization>
     <app-load-file-localization [mode]="'export'"></app-load-file-localization>
+</ng-template>
+
+<ng-template #stepperLoadGamedata>
+    <app-load-file-gamedata [mode]="'export'"></app-load-file-gamedata>
 </ng-template>
 
 

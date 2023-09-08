@@ -32,6 +32,7 @@ import { LocalizationSearchComponent } from './components/localization-search/lo
 import { LoadObbFileExportComponent } from './components/load-obb-file-export/load-obb-file-export.component';
 import { DraggableElementDirective } from './core/directives/draggable-element.directive';
 import { LocalizationKeyComponent } from './components/localization-key/localization-key.component';
+import { LoadFileGamedataComponent } from './components/load-file-gamedata/load-file-gamedata.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -55,7 +56,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LocalizationSearchComponent,
     LoadObbFileExportComponent,
     DraggableElementDirective,
-    LocalizationKeyComponent
+    LocalizationKeyComponent,
+    LoadFileGamedataComponent
   ],
   imports: [
     BrowserModule,

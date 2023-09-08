@@ -1,0 +1,100 @@
+<ng-container [ngTemplateOutlet]="{'import': import, 'export': export}[mode]">
+
+</ng-container>
+
+<ng-template #import>
+    <ng-container *ngIf="(fileGameReader.fileProgressState$ | async) == 'finish'; else uploadFile">
+        <tui-block-status>
+            <h4>File Loaded</h4>
+
+            <button tuiButton appearance="secondary">
+                Remove
+            </button>
+        </tui-block-status>
+    </ng-container>
+</ng-template>
+<ng-template #uploadFile>
+    <tui-input-files *ngIf="!fileControl.value" class="file-upload-input" [formControl]="fileControl"
+        [maxFileSize]="(1024*1024*100)" [multiple]="false" (reject)="onRejectFile($event)">
+        <ng-template let-dragged>
+            <div *ngIf="dragged; else base" class="content">
+                <tui-marker-icon mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
+                <div>Drop it like it's hot!</div>
+            </div>
+            <ng-template #base>
+                <tui-marker-icon mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
+                <div>
+                    Drag and drop GAMEDATA file here or
+                    <a tuiLink>click to upload</a>
+                </div>
+            </ng-template>
+        </ng-template>
+    </tui-input-files>
+
+    <ng-container *ngIf="loadedFile$ | async as file">
+        <tui-block-status>
+            <h4 class="tui-space_bottom-3" style="display: flex; flex-direction: column;">
+                <span>Status: {{fileGameReader.fileProgressState$ | async}}</span>
+            </h4>
+            <ng-container *ngIf="(fileGameReader.fileProgressBarMax$ | async) as max">
+                <label *ngIf="(fileGameReader.fileProgressBar$ | async) as value" tuiProgressLabel>
+                    <span class="text">COMPLETED</span>
+                    <span class="percent">{{ (value / max * 100) | number : '1.2-2' }}%</span>
+                    <tui-progress-circle [value]="value" [max]="max" size="xl"></tui-progress-circle>
+                </label>
+            </ng-container>
+        </tui-block-status>
+    </ng-container>
+</ng-template>
+
+<ng-template #export>
+    <ng-container *ngIf="(fileGameReader.fileExportProgressState$ | async) == 'finish'; else uploadExportFile">
+        <tui-block-status>
+            <h4>Process Completed</h4>
+
+            <p>To apply the translation only replace your gamedata file with the new one, remember to make a backup,
+                just in case you need</p>
+            <b>If the file downloaded have extension .txt remove it and it should work fine</b>
+            <p>The localization file will automatically been download if not
+                <a href="{{fileGameReader.url}}" download="{{fileGameReader.file?.name}}" type="File">click here</a>
+            </p>
+
+            <!-- <button tuiButton appearance="secondary" (click)="onNext()">
+                {{'next' | translate }}
+            </button> -->
+        </tui-block-status>
+    </ng-container>
+</ng-template>
+<ng-template #uploadExportFile>
+    <tui-input-files *ngIf="!fileControl.value" class="file-upload-input" [formControl]="fileControl"
+        [maxFileSize]="(1024*1024*100)" [multiple]="false" (reject)="onRejectFile($event)">
+        <ng-template let-dragged>
+            <div *ngIf="dragged; else base" class="content">
+                <tui-marker-icon mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
+                <div>Drop it like it's hot!</div>
+            </div>
+            <ng-template #base>
+                <tui-marker-icon mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
+                <div>
+                    Drag and drop GAMEDATA file here or
+                    <a tuiLink>click to upload</a>
+                </div>
+            </ng-template>
+        </ng-template>
+    </tui-input-files>
+
+    <ng-container *ngIf="loadedFile$ | async as file">
+        <tui-block-status>
+            <h4 class="tui-space_bottom-3" style="display: flex; flex-direction: column;">
+                <span>Status: {{fileGameReader.fileExportProgressState$ | async}}</span>
+            </h4>
+            <ng-container *ngIf="(fileGameReader.fileProgressBarMax$ | async) as max">
+                <label *ngIf="(fileGameReader.fileProgressBar$ | async) as value" tuiProgressLabel>
+                    <span class="text">COMPLETED</span>
+                    <span class="percent">{{ (value / max * 100) | number : '1.2-2' }}%</span>
+                    <tui-progress-circle [value]="value" [max]="max" size="xl"></tui-progress-circle>
+                </label>
+            </ng-container>
+        </tui-block-status>
+    </ng-container>
+</ng-template>

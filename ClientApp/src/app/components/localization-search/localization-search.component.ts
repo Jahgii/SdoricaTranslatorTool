@@ -18,9 +18,9 @@ import { LanguageOriginService } from 'src/app/core/services/language-origin.ser
 })
 export class LocalizationSearchComponent {
   @Output() onTranslated = new EventEmitter<{ check: boolean, keys: ILocalizationKey[], key: ILocalizationKey }>();
-  public search: FormControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
-  public searchKey: FormControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
-  public searchTranslation: FormControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  public search: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  public searchKey: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  public searchTranslation: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
 
   readonly filterForm = new FormGroup({
     original: new FormControl(undefined),

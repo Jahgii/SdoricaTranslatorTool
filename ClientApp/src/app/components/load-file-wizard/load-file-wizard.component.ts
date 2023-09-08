@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
 import { TuiStepperComponent } from '@taiga-ui/kit';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { FileReaderGamedataService } from 'src/app/core/services/file-reader-gamedata.service';
 import { FileReaderLocalizationService } from 'src/app/core/services/file-reader-localization.service';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
@@ -11,7 +12,7 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
   templateUrl: './load-file-wizard.component.html',
   styleUrls: ['./load-file-wizard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [FileReaderService, FileReaderLocalizationService]
+  providers: [FileReaderService, FileReaderLocalizationService, FileReaderGamedataService]
 })
 export class LoadFileWizardComponent implements OnDestroy {
   @ViewChild(TuiStepperComponent) stepper!: TuiStepperComponent;
@@ -20,17 +21,18 @@ export class LoadFileWizardComponent implements OnDestroy {
   private subsStepperthree!: Subscription;
   private subsStepperfour!: Subscription;
   private subsStepperfive!: Subscription;
+  private subsSteppersix!: Subscription;
 
-  public activeItemIndex = 0;
+  public activeItemIndex = 5;
   public languageSelected = false;
 
   public languagesSelected!: string[];
   public multiLanguage$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-
   constructor(
     public fileReader: FileReaderService,
     public fileLocalizationReader: FileReaderLocalizationService,
+    public fileGamedataReader: FileReaderGamedataService,
     public languageOrigin: LanguageOriginService,
     private storage: LocalStorageService,
   ) {
@@ -69,6 +71,14 @@ export class LoadFileWizardComponent implements OnDestroy {
         this.activeItemIndex = 5;
         this.languageOrigin.onRetriveLanguages();
         this.stepper.activate(5);
+      }
+    });
+
+    this.subsSteppersix = this.fileGamedataReader.fileProgressState$.subscribe(state => {
+      if (state == 'finish') {
+        this.activeItemIndex = 6;
+        this.languageOrigin.onRetriveLanguages();
+        this.stepper.activate(6);
       }
     });
   }
