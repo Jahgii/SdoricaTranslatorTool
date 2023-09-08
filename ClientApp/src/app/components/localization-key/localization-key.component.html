@@ -1,0 +1,86 @@
+<button tuiButton type="button" [icon]="'tuiIconDatabase'" size="xs"
+    (click)="dialogState.isHidden = !dialogState.isHidden">
+    Create New Key
+</button>
+<main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
+    <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
+        [draggableElementState]="dialogState">
+        <p>New Key Form</p>
+        <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
+            (click)="dialogState.isHidden = !dialogState.isHidden">
+        </button>
+    </div>
+    <tui-scrollbar class="main-form-content">
+        <form [formGroup]="keyForm" style="padding: 0 1rem;">
+            <div>
+                <div>
+                    <h3 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">Key</h3>
+                    <div class="tui-form__row">
+                        <tui-select tuiTextfieldSize="m" formControlName="Category">
+                            Category
+                            <tui-data-list-wrapper *tuiDataList [items]="categories$ | async"></tui-data-list-wrapper>
+                        </tui-select>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-input formControlName="Name" tuiTextfieldSize="m"
+                            [tuiTextfieldIcon]="availableKeyNameTemplate">
+                            Key Name
+                            <input placeholder="***" tuiTextfield />
+                            <span class="tui-required"></span>
+                        </tui-input>
+                    </div>
+                    <ng-container *ngIf="categorySelected$ | async">
+                        <h3 class="tui-form__header">Languages</h3>
+                        <ng-container *ngFor="let keyControl of $any(keyForm.controls['Original']).controls | keyvalue">
+                            <div class="tui-form__row">
+                                <tui-input [formControl]="$any(keyControl.value)" tuiHintContent="A tooltip">
+                                    <input placeholder="***" tuiTextfield />
+                                    {{keyControl.key}}
+                                    <span class="tui-required"></span>
+                                </tui-input>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </form>
+
+        <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
+            <ng-container *ngIf="!(createOther$ | async); else createOther">
+                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
+                    [showLoader]="(creating$ | async) ?? false"
+                    [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
+                    [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? 'The form has errors' : undefined"
+                    tuiMode="onDark">
+                    Create
+                </button>
+            </ng-container>
+            <ng-template #createOther>
+                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
+                    Created - Other?
+                </button>
+            </ng-template>
+        </div>
+    </tui-scrollbar>
+</main>
+
+<ng-template #availableKeyNameTemplate>
+    <ng-container *ngIf="availableKeyName$ | async as status">
+        <ng-container [ngSwitch]="status">
+            <p *ngSwitchCase="'verifying'">
+                <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true" tuiHintContent="Select Category">
+                    <button tuiIconButton appearance="icon" [icon]="'tuiIconLoader'">
+                    </button>
+                </tui-loader>
+            </p>
+            <p *ngSwitchCase="'valid'">
+                <button tuiIconButton appearance="icon" [icon]="'tuiIconCheckCircle'">
+                </button>
+            </p>
+            <p *ngSwitchCase="'invalid'">
+                <button tuiIconButton appearance="icon" [icon]="'tuiIconAlertCircle'">
+                </button>
+            </p>
+        </ng-container>
+    </ng-container>
+</ng-template>

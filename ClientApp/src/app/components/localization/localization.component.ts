@@ -158,4 +158,33 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     this.libreTranslate.onTranslateKeys(keys, this.languageOrigin.localizationLang);
   }
 
+  public onResetCategories() {
+    firstValueFrom(this.api.post('localizationcategories/reset', {}));
+  }
+
+  public refreshAll() {
+    this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories')
+      .pipe(map(r => {
+        let searchCategory: ILocalizationCategory = {
+          Name: "SEARCH",
+          Keys: {
+            [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
+              return ac + v.Keys[this.languageOrigin.localizationLang];
+            }, 0)
+          },
+
+          KeysTranslated: {
+            [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
+              return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
+            }, 0)
+          }
+        }
+        r.unshift(searchCategory);
+        return r;
+      }));
+
+    if (this.selectedCategory?.Name == 'SEARCH') return;
+    this.keys$ = this.api.getWithHeaders('localizationkeys', { category: this.selectedCategory.Name });
+  }
+
 }

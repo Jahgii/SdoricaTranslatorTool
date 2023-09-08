@@ -1,0 +1,39 @@
+.main-form {
+    position: absolute;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    height: 500px;
+    background: var(--tui-base-02);
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 16%);
+    border-radius: var(--tui-radius-s);
+    // border: 1px solid var(--tui-base-03);
+    padding: 0;
+
+    .main-form-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--tui-base-01);
+        border-radius: var(--tui-radius-s) var(--tui-radius-s) 0 0;
+        border: 1px #fff solid;
+        cursor: move;
+        height: 2rem;
+
+        p {
+            padding: 0 .5rem;
+        }
+    }
+
+    .main-form-content {
+        overflow-y: visible;
+        overflow-x: hidden;
+    }
+
+    .main-form-actions {
+        display: flex;
+        flex-direction: row-reverse;
+        padding: 0 1rem;
+    }
+}

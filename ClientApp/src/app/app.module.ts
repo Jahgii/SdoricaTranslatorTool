@@ -30,6 +30,8 @@ import { MainGroupsComponent } from './components/main-groups/main-groups.compon
 import { ExportTranslationComponent } from './components/export-translation/export-translation.component';
 import { LocalizationSearchComponent } from './components/localization-search/localization-search.component';
 import { LoadObbFileExportComponent } from './components/load-obb-file-export/load-obb-file-export.component';
+import { DraggableElementDirective } from './core/directives/draggable-element.directive';
+import { LocalizationKeyComponent } from './components/localization-key/localization-key.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -51,7 +53,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     MainGroupsComponent,
     ExportTranslationComponent,
     LocalizationSearchComponent,
-    LoadObbFileExportComponent
+    LoadObbFileExportComponent,
+    DraggableElementDirective,
+    LocalizationKeyComponent
   ],
   imports: [
     BrowserModule,

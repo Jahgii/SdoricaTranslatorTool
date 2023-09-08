@@ -6,7 +6,16 @@
             <input tuiTextfield type="text" />
         </tui-input>
         <button tuiButton (click)="onSearch()" [disabled]="search.invalid" size="m">Search</button>
-
+        
+        <span class="tui-space_right-3"></span>
+        
+        <tui-input class="tui-space_right-3" style="width: 200px;" [formControl]="searchTranslation" [tuiTextfieldSize]="'m'"
+            [tuiTextfieldCustomContent]="'tuiIconSearch'">
+            Search by Translation
+            <input tuiTextfield type="text" />
+        </tui-input>
+        <button tuiButton (click)="onSearchTranslation()" [disabled]="searchTranslation.invalid" size="m">Search</button>
+        
         <span class="tui-space_right-3"></span>
 
         <tui-input class="tui-space_right-3" style="width: 200px;" [formControl]="searchKey" [tuiTextfieldSize]="'m'"

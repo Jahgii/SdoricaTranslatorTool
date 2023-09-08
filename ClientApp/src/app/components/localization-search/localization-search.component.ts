@@ -20,6 +20,7 @@ export class LocalizationSearchComponent {
   @Output() onTranslated = new EventEmitter<{ check: boolean, keys: ILocalizationKey[], key: ILocalizationKey }>();
   public search: FormControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
   public searchKey: FormControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  public searchTranslation: FormControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
   readonly filterForm = new FormGroup({
     original: new FormControl(undefined),
@@ -67,6 +68,15 @@ export class LocalizationSearchComponent {
       .getWithHeaders('localizationkeys/searchkey',
         {
           key: this.searchKey.value
+        });
+  }
+
+  public onSearchTranslation() {
+    this.results$ = this.api
+      .getWithHeaders('localizationkeys/searchtranslation',
+        {
+          language: this.languageOrigin.localizationLang,
+          text: this.searchTranslation.value
         });
   }
 

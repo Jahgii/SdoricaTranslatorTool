@@ -39,6 +39,22 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(data);
         }
 
+        [HttpGet("searchkeyequal")]
+        public async Task<ActionResult> SearchByKeyEqual([FromHeader] string category, [FromHeader] string key)
+        {
+            var cursor = _cMongoClient.GetCollection<LocalizationKey>()
+                .Find(e => e.Category == category && e.Name == key);
+            var data = await cursor.ToListAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("searchtranslation")]
+        public async Task<ActionResult> SearchByTranslateText([FromHeader] string language, [FromHeader] string text)
+        {
+            var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Translations[language].ToLower().Contains(text.ToLower()));
+            var data = await cursor.ToListAsync();
+            return Ok(data);
+        }
 
         [HttpGet("verified")]
         public async Task<ActionResult> Veried()
@@ -55,6 +71,54 @@ namespace SdoricaTranslatorTool.Controllers
             var data = await cursor.ToListAsync();
             return Ok(data);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> Post(LocalizationKey key)
+        {
+            using (var session = await _cMongoClient.StartSessionAsync())
+            {
+                session.StartTransaction();
+
+                try
+                {
+                    if (await VerifiedIfKeyExist(key.Category, key.Name)) return Ok();
+
+                    await _cMongoClient.Create<LocalizationKey>(session, key);
+
+                    var category = await _cMongoClient.GetCollection<LocalizationCategory>()
+                    .Find(e => e.Name == key.Category)
+                    .FirstOrDefaultAsync();
+
+                    if (category != null)
+                    {
+                        foreach (var keyLang in category.Keys)
+                        {
+                            category.Keys[keyLang.Key] = (int)await _cMongoClient
+                                .GetCollection<LocalizationKey>()
+                                .Find(e => e.Category == category.Name)
+                                .CountDocumentsAsync() + 1;
+
+                            category.KeysTranslated[keyLang.Key] = (int)await _cMongoClient
+                                .GetCollection<LocalizationKey>()
+                                .Find(e => e.Category == category.Name && e.Translated[keyLang.Key])
+                                .CountDocumentsAsync();
+                        }
+
+                        await _cMongoClient.Replace<LocalizationCategory>(session, e => e.Id == category.Id, category);
+                    }
+
+                    await session.CommitTransactionAsync();
+                }
+                catch
+                {
+                    await session.AbortTransactionAsync();
+                    return StatusCode(500);
+                }
+            }
+
+            return Ok(key);
+        }
+
 
         [HttpPost("import")]
         public async Task<ActionResult> Post(List<LocalizationKey> keys)

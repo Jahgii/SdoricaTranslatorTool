@@ -7,6 +7,7 @@ export interface ILocalizationCategory {
 export interface ILocalizationKey {
     Category: string;
     Name: string;
+    Custom?: boolean;
     Translated: { [language: string]: boolean };
     Original: { [language: string]: string };
     Translations: { [language: string]: string };
