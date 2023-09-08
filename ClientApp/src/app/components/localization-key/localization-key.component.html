@@ -33,7 +33,7 @@
                         <h3 class="tui-form__header">Languages</h3>
                         <ng-container *ngFor="let keyControl of $any(keyForm.controls['Original']).controls | keyvalue">
                             <div class="tui-form__row">
-                                <tui-input [formControl]="$any(keyControl.value)" tuiHintContent="A tooltip">
+                                <tui-input [formControl]="$any(keyControl.value)" tuiHintContent="A tooltip" tuiTextfieldSize="m">
                                     <input placeholder="***" tuiTextfield />
                                     {{keyControl.key}}
                                     <span class="tui-required"></span>
