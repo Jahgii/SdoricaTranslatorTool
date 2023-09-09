@@ -44,6 +44,7 @@ export class LoadFileWizardComponent implements OnDestroy {
     this.subsStepperthree.unsubscribe();
     this.subsStepperfour.unsubscribe();
     this.subsStepperfive.unsubscribe();
+    this.subsSteppersix.unsubscribe();
   }
 
   private onFileReader() {

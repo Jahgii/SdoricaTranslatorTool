@@ -35,4 +35,8 @@ export class LoadFileLocalizationComponent {
   onRejectFile(file: TuiFileLike | readonly TuiFileLike[]): void {
     console.log("REJECTED FILE");
   }
+
+  onNext() {
+    this.fileLocalizationReader.fileProgressState$.next('finish');
+  }
 }

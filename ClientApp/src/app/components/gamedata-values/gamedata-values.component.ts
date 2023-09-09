@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
 import { IGamedataValue } from 'src/app/core/interfaces/i-gamedata';
@@ -9,7 +9,8 @@ type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
 @Component({
   selector: 'app-gamedata-values',
   templateUrl: './gamedata-values.component.html',
-  styleUrls: ['./gamedata-values.component.scss']
+  styleUrls: ['./gamedata-values.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {
   @Output() created = new EventEmitter();
@@ -53,7 +54,8 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
 
   constructor(
     private fB: FormBuilder,
-    private api: ApiService
+    private api: ApiService,
+    private cd: ChangeDetectorRef 
   ) {
 
   }
@@ -74,6 +76,13 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsKeyName?.unsubscribe();
+  }
+
+  public onShowCreateNew() {
+    this.menuOpen = false;
+    this.dialogState.isHidden = !this.dialogState.isHidden
+
+    this.cd.detectChanges();
   }
 
   public onKeyNameChange(key: string) {
@@ -111,6 +120,11 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
 
     this.availableKeyName$.next('untoching');
     this.createOther$.next(false);
+
+    this.contentForm.patchValue({
+      order: 90000,
+      viewable: false
+    }, { emitEvent: false });
   }
 
 }

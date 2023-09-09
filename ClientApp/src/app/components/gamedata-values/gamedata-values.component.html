@@ -11,12 +11,17 @@
             <button tuiOption>
                 See All
             </button>
-            <button tuiOption (click)="dialogState.isHidden = !dialogState.isHidden">
+            <button tuiOption (click)="onShowCreateNew()">
                 Create New
             </button>
         </tui-opt-group>
     </tui-data-list>
 </ng-template>
+
+<!-- <button tuiButton type="button" [icon]="'tuiIconDatabase'" size="xs"
+    (click)="dialogState.isHidden = !dialogState.isHidden">
+    Create New Buff Info
+</button> -->
 
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
