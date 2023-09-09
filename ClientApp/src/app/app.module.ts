@@ -1,6 +1,6 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiTooltipModule, TuiHintModule, TuiGroupModule, TuiDropdownModule } from "@taiga-ui/core";
-import { TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiDataListWrapperModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
+import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiTooltipModule, TuiHintModule, TuiGroupModule, TuiDropdownModule, TuiHostedDropdownModule } from "@taiga-ui/core";
+import { TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiDataListWrapperModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiInputNumberModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiTableFiltersModule, TuiTableModule } from "@taiga-ui/addon-table";
 import { ScrollingModule } from "@angular/cdk/scrolling";
@@ -33,6 +33,7 @@ import { LoadObbFileExportComponent } from './components/load-obb-file-export/lo
 import { DraggableElementDirective } from './core/directives/draggable-element.directive';
 import { LocalizationKeyComponent } from './components/localization-key/localization-key.component';
 import { LoadFileGamedataComponent } from './components/load-file-gamedata/load-file-gamedata.component';
+import { GamedataValuesComponent } from './components/gamedata-values/gamedata-values.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -57,7 +58,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoadObbFileExportComponent,
     DraggableElementDirective,
     LocalizationKeyComponent,
-    LoadFileGamedataComponent
+    LoadFileGamedataComponent,
+    GamedataValuesComponent
   ],
   imports: [
     BrowserModule,
@@ -106,6 +108,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     TuiActiveZoneModule,
     TuiLetModule,
     TuiBadgeModule,
+    TuiInputNumberModule,
+    TuiHostedDropdownModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {

@@ -66,7 +66,6 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(value);
         }
 
-
         [HttpPost("import")]
         public async Task<ActionResult> Post(List<GamedataValue> values)
         {
