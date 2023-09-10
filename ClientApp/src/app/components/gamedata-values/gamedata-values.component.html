@@ -8,7 +8,7 @@
 <ng-template #dropdown let-close="close">
     <tui-data-list>
         <tui-opt-group>
-            <button tuiOption>
+            <button tuiOption (click)="onShowList()">
                 See All
             </button>
             <button tuiOption (click)="onShowCreateNew()">
@@ -17,11 +17,6 @@
         </tui-opt-group>
     </tui-data-list>
 </ng-template>
-
-<!-- <button tuiButton type="button" [icon]="'tuiIconDatabase'" size="xs"
-    (click)="dialogState.isHidden = !dialogState.isHidden">
-    Create New Buff Info
-</button> -->
 
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
@@ -121,3 +116,103 @@
         </ng-container>
     </ng-container>
 </ng-template>
+
+<main class="main-list" #draggableListElement *ngIf="!listDialogState.isHidden">
+    <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
+        [draggableElementState]="listDialogState">
+        <p>Buff Info List</p>
+        <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
+            (click)="listDialogState.isHidden = !listDialogState.isHidden">
+        </button>
+    </div>
+    <!-- <tui-scrollbar class="main-form-content"> -->
+    <ng-container *ngIf="gamedataValues$ | async as values">
+        <cdk-virtual-scroll-viewport #viewport tuiScrollable class="main-form-content viewport tui-zero-scrollbar"
+            [itemSize]="45">
+            <table class="tui-table" style="table-layout: fixed;" tuiTable
+                [columns]="['id', 'iconKey', 'localizationInfoKey', 'localizationNameKey', 'order', 'viewable', 'custom']"
+                [size]="'s'" [@popIn]>
+                <thead>
+                    <tr tuiThGroup>
+                        <th tuiTh *tuiHead="'id'" [sticky]="true" [style.top.px]="-viewport['_renderedContentOffset']"
+                            [sorter]="null">
+                            id
+                        </th>
+                        <th tuiTh *tuiHead="'iconKey'" [sticky]="true"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+                            icon
+                        </th>
+                        <th tuiTh *tuiHead="'localizationInfoKey'" [sticky]="true"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+                            Info Key
+                        </th>
+                        <th tuiTh *tuiHead="'localizationNameKey'" [sticky]="true"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+                            Name Key
+                        </th>
+                        <th tuiTh *tuiHead="'order'" [sticky]="true"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+                            order
+                        </th>
+                        <th tuiTh *tuiHead="'viewable'" [sticky]="true"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+                            viewable
+                        </th>
+                        <th tuiTh *tuiHead="'custom'" [sticky]="true" style="width: 48px;"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody tuiTbody>
+                    <tr *cdkVirtualFor="let v of values" tuiTr>
+                        <td *tuiCell="'id'" tuiTd>
+                            <tui-input [(ngModel)]="v.Content.id">
+                                id
+                                <input placeholder="***" tuiTextfield />
+                            </tui-input>
+                        </td>
+                        <td *tuiCell="'iconKey'" tuiTd>
+                            <tui-input [(ngModel)]="v.Content.iconKey">
+                                id
+                                <input placeholder="***" tuiTextfield />
+                            </tui-input>
+                        </td>
+                        <td *tuiCell="'localizationInfoKey'" tuiTd>
+                            <tui-input [(ngModel)]="v.Content.localizationInfoKey">
+                                localizationInfoKey
+                                <input placeholder="***" tuiTextfield />
+                            </tui-input>
+                        </td>
+                        <td *tuiCell="'localizationNameKey'" tuiTd>
+                            <tui-input [(ngModel)]="v.Content.localizationNameKey">
+                                localizationNameKey
+                                <input placeholder="***" tuiTextfield />
+                            </tui-input>
+                        </td>
+                        <td *tuiCell="'order'" tuiTd>
+                            <tui-input-number [(ngModel)]="v.Content.order" [readOnly]="true">
+                                order
+                            </tui-input-number>
+                        </td>
+                        <td *tuiCell="'viewable'" tuiTd>
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                                <tui-checkbox [(ngModel)]="v.Content.viewable"></tui-checkbox>
+                            </div>
+                        </td>
+                        <td *tuiCell="'custom'" tuiTd>
+                            <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
+                                [overlay]="true" tuiHintContent="Select Category">
+                                <button *ngIf="v.Custom" appearance="flat" icon="tuiIconSave" shape="rounded" size="xs"
+                                    title="Remove" tuiIconButton type="button" class="remove"
+                                    (click)="onUpdateValue(v)">
+                                </button>
+                            </tui-loader>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </cdk-virtual-scroll-viewport>
+    </ng-container>
+    <!-- </tui-scrollbar> -->
+</main>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
+import { popinAnimation } from 'src/app/core/animations/popin';
 import { IGamedataValue } from 'src/app/core/interfaces/i-gamedata';
 import { ApiService } from 'src/app/core/services/api.service';
 
@@ -10,13 +11,29 @@ type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
   selector: 'app-gamedata-values',
   templateUrl: './gamedata-values.component.html',
   styleUrls: ['./gamedata-values.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    popinAnimation
+  ]
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {
   @Output() created = new EventEmitter();
   public menuOpen = false;
 
   public dialogState = {
+    isDragging: false,
+    isHidden: true,
+    xDiff: 0,
+    yDiff: 0,
+    x: 5,
+    y: 5,
+    xLLimits: 198,
+    xRLimits: 195,
+    yTLimits: 16,
+    yBLimits: 75
+  };
+
+  public listDialogState = {
     isDragging: false,
     isHidden: true,
     xDiff: 0,
@@ -55,7 +72,7 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
   constructor(
     private fB: FormBuilder,
     private api: ApiService,
-    private cd: ChangeDetectorRef 
+    private cd: ChangeDetectorRef
   ) {
 
   }
@@ -80,7 +97,7 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
 
   public onShowCreateNew() {
     this.menuOpen = false;
-    this.dialogState.isHidden = !this.dialogState.isHidden
+    this.dialogState.isHidden = !this.dialogState.isHidden;
 
     this.cd.detectChanges();
   }
@@ -126,5 +143,29 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
       viewable: false
     }, { emitEvent: false });
   }
+
+  //#region List
+  public gamedataValues$: Observable<IGamedataValue[]> =
+    this.api.getWithHeaders('gamedatavalues', { category: 'BuffInfo' });
+
+  public onShowList() {
+    this.menuOpen = false;
+    this.listDialogState.isHidden = !this.listDialogState.isHidden;
+
+    this.cd.detectChanges();
+  }
+
+  public async onUpdateValue(value: IGamedataValue) {
+    (value as any)['loader'] = new BehaviorSubject<Boolean>(true);
+    let update$ = this.api.put('gamedatavalues', value);
+
+    await firstValueFrom(update$)
+      .then(r => {
+
+      });
+
+    (value as any)['loader'].next(false);
+  }
+  //#endregion
 
 }
