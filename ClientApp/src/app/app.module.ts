@@ -34,6 +34,7 @@ import { DraggableElementDirective } from './core/directives/draggable-element.d
 import { LocalizationKeyComponent } from './components/localization-key/localization-key.component';
 import { LoadFileGamedataComponent } from './components/load-file-gamedata/load-file-gamedata.component';
 import { GamedataValuesComponent } from './components/gamedata-values/gamedata-values.component';
+import { CommonDictionaryDirective } from './core/directives/common-dictionary.directive';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -59,7 +60,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     DraggableElementDirective,
     LocalizationKeyComponent,
     LoadFileGamedataComponent,
-    GamedataValuesComponent
+    GamedataValuesComponent,
+    CommonDictionaryDirective
   ],
   imports: [
     BrowserModule,
