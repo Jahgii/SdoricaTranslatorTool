@@ -35,6 +35,7 @@ import { LocalizationKeyComponent } from './components/localization-key/localiza
 import { LoadFileGamedataComponent } from './components/load-file-gamedata/load-file-gamedata.component';
 import { GamedataValuesComponent } from './components/gamedata-values/gamedata-values.component';
 import { CommonDictionaryDirective } from './core/directives/common-dictionary.directive';
+import { ThemeDarkComponent } from './components/theme-dark/theme-dark.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -61,7 +62,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LocalizationKeyComponent,
     LoadFileGamedataComponent,
     GamedataValuesComponent,
-    CommonDictionaryDirective
+    CommonDictionaryDirective,
+    ThemeDarkComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
   --header-height: 3.9375rem;
+  --important-text: red;
 }
 
 @font-face {
@@ -30,5 +31,5 @@ code {
 }
 
 .common-word {
-  color: var(--tui-primary);
+  color: var(--important-text);
 }

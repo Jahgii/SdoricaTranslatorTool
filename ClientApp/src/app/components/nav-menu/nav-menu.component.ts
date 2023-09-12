@@ -18,7 +18,7 @@ export class NavMenuComponent {
   constructor(
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
-    readonly translate: TranslateService
+    readonly translate: TranslateService,
   ) { }
 
   public switchTheme(): void {

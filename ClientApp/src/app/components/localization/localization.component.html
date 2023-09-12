@@ -46,15 +46,14 @@
                         </app-localization-search>
                     </ng-container>
                     <ng-template #normal>
-                        <div>
-                            <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false"
-                                [inheritColor]="true" [overlay]="true">
-                                <button tuiIconButton type="button" appearance="icon" shape="square"
-                                    tuiHint="Translate all dialog with Libre Translate" [tuiHintAppearance]="'onDark'"
-                                    (click)="onMachineTranslate(keys)" icon="tuiIconBox"
-                                    [disabled]="!(libreTranslate.serverReady$ | async)">
-                                </button>
-                            </tui-loader>
+                        <div class="tui-space_bottom-3">
+                            <button tuiButton type="button" appearance="flat" size="s" tuiMode="onLight"
+                                tuiHint="Translate all dialog with Libre Translate" [tuiHintAppearance]="'onDark'"
+                                (click)="onMachineTranslate(keys)" icon="tuiIconBox"
+                                [disabled]="!(libreTranslate.serverReady$ | async)"
+                                [showLoader]="(libreTranslate.translating$ | async) ?? false">
+                                Translate All Keys
+                            </button>
                         </div>
                         <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar"
                             [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
