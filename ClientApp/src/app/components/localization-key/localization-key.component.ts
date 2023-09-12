@@ -28,10 +28,10 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     yDiff: 0,
     x: 5,
     y: 5,
-    xLLimits: 198,
-    xRLimits: 195,
-    yTLimits: 16,
-    yBLimits: 75
+    xLLimits: 1694,
+    xRLimits: 1694,
+    yTLimits: 28,
+    yBLimits: 84
   };
 
   public keyForm: FormGroup = this.fB.group({
