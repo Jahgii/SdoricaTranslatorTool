@@ -20,7 +20,7 @@
 
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
-        [draggableElementState]="dialogState">
+        [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
         <p>Buff Info Form</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
             (click)="dialogState.isHidden = !dialogState.isHidden">
@@ -119,7 +119,7 @@
 
 <main class="main-list" #draggableListElement *ngIf="!listDialogState.isHidden">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
-        [draggableElementState]="listDialogState">
+        [draggableElementState]="listDialogState" [elementAnchorRef]="anchor">
         <p>Buff Info List</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
             (click)="listDialogState.isHidden = !listDialogState.isHidden">
@@ -216,3 +216,5 @@
     </ng-container>
     <!-- </tui-scrollbar> -->
 </main>
+
+<div #anchor style="position: absolute;"></div>

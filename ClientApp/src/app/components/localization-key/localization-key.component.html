@@ -3,7 +3,7 @@
     Create New Key
 </button>
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
-    <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
+    <div class="main-form-header" appDraggableElement [elementRef]="draggableElement" [elementAnchorRef]="anchor"
         [draggableElementState]="dialogState">
         <p>New Key Form</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
@@ -85,3 +85,5 @@
         </ng-container>
     </ng-container>
 </ng-template>
+
+<div #anchor style="position: absolute;"></div>

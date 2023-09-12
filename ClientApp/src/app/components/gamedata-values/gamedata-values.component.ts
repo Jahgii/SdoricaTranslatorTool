@@ -27,10 +27,8 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
     yDiff: 0,
     x: 5,
     y: 5,
-    xLLimits: 198,
-    xRLimits: 195,
-    yTLimits: 16,
-    yBLimits: 75
+    yTopMargin: 55,
+    yBottomMargin: 10
   };
 
   public listDialogState = {
@@ -40,10 +38,8 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
     yDiff: 0,
     x: 5,
     y: 5,
-    xLLimits: 198,
-    xRLimits: 195,
-    yTLimits: 16,
-    yBLimits: 75
+    yTopMargin: 50,
+    yBottomMargin: 10
   };
 
   public buffInfoForm: FormGroup = this.fB.group({
