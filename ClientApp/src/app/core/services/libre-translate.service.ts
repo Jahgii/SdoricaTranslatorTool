@@ -119,13 +119,8 @@ export class LibreTranslateService {
   public async onTranslateKeys(keys: ILocalizationKey[], currentLang: string) {
     this.translating$.next(true);
     for (let index = 0; index < keys.length; index++) {
-      keys[index].Translations[currentLang]
-
-      var key = Object.keys(keys[index].Translations).find(key => key.toLowerCase() === currentLang);
-      if (!key) return;
-
-      let translatedText = await this.onTranslate(keys[index].Translations[key]);
-      if (translatedText) keys[index].Translations['ReplaceLang'] = translatedText;
+      let translatedText = await this.onTranslate(keys[index].Original[currentLang]);
+      if (translatedText) keys[index].Translations[currentLang] = translatedText;
     }
     this.translating$.next(false);
   }
