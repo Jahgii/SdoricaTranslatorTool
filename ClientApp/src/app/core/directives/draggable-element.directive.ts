@@ -25,6 +25,9 @@ export class DraggableElementDirective {
   constructor() { }
 
   ngAfterViewInit(): void {
+    this.boundings = this.elementAnchorRef.getBoundingClientRect();
+    if (this.draggableElementState.xDiff === 0 && this.draggableElementState.yDiff === 0)
+      this.moveAxis(this.draggableElementState.x, this.draggableElementState.y);
     this.renderWindow();
   }
 
