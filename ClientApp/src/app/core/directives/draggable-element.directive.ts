@@ -6,21 +6,21 @@ import { Observable, fromEvent, take, takeWhile } from 'rxjs';
 })
 export class DraggableElementDirective {
   @Input() elementRef!: HTMLElement;
+  @Input() elementAnchorRef!: HTMLElement;
   @Input() draggableElementState: DraggableElementState = {
     isDragging: false,
     xDiff: 0,
     yDiff: 0,
     x: 0,
     y: 0,
-    xLLimits: 0,
-    xRLimits: 0,
-    yTLimits: 0,
-    yBLimits: 0
+    yTopMargin: 0,
+    yBottomMargin: 0
   };
 
   public mouseMove$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mousemove");
   public mouseUp$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mouseup");
   public margin: number = 5;
+  public boundings!: DOMRect;
 
   constructor() { }
 
@@ -29,6 +29,7 @@ export class DraggableElementDirective {
   }
 
   @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent) {
+    this.boundings = this.elementAnchorRef.getBoundingClientRect();
     this.draggableElementState.isDragging = true;
     this.draggableElementState.xDiff = e.pageX - this.draggableElementState.x;
     this.draggableElementState.yDiff = e.pageY - this.draggableElementState.y;
@@ -41,6 +42,9 @@ export class DraggableElementDirective {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
+    this.boundings = this.elementAnchorRef.getBoundingClientRect();
+    this.draggableElementState.xDiff = 0;
+    this.draggableElementState.yDiff = 0;
     this.moveAxis(this.draggableElementState.x, this.draggableElementState.y);
     this.renderWindow();
   }
@@ -71,14 +75,17 @@ export class DraggableElementDirective {
   }
 
   private moveOnAxisX(xCoordinate: number) {
-    let elementWidth = this.elementRef.offsetWidth + this.margin;
-    let limit = window.innerWidth - elementWidth - this.draggableElementState.xRLimits;
-    return Math.min(Math.max(xCoordinate, this.margin - this.draggableElementState.xLLimits), limit);
+    let elementWidth = this.elementRef.offsetWidth;
+    let leftLimit = window.innerWidth - elementWidth - this.margin - this.boundings.left;
+    let rightLimit = Math.max(this.margin - this.boundings.right, xCoordinate);
+    return Math.min(rightLimit, leftLimit);
   }
 
   private moveOnAxisY(yCoordinate: number) {
-    let elementHeight = this.elementRef.offsetHeight + this.margin;
-    return Math.min(Math.max(yCoordinate, this.margin - this.draggableElementState.yTLimits), window.innerHeight - elementHeight - this.draggableElementState.yBLimits);
+    let elementHeight = this.elementRef.offsetHeight;
+    let bottomLimit = window.innerHeight - elementHeight - this.draggableElementState.yBottomMargin - this.boundings.bottom;
+    let topLimit = Math.max(this.draggableElementState.yTopMargin - this.boundings.top, yCoordinate);
+    return Math.min(topLimit, bottomLimit);
   }
 
   private renderWindow() {
@@ -92,10 +99,8 @@ interface DraggableElementState {
   isDragging: boolean,
   xDiff: number,
   yDiff: number,
-  xLLimits: number,
-  xRLimits: number,
-  yTLimits: number,
-  yBLimits: number,
+  yTopMargin: number,
+  yBottomMargin: number,
   x: number,
   y: number
 }
