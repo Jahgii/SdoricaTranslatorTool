@@ -65,6 +65,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   public selectedCategory!: ILocalizationCategory;
   public searchCategory$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public language: string = '';
+  public focusRow: number = -1;
 
   constructor(
     private api: ApiService,

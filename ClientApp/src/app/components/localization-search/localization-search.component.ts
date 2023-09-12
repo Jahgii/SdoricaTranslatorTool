@@ -46,6 +46,7 @@ export class LocalizationSearchComponent {
   public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public propagateTranslation: boolean = true;
   public language: string = '';
+  public focusRow: number = -1;
 
   constructor(
     private api: ApiService,

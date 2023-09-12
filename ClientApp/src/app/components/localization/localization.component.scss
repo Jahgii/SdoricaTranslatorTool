@@ -13,8 +13,7 @@
     grid-column: 2;
 }
 
-.localization-keys-toolbar {
-}
+.localization-keys-toolbar {}
 
 .sticky-header {
     top: 0;
@@ -49,4 +48,8 @@
 .tooltip-important-text {
     font-weight: bold;
     color: var(--tui-warning-fill);
+}
+
+.translation-content-cell {
+    max-height: 180px;
 }

@@ -84,11 +84,19 @@
                             </div>
                         </td>
                     </tr>
-                    <tr *cdkVirtualFor="let item of keys | tuiTableFilters | async" tuiTr>
+                    <tr *cdkVirtualFor="let item of keys | tuiTableFilters | async; index as i" tuiTr>
                         <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintAppearance]="'onDark'"
                             [tuiHintShowDelay]="200" class="tooltip-name-cell">
-                            <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)"></span>
-                            <!-- <span tuiHint="TESTING" [tuiHintManual]="true">TESTING</span> -->
+                            <ng-container *ngIf="focusRow == i; else showNormalText">
+                                <tui-scrollbar class="translation-content-cell">
+                                    <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)"></span>
+                                </tui-scrollbar>
+                            </ng-container>
+                            <ng-template #showNormalText>
+                                <tui-scrollbar class="translation-content-cell">
+                                    <span>{{onRenderDefaultLanguage(item.Original)}}</span>
+                                </tui-scrollbar>
+                            </ng-template>
                             <span class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
                                 <tui-svg src="tuiIconBox" style="font: inherit;"></tui-svg>{{item.Category}}
                                 <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>{{item.Name}}
@@ -115,7 +123,8 @@
                         </ng-template>
                         <td *tuiCell="'Translation'" tuiTd>
                             <tui-text-area [(ngModel)]="item.Translations[language]" [expandable]="true"
-                                [tuiTextfieldSize]="'m'" (ngModelChange)="onTranslationChange($event, keys, item)">
+                                (focusedChange)="focusRow = i" [tuiTextfieldSize]="'m'"
+                                (ngModelChange)="onTranslationChange($event, keys, item)" [rows]="8">
                                 ......
                             </tui-text-area>
                         </td>
