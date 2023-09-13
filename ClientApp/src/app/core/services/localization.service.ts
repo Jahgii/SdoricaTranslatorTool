@@ -97,10 +97,11 @@ export class LocalizationService implements OnDestroy {
     if (category.Name == 'SEARCH') {
       this.keys = undefined;
       this.searchCategory$.next(true);
+      this.alreadySearch$.next(false);
+      this.searchTotalTranslated = 0;
     }
     else {
       this.searchCategory$.next(false);
-      this.alreadySearch$.next(false);
       this.loading$.next(true)
       await firstValueFrom(this.keys$).then(r => this.keys = r, e => undefined);
       this.loading$.next(false);
