@@ -9,6 +9,7 @@
     border-right: 1px solid var(--tui-base-03);
     border-radius: 0 0 var(--tui-radius-xl) var(--tui-radius-xl);
     padding: 0 0.5rem 0.5rem 0.5rem;
+    box-shadow: 0 0.125rem 1rem rgba(0, 0, 0, 0.0784313725);
 
     .localization-action-content {
         position: relative;
@@ -17,8 +18,8 @@
 }
 
 .localization-container {
-    display: grid;
-    grid-template-columns: 200px 1fr;
+    display: flex;
+    flex-direction: column;
     padding: 1em;
     height: calc(100% - var(--header-height) - 6em);
 }
@@ -30,8 +31,6 @@
 .localization-keys {
     grid-column: 2;
 }
-
-.localization-keys-toolbar {}
 
 .sticky-header {
     top: 0;

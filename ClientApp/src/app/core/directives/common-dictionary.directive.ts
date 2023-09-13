@@ -1,5 +1,5 @@
-import { Directive, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChanges, TemplateRef, ViewContainerRef } from '@angular/core';
-import { computePosition, flip, shift, offset, arrow, autoUpdate } from '@floating-ui/dom';
+import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { computePosition, flip, shift, arrow, autoUpdate } from '@floating-ui/dom';
 
 const REGEXP_SPECIAL_CHAR =
   /[\!\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-]/g;
@@ -23,7 +23,8 @@ export class CommonDictionaryDirective implements OnInit {
     let searchWords: ICommonDictionary[] = [
       { Original: '[Extreme]', Translation: '[Extremo]' },
       { Original: 'Wonderland Trial', Translation: 'Wonderland Trial' },
-      { Original: 'achievement', Translation: 'Logro' }
+      { Original: 'achievement', Translation: 'Logro' },
+      { Original: 'Tier SSR', Translation: 'Rareza SSR' }
     ];
     this.treeSearch(searchWords, temporalText);
   }
@@ -86,7 +87,6 @@ export class CommonDictionaryDirective implements OnInit {
           computePosition(span, tooltip, {
             placement: 'top',
             middleware: [
-              offset(6),
               flip(),
               shift({ padding: 5 }),
               arrow({ element: tooltipArrow }),
