@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map, pairwise } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localizations';
 import { LanguageOriginService } from './language-origin.service';
 import { LibreTranslateService } from './libre-translate.service';
@@ -46,8 +46,10 @@ export class LocalizationService implements OnDestroy {
   };
 
   readonly filterTranslatedColumn = (item: { [language: string]: boolean }, value: boolean): boolean => {
+    if (value === null) return true;
     return item[this.languageOrigin.localizationLang] === value;
   };
+
   //#endregion
 
   public keys$!: Observable<ILocalizationKey[]>;
@@ -60,6 +62,7 @@ export class LocalizationService implements OnDestroy {
   public language: string = '';
   public focusRow: number = -1;
   public searchTotalTranslated = 0;
+  private controlCheckbox = 1;
 
   public search: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   public searchKey: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
@@ -67,6 +70,7 @@ export class LocalizationService implements OnDestroy {
   private subsSearch!: Subscription;
   private subsSearchKey!: Subscription;
   private subsSearchTranslation!: Subscription;
+  private subsTranslatedColumn$!: Subscription;
 
   constructor(
     private api: ApiService,
@@ -75,23 +79,22 @@ export class LocalizationService implements OnDestroy {
   ) {
     this.language = this.languageOrigin.localizationLang;
     this.autoSearch();
+    this.onTranslatedColumnCheckboxChange();
   }
 
   ngOnDestroy(): void {
     this.subsSearch.unsubscribe();
     this.subsSearchKey.unsubscribe();
     this.subsSearchTranslation.unsubscribe();
+    this.subsTranslatedColumn$.unsubscribe();
   }
 
   public async onSelectCategory(category: ILocalizationCategory) {
     // if (this.selectedCategory.Name === category.Name) return;
 
     this.keys = undefined;
+    this.restartFilters();
 
-    this.filterForm.reset();
-    this.filterForm.patchValue({
-      translated: false
-    });
     this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
 
     if (category.Name == 'SEARCH') {
@@ -127,8 +130,14 @@ export class LocalizationService implements OnDestroy {
     for (let index = 0; index < propagateKeys.length; index++) {
       let keyToPropagate = propagateKeys[index];
       if (keyToPropagate.Translated[this.languageOrigin.localizationLang] === check) return;
-      if (check) this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
-      else this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
+      if (check) {
+        this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
+        this.searchTotalTranslated++;
+      }
+      else {
+        this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
+        this.searchTotalTranslated--;
+      }
       keyToPropagate.Translated[this.languageOrigin.localizationLang] = check;
       await this.onKeyTranslated(keyToPropagate);
     }
@@ -191,6 +200,35 @@ export class LocalizationService implements OnDestroy {
       this.libreTranslate.onTranslateKeys(this.keys, this.languageOrigin.localizationLang);
   }
 
+  private onTranslatedColumnCheckboxChange() {
+    this.subsTranslatedColumn$ = this.filterForm.controls['translated']
+      .valueChanges
+      .subscribe(v => {
+        if (this.controlCheckbox >= 2) this.controlCheckbox = -1;
+        this.controlCheckbox += 1;
+
+        switch (this.controlCheckbox) {
+          case 0:
+            this.filterForm.patchValue({ translated: false }, { emitEvent: false })
+            break;
+          case 1:
+            this.filterForm.patchValue({ translated: null }, { emitEvent: false })
+            break;
+          case 2:
+            this.filterForm.patchValue({ translated: true }, { emitEvent: false })
+            break;
+        }
+      });
+  }
+
+  private restartFilters() {
+    this.controlCheckbox = 1;
+    this.filterForm.reset(undefined, { emitEvent: false });
+    this.filterForm.patchValue({
+      translated: null
+    }, { emitEvent: false });
+  }
+
   //#region Search
   private autoSearch() {
     this.subsSearch = this.search.valueChanges
@@ -225,6 +263,9 @@ export class LocalizationService implements OnDestroy {
           text: this.search.value
         });
     this.loading$.next(true);
+
+    this.restartFilters();
+
     await firstValueFrom(this.keys$)
       .then(
         r => {
@@ -249,6 +290,9 @@ export class LocalizationService implements OnDestroy {
         });
 
     this.loading$.next(true);
+
+    this.restartFilters();
+
     await firstValueFrom(this.keys$).then(
       r => {
         this.searchTotalTranslated = 0;
@@ -273,6 +317,9 @@ export class LocalizationService implements OnDestroy {
         });
 
     this.loading$.next(true);
+
+    this.restartFilters();
+
     await firstValueFrom(this.keys$).then(
       r => {
         this.searchTotalTranslated = 0;
