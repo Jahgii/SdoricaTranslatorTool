@@ -109,8 +109,14 @@ export class LocalizationService implements OnDestroy {
   }
 
   public async onTranslatedCheck(check: boolean, keys: ILocalizationKey[], key: ILocalizationKey) {
-    if (check) this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
-    else this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
+    if (check) {
+      this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
+      this.searchTotalTranslated++;
+    }
+    else {
+      this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
+      this.searchTotalTranslated--;
+    }
 
     await this.onKeyTranslated(key);
 
