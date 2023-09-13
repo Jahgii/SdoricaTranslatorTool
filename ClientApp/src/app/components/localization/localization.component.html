@@ -109,26 +109,32 @@
                                                 <tui-svg style="display: inherit;" src="tuiIconCheckCircle"></tui-svg>
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <tbody tuiTbody>
-                                        <tr tuiTr>
-                                            <td *tuiCell="'Language'" tuiTd>
+                                        <tr tuiThGroup>
+                                            <th tuiTh *tuiHead="'Language'" [sticky]="true"
+                                                style="transform: translate(0);"
+                                                [style.top.px]="-viewport['_renderedContentOffset'] + 1"
+                                                [sorter]="null">
                                                 <tui-input tuiTableFilter="Original"
                                                     [formControl]="localization.filterForm.controls['original']"
                                                     [tuiGenericFilter]="localization.filterOriginalColumn"
                                                     [tuiTextfieldSize]="'m'" [tuiTextfieldIconLeft]="'tuiIconFilter'">
                                                     Search by Original Column
                                                 </tui-input>
-                                            </td>
-                                            <td *tuiCell="'Translation'" tuiTd>
+                                            </th>
+                                            <th tuiTh *tuiHead="'Translation'" [sticky]="true"
+                                                [style.top.px]="-viewport['_renderedContentOffset'] + 1"
+                                                [sorter]="null"
+                                                style="width: 60%; max-width: 60%; transform: translate(0);">
                                                 <tui-input tuiTableFilter="Translations"
                                                     [formControl]="localization.filterForm.controls['translation']"
                                                     [tuiGenericFilter]="localization.filterTranslationColumn"
                                                     [tuiTextfieldSize]="'m'" [tuiTextfieldIconLeft]="'tuiIconFilter'">
                                                     Search by Translation Column
                                                 </tui-input>
-                                            </td>
-                                            <td *tuiCell="'Translated'" tuiTd>
+                                            </th>
+                                            <th tuiTh *tuiHead="'Translated'" [sticky]="true"
+                                                [style.top.px]="-viewport['_renderedContentOffset'] + 1"
+                                                [sorter]="null" style="width: 32px; transform: translate(0);">
                                                 <div
                                                     style="display: flex; align-items: center; justify-content: center; height: 100%;">
                                                     <tui-checkbox
@@ -138,8 +144,10 @@
                                                         contentAlign="right">
                                                     </tui-checkbox>
                                                 </div>
-                                            </td>
+                                            </th>
                                         </tr>
+                                    </thead>
+                                    <tbody tuiTbody>
                                         <tr *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i"
                                             tuiTr>
                                             <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip"
