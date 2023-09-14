@@ -2,5 +2,12 @@
     "empty_db": "Parece que es tu primera vez aquí, preparemos todo para comenzar.",
     "main_localization": "Localización Principal",
     "categories": "Categorias",
-    "results:": "Resultados"
+    "results:": "Resultados",
+    "dictionary": "Diccionario",
+    "empty-dictionary": "Diccionario Vacio",
+    "create-one": "¡Agrega un palabra al Diccionario!",
+    "go": "¡Vamos!",
+    "original-word": "Palabra Original",
+    "translation": "Traducción",
+    "dictionary-description": "Las palabras agregadas al diccionario seran resaltadas en la columna de texto Original con sus correspondientes traducciones"
 }

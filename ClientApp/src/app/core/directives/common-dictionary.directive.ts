@@ -1,5 +1,7 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 import { computePosition, flip, shift, arrow, autoUpdate } from '@floating-ui/dom';
+import { ICommonWord } from '../interfaces/i-common-word';
+import { CommonWordsService } from '../services/common-words.service';
 
 const REGEXP_SPECIAL_CHAR =
   /[\!\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-]/g;
@@ -13,6 +15,7 @@ export class CommonDictionaryDirective implements OnInit {
   private color: string = 'var(--tui-elevation-02)';
 
   constructor(
+    private commonWords: CommonWordsService,
     private _elemRef: ElementRef<HTMLSpanElement>,
     private render: Renderer2
   ) {
@@ -20,13 +23,7 @@ export class CommonDictionaryDirective implements OnInit {
 
   ngOnInit(): void {
     let temporalText = this.text;
-    let searchWords: ICommonDictionary[] = [
-      { Original: '[Extreme]', Translation: '[Extremo]' },
-      { Original: 'Wonderland Trial', Translation: 'Wonderland Trial' },
-      { Original: 'achievement', Translation: 'Logro' },
-      { Original: 'Tier SSR', Translation: 'Rareza SSR' }
-    ];
-    this.treeSearch(searchWords, temporalText);
+    this.treeSearch(this.commonWords.words, temporalText);
   }
 
   /**
@@ -34,7 +31,7 @@ export class CommonDictionaryDirective implements OnInit {
    * @param searchWords common words
    * @param temporalText text to search
    */
-  private treeSearch(searchWords: ICommonDictionary[], temporalText: string) {
+  private treeSearch(searchWords: ICommonWord[], temporalText: string) {
     let found = false;
     for (var index = 0; index < searchWords.length; index++) {
       const searchWord = searchWords[index];
@@ -141,9 +138,4 @@ export class CommonDictionaryDirective implements OnInit {
     }
   }
 
-}
-
-interface ICommonDictionary {
-  Original: string;
-  Translation: string;
 }

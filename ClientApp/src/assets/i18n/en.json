@@ -2,5 +2,15 @@
     "empty_db": "Its seem is your first time here, let's create all the necessary to begin the translation",
     "main_localization": "Main Game Localization",
     "categories": "Categories",
-    "results:": "Results"
+    "results:": "Results",
+    "dictionary": "Dictionary",
+    "empty-dictionary": "Empty Dictionary",
+    "create-one": "Create New Word Here!",
+    "go": "Lets Go!",
+    "original-word": "Original Word",
+    "translation": "Translation",
+    "dictionary-description": "Words added to the dictionary will be highlighted in the Original text column with their corresponding translations",
+    "confirm-text-delete-word": "I you sure you want to delete this word?",
+    "confirm-frienly": "Yes, delete it!",
+    "unconfirm-frienly": "No, it was a mistake!"
 }

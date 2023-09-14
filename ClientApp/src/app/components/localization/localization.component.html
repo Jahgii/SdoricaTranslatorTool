@@ -2,6 +2,7 @@
     <div class="localization-action-content">
         <app-localization-key (created)="localization.refreshAll()"></app-localization-key>
         <app-gamedata-values></app-gamedata-values>
+        <app-common-words></app-common-words>
     </div>
 </div>
 <div class="localization-container" *ngIf="localization.categories$ | async as categories; else loadingCategories">
@@ -81,8 +82,8 @@
                                 <table class="tui-table" style="table-layout: fixed;" tuiTable
                                     [columns]="['Language', 'Translation', 'Translated']" [@popIn]>
                                     <thead>
-                                        <tr tuiThGroup>
-                                            <th tuiTh *tuiHead="'Language'" [sticky]="true"
+                                        <tr tuiThGroup #columnsHeader>
+                                            <th tuiTh *tuiHead="'Language'" [sticky]=" true"
                                                 [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
                                                 Original
                                             </th>
@@ -109,7 +110,7 @@
                                                 <tui-svg style="display: inherit;" src="tuiIconCheckCircle"></tui-svg>
                                             </th>
                                         </tr>
-                                        <tr tuiThGroup>
+                                        <tr tuiThGroup #filterHeader>
                                             <th tuiTh *tuiHead="'Language'" [sticky]="true"
                                                 style="transform: translate(0);"
                                                 [style.top.px]="-viewport['_renderedContentOffset'] + 1"
@@ -122,8 +123,7 @@
                                                 </tui-input>
                                             </th>
                                             <th tuiTh *tuiHead="'Translation'" [sticky]="true"
-                                                [style.top.px]="-viewport['_renderedContentOffset'] + 1"
-                                                [sorter]="null"
+                                                [style.top.px]="-viewport['_renderedContentOffset'] + 1" [sorter]="null"
                                                 style="width: 60%; max-width: 60%; transform: translate(0);">
                                                 <tui-input tuiTableFilter="Translations"
                                                     [formControl]="localization.filterForm.controls['translation']"
@@ -133,8 +133,8 @@
                                                 </tui-input>
                                             </th>
                                             <th tuiTh *tuiHead="'Translated'" [sticky]="true"
-                                                [style.top.px]="-viewport['_renderedContentOffset'] + 1"
-                                                [sorter]="null" style="width: 32px; transform: translate(0);">
+                                                [style.top.px]="-viewport['_renderedContentOffset'] + 1" [sorter]="null"
+                                                style="width: 32px; transform: translate(0);">
                                                 <div
                                                     style="display: flex; align-items: center; justify-content: center; height: 100%;">
                                                     <tui-checkbox
