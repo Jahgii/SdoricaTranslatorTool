@@ -13,7 +13,8 @@ const PROXY_CONFIG = [
       "/localizationcategories",
       "/localizationkeys",
       "/gamedatacategories",
-      "/gamedatavalues"
+      "/gamedatavalues",
+      "/commonwords"
     ],
     proxyTimeout: 30000,
     target: target,

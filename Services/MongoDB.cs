@@ -36,6 +36,11 @@ namespace SdoricaTranslatorTool
             await GetCollection<T>().ReplaceOneAsync(session, predicate, collectionData);
         }
 
+        public async Task Delete<T>(IClientSessionHandle session, Expression<Func<T, bool>> predicate)
+        {
+            await GetCollection<T>().DeleteOneAsync(session, predicate);
+        }
+
         public async Task<IClientSessionHandle> StartSessionAsync()
         {
             return await _mongoDB.Client.StartSessionAsync();
@@ -54,6 +59,7 @@ namespace SdoricaTranslatorTool
         public Task Create<T>(IClientSessionHandle session, IEnumerable<T> collectionData);
         public Task Update<T>(IClientSessionHandle session, Expression<Func<T, bool>> filter, UpdateDefinition<T> collectionData);
         public Task Replace<T>(IClientSessionHandle session, Expression<Func<T, bool>> predicate, T collectionData);
+        public Task Delete<T>(IClientSessionHandle session, Expression<Func<T, bool>> predicate);
         public Task<IClientSessionHandle> StartSessionAsync();
         public IMongoCollection<T> GetCollection<T>();
 
