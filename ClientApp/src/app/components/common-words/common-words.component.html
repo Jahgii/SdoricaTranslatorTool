@@ -53,12 +53,13 @@
             <ng-container *ngIf="!(commonWords.createOther$ | async); else createOther">
                 <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
                     [showLoader]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
-                    [tuiHint]="(commonWordForm.invalid) ? 'The form has errors' : undefined" tuiMode="onDark">
+                    [tuiHint]="(commonWordForm.invalid) ? 'The form has errors' : undefined" [tuiHintAppearance]="'onDark'"
+                    appearance="outline">
                     Create
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
+                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m" appearance="outline">
                     Created - Other?
                 </button>
             </ng-template>
@@ -118,14 +119,14 @@
                         <td *tuiCell="'custom'" tuiTd>
                             <div style="display: flex; align-items: center; justify-content: center;">
                                 <tui-loader [showLoader]="(w.loader | async) ?? false" [inheritColor]="true"
-                                    [overlay]="true" tuiHintContent="Select Category">
+                                    [overlay]="true">
                                     <button appearance="flat" icon="tuiIconTrash" shape="rounded" size="xs"
                                         title="Delete" tuiIconButton type="button" tuiMode="onLight"
-                                        (click)="commonWords.confirmDelete(w);" [focusable]="false">
+                                        (click)="commonWords.confirmDelete(w);">
                                     </button>
                                 </tui-loader>
                                 <tui-loader [showLoader]="(w.loader | async) ?? false" [inheritColor]="true"
-                                    [overlay]="true" tuiHintContent="Select Category">
+                                    [overlay]="true">
                                     <button appearance="flat" icon="tuiIconSave" shape="rounded" size="xs"
                                         title="Update" tuiIconButton type="button" tuiMode="onLight"
                                         (click)="commonWords.update(w)">

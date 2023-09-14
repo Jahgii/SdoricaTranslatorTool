@@ -30,7 +30,7 @@ export class CommonWordsService {
       .then(
         createdWord => {
           this.words.push(createdWord);
-          this.change$.next(true);
+          this.words = [...this.words];
           this.createOther$.next(true);
         },
         error => { }
@@ -39,26 +39,48 @@ export class CommonWordsService {
   }
 
   public async update(word: ICommonWord) {
-    (word as any)['loader'] = new BehaviorSubject<Boolean>(true);
-    await firstValueFrom(this.api.put<ICommonWord[]>('commonwords', word))
+    if (!(word as any)['loader'])
+      (word as any)['loader'] = new BehaviorSubject<Boolean>(true);
+    else (word as any)['loader'].next(true);
+
+    let tempWord: ICommonWord = {
+      Id: word.Id,
+      Original: word.Original,
+      Translation: word.Translation
+    };
+
+    await firstValueFrom(this.api.put<ICommonWord[]>('commonwords', tempWord))
       .then(
         updatedWord => {
           this.change$.next(true);
-        },
-        error => { }
+        }
       );
+
     (word as any)['loader'].next(false);
   }
 
   public async delete(word: ICommonWord, index: number) {
-    await firstValueFrom(this.api.delete<ICommonWord>('commonwords', word))
+    if (!(word as any)['loader'])
+      (word as any)['loader'] = new BehaviorSubject<Boolean>(true);
+    else (word as any)['loader'].next(true);
+
+    let tempWord: ICommonWord = {
+      Id: word.Id,
+      Original: word.Original,
+      Translation: word.Translation
+    };
+
+    await firstValueFrom(this.api.delete<ICommonWord>('commonwords', tempWord))
       .then(
         deletedWord => {
           this.words.splice(index, 1);
+          this.words = [...this.words];
           this.change$.next(true);
         },
         error => { }
       );
+
+    (word as any)['loader'].next(false);
   }
 
   public confirmDelete(word: ICommonWord) {
