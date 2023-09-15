@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
@@ -27,16 +27,30 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(data);
         }
 
+        [HttpGet("search")]
+        public async Task<ActionResult> Search([FromHeader] string language, [FromHeader] string text)
+        {
+            var cursor = _cMongoClient.GetCollection<DialogAsset>()
+                .Find(e =>
+                    e.Language == language
+                    && e.Model.Content.Any(d => d.OriginalText.ToLower().Contains(text.ToLower()))   
+                )
+                .SortBy(e => e.Number);
+            var data = await cursor.ToListAsync();
+
+            return Ok(data);
+        }
+
+
         [HttpGet("export")]
         public async Task<ActionResult> GetTranslated()
         {
             var cursor = _cMongoClient.GetCollection<DialogAsset>()
                 .Find(e => e.Translated == true);
             var data = await cursor.ToListAsync();
-            
+
             return Ok(data);
         }
-
 
         [HttpPost]
         public async Task<ActionResult> Post(List<DialogAsset> dialogAssets)
