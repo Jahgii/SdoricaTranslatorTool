@@ -14,7 +14,7 @@
 
                 {{'main_localization' | translate}}
 
-                <button tuiButton appearance="secondary" [size]="size" [routerLink]="['/localization']">
+                <button tuiButton appearance="outline" [size]="size" [routerLink]="['/localization']">
                     {{'go' | translate }}
                 </button>
             </tui-block-status>
@@ -23,15 +23,15 @@
 
                 Chapters Dialog Localization
 
-                <button tuiButton appearance="secondary" [size]="size" [routerLink]="['/dialogsAsset']">
-                    GO
+                <button tuiButton appearance="outline" [size]="size" [routerLink]="['/dialogsAsset']">
+                    {{'go' | translate }}
                 </button>
             </tui-block-status>
             <tui-block-status class="card" [card]="true">
                 <img tuiSlot="top" alt="something wrong" src="./assets/images/import-translation.svg" class="image" />
                 Re/Import Files
-                <button tuiButton appearance="secondary" [size]="size" [routerLink]="['/loading']">
-                    GO
+                <button tuiButton appearance="outline" [size]="size" [routerLink]="['/loading']">
+                    {{'go' | translate }}
                 </button>
             </tui-block-status>
             <tui-block-status class="card" [card]="true">
@@ -39,7 +39,7 @@
 
                 The moment of truth
 
-                <button tuiButton appearance="secondary" [size]="size" [routerLink]="['/export']">
+                <button tuiButton appearance="outline" [size]="size" [routerLink]="['/export']">
                     I'm Scared
                 </button>
             </tui-block-status>
