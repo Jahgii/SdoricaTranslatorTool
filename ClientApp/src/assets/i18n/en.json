@@ -1,4 +1,5 @@
 {
+    "sdorica-translator-tool": "Sdorica Translator Tool",
     "empty_db": "Its seem is your first time here, let's create all the necessary to begin the translation",
     "main_localization": "Main Game Localization",
     "categories": "Categories",
@@ -12,5 +13,24 @@
     "dictionary-description": "Words added to the dictionary will be highlighted in the Original text column with their corresponding translations",
     "confirm-text-delete-word": "I you sure you want to delete this word?",
     "confirm-frienly": "Yes, delete it!",
-    "unconfirm-frienly": "No, it was a mistake!"
+    "unconfirm-frienly": "No, it was a mistake!",
+    "guide-me": "Guide me",
+    "chapter-dialog-localization": "Chapters Dialog Localization",
+    "re-import-files": "Re/Import Files",
+    "export-files": "Export Files",
+    "language-configuration": "Language Configuration",
+    "app-language": "App Language",
+    "origin-language": "Origin Language",
+    "libretranslate-configuration": "LibreTranslate Configuration",
+    "libretranslate-url": "LibreTranslate Server Url",
+    "libretranslate-apikey": "Api Key (if need)",
+    "libretranslate-testserver": "Test Server",
+    "libretranslate-serveralive": "Server Alive",
+    "libretranslate-source": "Source Language Target",
+    "libretranslate-selectsource": "Select Source",
+    "libretranslate-testtranslation": "Test Translation",
+    "libretranslate-ready": "All Ready",
+    "language": "Language",
+    "en": "English",
+    "es": "Español"
 }

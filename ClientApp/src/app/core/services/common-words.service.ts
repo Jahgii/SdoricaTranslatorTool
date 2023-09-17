@@ -10,6 +10,7 @@ export class CommonWordsService {
   public words!: ICommonWord[];
   public createOther$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public creating$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public deleting$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public change$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
   constructor(private api: ApiService) {
@@ -60,9 +61,7 @@ export class CommonWordsService {
   }
 
   public async delete(word: ICommonWord, index: number) {
-    if (!(word as any)['loader'])
-      (word as any)['loader'] = new BehaviorSubject<Boolean>(true);
-    else (word as any)['loader'].next(true);
+    this.deleting$.next(true);
 
     let tempWord: ICommonWord = {
       Id: word.Id,
@@ -80,7 +79,7 @@ export class CommonWordsService {
         error => { }
       );
 
-    (word as any)['loader'].next(false);
+    this.deleting$.next(false);
   }
 
   public confirmDelete(word: ICommonWord) {

@@ -6,11 +6,16 @@
                     <div class="wrapper tui-space_bottom-2">
                         <div style="display: flex; align-items: center;">
                             <span class="tui-text_h6 tui-space_right-4">File Number: </span>
-                            <tui-tabs [(activeItemIndex)]="activeItemIndex" class="tabs">
-                                <button *ngFor="let item of data" tuiTab>
-                                    {{item.Number}}
-                                </button>
-                            </tui-tabs>
+                            <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="activeItemIndex" class="tabs">
+                                <ng-container *ngFor="let item of data">
+                                    <button *tuiItem tuiTab>
+                                        {{item.Number}}
+                                    </button>
+                                </ng-container>
+                                <ng-template #more>
+                                    <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
+                                </ng-template>
+                            </tui-tabs-with-more>
                         </div>
                         <div style="display: flex; align-items: center;">
                             <span *ngIf="pendingChanges$ | async" class="tui-space_right-5">Saving Changes</span>

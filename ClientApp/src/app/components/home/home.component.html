@@ -3,11 +3,11 @@
         <h4>{{'empty_db' | translate}}</h4>
 
         <button tuiButton appearance="secondary" [routerLink]="['/loading']">
-            Guide me
+            {{'guide-me' | translate}}
         </button>
     </tui-block-status>
 
-    <ng-container *ngIf="(languageOrigin.language.value)">
+    <ng-container *ngIf="(languageOrigin.language.value)">  
         <div *ngIf="size$ | async as size" class="container">
             <tui-block-status class="card" [card]="true">
                 <img tuiSlot="top" alt="hidden content" src="./assets/images/localization.svg" class="image" />
@@ -21,7 +21,7 @@
             <tui-block-status class="card" [card]="true">
                 <img tuiSlot="top" alt="something wrong" src="./assets/images/dialog-assets.svg" class="image" />
 
-                Chapters Dialog Localization
+                {{'chapter-dialog-localization' | translate}}
 
                 <button tuiButton appearance="outline" [size]="size" [routerLink]="['/dialogsAsset']">
                     {{'go' | translate }}
@@ -29,7 +29,7 @@
             </tui-block-status>
             <tui-block-status class="card" [card]="true">
                 <img tuiSlot="top" alt="something wrong" src="./assets/images/import-translation.svg" class="image" />
-                Re/Import Files
+                {{'re-import-files' | translate}}
                 <button tuiButton appearance="outline" [size]="size" [routerLink]="['/loading']">
                     {{'go' | translate }}
                 </button>
@@ -37,10 +37,10 @@
             <tui-block-status class="card" [card]="true">
                 <img tuiSlot="top" alt="something wrong" src="./assets/images/export-translation.svg" class="image" />
 
-                The moment of truth
+                {{'export-files' | translate}}
 
                 <button tuiButton appearance="outline" [size]="size" [routerLink]="['/export']">
-                    I'm Scared
+                    {{'go' | translate }}
                 </button>
             </tui-block-status>
         </div>

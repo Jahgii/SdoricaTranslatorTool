@@ -53,8 +53,8 @@
             <ng-container *ngIf="!(commonWords.createOther$ | async); else createOther">
                 <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
                     [showLoader]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
-                    [tuiHint]="(commonWordForm.invalid) ? 'The form has errors' : undefined" [tuiHintAppearance]="'onDark'"
-                    appearance="outline">
+                    [tuiHint]="(commonWordForm.invalid) ? 'The form has errors' : undefined"
+                    [tuiHintAppearance]="'onDark'" appearance="outline">
                     Create
                 </button>
             </ng-container>
@@ -138,11 +138,13 @@
                             <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
                                 <p class="text">{{'confirm-text-delete-word' | translate}}</p>
                                 <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
-                                    (click)="commonWords.delete(w, i)" appearance="accent">
+                                    (click)="commonWords.delete(w, i)" [showLoader]="(commonWords.deleting$ | async) ?? false"
+                                    appearance="accent">
                                     {{'confirm-frienly' | translate}}
                                 </button>
                                 <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
-                                    (click)="commonWords.cancelDelete(w)" appearance="flat">
+                                    (click)="commonWords.cancelDelete(w)" [showLoader]="(commonWords.deleting$ | async) ?? false"
+                                    appearance="flat">
                                     {{'unconfirm-frienly' | translate}}
                                 </button>
                             </td>
