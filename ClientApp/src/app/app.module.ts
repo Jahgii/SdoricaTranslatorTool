@@ -1,6 +1,6 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
 import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiTooltipModule, TuiHintModule, TuiGroupModule, TuiDropdownModule, TuiHostedDropdownModule } from "@taiga-ui/core";
-import { TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiComboBoxModule, TuiDataListWrapperModule, TuiFilterByInputPipeModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiInputNumberModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
+import { TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiComboBoxModule, TuiDataListWrapperModule, TuiFilterByInputPipeModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiInputNumberModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiRadioBlockModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiTableFiltersModule, TuiTableModule } from "@taiga-ui/addon-table";
 import { ScrollingModule } from "@angular/cdk/scrolling";
@@ -14,6 +14,7 @@ import { TuiSidebarModule } from "@taiga-ui/addon-mobile";
 import { TuiActiveZoneModule, TuiAutoFocusModule, TuiLetModule } from "@taiga-ui/cdk";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE } from '@taiga-ui/i18n';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from "./components/home/home.component";
@@ -37,9 +38,10 @@ import { GamedataValuesComponent } from './components/gamedata-values/gamedata-v
 import { CommonDictionaryDirective } from './core/directives/common-dictionary.directive';
 import { ThemeDarkComponent } from './components/theme-dark/theme-dark.component';
 import { CommonWordsComponent } from './components/common-words/common-words.component';
+import { of } from "rxjs";
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -118,8 +120,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     TuiHostedDropdownModule,
     TuiComboBoxModule,
     TuiFilterByInputPipeModule,
+    TuiRadioBlockModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
+      // useDefaultLang: true,
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
@@ -127,7 +131,16 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     })
   ],
-  providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }],
+  providers: [
+    {
+      provide: TUI_SANITIZER,
+      useClass: NgDompurifySanitizer
+    },
+    {
+      provide: TUI_LANGUAGE,
+      useValue: of(TUI_ENGLISH_LANGUAGE)
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

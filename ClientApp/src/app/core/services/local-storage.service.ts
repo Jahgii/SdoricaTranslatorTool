@@ -15,7 +15,6 @@ export class LocalStorageService {
     localStorage.setItem('lTUrl', url);
   }
 
-  
   getLibreTranslateSource() {
     return localStorage.getItem('lTSource') ?? undefined;
   }
@@ -38,5 +37,13 @@ export class LocalStorageService {
 
   setDefaultLang(lang: string) {
     localStorage.setItem('defaultLang', lang);
+  }
+
+  getAppLang() {
+    return localStorage.getItem('appLang') ?? undefined;
+  }
+
+  setAppLang(lang: string) {
+    localStorage.setItem('appLang', lang);
   }
 }

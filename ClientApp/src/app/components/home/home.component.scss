@@ -1,10 +1,22 @@
-.container {
-    display: flex;
-    gap: 1rem;
+.container-m {
+    padding: 1em 5em;
+    max-width: 1680px;
+    margin: 0 auto;
+}
 
-    :host-context(tui-root._mobile) & {
-        flex-direction: column;
-    }
+.container {
+    --grid-layout-gap: 16px;
+    --grid-column-count: 4;
+    --grid-item--min-width: 280px;
+
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+    grid-column: 4;
+    gap: 1rem;
 }
 
 .image {
