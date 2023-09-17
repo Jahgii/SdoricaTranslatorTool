@@ -7,37 +7,50 @@
         </button>
     </tui-block-status>
 
-    <ng-container *ngIf="(languageOrigin.language.value)">  
+    <ng-container *ngIf="(languageOrigin.language.value)">
         <div *ngIf="size$ | async as size" class="container">
             <tui-block-status class="card" [card]="true">
-                <img tuiSlot="top" alt="hidden content" src="./assets/images/localization.svg" class="image" />
+                <img tuiSlot="top" alt="main localization" src="./assets/images/localization.svg" class="image" />
 
-                {{'main_localization' | translate}}
+                <h4 class="tui-text_h6">{{'main_localization' | translate}}</h4>
+                <p class="tui-text_body-x">
+                    {{'main_localization-description' | translate}}
+                </p>
 
                 <button tuiButton appearance="outline" [size]="size" [routerLink]="['/localization']">
                     {{'go' | translate }}
                 </button>
             </tui-block-status>
             <tui-block-status class="card" [card]="true">
-                <img tuiSlot="top" alt="something wrong" src="./assets/images/dialog-assets.svg" class="image" />
+                <img tuiSlot="top" alt="dialog assets" src="./assets/images/dialog-assets.svg" class="image" />
 
-                {{'chapter-dialog-localization' | translate}}
+                <h4 class="tui-text_h6">{{'chapter-dialog-localization' | translate}}</h4>
+                <p class="tui-text_body-x">
+                    {{'chapter-dialog-localization-description' | translate}}
+                </p>
 
                 <button tuiButton appearance="outline" [size]="size" [routerLink]="['/dialogsAsset']">
                     {{'go' | translate }}
                 </button>
             </tui-block-status>
             <tui-block-status class="card" [card]="true">
-                <img tuiSlot="top" alt="something wrong" src="./assets/images/import-translation.svg" class="image" />
-                {{'re-import-files' | translate}}
+                <img tuiSlot="top" alt="re/import" src="./assets/images/import-translation.svg" class="image" />
+                <h4 class="tui-text_h6">{{'re-import-files' | translate}}</h4>
+                <p class="tui-text_body-x">
+                    {{'re-import-files-description' | translate}}
+                </p>
+
                 <button tuiButton appearance="outline" [size]="size" [routerLink]="['/loading']">
                     {{'go' | translate }}
                 </button>
             </tui-block-status>
             <tui-block-status class="card" [card]="true">
-                <img tuiSlot="top" alt="something wrong" src="./assets/images/export-translation.svg" class="image" />
+                <img tuiSlot="top" alt="export" src="./assets/images/export-translation.svg" class="image" />
 
-                {{'export-files' | translate}}
+                <h4 class="tui-text_h6">{{'export-files' | translate}}</h4>
+                <p class="tui-text_body-x">
+                    {{'export-files-description' | translate}}
+                </p>
 
                 <button tuiButton appearance="outline" [size]="size" [routerLink]="['/export']">
                     {{'go' | translate }}

@@ -38,7 +38,7 @@ export class NavMenuComponent implements OnInit {
     readonly translate: TranslateService,
     private localStorage: LocalStorageService,
     @Inject(TuiLanguageSwitcher) readonly switcher: TuiLanguageSwitcher,
-    @Inject(TuiBreakpointService) readonly breakpointService: TuiBreakpointService
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) {
     this.translate.currentLang = this.translate.defaultLang;
   }

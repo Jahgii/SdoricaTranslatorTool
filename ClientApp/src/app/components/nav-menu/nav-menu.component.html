@@ -1,7 +1,14 @@
 <tui-theme-night *ngIf="!(nightMode$ | async)"></tui-theme-night>
 <app-theme-dark *ngIf="!(nightMode$ | async)"></app-theme-dark>
 <header class="header">
-    <h1 style="margin-right: auto;">{{'sdorica-translator-tool' | translate}}</h1>
+    <ng-container *ngIf="breakpointService$ | async as breakpoint">
+        <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
+            <h1 style="margin-right: auto;">{{'sdorica-translator-tool' | translate}}</h1>
+        </ng-container>
+        <ng-container *ngIf="breakpoint === 'mobile'">
+            <h1 style="margin-right: auto;">{{'sdorica-translator-tool-small' | translate}}</h1>
+        </ng-container>
+    </ng-container>
     <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
         appearance="icon" [icon]="'tuiIconGithub'">
     </a>
