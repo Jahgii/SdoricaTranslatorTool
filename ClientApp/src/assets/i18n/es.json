@@ -44,5 +44,21 @@
     "en": "English",
     "es": "Español",
     "english": "Inglés",
-    "japanese": "Japonés"
+    "japanese": "Japonés",
+    "file-number": "Archivo No°",
+    "saving-changes": "Guardando Cambios",
+    "translated": "Traducido",
+    "propagation": "Propagación",
+    "download-dialog-file": "Descargar Dialogo",
+    "libretranslate-button-ready": "Traducir todos los textos con LibreTranslate",
+    "libretranslate-button-disabled": "LibreTranslate no esta configurado o el servidor no esta activo, sí quieres utilizar LibreTranslate puedes configurarlo en el icono de tuerca(esquina-superior-derecha).",
+    "original": "Original",
+    "propagation-dialog-description-0": "Al editar, propaga todos los cambios hechos a los",
+    "propagation-dialog-description-1": "Dialogos",
+    "propagation-dialog-description-2": "con el mismo valor en",
+    "propagation-dialog-description-3": "Nombre del Hablante",
+    "propagation-dialog-description-4": ".",
+    "loading-3-dots": "...Cargando...",
+    "type-name": "Escribe un Nombre",
+    "edit-name": "Editar Nombre"
 }

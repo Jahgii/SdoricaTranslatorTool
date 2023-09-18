@@ -9,22 +9,22 @@
                             <tui-input-inline *ngIf="mainGroup.editing; else groupName;" tuiAutoFocus
                                 [(ngModel)]="mainGroup.Name" (focusedChange)="onFocusedChange($any($event), mainGroup)"
                                 (keydown.enter.prevent)="onEditGroupName(mainGroup)">
-                                Type a name
+                                {{'type-name' | translate}}
                             </tui-input-inline>
                             <ng-template #groupName>
                                 <div style="display: flex;">
                                     <span>{{ mainGroup.Name }}</span>
-                                    <button tuiIconButton type="button" title="Edit heading" size="xs" appearance="icon"
+                                    <button tuiIconButton type="button" title="{{'edit-name' | translate}}" size="xs" appearance="icon"
                                         icon="tuiIconEdit2" class="tui-space_left-1"
                                         (click)="toogle(mainGroup)"></button>
                                 </div>
                             </ng-template>
                         </h2>
                         <ng-container *ngIf="(mainGroup.TranslatedFiles/mainGroup.Files) < 1; else completed">
-                            Translated: {{ mainGroup.TranslatedFiles }} / {{ mainGroup.Files }}
+                            {{ "translated" | translate }}: {{ mainGroup.TranslatedFiles }} / {{ mainGroup.Files }}
                         </ng-container>
                         <ng-template #completed>
-                            Translated: <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                            {{ "translated" | translate }}: <tui-svg src="tuiIconCheckCircle"></tui-svg>
                         </ng-template>
                         <button style="position: absolute; bottom: 0; right: 0;" tuiIconButton
                             icon="tuiIconArrowRightCircle" appearance="icon" shape="square"
@@ -36,7 +36,7 @@
         <ng-template #loading>
             <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" [@popIn]>
                 <tui-block-status>
-                    <h4>...Loading...</h4>
+                    <h4>{{'loading-3-dots' | translate}}</h4>
                 </tui-block-status>
             </tui-loader>
         </ng-template>

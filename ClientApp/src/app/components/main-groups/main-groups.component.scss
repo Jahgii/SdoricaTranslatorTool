@@ -2,7 +2,7 @@
 
 .tiles {
     gap: 1rem;
-    grid-auto-rows: minmax(180px, auto);
+    grid-auto-rows: minmax(240px, auto);
     grid-template-columns: repeat(auto-fit, minmax(320px, auto));
 }
 

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { TuiBreakpointService } from '@taiga-ui/core';
 import { Observable, Subscription, firstValueFrom, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
@@ -21,7 +22,8 @@ export class MainGroupsComponent {
 
   constructor(
     private api: ApiService,
-    readonly languageOrigin: LanguageOriginService
+    readonly languageOrigin: LanguageOriginService,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) { }
 
   ngOnInit(): void {

@@ -44,5 +44,21 @@
     "en": "English",
     "es": "Español",
     "english": "English",
-    "japanese": "Japanese"
+    "japanese": "Japanese",
+    "file-number": "File Number",
+    "saving-changes": "Saving Changes",
+    "translated": "Translated",
+    "propagation": "Propagation",
+    "download-dialog-file": "Download Dialog File",
+    "libretranslate-button-ready": "Translate all dialog with Libre Translate",
+    "libretranslate-button-disabled": "LibreTranslate its not configure or the server its not active, if you want use LibreTranslate click on gear icon(upper-right-corner) to configure.",
+    "original": "Original",
+    "propagation-dialog-description-0": "When editing, propagates the changes made to all",
+    "propagation-dialog-description-1": "Dialogs",
+    "propagation-dialog-description-2": "with the same",
+    "propagation-dialog-description-3": "Speaker Name",
+    "propagation-dialog-description-4": "value.",
+    "loading-3-dots": "...Loading...",
+    "type-name": "Type a Name",
+    "edit-name": "Edit Name"
 }

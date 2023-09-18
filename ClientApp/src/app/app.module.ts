@@ -15,6 +15,8 @@ import { TuiActiveZoneModule, TuiAutoFocusModule, TuiLetModule } from "@taiga-ui
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE } from '@taiga-ui/i18n';
+import { TuiLanguageName } from '@taiga-ui/i18n/interfaces';
+import { tuiLanguageSwitcher } from '@taiga-ui/i18n/switch';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from "./components/home/home.component";
@@ -139,7 +141,15 @@ export function HttpLoaderFactory(http: HttpClient) {
     {
       provide: TUI_LANGUAGE,
       useValue: of(TUI_ENGLISH_LANGUAGE)
-    }
+    },
+    tuiLanguageSwitcher(async (language: TuiLanguageName): Promise<unknown> => {
+      switch (language) {
+        case `es`:
+          return import(`@taiga-ui/i18n/languages/spanish`);
+        default:
+          return import(`@taiga-ui/i18n/languages/english`);
+      }
+    }),
   ],
   bootstrap: [AppComponent]
 })

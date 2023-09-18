@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { tuiPure, TuiStringHandler, TuiContextWithImplicit } from '@taiga-ui/cdk';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { TuiCountryIsoCode, TuiLanguageName, TuiLanguageSwitcher } from '@taiga-ui/i18n';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { TUI_SPANISH_LANGUAGE } from '@taiga-ui/i18n';
 
 @Component({
   selector: 'app-nav-menu',
@@ -48,6 +49,7 @@ export class NavMenuComponent implements OnInit {
       .subscribe(lang => {
         this.translate.use(lang);
         this.localStorage.setAppLang(lang);
+        this.switcher.setLanguage(lang);
       });
 
     let lang = this.localStorage.getAppLang();
