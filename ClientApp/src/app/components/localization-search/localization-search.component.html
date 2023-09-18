@@ -9,21 +9,27 @@
                         <tr tuiThGroup>
                             <th tuiTh *tuiHead="'Language'" [sticky]="true"
                                 [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
-                                Original
+                                {{'original' | translate}}
                             </th>
                             <th tuiTh *tuiHead="'Translation'" [sticky]="true"
                                 [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null"
                                 style="width: 60%; max-width: 60%;">
-                                Translation
+                                {{'translation' | translate}}
                                 <tui-toggle class="tui-space_left-2" [showIcons]="true"
                                     [(ngModel)]="localization.propagateTranslation"></tui-toggle>
                                 <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
                                 </tui-tooltip>
                                 <ng-template #propagationTooltip>
-                                    Propagation: When editing, propagates the changes made to all <span
-                                        class="tooltip-important-text">KEYS</span> with the same
-                                    <strong>Original</strong> value, in the current language, applies to the
-                                    Translation and Translated(checkbox) columns.
+                                    {{'propagation' | translate}}:
+                                    {{'propagation-keys-description-0' | translate}}
+                                    <span class="tooltip-important-text">
+                                        {{'propagation-keys-description-1' | translate}}
+                                    </span>
+                                    {{'propagation-keys-description-2' | translate}}
+                                    <strong>
+                                        {{'propagation-keys-description-3' | translate}}
+                                    </strong>
+                                    {{'propagation-keys-description-4' | translate}}
                                 </ng-template>
                             </th>
                             <th tuiTh *tuiHead="'Translated'" [sticky]="true"
@@ -39,7 +45,7 @@
                                     [formControl]="localization.filterForm.controls['original']"
                                     [tuiGenericFilter]="localization.filterOriginalColumn" [tuiTextfieldSize]="'m'"
                                     [tuiTextfieldIconLeft]="'tuiIconFilter'">
-                                    Search by Original Column
+                                    {{'search-by-original-column' | translate}}
                                 </tui-input>
                             </th>
                             <th tuiTh *tuiHead="'Translation'" [sticky]="true"
@@ -49,7 +55,7 @@
                                     [formControl]="localization.filterForm.controls['translation']"
                                     [tuiGenericFilter]="localization.filterTranslationColumn" [tuiTextfieldSize]="'m'"
                                     [tuiTextfieldIconLeft]="'tuiIconFilter'">
-                                    Search by Translation Column
+                                    {{'search-by-translation-column' | translate}}
                                 </tui-input>
                             </th>
                             <th tuiTh *tuiHead="'Translated'" [sticky]="true"
@@ -93,7 +99,7 @@
                                         </li>
                                         <li *ngFor="let key of item.Original| keyvalue">
                                             <span class="tooltip-important-text">
-                                                {{key.key}}:
+                                                {{$any(key.key) | translate}}:
                                             </span>
                                             {{key.value}}
                                         </li>
@@ -126,7 +132,7 @@
         <ng-template #loading>
             <tui-block-status>
                 <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" [@popIn]>
-                    <h4 style="margin-top: revert; margin-bottom: revert;">...Loading...</h4>
+                    <h4 style="margin-top: revert; margin-bottom: revert;">{{'loading-3-dots' | translate}}</h4>
                 </tui-loader>
             </tui-block-status>
         </ng-template>
@@ -134,7 +140,7 @@
 
     <ng-template #searchTemplate>
         <tui-block-status>
-            <h4>...Type your search...</h4>
+            <h4>{{'type-your-search' | translate}}</h4>
         </tui-block-status>
     </ng-template>
 </div>

@@ -64,9 +64,10 @@ export class LocalizationService implements OnDestroy {
   public searchTotalTranslated = 0;
   private controlCheckbox = 1;
 
-  public search: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
-  public searchKey: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
-  public searchTranslation: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  public search: FormControl = new FormControl('');
+  public searchKey: FormControl = new FormControl('');
+  public searchTranslation: FormControl = new FormControl('');
+  private lastSearch!: () => void;
   private subsSearch!: Subscription;
   private subsSearchKey!: Subscription;
   private subsSearchTranslation!: Subscription;
@@ -78,6 +79,34 @@ export class LocalizationService implements OnDestroy {
     public libreTranslate: LibreTranslateService
   ) {
     this.language = this.languageOrigin.localizationLang;
+
+    this.languageOrigin.language.valueChanges.subscribe(v => {
+      this.language = this.languageOrigin.localizationLang;
+      this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories')
+        .pipe(map(r => {
+          let searchCategory: ILocalizationCategory = {
+            Name: "SEARCH",
+            Keys: {
+              [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
+                return ac + v.Keys[this.languageOrigin.localizationLang];
+              }, 0)
+            },
+            KeysTranslated: {
+              [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
+                return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
+              }, 0)
+            }
+          }
+          r.unshift(searchCategory);
+
+          let index = r.findIndex(c => c.Name === this.selectedCategory.Name);
+          this.selectedCategory = r[index];
+          if (this.alreadySearch$.value && this.lastSearch != null) this.lastSearch();
+
+          return r;
+        }));
+    });
+
     this.autoSearch();
     this.onTranslatedColumnCheckboxChange();
   }
@@ -255,6 +284,7 @@ export class LocalizationService implements OnDestroy {
   }
 
   public async onSearch() {
+    this.lastSearch = this.onSearch;
     this.alreadySearch$.next(true);
     this.keys$ = this.api
       .getWithHeaders('localizationkeys/search',
@@ -282,6 +312,7 @@ export class LocalizationService implements OnDestroy {
   }
 
   public async onSearchKey() {
+    this.lastSearch = this.onSearchKey;
     this.alreadySearch$.next(true);
     this.keys$ = this.api
       .getWithHeaders('localizationkeys/searchkey',
@@ -308,6 +339,7 @@ export class LocalizationService implements OnDestroy {
   }
 
   public async onSearchTranslation() {
+    this.lastSearch = this.onSearchTranslation;
     this.alreadySearch$.next(true);
     this.keys$ = this.api
       .getWithHeaders('localizationkeys/searchtranslation',

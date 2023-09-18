@@ -1,18 +1,18 @@
 <tui-hosted-dropdown class="tui-space_left-2" tuiDropdownAlign="right" [content]="dropdown" [sided]="true"
     [(open)]="menuOpen">
     <button appearance="flat" tuiButton type="button" size="xs" iconRight="tuiIconChevronRight"
-        [icon]="'tuiIconBookOpen'" tuiMode="onLight" [pseudoActive]="menuOpen || null">
-        Dictionary
+        [icon]="'tuiIconBook'" tuiMode="onLight" [pseudoActive]="menuOpen || null">
+        {{'dictionary' | translate}}
     </button>
 </tui-hosted-dropdown>
 <ng-template #dropdown let-close="close">
     <tui-data-list>
         <tui-opt-group>
             <button tuiOption (click)="onShowList()">
-                See All
+                <tui-svg src="tuiIconBookOpen"></tui-svg> {{'see-all' | translate}}
             </button>
             <button tuiOption (click)="onShowCreateNew()">
-                Create New
+                <tui-svg src="tuiIconEdit2"></tui-svg> {{'create-new' | translate}}
             </button>
         </tui-opt-group>
     </tui-data-list>
@@ -21,7 +21,7 @@
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
         [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
-        <p>Common Word Form</p>
+        <p>{{'common-word-form' | translate}}</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
             (click)="dialogState.isHidden = !dialogState.isHidden">
         </button>
@@ -30,7 +30,9 @@
         <form [formGroup]="commonWordForm" style="padding: 0 1rem;">
             <div>
                 <div>
-                    <h3 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">Content</h3>
+                    <h3 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">
+                        {{'content' | translate}}
+                    </h3>
                     <div class="tui-form__row">
                         <tui-input formControlName="Original" tuiTextfieldSize="m">
                             {{'original-word' | translate}}
@@ -53,14 +55,14 @@
             <ng-container *ngIf="!(commonWords.createOther$ | async); else createOther">
                 <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
                     [showLoader]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
-                    [tuiHint]="(commonWordForm.invalid) ? 'The form has errors' : undefined"
-                    [tuiHintAppearance]="'onDark'" appearance="outline">
-                    Create
+                    [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined"
+                    tuiHintAppearance="error" appearance="outline">
+                    {{'create' | translate}}
                 </button>
             </ng-container>
             <ng-template #createOther>
                 <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m" appearance="outline">
-                    Created - Other?
+                    {{'created-other'}}
                 </button>
             </ng-template>
         </div>
@@ -80,7 +82,7 @@
 
     <ng-container *ngIf="commonWords.words as words">
         <cdk-virtual-scroll-viewport *ngIf="words.length > 0; else emptyWords" #viewport tuiScrollable
-            class="main-form-content tui-space_horizontal-3 viewport tui-zero-scrollbar" [itemSize]="45">
+            class="main-form-content tui-space_horizontal-3 tui-space_bottom-3 viewport tui-zero-scrollbar" [itemSize]="45">
             <table class="tui-table" style="table-layout: fixed;" tuiTable
                 [columns]="['Original', 'Translation', 'custom', 'confirmDelete']" [size]="'s'" [@popIn]
                 *ngIf="commonWords.change$ | async">
@@ -121,14 +123,14 @@
                                 <tui-loader [showLoader]="(w.loader | async) ?? false" [inheritColor]="true"
                                     [overlay]="true">
                                     <button appearance="flat" icon="tuiIconTrash" shape="rounded" size="xs"
-                                        title="Delete" tuiIconButton type="button" tuiMode="onLight"
+                                        title="{{'remove' | translate}}" tuiIconButton type="button" tuiMode="onLight"
                                         (click)="commonWords.confirmDelete(w);">
                                     </button>
                                 </tui-loader>
                                 <tui-loader [showLoader]="(w.loader | async) ?? false" [inheritColor]="true"
                                     [overlay]="true">
                                     <button appearance="flat" icon="tuiIconSave" shape="rounded" size="xs"
-                                        title="Update" tuiIconButton type="button" tuiMode="onLight"
+                                        title="{{'update' | translate}}" tuiIconButton type="button" tuiMode="onLight"
                                         (click)="commonWords.update(w)">
                                     </button>
                                 </tui-loader>
@@ -138,13 +140,13 @@
                             <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
                                 <p class="text">{{'confirm-text-delete-word' | translate}}</p>
                                 <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
-                                    (click)="commonWords.delete(w, i)" [showLoader]="(commonWords.deleting$ | async) ?? false"
-                                    appearance="accent">
+                                    (click)="commonWords.delete(w, i)"
+                                    [showLoader]="(commonWords.deleting$ | async) ?? false" appearance="accent">
                                     {{'confirm-frienly' | translate}}
                                 </button>
                                 <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
-                                    (click)="commonWords.cancelDelete(w)" [showLoader]="(commonWords.deleting$ | async) ?? false"
-                                    appearance="flat">
+                                    (click)="commonWords.cancelDelete(w)"
+                                    [showLoader]="(commonWords.deleting$ | async) ?? false" appearance="flat">
                                     {{'unconfirm-frienly' | translate}}
                                 </button>
                             </td>

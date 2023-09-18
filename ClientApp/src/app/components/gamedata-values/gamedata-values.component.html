@@ -1,18 +1,18 @@
 <tui-hosted-dropdown class="tui-space_left-2" tuiDropdownAlign="right" [content]="dropdown" [sided]="true"
     [(open)]="menuOpen">
-    <button appearance="flat" tuiButton type="button" size="xs" iconRight="tuiIconChevronRight" [icon]="'tuiIconMenu'"
+    <button appearance="flat" tuiButton type="button" size="xs" iconRight="tuiIconChevronRight" [icon]="'tuiIconBook'"
         tuiMode="onLight" [pseudoActive]="menuOpen || null">
-        BuffInfo
+        {{'buffinfo' | translate}}
     </button>
 </tui-hosted-dropdown>
 <ng-template #dropdown let-close="close">
     <tui-data-list>
         <tui-opt-group>
             <button tuiOption (click)="onShowList()">
-                See All
+                <tui-svg src="tuiIconBookOpen"></tui-svg> {{'see-all' | translate}}
             </button>
             <button tuiOption (click)="onShowCreateNew()">
-                Create New
+                <tui-svg src="tuiIconEdit2"></tui-svg> {{'create-new' | translate}}
             </button>
         </tui-opt-group>
     </tui-data-list>
@@ -21,7 +21,7 @@
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
         [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
-        <p>Buff Info Form</p>
+        <p>{{'buffinfo-form' | translate}}</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
             (click)="dialogState.isHidden = !dialogState.isHidden">
         </button>
@@ -30,32 +30,34 @@
         <form [formGroup]="contentForm" style="padding: 0 1rem;">
             <div>
                 <div>
-                    <h3 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">Content</h3>
+                    <h3 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">
+                        {{'content' | translate}}
+                    </h3>
                     <div class="tui-form__row">
                         <tui-input formControlName="id" tuiTextfieldSize="m"
                             [tuiTextfieldIcon]="availableKeyNameTemplate">
-                            id
+                            {{'id' | translate}}
                             <input placeholder="***" tuiTextfield />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="iconKey" tuiTextfieldSize="m">
-                            iconKey
+                            {{'iconkey' | translate}}
                             <input placeholder="***" tuiTextfield />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="localizationInfoKey" tuiTextfieldSize="m">
-                            localizationInfoKey
+                            {{'localizationinfokey' | translate}}
                             <input placeholder="***" tuiTextfield />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="localizationNameKey" tuiTextfieldSize="m">
-                            localizationNameKey
+                            {{'localizationnamekey' | translate}}
                             <input placeholder="***" tuiTextfield />
                             <span class="tui-required"></span>
                         </tui-input>
@@ -63,14 +65,14 @@
                     <div class="tui-form__row">
                         <tui-input-number tuiHintContent="Order need to be more than 90000" formControlName="order"
                             [tuiTextfieldSize]="'m'">
-                            order
+                            {{'order' | translate}}
                             <span class="tui-required"></span>
                         </tui-input-number>
                     </div>
                     <div class="tui-form__row">
                         <tui-checkbox-block contentAlign="right" formControlName="viewable" size="s"
                             tuiTextfieldSize="m">
-                            viewable
+                            {{'viewable' | translate}}
                         </tui-checkbox-block>
                     </div>
                 </div>
@@ -79,17 +81,17 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
+                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
                     [showLoader]="(creating$ | async) ?? false"
                     [disabled]="(availableKeyName$ | async) != 'valid' || buffInfoForm.invalid"
-                    [tuiHint]="((availableKeyName$ | async) == 'invalid' || buffInfoForm.invalid) ? 'The form has errors' : undefined"
-                    tuiMode="onDark">
-                    Create
+                    [tuiHint]="((availableKeyName$ | async) == 'invalid' || buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
+                    tuiHintAppearance="error">
+                    {{'create' | translate}}
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
-                    Created - Other?
+                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
+                    {{'created-other' | translate}}
                 </button>
             </ng-template>
         </div>
@@ -100,7 +102,7 @@
     <ng-container *ngIf="availableKeyName$ | async as status">
         <ng-container [ngSwitch]="status">
             <p *ngSwitchCase="'verifying'">
-                <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true" tuiHintContent="Select Category">
+                <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
                     <button tuiIconButton appearance="icon" [icon]="'tuiIconLoader'">
                     </button>
                 </tui-loader>
@@ -120,14 +122,17 @@
 <main class="main-list" #draggableListElement *ngIf="!listDialogState.isHidden">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
         [draggableElementState]="listDialogState" [elementAnchorRef]="anchor">
-        <p>Buff Info List</p>
+        <p>{{'buffinfo-list' | translate}}</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
             (click)="listDialogState.isHidden = !listDialogState.isHidden">
         </button>
     </div>
-    <!-- <tui-scrollbar class="main-form-content"> -->
+
+    <h4 class="tui-space_horizontal-3">{{'buffinfo-description' | translate}}</h4>
+
     <ng-container *ngIf="gamedataValues$ | async as values">
-        <cdk-virtual-scroll-viewport #viewport tuiScrollable class="main-form-content viewport tui-zero-scrollbar"
+        <cdk-virtual-scroll-viewport #viewport tuiScrollable
+            class="main-form-content tui-space_horizontal-3 tui-space_bottom-3 viewport tui-zero-scrollbar"
             [itemSize]="45">
             <table class="tui-table" style="table-layout: fixed;" tuiTable
                 [columns]="['id', 'iconKey', 'localizationInfoKey', 'localizationNameKey', 'order', 'viewable', 'custom']"
@@ -136,27 +141,27 @@
                     <tr tuiThGroup>
                         <th tuiTh *tuiHead="'id'" [sticky]="true" [style.top.px]="-viewport['_renderedContentOffset']"
                             [sorter]="null">
-                            id
+                            {{'id' | translate}}
                         </th>
                         <th tuiTh *tuiHead="'iconKey'" [sticky]="true"
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
-                            icon
+                            {{'iconkey' | translate}}
                         </th>
                         <th tuiTh *tuiHead="'localizationInfoKey'" [sticky]="true"
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
-                            Info Key
+                            {{'infokey' | translate}}
                         </th>
                         <th tuiTh *tuiHead="'localizationNameKey'" [sticky]="true"
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
-                            Name Key
+                            {{'localizationnamekey' | translate}}
                         </th>
                         <th tuiTh *tuiHead="'order'" [sticky]="true"
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
-                            order
+                            {{'order' | translate}}
                         </th>
                         <th tuiTh *tuiHead="'viewable'" [sticky]="true"
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
-                            viewable
+                            {{'viewable' | translate}}
                         </th>
                         <th tuiTh *tuiHead="'custom'" [sticky]="true" style="width: 48px;"
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
@@ -168,31 +173,31 @@
                     <tr *cdkVirtualFor="let v of values" tuiTr>
                         <td *tuiCell="'id'" tuiTd>
                             <tui-input [(ngModel)]="v.Content.id">
-                                id
+                                {{'id' | translate}}
                                 <input placeholder="***" tuiTextfield />
                             </tui-input>
                         </td>
                         <td *tuiCell="'iconKey'" tuiTd>
                             <tui-input [(ngModel)]="v.Content.iconKey">
-                                id
+                                {{'iconkey' | translate}}
                                 <input placeholder="***" tuiTextfield />
                             </tui-input>
                         </td>
                         <td *tuiCell="'localizationInfoKey'" tuiTd>
                             <tui-input [(ngModel)]="v.Content.localizationInfoKey">
-                                localizationInfoKey
+                                {{'localizationinfokey' | translate}}
                                 <input placeholder="***" tuiTextfield />
                             </tui-input>
                         </td>
                         <td *tuiCell="'localizationNameKey'" tuiTd>
                             <tui-input [(ngModel)]="v.Content.localizationNameKey">
-                                localizationNameKey
+                                {{'localizationnamekey' | translate}}
                                 <input placeholder="***" tuiTextfield />
                             </tui-input>
                         </td>
                         <td *tuiCell="'order'" tuiTd>
                             <tui-input-number [(ngModel)]="v.Content.order" [readOnly]="true">
-                                order
+                                {{'order' | translate}}
                             </tui-input-number>
                         </td>
                         <td *tuiCell="'viewable'" tuiTd>
@@ -202,9 +207,9 @@
                         </td>
                         <td *tuiCell="'custom'" tuiTd>
                             <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
-                                [overlay]="true" tuiHintContent="Select Category">
+                                [overlay]="true">
                                 <button *ngIf="v.Custom" appearance="flat" icon="tuiIconSave" shape="rounded" size="xs"
-                                    title="Remove" tuiIconButton type="button" class="remove"
+                                    title="{{'remove' | translate}}" tuiIconButton type="button" class="remove"
                                     (click)="onUpdateValue(v)">
                                 </button>
                             </tui-loader>
@@ -214,7 +219,6 @@
             </table>
         </cdk-virtual-scroll-viewport>
     </ng-container>
-    <!-- </tui-scrollbar> -->
 </main>
 
 <div #anchor style="position: absolute;"></div>

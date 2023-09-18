@@ -25,7 +25,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: ApiService,
-    private languageOrigin: LanguageOriginService,
+    public languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
     public localization: LocalizationService
   ) {
