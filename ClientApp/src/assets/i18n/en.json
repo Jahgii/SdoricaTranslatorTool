@@ -78,6 +78,8 @@
     "propagation-keys-description-4": "value, in the current language, applies to the Translation and Translated(checkbox) columns.",
     "search-by-original-column": "Search by Original Column",
     "search-by-translation-column": "Search by Translation Column",
+    "search-by-original-column-short": "Original",
+    "search-by-translation-column-short": "Translation",
     "loading-categories": "Loading Categories",
     "select-one-category": "Select One category on upper left Select Box",
     "type-your-search": "Type your Search on Results button",
@@ -107,5 +109,6 @@
     "common-word-form": "Word",
     "buffinfo-description": "All records in the table can be used with the keyword | $BUFF:(ID) | ID must be changed by the table's Id values. The categories where it can be used are limited. As a general rule, only use where in the Original value is used.",
     "remove": "Remove",
-    "update": "Update"
+    "update": "Update",
+    "order-hint": "Order need to be more than 90000"
 }

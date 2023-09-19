@@ -1,5 +1,5 @@
 <button tuiButton type="button" appearance="flat" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
-    (click)="dialogState.isHidden = !dialogState.isHidden">
+    (click)="onShowCreate(createTemplate, 'm')">
     {{'create-new-key' | translate}}
 </button>
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
@@ -65,6 +65,59 @@
         </div>
     </tui-scrollbar>
 </main>
+<ng-template #createTemplate>
+    <tui-scrollbar class="main-form-content">
+        <form [formGroup]="keyForm" style="padding: 0 1rem;">
+            <div>
+                <div>
+                    <div class="tui-form__row">
+                        <tui-select tuiTextfieldSize="m" formControlName="Category">
+                            {{'category' | translate}}
+                            <tui-data-list-wrapper *tuiDataList [items]="categories$ | async"></tui-data-list-wrapper>
+                        </tui-select>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-input formControlName="Name" tuiTextfieldSize="m"
+                            [tuiTextfieldIcon]="availableKeyNameTemplate">
+                            {{'key-name' | translate}}
+                            <input placeholder="***" tuiTextfield />
+                            <span class="tui-required"></span>
+                        </tui-input>
+                    </div>
+                    <ng-container *ngIf="categorySelected$ | async">
+                        <h4 class="tui-form__header">{{'languages' | translate}}</h4>
+                        <ng-container *ngFor="let keyControl of $any(keyForm.controls['Original']).controls | keyvalue">
+                            <div class="tui-form__row">
+                                <tui-input [formControl]="$any(keyControl.value)" tuiTextfieldSize="m">
+                                    <input placeholder="***" tuiTextfield />
+                                    {{$any(keyControl.key) | translate}}
+                                    <span class="tui-required"></span>
+                                </tui-input>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </form>
+
+        <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
+            <ng-container *ngIf="!(createOther$ | async); else createOther">
+                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
+                    [showLoader]="(creating$ | async) ?? false"
+                    [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
+                    [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? ('form-error' | translate) : undefined"
+                    tuiHintAppearance="error">
+                    {{'create' | translate}}
+                </button>
+            </ng-container>
+            <ng-template #createOther>
+                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
+                    {{'created-other' | translate}}
+                </button>
+            </ng-template>
+        </div>
+    </tui-scrollbar>
+</ng-template>
 
 <ng-template #availableKeyNameTemplate>
     <ng-container *ngIf="availableKeyName$ | async as status">

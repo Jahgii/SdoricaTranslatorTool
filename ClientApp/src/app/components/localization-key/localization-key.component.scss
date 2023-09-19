@@ -29,10 +29,10 @@
         overflow-y: visible;
         overflow-x: hidden;
     }
+}
 
-    .main-form-actions {
-        display: flex;
-        flex-direction: row-reverse;
-        padding: 0 1rem;
-    }
+.main-form-actions {
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 0 1rem;
 }

@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { TuiStringHandler } from '@taiga-ui/cdk';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize } from '@taiga-ui/core';
 import { tuiItemsHandlersProvider } from '@taiga-ui/kit';
 import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
+import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 
 const STRINGIFY_CATEGORIES: TuiStringHandler<ILocalizationCategory> = (c: ILocalizationCategory) =>
-  c ? `${c.Name}` : 'Select One Category';
+  c ? `${c.Name}` : '***';
 
 type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
 
@@ -19,6 +22,7 @@ type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
   providers: [tuiItemsHandlersProvider({ stringify: STRINGIFY_CATEGORIES })],
 })
 export class LocalizationKeyComponent implements OnInit, OnDestroy {
+  @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;
   @Output() created = new EventEmitter();
 
   public dialogState = {
@@ -51,10 +55,16 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
 
   private subsCategory!: Subscription | undefined;
   private subsKeyName!: Subscription | undefined;
+  private subsBreakpoint!: Subscription | undefined;
+  private subsDialog!: Subscription | undefined;
 
   constructor(
     private api: ApiService,
-    private fB: FormBuilder
+    private fB: FormBuilder,
+    private translate: TranslateService,
+    private cd: ChangeDetectorRef,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
+    @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
   ) {
 
   }
@@ -74,11 +84,51 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
         debounceTime(1000)
       )
       .subscribe(this.onKeyNameChange.bind(this));
+
+    this.subsBreakpoint = this.breakpointService$.subscribe(v => {
+      if (v == 'mobile') {
+        if (this.dialogState.isHidden === false) {
+          this.dialogState.isHidden = true;
+          this.onShowCreate(this.createTemplateView, 'm');
+          this.cd.detectChanges();
+        }
+      }
+      else {
+        if (this.subsDialog) {
+          this.subsDialog.unsubscribe();
+          this.subsDialog = undefined;
+          this.dialogState.isHidden = false;
+          this.cd.detectChanges();
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.subsCategory?.unsubscribe();
     this.subsKeyName?.unsubscribe();
+    this.subsBreakpoint?.unsubscribe();
+  }
+
+  public onShowCreate(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
+    firstValueFrom(this.breakpointService$)
+      .then(v => {
+        if (v == 'desktopLarge' || v == 'desktopSmall') {
+          this.dialogState.isHidden = !this.dialogState.isHidden;
+        }
+        else {
+          this.subsDialog = this.dialogs
+            .open(content, {
+              label: this.translate.instant('new-key-form'),
+              size: size
+            })
+            .subscribe({
+              complete: () => {
+                this.subsDialog = undefined;
+              },
+            });
+        }
+      });
   }
 
   public onCategoryChange(c: ILocalizationCategory) {

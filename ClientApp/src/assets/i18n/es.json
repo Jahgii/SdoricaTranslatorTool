@@ -78,6 +78,8 @@
     "propagation-keys-description-4": "en el lenguaje actual, aplica a las columnas de Traducción y Traducido",
     "search-by-original-column": "Buscar en Columna Original",
     "search-by-translation-column": "Buscar en Columna Traducción",
+    "search-by-original-column-short": "Original",
+    "search-by-translation-column-short": "Traducción",
     "loading-categories": "Cargando Categorias",
     "select-one-category": "Selecciona una categoria, en el seleccionador(esquina-superior-izquierda).",
     "type-your-search": "Escribe tu busqueda en el botón Resultados",
@@ -107,5 +109,6 @@
     "common-word-form": "Palabra",
     "buffinfo-description": "Todos los registros en la tabla pueden ser utilizados con la palabra clave | $BUFF:(ID) | ID debe de ser cambiado por los valores Id de la tabla. Las categorias donde puede utilizarse son limitadas. Por norma general solo utilice donde en su valor Original se utilice.",
     "remove": "Eliminar",
-    "update": "Guardar"
+    "update": "Guardar",
+    "order-hint": "Orden necesita ser mayor a 90000"
 }

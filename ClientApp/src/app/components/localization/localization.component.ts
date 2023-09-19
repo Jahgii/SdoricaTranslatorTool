@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { TuiScrollbarComponent } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiScrollbarComponent } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
@@ -27,7 +27,8 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     private api: ApiService,
     public languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
-    public localization: LocalizationService
+    public localization: LocalizationService,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) {
   }
 

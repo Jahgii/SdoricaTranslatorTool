@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TuiScrollbarComponent } from '@taiga-ui/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { TuiBreakpointService, TuiScrollbarComponent } from '@taiga-ui/core';
 import { BehaviorSubject } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
@@ -19,7 +19,8 @@ export class LocalizationSearchComponent {
 
   constructor(
     private languageOrigin: LanguageOriginService,
-    public localization: LocalizationService
+    public localization: LocalizationService,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) {
   }
 
