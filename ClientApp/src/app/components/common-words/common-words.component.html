@@ -274,7 +274,7 @@
                         </td>
                         <ng-template [ngIf]="(w.confirm | async) ?? false">
                             <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
-                                <p class="text">{{'confirm-text-delete-word' | translate}}</p>
+                                <p class="text tui-text_body-xs">{{'confirm-text-delete-word-short' | translate}}</p>
                                 <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
                                     (click)="commonWords.delete(w, i)"
                                     [showLoader]="(commonWords.deleting$ | async) ?? false" appearance="accent">

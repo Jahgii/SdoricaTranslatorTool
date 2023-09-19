@@ -24,8 +24,8 @@ export class NavMenuComponent implements OnInit {
   public langControl: FormControl = new FormControl();
 
   public langs: { lang: string; value: string; }[] = [
-    { lang: 'English', value: 'en' },
-    { lang: 'Español', value: 'es' }
+    { lang: 'en', value: 'en' },
+    { lang: 'es', value: 'es' }
   ];
 
   readonly flags = new Map<TuiLanguageName, TuiCountryIsoCode>([

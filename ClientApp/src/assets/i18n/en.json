@@ -14,6 +14,7 @@
     "translation": "Translation",
     "dictionary-description": "Words added to the dictionary will be highlighted in the Original text column with their corresponding translations",
     "confirm-text-delete-word": "I you sure you want to delete this word?",
+    "confirm-text-delete-word-short": "I you sure?",
     "confirm-frienly": "Yes, delete it!",
     "unconfirm-frienly": "No, it was a mistake!",
     "guide-me": "Guide me",

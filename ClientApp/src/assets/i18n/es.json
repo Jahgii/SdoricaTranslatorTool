@@ -14,6 +14,7 @@
     "translation": "Traducción",
     "dictionary-description": "Las palabras agregadas al diccionario seran resaltadas en la columna de texto Original con sus correspondientes traducciones",
     "confirm-text-delete-word": "¿Estás seguro que deseas borrar esta palabra?",
+    "confirm-text-delete-word-short": "¿Seguro?",
     "confirm-frienly": "Si, Borrala!",
     "unconfirm-frienly": "No, fue una equivocación!",
     "guide-me": "Guiame",

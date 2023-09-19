@@ -1,3 +1,5 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+
 .main-form {
     position: absolute;
     z-index: 1000;
@@ -104,5 +106,9 @@
         white-space: nowrap;
         width: 30ch;
         overflow: hidden;
+
+        @media #{$tui-mobile} {
+            width: 10ch;
+        }
     }
 }
