@@ -16,7 +16,7 @@ namespace SdoricaTranslatorTool
         {
             services.AddSingleton<IMongoClient>(s =>
             {
-                var connectionString = config["Mongoconnection:connectionServer"];
+                var connectionString = config["Mongoconnection"];
                 var settings = MongoClientSettings.FromConnectionString(connectionString);
                 settings.ServerApi = new ServerApi(ServerApiVersion.V1);
 
