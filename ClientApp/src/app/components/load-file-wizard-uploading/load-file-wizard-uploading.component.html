@@ -3,25 +3,25 @@
         <li class="tui-list__item">
             <tui-loader class="loader" [showLoader]="(language.value.Uploading | async) ?? false" [inheritColor]="true"
                 [overlay]="true">
-                {{language.key}}
+                {{language.key | translate}}
                 <div style="display: flex; flex-direction: column;">
                     <span>
-                        Status:
+                        {{'status' | translate}}:
                         <tui-svg [src]="(language.value.Uploaded | async) ? 'tuiIconCheckCircle' : 'tuiIconArchive'"
                             [ngStyle]="{'color': (language.value.Uploaded | async) ? 'var(--tui-success-fill)' : ''}">
                         </tui-svg>
                     </span>
-                    <span>Pending Files: {{fileReader.dialogAssets[language.key].length}}</span>
+                    <span>{{'pending-files' | translate}}: {{fileReader.dialogAssets[language.key].length}}</span>
                     <span *ngIf="(language.value.FileSkip | async) ?? 0 > 0">
-                        Skip Files:{{(language.value.FileSkip | async)}}
+                        {{'skip-files' | translate}}:{{(language.value.FileSkip | async)}}
                     </span>
                     <ng-container *ngIf="fileReader.dialogAssetsUploadingError[language.key]">
-                        <span>ERRORS: </span>
+                        <span>{{'errors' | translate}}: </span>
                         <tui-scrollbar class="file-error">
                             <table class="tui-table">
                                 <tr class="tui-table__tr tui-table__tr_border_none">
-                                    <th class="tui-table__th">Files Range</th>
-                                    <th class="tui-table__th">Actions</th>
+                                    <th class="tui-table__th">{{'files-range' | translate}}</th>
+                                    <th class="tui-table__th">{{'actions' | translate}}</th>
                                 </tr>
                                 <ng-container *ngFor="let error of fileReader.dialogAssetsUploadingError[language.key]">
                                     <tr class="tui-table__tr tui-table__tr_border_none">
@@ -48,25 +48,6 @@
                                     </tr>
                                 </ng-container>
                             </table>
-                            <!-- <ul class="tui-list tui-list_linear tui-list_nested">
-                                <ng-container *ngFor="let error of fileReader.dialogAssetsUploadingError[language.key]">
-                                    <li class="tui-list__item">
-                                        {{error.range}}
-                                        <button
-                                            *ngIf="(error.uploadStateError$ | async) && !(language.value.Uploading | async)"
-                                            tuiIconButton [iconRight]="'tuiIconRotateCw'" [appearance]="'accent'"
-                                            size="xs" [disabled]="(error.uploading$ | async) ?? false"
-                                            (click)="error.retry(error)">
-                                        </button>
-                                        <button
-                                            *ngIf="(error.uploadStateError$ | async) && !(language.value.Uploading | async)"
-                                            tuiIconButton [iconRight]="'tuiIconXCircle'" [appearance]="'accent'"
-                                            size="xs" [disabled]="(error.uploading$ | async) ?? false"
-                                            (click)="error.skip(error)">
-                                        </button>
-                                    </li>
-                                </ng-container>
-                            </ul> -->
                         </tui-scrollbar>
                     </ng-container>
                 </div>

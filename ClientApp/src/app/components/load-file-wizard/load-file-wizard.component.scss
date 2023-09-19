@@ -1,9 +1,21 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+
 .main-wizard {
     display: flex;
+    flex-direction: column;
+
+    @media #{$tui-desktop-min} {
+        flex-direction: row;
+    }
 }
 
 .wizard-stepper {
     padding: 1em;
+    margin: 0 auto;
+
+    @media #{$tui-desktop-min} {
+        margin: inherit;
+    }
 }
 
 .wizard-content {

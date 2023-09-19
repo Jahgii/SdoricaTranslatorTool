@@ -1,53 +1,63 @@
-<main class="main-wizard">
-    <tui-stepper #stepper class="wizard-stepper" orientation="vertical" [activeItemIndex]="activeItemIndex">
-        <button tuiStep [stepState]="(fileReader.fileProgressState$ | async) == 'finish' ? 'pass': 'normal'" disabled>
-            Load OBB File
-        </button>
-        <button tuiStep disabled>
-            Choose languages
-        </button>
-        <button tuiStep disabled>
-            Uploading data
-        </button>
-        <button tuiStep disabled>
-            Creating Main Groups and Groups
-        </button>
-        <button tuiStep disabled>
-            Load Localization File
-        </button>
-        <button tuiStep disabled>
-            Load Gamedata File
-        </button>
-        <button tuiStep disabled>
-            Let's translate!
-        </button>
-    </tui-stepper>
+<ng-container *ngIf="breakpointService$ | async as breakpoint">
+    <main class="main-wizard">
+        <tui-stepper #stepper class="wizard-stepper"
+            [orientation]="(breakpoint == 'desktopSmall' || breakpoint == 'mobile') ? 'horizontal' : 'vertical'"
+            [activeItemIndex]="activeItemIndex">
+            <button tuiStep [stepState]="(fileReader.fileProgressState$ | async) == 'finish' ? 'pass': 'normal'"
+                disabled>
+                {{'load-obb-file' | translate}}
+            </button>
+            <button tuiStep disabled>
+                {{'choose-languages' | translate}}
+            </button>
+            <button tuiStep disabled>
+                {{'uploading-data' | translate}}
+            </button>
+            <button tuiStep disabled>
+                {{'creating-main-groups-and-groups' | translate}}
+            </button>
+            <button tuiStep disabled>
+                {{'load-localization-file' | translate}}
+            </button>
+            <button tuiStep disabled>
+                {{'load-gamedata-file' | translate}}
+            </button>
+            <button tuiStep disabled>
+                {{'lets-translate' | translate}}
+            </button>
+        </tui-stepper>
 
-    <div class="wizard-content">
-        <ng-container [ngTemplateOutlet]="{
-            '0': stepperLoadFile,
-            '1': stepperChooseLanguage,
-            '2': stepperUploadingData,
-            '3': stepperCreatingGroups,
-            '4': stepperLoadLocalization,
-            '5': stepperLoadGamedata,
-            '6': stepperFinish,
-         }[stepper.activeItemIndex] ?? stepperDefault">
-        </ng-container>
-    </div>
-</main>
+        <div class="wizard-content">
+            <ng-container [ngTemplateOutlet]="{
+                '0': stepperLoadFile,
+                '1': stepperChooseLanguage,
+                '2': stepperUploadingData,
+                '3': stepperCreatingGroups,
+                '4': stepperLoadLocalization,
+                '5': stepperLoadGamedata,
+                '6': stepperFinish,
+             }[stepper.activeItemIndex] ?? stepperDefault">
+            </ng-container>
+        </div>
+    </main>
+</ng-container>
 
 <ng-template #stepperLoadFile>
     <app-load-file-input></app-load-file-input>
 </ng-template>
 
 <ng-template #stepperChooseLanguage>
-    <p>Choose languages</p>
+    <p>{{'choose-languages' | translate}}</p>
     <ng-container *ngIf="multiLanguage$ | async">
-        <tui-select tuiTextfieldSize="s" [formControl]="fileReader.defaultLanguage" class="tui-space_bottom-3">
-            Default Language
+        <tui-select tuiTextfieldSize="s" [formControl]="fileReader.defaultLanguage" class="tui-space_bottom-3"
+            [valueContent]="originLang">
+            {{'default-language' | translate}}
             <input tuiTextfield placeholder="..." />
-            <tui-data-list-wrapper *tuiDataList [items]="languagesSelected"></tui-data-list-wrapper>
+            <tui-data-list-wrapper *tuiDataList [items]="languagesSelected" [itemContent]="originLang">
+            </tui-data-list-wrapper>
+            <ng-template #originLang let-data>
+                {{data | translate}}
+            </ng-template>
         </tui-select>
     </ng-container>
     <div class="wizard-choose-lang">
@@ -56,8 +66,8 @@
             (ngModelChange)="onSelectLanguage(language.key, $event)">
             <div class="content">
                 <div>
-                    <div class="label">{{language.key}}</div>
-                    Files: {{language.value.length}}
+                    <div class="label">{{language.key | translate}}</div>
+                    {{'files' | translate}}: {{language.value.length}}
                 </div>
             </div>
         </tui-checkbox-block>
@@ -87,14 +97,13 @@
 
 <ng-template #stepperFinish>
     <tui-block-status>
-        <h4>Let's translate!</h4>
+        <h4>{{'lets-translate' | translate}}</h4>
 
         <button tuiButton appearance="secondary" [routerLink]="['/']">
-            Guide me
+            {{'guide-me' | translate}}
         </button>
     </tui-block-status>
 </ng-template>
 
 <ng-template #stepperDefault>
-    <p>DEFAULT TEMPLATE</p>
 </ng-template>

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, ViewChild } from '@angular/core';
+import { TuiBreakpointService } from '@taiga-ui/core';
 import { TuiStepperComponent } from '@taiga-ui/kit';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FileReaderGamedataService } from 'src/app/core/services/file-reader-gamedata.service';
@@ -35,6 +36,7 @@ export class LoadFileWizardComponent implements OnDestroy {
     public fileGamedataReader: FileReaderGamedataService,
     public languageOrigin: LanguageOriginService,
     private storage: LocalStorageService,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) {
     this.onFileReader();
   }

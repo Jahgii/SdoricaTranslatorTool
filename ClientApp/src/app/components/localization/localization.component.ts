@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { TuiBreakpointService, TuiScrollbarComponent } from '@taiga-ui/core';
-import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
-import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
+import { ILocalizationCategory } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
-import { TUI_DEFAULT_MATCHER } from '@taiga-ui/cdk';
 import { LocalizationService } from 'src/app/core/services/localization.service';
 
 @Component({

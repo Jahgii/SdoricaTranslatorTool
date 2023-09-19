@@ -5,27 +5,29 @@
 <ng-template #import>
     <ng-container *ngIf="(fileLocalizationReader.fileProgressState$ | async) == 'finish'; else uploadFile">
         <tui-block-status>
-            <h4>File Loaded</h4>
+            <h4>{{'file-loaded' | translate}}</h4>
 
             <button tuiButton appearance="secondary">
-                Remove
+                {{'remove' | translate}}
             </button>
         </tui-block-status>
     </ng-container>
 </ng-template>
 <ng-template #uploadFile>
+    <h3>{{'localization-file-description' | translate}}</h3>
+
     <tui-input-files *ngIf="!fileControl.value" class="file-upload-input" [formControl]="fileControl"
         [maxFileSize]="(1024*1024*100)" [multiple]="false" (reject)="onRejectFile($event)">
         <ng-template let-dragged>
             <div *ngIf="dragged; else base" class="content">
-                <tui-marker-icon mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
-                <div>Drop it like it's hot!</div>
+                <tui-marker-icon class="tui-space_right-1" mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
+                <div>{{'drop-obb' | translate}}</div>
             </div>
             <ng-template #base>
-                <tui-marker-icon mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
+                <tui-marker-icon class="tui-space_right-1" mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
                 <div>
-                    Drag and drop LOCALIZATION file here or
-                    <a tuiLink>click to upload</a>
+                    {{'drag-localization' | translate}}
+                    <a tuiLink>{{'click-to-upload' | translate}}</a>
                 </div>
             </ng-template>
         </ng-template>
@@ -34,11 +36,12 @@
     <ng-container *ngIf="loadedFile$ | async as file">
         <tui-block-status>
             <h4 class="tui-space_bottom-3" style="display: flex; flex-direction: column;">
-                <span>Status: {{fileLocalizationReader.fileProgressState$ | async}}</span>
+                <span>{{'status' | translate}}: {{((fileLocalizationReader.fileProgressState$ | async) ?? '') |
+                    translate}}</span>
             </h4>
             <ng-container *ngIf="(fileLocalizationReader.fileProgressBarMax$ | async) as max">
                 <label *ngIf="(fileLocalizationReader.fileProgressBar$ | async) as value" tuiProgressLabel>
-                    <span class="text">COMPLETED</span>
+                    <span class="text">{{'completed' | translate}}</span>
                     <span class="percent">{{ (value / max * 100) | number : '1.2-2' }}%</span>
                     <tui-progress-circle [value]="value" [max]="max" size="xl"></tui-progress-circle>
                 </label>
@@ -50,15 +53,13 @@
 <ng-template #export>
     <ng-container *ngIf="(fileLocalizationReader.fileExportProgressState$ | async) == 'finish'; else uploadExportFile">
         <tui-block-status>
-            <h4>Process Completed</h4>
+            <h4>{{'process-complete' | translate}}</h4>
 
-            <p>To apply the translation only replace your localization file with the new one, remember to make a backup,
-                just in
-                case you need</p>
-            <b>If the file downloaded have extension .txt remove it and it should work fine</b>
-            <p>The localization file will automatically been download if not
+            <p>{{'localization-process-complete-0' | translate}}</p>
+            <b>{{'localization-process-complete-1' | translate}}</b>
+            <p>{{'localization-process-complete-2' | translate}}
                 <a href="{{fileLocalizationReader.url}}" download="{{fileLocalizationReader.file?.name}}"
-                    type="File">click here</a>
+                    type="File">{{'click-here' | translate}}</a>
             </p>
 
             <button tuiButton appearance="secondary" (click)="onNext()">
@@ -68,18 +69,20 @@
     </ng-container>
 </ng-template>
 <ng-template #uploadExportFile>
+    <h3>{{'localization-file-description' | translate}}</h3>
+
     <tui-input-files *ngIf="!fileControl.value" class="file-upload-input" [formControl]="fileControl"
         [maxFileSize]="(1024*1024*100)" [multiple]="false" (reject)="onRejectFile($event)">
         <ng-template let-dragged>
             <div *ngIf="dragged; else base" class="content">
-                <tui-marker-icon mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
-                <div>Drop it like it's hot!</div>
+                <tui-marker-icon class="tui-space_right-1" mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
+                <div>{{'drop-obb' | translate}}</div>
             </div>
             <ng-template #base>
-                <tui-marker-icon mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
+                <tui-marker-icon class="tui-space_right-1" mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
                 <div>
-                    Drag and drop LOCALIZATION file here or
-                    <a tuiLink>click to upload</a>
+                    {{'drag-localization' | translate}}
+                    <a tuiLink>{{'click-to-upload' | translate}}</a>
                 </div>
             </ng-template>
         </ng-template>
@@ -88,11 +91,12 @@
     <ng-container *ngIf="loadedFile$ | async as file">
         <tui-block-status>
             <h4 class="tui-space_bottom-3" style="display: flex; flex-direction: column;">
-                <span>Status: {{fileLocalizationReader.fileExportProgressState$ | async}}</span>
+                <span>{{'status' | translate}}: {{((fileLocalizationReader.fileExportProgressState$ | async) ?? '') |
+                    translate}}</span>
             </h4>
             <ng-container *ngIf="(fileLocalizationReader.fileProgressBarMax$ | async) as max">
                 <label *ngIf="(fileLocalizationReader.fileProgressBar$ | async) as value" tuiProgressLabel>
-                    <span class="text">COMPLETED</span>
+                    <span class="text">{{'completed' | translate}}</span>
                     <span class="percent">{{ (value / max * 100) | number : '1.2-2' }}%</span>
                     <tui-progress-circle [value]="value" [max]="max" size="xl"></tui-progress-circle>
                 </label>

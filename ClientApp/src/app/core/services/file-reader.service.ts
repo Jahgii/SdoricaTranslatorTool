@@ -10,8 +10,8 @@ import * as JSZip from 'jszip';
 
 @Injectable()
 export class FileReaderService {
-  public fileProgressState$: BehaviorSubject<'reading' | 'reading content' | 'generating-new-file' | 'finish' | undefined> =
-    new BehaviorSubject<'reading' | 'reading content' | 'generating-new-file' | 'finish' | undefined>(undefined);
+  public fileProgressState$: BehaviorSubject<'reading' | 'reading-content' | 'generating-new-file' | 'finish' | undefined> =
+    new BehaviorSubject<'reading' | 'reading-content' | 'generating-new-file' | 'finish' | undefined>(undefined);
   public exportProgressState$: BehaviorSubject<'retriving-data' | 'replacing' | 'finish' | undefined> =
     new BehaviorSubject<'retriving-data' | 'replacing' | 'finish' | undefined>(undefined);
   public fileProgressBarMax$: BehaviorSubject<number> = new BehaviorSubject<number>(100);
@@ -56,7 +56,7 @@ export class FileReaderService {
     const zip = new JSZip();
     var files = (await zip.loadAsync(file)).filter((relativePath, file) => relativePath.includes("assets/DialogAssets/") && !file.dir);
     this.fileProgressBarMax$.next(files.length);
-    this.fileProgressState$.next('reading content');
+    this.fileProgressState$.next('reading-content');
     for (let index = 0; index < files.length; index++) {
       var dialogFile = files[index];
       const content = await dialogFile.async("string");

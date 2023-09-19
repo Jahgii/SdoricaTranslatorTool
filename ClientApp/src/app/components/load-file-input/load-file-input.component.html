@@ -8,18 +8,20 @@
     </tui-block-status>
 </ng-container>
 <ng-template #uploadFile>
+    <h3>{{'obb-file-description' | translate}}</h3>
+
     <tui-input-files *ngIf="!fileControl.value" class="file-upload-input" [formControl]="fileControl" [accept]="'.obb'"
         [maxFileSize]="(1024*1024*1024*2)" [multiple]="false" (reject)="onRejectFile($event)">
         <ng-template let-dragged>
             <div *ngIf="dragged; else base" class="content">
-                <tui-marker-icon mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
-                <div>Drop it like it's hot!</div>
+                <tui-marker-icon class="tui-space_right-1" mode="link" src="tuiIconDropletLarge"></tui-marker-icon>
+                <div>{{'drop-obb' | translate}}</div>
             </div>
             <ng-template #base>
-                <tui-marker-icon mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
+                <tui-marker-icon class="tui-space_right-1" class="tui-space_right-1" mode="link" src="tuiIconUploadCloudLarge"></tui-marker-icon>
                 <div>
-                    Drag and drop OBB file here or
-                    <a tuiLink>click to upload</a>
+                    {{'drag-obb' | translate}}
+                    <a tuiLink>{{'click-to-upload' | translate}}</a>
                 </div>
             </ng-template>
         </ng-template>
@@ -28,11 +30,11 @@
     <ng-container *ngIf="loadedFile$ | async as file">
         <tui-block-status>
             <h4 class="tui-space_bottom-3" style="display: flex; flex-direction: column;">
-                <span>Status: {{fileReader.fileProgressState$ | async}}</span>
+                <span>{{'status' | translate}}: {{((fileReader.fileProgressState$ | async) ?? '' | translate)}}</span>
             </h4>
             <ng-container *ngIf="(fileReader.fileProgressBarMax$ | async) as max">
-                <label *ngIf="(fileReader.fileProgressBar$ | async) as value" tuiProgressLabel>
-                    <span class="text">COMPLETED</span>
+                <label tuiProgressLabel *ngIf="(fileReader.fileProgressBar$ | async) as value">
+                    <span class="text">{{'completed' | translate}}</span>
                     <span class="percent">{{ (value / max * 100) | number : '1.2-2' }}%</span>
                     <tui-progress-circle [value]="value" [max]="max" size="xl"></tui-progress-circle>
                 </label>

@@ -1,25 +1,29 @@
-<main class="main-wizard">
-    <tui-stepper #stepper class="wizard-stepper" orientation="vertical" [activeItemIndex]="activeItemIndex">
-        <button tuiStep disabled>
-            Load Obb File
-        </button>
-        <button tuiStep disabled>
-            Load Localization File
-        </button>
-        <button tuiStep disabled>
-            Load Gamedata File
-        </button>
-    </tui-stepper>
+<ng-container *ngIf="breakpointService$ | async as breakpoint">
+    <main class="main-wizard">
+        <tui-stepper #stepper class="wizard-stepper"
+            [orientation]="(breakpoint == 'desktopSmall' || breakpoint == 'mobile') ? 'horizontal' : 'vertical'"
+            [activeItemIndex]="activeItemIndex">
+            <button tuiStep disabled>
+                Load Obb File
+            </button>
+            <button tuiStep disabled>
+                Load Localization File
+            </button>
+            <button tuiStep disabled>
+                Load Gamedata File
+            </button>
+        </tui-stepper>
 
-    <div class="wizard-content">
-        <ng-container [ngTemplateOutlet]="{
-            '0': stepperLoadFile,
-            '1': stepperLoadLocalization,
-            '2': stepperLoadGamedata,
-         }[stepper.activeItemIndex] ?? stepperDefault">
-        </ng-container>
-    </div>
-</main>
+        <div class="wizard-content">
+            <ng-container [ngTemplateOutlet]="{
+                '0': stepperLoadFile,
+                '1': stepperLoadLocalization,
+                '2': stepperLoadGamedata,
+             }[stepper.activeItemIndex] ?? stepperDefault">
+            </ng-container>
+        </div>
+    </main>
+</ng-container>
 
 <ng-template #stepperLoadFile>
     <app-load-obb-file-export (next)="activeItemIndex = 1"></app-load-obb-file-export>

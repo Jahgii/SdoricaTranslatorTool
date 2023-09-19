@@ -1,16 +1,16 @@
-<p>Creating Main Groups and Groups</p>
-<p>You can edit the names later if you want</p>
+<p>{{'creating-main-groups-and-groups' | translate}}</p>
+<p>{{'creating-main-groups-and-groups-description' | translate}}</p>
 <tui-loader class="loader" [showLoader]="(uploading$ | async) ?? false" [inheritColor]="true" [overlay]="true">
     <ul class="tui-list tui-list_small">
         <li class="tui-list__item">
-            Main Groups
+            {{'main-groups' | translate}}
             <tui-scrollbar class="group-container">
                 <form #formMainGroup>
                     <table class="tui-table" tuiTable>
                         <thead>
                             <tr>
-                                <th tuiTh class="sticky-header">Real Name</th>
-                                <th tuiTh class="sticky-header">User Defined Name</th>
+                                <th tuiTh class="sticky-header">{{'real-name' | translate}}</th>
+                                <th tuiTh class="sticky-header">{{'user-defined-name' | translate}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -24,7 +24,7 @@
                                         [tuiTextfieldLabelOutside]="true" type="text"
                                         [name]="mainGroup.value.OriginalName" (ngModelChange)="onGroupChange()"
                                         required>
-                                        Name
+                                        {{'name' | translate}}
                                         <input tuiTextfield required placeholder="..." />
                                     </tui-input>
                                 </td>
@@ -35,7 +35,7 @@
             </tui-scrollbar>
         </li>
         <li class="tui-list__item" *ngIf="groups">
-            Groups
+            {{'groups' | translate}}
             <tui-scrollbar>
                 <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="30"
                     [maxBufferPx]="500" [minBufferPx]="400">
@@ -45,11 +45,11 @@
                                 <tr tuiThGroup>
                                     <th *tuiHead="'OriginalName'" tuiTh [sticky]="true" [sorter]="null"
                                         [style.top.px]="-viewport['_renderedContentOffset']">
-                                        Real Name
+                                        {{'real-name' | translate}}
                                     </th>
                                     <th *tuiHead="'Name'" tuiTh [sticky]="true" [sorter]="null"
                                         [style.top.px]="-viewport['_renderedContentOffset']">
-                                        User Defined Name
+                                        {{'user-defined-name' | translate}}
                                     </th>
                                 </tr>
                             </thead>
@@ -60,10 +60,9 @@
                                     </td>
                                     <td *tuiCell="'Name'" tuiTd>
                                         <tui-input [(ngModel)]="group.Name" tuiTextfieldSize="m"
-                                            [tuiTextfieldLabelOutside]="true" type="text"
-                                            [name]="group.OriginalName" (ngModelChange)="onGroupChange()"
-                                            required>
-                                            Name
+                                            [tuiTextfieldLabelOutside]="true" type="text" [name]="group.OriginalName"
+                                            (ngModelChange)="onGroupChange()" required>
+                                            {{'name' | translate}}
                                             <input tuiTextfield required placeholder="..." />
                                         </tui-input>
                                     </td>

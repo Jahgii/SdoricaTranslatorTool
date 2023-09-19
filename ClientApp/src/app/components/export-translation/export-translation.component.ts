@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { TuiBreakpointService } from '@taiga-ui/core';
 import { Subscription } from 'rxjs';
 import { FileReaderGamedataService } from 'src/app/core/services/file-reader-gamedata.service';
 import { FileReaderLocalizationService } from 'src/app/core/services/file-reader-localization.service';
@@ -17,7 +18,10 @@ export class ExportTranslationComponent implements OnInit, OnDestroy {
 
   private subsSteppertwo!: Subscription;
 
-  constructor(private fileLocalizationReader: FileReaderLocalizationService) { }
+  constructor(
+    private fileLocalizationReader: FileReaderLocalizationService,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
+  ) { }
 
   ngOnInit(): void {
     this.subsSteppertwo = this.fileLocalizationReader.fileProgressState$.subscribe(state => {
