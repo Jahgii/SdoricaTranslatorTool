@@ -6,10 +6,10 @@ import { TuiBreakpointService } from '@taiga-ui/core';
 import { TuiCountryIsoCode, TuiLanguageName, TuiLanguageSwitcher } from '@taiga-ui/i18n';
 import { BehaviorSubject } from 'rxjs';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { TUI_SPANISH_LANGUAGE } from '@taiga-ui/i18n';
 
 @Component({
   selector: 'app-nav-menu',
@@ -38,6 +38,7 @@ export class NavMenuComponent implements OnInit {
     readonly languageOrigin: LanguageOriginService,
     readonly translate: TranslateService,
     private localStorage: LocalStorageService,
+    public authService: AuthService,
     @Inject(TuiLanguageSwitcher) readonly switcher: TuiLanguageSwitcher,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) {

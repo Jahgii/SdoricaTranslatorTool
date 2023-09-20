@@ -19,7 +19,10 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpGet]
         public async Task<ActionResult> Get([FromHeader] string category)
         {
-            var cursor = await _cMongoClient.GetCollection<GamedataValue>().FindAsync(e => e.Category == category);
+            var cursor = _cMongoClient
+                .GetCollection<GamedataValue>()
+                .Find(e => e.Category == category)
+                .SortBy(e => e.Content.order);
             var data = await cursor.ToListAsync();
             return Ok(data);
         }

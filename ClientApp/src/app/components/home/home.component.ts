@@ -25,6 +25,4 @@ export class HomeComponent {
     @Inject(TuiBreakpointService) readonly breakpointService: TuiBreakpointService
   ) { }
 
-  
-
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { LanguageOriginService } from './core/services/language-origin.service';
-import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,8 @@ export class AppComponent {
   title = 'app';
 
   constructor(
-    public languageOrigin: LanguageOriginService
+    public languageOrigin: LanguageOriginService,
+    public authService: AuthService
   ) {
     this.languageOrigin.onRetriveLanguages();
   }

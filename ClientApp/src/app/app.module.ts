@@ -1,6 +1,6 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
 import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiTooltipModule, TuiHintModule, TuiGroupModule, TuiDropdownModule, TuiHostedDropdownModule } from "@taiga-ui/core";
-import { TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiComboBoxModule, TuiDataListWrapperModule, TuiFilterByInputPipeModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiInputNumberModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiRadioBlockModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
+import { TuiAvatarModule, TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiComboBoxModule, TuiDataListWrapperModule, TuiFilterByInputPipeModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiInputNumberModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiRadioBlockModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiTableFiltersModule, TuiTableModule } from "@taiga-ui/addon-table";
 import { ScrollingModule } from "@angular/cdk/scrolling";
@@ -10,13 +10,16 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AppRoutingModule } from "./app-routing.module";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { TuiSidebarModule } from "@taiga-ui/addon-mobile";
+import { TuiAppBarModule, TuiSidebarModule } from "@taiga-ui/addon-mobile";
 import { TuiActiveZoneModule, TuiAutoFocusModule, TuiLetModule } from "@taiga-ui/cdk";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE } from '@taiga-ui/i18n';
 import { TuiLanguageName } from '@taiga-ui/i18n/interfaces';
 import { tuiLanguageSwitcher } from '@taiga-ui/i18n/switch';
+
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from "./components/home/home.component";
@@ -41,6 +44,7 @@ import { CommonDictionaryDirective } from './core/directives/common-dictionary.d
 import { ThemeDarkComponent } from './components/theme-dark/theme-dark.component';
 import { CommonWordsComponent } from './components/common-words/common-words.component';
 import { of } from "rxjs";
+import { LoginComponent } from "./components/login/login.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -69,7 +73,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     GamedataValuesComponent,
     CommonDictionaryDirective,
     ThemeDarkComponent,
-    CommonWordsComponent
+    CommonWordsComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -78,6 +83,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    SocialLoginModule,
+    GoogleSigninButtonModule,
     TuiRootModule,
     TuiDialogModule,
     TuiAlertModule,
@@ -123,17 +130,35 @@ export function HttpLoaderFactory(http: HttpClient) {
     TuiComboBoxModule,
     TuiFilterByInputPipeModule,
     TuiRadioBlockModule,
+    TuiAvatarModule,
+    TuiAppBarModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
-      // useDefaultLang: true,
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
   ],
   providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              'REPLACE'
+            )
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    },
     {
       provide: TUI_SANITIZER,
       useClass: NgDompurifySanitizer

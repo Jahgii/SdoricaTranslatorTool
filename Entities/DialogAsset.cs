@@ -15,7 +15,7 @@ namespace SdoricaTranslatorTool
         public required string Group { get; set; }
         public int Number { get; set; }
         public required string Language { get; set; }
-        public bool Translated {  get; set; }
+        public bool Translated { get; set; }
         public DialogAssetModel? Model { get; set; }
         public DialogAssetArray? ReferenceAavatarImage { get; set; }
         public DialogAssetArray? ReferenceDialogAudio { get; set; }
@@ -40,33 +40,14 @@ namespace SdoricaTranslatorTool
 
     public class Dialog
     {
-        public string? ID { get; set; }
-        public string? SpeakerName { get; set; }
-        public string? SpeakerAssetName { get; set; }
-        public string? IconName { get; set; }
+        public required string ID { get; set; }
+        public required string SpeakerName { get; set; }
+        public required string SpeakerAssetName { get; set; }
+        public required string IconName { get; set; }
         public int IconLocate { get; set; }
-        public string? OriginalText { get; set; }
-        public string? Text { get; set; }
-        public string? sfxName { get; set; }
+        public required string OriginalText { get; set; }
+        public required string Text { get; set; }
+        public required string sfxName { get; set; }
         public double sfxVolume { get; set; }
-    }
-
-    public class DialogAssetModelExport
-    {
-        [BsonElement("$content")]
-        [JsonPropertyName("$content")]
-        public List<DialogExport>? Content { get; set; }
-    }
-
-    public class DialogExport : Dialog
-    {
-        public new string? Id { get; set; }
-        public new string? SpeakerName { get; set; }
-        public new string? SpeakerAssetName { get; set; }
-        public new string? IconName { get; set; }
-        public new int IconLocate { get; set; }
-        public new string? Text { get; set; }
-        public new string? sfxName { get; set; }
-        public new decimal sfxVolume { get; set; }
     }
 }

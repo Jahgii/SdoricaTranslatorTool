@@ -13,15 +13,16 @@ builder.Services
 });
 
 // CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(cors, builder =>
+builder.Services
+    .AddCors(options =>
     {
-        builder.AllowAnyOrigin()
-        .AllowAnyHeader()
-        .AllowAnyMethod();
+        options.AddPolicy(cors, builder =>
+            {
+                builder.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
     });
-});
 
 // Add MongoClient as Singleton
 builder.Services.ConfigureMongoDB(builder.Configuration);
@@ -38,13 +39,12 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseCors(cors);
-// app.MapControllers();
-// app.MapDefaultControllerRoute();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+    pattern: "{controller}/{action=Index}/{id?}"
+);
 
 app.MapFallbackToFile("index.html");
 

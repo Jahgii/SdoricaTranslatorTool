@@ -1,5 +1,16 @@
 <tui-root style="height: 100%;">
-  <app-nav-menu #navMenu>
-  </app-nav-menu>
-  <router-outlet *ngIf="(languageOrigin.ready$ | async)"></router-outlet>
+  <ng-container *ngIf="(authService.authenticated$ | async); else login">
+    <ng-container *ngIf="authService.rol == 'admin'">
+      <app-nav-menu #navMenu>
+      </app-nav-menu>
+      <router-outlet *ngIf="(languageOrigin.ready$ | async)"></router-outlet>
+    </ng-container>
+    <ng-container *ngIf="authService.rol == 'guest'">
+      
+    </ng-container>
+  </ng-container>
+
+  <ng-template #login>
+    <app-login></app-login>
+  </ng-template>
 </tui-root>
