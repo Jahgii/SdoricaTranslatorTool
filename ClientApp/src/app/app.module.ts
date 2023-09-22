@@ -1,5 +1,5 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiTooltipModule, TuiHintModule, TuiGroupModule, TuiDropdownModule, TuiHostedDropdownModule } from "@taiga-ui/core";
+import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiTooltipModule, TuiHintModule, TuiGroupModule, TuiDropdownModule, TuiHostedDropdownModule, TuiExpandModule } from "@taiga-ui/core";
 import { TuiAvatarModule, TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiComboBoxModule, TuiDataListWrapperModule, TuiFilterByInputPipeModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiInputNumberModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiRadioBlockModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiTableFiltersModule, TuiTableModule } from "@taiga-ui/addon-table";
@@ -45,6 +45,8 @@ import { ThemeDarkComponent } from './components/theme-dark/theme-dark.component
 import { CommonWordsComponent } from './components/common-words/common-words.component';
 import { of } from "rxjs";
 import { LoginComponent } from "./components/login/login.component";
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { ExportTranslationGuestComponent } from './components/export-translation-guest/export-translation-guest.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -74,7 +76,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     CommonDictionaryDirective,
     ThemeDarkComponent,
     CommonWordsComponent,
-    LoginComponent
+    LoginComponent,
+    NavBarComponent,
+    ExportTranslationGuestComponent
   ],
   imports: [
     BrowserModule,
@@ -132,8 +136,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     TuiRadioBlockModule,
     TuiAvatarModule,
     TuiAppBarModule,
+    TuiExpandModule,
     TranslateModule.forRoot({
-      defaultLanguage: 'en',
+      defaultLanguage: 'es',
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,

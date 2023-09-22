@@ -1,0 +1,13 @@
+<tui-app-bar class="app-bar">
+    <div tuiSlot="left" style="display: flex; align-items: center;">
+        <tui-avatar size="s" [rounded]="true" [text]="auth.user?.name ? auth.user?.name ?? '' : '?'"
+            [avatarUrl]="auth.user?.photoUrl ? auth.user?.photoUrl ?? '' : null">
+
+        </tui-avatar>
+        <span class="tui-space_left-2">{{auth.user?.name ? 'Hola, ' + auth.user?.name : 'Desconocido'}}</span>
+    </div>
+
+    <button tuiIconButton appearance="icon" [icon]="(theme.nightMode$ | async)? 'tuiIconMoon' : 'tuiIconSun'"
+        (click)="theme.switchTheme()" tuiSlot="right">
+    </button>
+</tui-app-bar>

@@ -205,7 +205,7 @@ export class FileReaderService {
 
   }
   //#endregion
-  
+
   //#region OBB Export
   async onExportFile(file: File) {
     this.file = file;
@@ -257,7 +257,7 @@ export class FileReaderService {
       delete (dialog.Language);
       delete (dialog.Translated);
 
-      // dialog.Model.$content.forEach(e => delete (e.OriginalText));
+      (dialog.Model.$content as any[]).forEach(e => delete (e.OriginalText));
 
       zip.file(`assets/DialogAssets/${dialogFileName}`, JSON.stringify(dialog));
       this.fileProgressBar$.next(index + 1);

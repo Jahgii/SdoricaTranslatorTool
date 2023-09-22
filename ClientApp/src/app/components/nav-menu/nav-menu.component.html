@@ -1,5 +1,3 @@
-<tui-theme-night *ngIf="!(nightMode$ | async)"></tui-theme-night>
-<app-theme-dark *ngIf="!(nightMode$ | async)"></app-theme-dark>
 <header class="header">
     <ng-container *ngIf="breakpointService$ | async as breakpoint">
         <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
@@ -12,8 +10,8 @@
     <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
         appearance="icon" [icon]="'tuiIconGithub'">
     </a>
-    <button tuiIconButton appearance="icon" [icon]="(nightMode$ | async)? 'tuiIconMoon' : 'tuiIconSun'"
-        (click)="switchTheme()">
+    <button tuiIconButton appearance="icon" [icon]="(theme.nightMode$ | async)? 'tuiIconMoon' : 'tuiIconSun'"
+        (click)="theme.switchTheme()">
     </button>
     <button tuiIconButton appearance="icon" [icon]="'tuiIconSettings'" (click)="onToogleSettings()"
         (tuiActiveZoneChange)="onToogleSettings()">
@@ -132,5 +130,6 @@
             </div>
         </tui-scrollbar>
     </button>
-    <tui-avatar size="s" [rounded]="true" [avatarUrl]="authService.user.photoUrl"></tui-avatar>
+    <tui-avatar size="s" [rounded]="true" [text]="authService.user?.name ? authService.user?.name ?? '' : '?'"
+        [avatarUrl]="authService.user?.photoUrl ? authService.user?.photoUrl ?? '' : null"></tui-avatar>
 </header>

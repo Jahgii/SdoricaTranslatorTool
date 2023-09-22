@@ -1,4 +1,7 @@
 <tui-root style="height: 100%;">
+  <tui-theme-night *ngIf="!(theme.nightMode$ | async)"></tui-theme-night>
+  <app-theme-dark *ngIf="!(theme.nightMode$ | async)"></app-theme-dark>
+
   <ng-container *ngIf="(authService.authenticated$ | async); else login">
     <ng-container *ngIf="authService.rol == 'admin'">
       <app-nav-menu #navMenu>
@@ -6,11 +9,13 @@
       <router-outlet *ngIf="(languageOrigin.ready$ | async)"></router-outlet>
     </ng-container>
     <ng-container *ngIf="authService.rol == 'guest'">
-      
+      <app-nav-bar></app-nav-bar>
+      <app-export-translation-guest></app-export-translation-guest>
     </ng-container>
   </ng-container>
 
   <ng-template #login>
+    <app-nav-bar></app-nav-bar>
     <app-login></app-login>
   </ng-template>
 </tui-root>

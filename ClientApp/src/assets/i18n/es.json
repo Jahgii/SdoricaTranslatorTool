@@ -160,5 +160,9 @@
     "gamedata-process-complete-1": "Sí el archivo descargado tienen la extensión .txt solo sera necesario borrarla y deberia funcionar",
     "gamedata-process-complete-2": "El archivo deberia haber iniciado su descarga, sí no fue así",
     "gamedata-file-description": "Este archivo esta localizado en el directorio → Android/data/com.rayark.sdorica/files/imperium/gamedata",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "waiting": "En Espera",
+    "progress": "Progreso",
+    "archive": "Archivo",
+    "download": "Descargar"
 }

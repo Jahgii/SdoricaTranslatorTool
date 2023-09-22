@@ -1,12 +1,14 @@
-<div class="background"></div>
 <tui-block-status>
-    <!-- <img alt="not found" src="tuiIconLoaderLarge" tuiSlot="top" /> -->
+    <img tuiSlot="top" alt="main localization" src="./assets/images/localization.svg"
+        class="tui-space_vertical-6 image" />
 
-    <h4 style="max-width: 800px;" tuiSlot="top">
+    <h4 style="max-width: 500px;" tuiSlot="top">
         Bienvenido a la herramienta de traducción de Sdorica, para continuar inicia sesión.
     </h4>
     <tui-loader class="loader" [inheritColor]="true" [overlay]="true"
         [showLoader]="(authService.authenticating$ | async) ?? false">
-        <asl-google-signin-button type='standard' size='large' shape="circle"></asl-google-signin-button>
+        <asl-google-signin-button *ngIf="theme.changeMode$ | async" type='standard' size='large' shape="circle"
+            [theme]="(theme.nightMode$ | async) ? 'filled_black' : 'outline'">
+        </asl-google-signin-button>
     </tui-loader>
 </tui-block-status>

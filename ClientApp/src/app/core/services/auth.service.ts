@@ -11,7 +11,7 @@ export class AuthService {
   public authenticating$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public authenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  public user!: SocialUser;
+  public user: SocialUser | undefined;
   public rol!: 'guest' | 'admin';
   private userDB!: IUser;
 

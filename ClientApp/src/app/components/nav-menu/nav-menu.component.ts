@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { ThemeService } from 'src/app/core/services/theme.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -19,7 +20,6 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 })
 export class NavMenuComponent implements OnInit {
   public openSetting: boolean = false;
-  public nightMode$ = new BehaviorSubject<boolean>(false);
 
   public langControl: FormControl = new FormControl();
 
@@ -39,6 +39,7 @@ export class NavMenuComponent implements OnInit {
     readonly translate: TranslateService,
     private localStorage: LocalStorageService,
     public authService: AuthService,
+    public theme: ThemeService,
     @Inject(TuiLanguageSwitcher) readonly switcher: TuiLanguageSwitcher,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) {
@@ -63,10 +64,6 @@ export class NavMenuComponent implements OnInit {
       this.localStorage.setAppLang('en');
       this.langControl.patchValue('en');
     }
-  }
-
-  public switchTheme(): void {
-    this.nightMode$.next(!this.nightMode$.value);
   }
 
   public onToogleSettings() {

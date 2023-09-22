@@ -1,0 +1,160 @@
+<main class="main-container">
+    <div class="files">
+        <h3>Progreso de Traducción</h3>
+        <p>
+            Aqui puedes ver el porcentaje de la traducción, es recomendable guardar los porcentajes y comparar la
+            siguiente vez que vuelvas por aquí. Los porcentajes son generales.
+        </p>
+
+        <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s">
+            <li class="tui-list__item">
+                IU: Corresponde a menus, descripciones de objetos, habilidades, personajes, etc.
+                → <b>0%</b>
+            </li>
+            <li class="tui-list__item">
+                Dialogos: Corresponde a la historia principal, de personajes y eventos.
+                → <b>0%</b>
+            </li>
+        </ol>
+
+        <h3>A Traducir</h3>
+        <p>Es hora de traducir, arrastra o da click sobre los recuadros de la parte inferior y proporciona los archivos
+            especificados, una vez hecho da click en 'Aplicar
+            Traducción'.</p>
+        <ul class="tui-list tui-list_ordered tui-list_nested tui-text_body-s">
+            <li class="tui-list__item"><b>OBB</b>: Este archivo esta localizado en el directorio →
+                Android/obb/com.rayark.sdorica
+            </li>
+            <li class="tui-list__item"><b>Localization</b>: Este archivo esta localizado en el
+                directorio →
+                Android/data/com.rayark.sdorica/files/imperium/localization</li>
+            <li class="tui-list__item"><b>Gamedata</b>: Este archivo esta localizado en el directorio →
+                Android/data/com.rayark.sdorica/files/imperium/gamedata</li>
+        </ul>
+
+        <div class="files-input tui-space_top-6">
+            <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
+                    $implicit: eTS.obb,
+                    filesize:(1024*1024*1024*2),
+                    accept: '.obb',
+                    filename: 'OBB',
+                    onreject: eTS.onReject.bind(this.eTS),
+                }">
+            </ng-container>
+            <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
+                    $implicit: eTS.localization,
+                    filesize:(1024*1024*100),
+                    accept: undefined,
+                    filename: 'Localization',
+                    onreject: eTS.onReject.bind(this.eTS)
+                }">
+            </ng-container>
+            <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
+                    $implicit: eTS.gamedata,
+                    filesize:(1024*1024*100),
+                    accept: undefined,
+                    filename: 'Gamedata',
+                    onreject: eTS.onReject.bind(this.eTS)
+                }">
+            </ng-container>
+        </div>
+
+        <tui-expand [expanded]="(eTS.filesVerified$ | async) && !(eTS.filesCompleted$ | async)">
+            <ng-template tuiExpandContent>
+                <p>
+                    Antes de traducir hay que pasar por caja, naaa, es una broma.
+                    Pero si quieres y puedes apoyar el proyecto puedes donar en
+                    <span class="important-text">Buy Me a Coffee</span>.
+                    Claro primero prueba la traducción.
+                </p>
+
+                <p>
+                    Todo el proceso de traducción sucede en el cliente(su equipo), del servidor
+                    solo se obtienen los textos, asi que la velocidad de modificación de los archivos
+                    depende de la potencia de su equipo.
+                </p>
+
+                <p>
+                    No olvides realizar un reespaldo de los archivos a reemplazar.
+                </p>
+            </ng-template>
+        </tui-expand>
+
+        <tui-expand [expanded]="(eTS.filesCompleted$ | async)">
+            <p class="important-text">
+                Importante: Si al descargar los archivos de LOCALIZATION y GAMEDATA se les agrego la extensión txt o
+                cualquier otra, solo elimina la extensión antes de moverlos a su correspondiente directorio.
+            </p>
+
+            <p>
+                Si las descargas no comenzaron automaticamente puedes descargar los archivos dando click en el texto
+                "Descargar" en su correspondiente recuadro.
+            </p>
+
+            <p>
+                No olvides compartir la traducción y reportar cualquier error u horror que encuentren sus desdichados
+                ojos.
+                Tambien puede proponer mejoras y/o sugerencias sí asi lo desea.
+            </p>
+
+            <p class="center-text">
+                ¡Que disfrutes la traducción!
+            </p>
+        </tui-expand>
+
+        <div class="translate-button tui-space_vertical-6">
+            <button *ngIf="!(eTS.filesCompleted$ | async)" tuiButton appearance="outline"
+                [showLoader]="(eTS.isTranslating$ | async) ?? false" (click)="eTS.onApplyTranslation()"
+                [disabled]="!(eTS.filesVerified$ | async)"
+                [tuiHint]="!(eTS.filesVerified$ | async) ? 'Por favor proporcina todos los archivos para aplicar la traducción' : undefined"
+                [tuiHintAppearance]="!(eTS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
+                {{'Aplicar Traducción' | translate}}
+            </button>
+            <button *ngIf="(eTS.filesCompleted$ | async)" tuiButton appearance="outline">
+                {{'PUGGGGIIIIIIIIII'}}
+            </button>
+        </div>
+    </div>
+</main>
+
+<ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename"
+    let-onreject="onreject">
+    <tui-input-files *ngIf="!filecontrol.control.value" class="file-input" [formControl]="filecontrol.control"
+        [maxFileSize]="filesize" [accept]="accept" [multiple]="false" (reject)="onreject($event)" tuiMode="onLight">
+        <ng-template let-dragged>
+            <div *ngIf="dragged; else base" class="content">
+                <tui-marker-icon mode="white" src="tuiIconDroplet" size="xs"></tui-marker-icon>
+                <div>¡Suelta!</div>
+            </div>
+            <ng-template #base>
+                <div class="content">
+                    <tui-marker-icon mode="white" src="tuiIconUploadCloud" size="xs"></tui-marker-icon>
+                    <div>{{filename}}</div>
+                </div>
+            </ng-template>
+        </ng-template>
+    </tui-input-files>
+    <ng-container *ngIf="filecontrol.loadedFile$ | async as file">
+        <tui-island size="s">
+            <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false"
+                style="position: absolute; right: 0.5em; top: 0.5em;">
+                <tui-svg [src]="'tuiIconCheckCircle'" style="position: relative; top: 0.25em;">
+                </tui-svg>
+            </tui-loader>
+            <p class="tui-island__category">{{'archive' | translate}}</p>
+            <h3 class="tui-island__title">{{filename}}</h3>
+            <p class="tui-island__paragraph">
+                {{(filecontrol.progressStatus$ | async) ?? '' | translate}}
+            </p>
+            <p class="tui-island__paragraph">
+                {{'progress' | translate}}: {{((filecontrol.progress$ | async) |
+                number:'1.0-2')}}/{{(filecontrol.progressMax$ | async)}}
+            </p>
+            <p class="tui-island__paragraph tui-island__paragraph_link" *ngIf="filecontrol.url">
+                <a href="{{filecontrol.url}}" download="{{filecontrol.control.value.name}}" type="File" tuiLink>
+                    {{'download' | translate}}
+                </a>
+            </p>
+        </tui-island>
+    </ng-container>
+</ng-template>

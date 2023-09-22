@@ -1,7 +1,7 @@
 .background {
-    background-color: #e5e5f7;
+    background-color: var(--tui-base-02);
     opacity: 0.3;
-    background-image: radial-gradient(#000000 0.8500000000000001px, #e5e5f7 0.8500000000000001px);
+    background-image: radial-gradient(#000000 0.8500000000000001px, var(--tui-base-02) 0.8500000000000001px);
     background-size: 17px 17px;
     position: absolute;
     top: 0;

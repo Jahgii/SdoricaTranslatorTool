@@ -221,5 +221,4 @@ export class FileReaderLocalizationService {
     a.click();
     a.remove();
   }
-
 }

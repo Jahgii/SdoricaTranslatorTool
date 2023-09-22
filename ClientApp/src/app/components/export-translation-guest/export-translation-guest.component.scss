@@ -1,0 +1,37 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+
+.main-container {
+    max-width: 710px;
+    position: absolute;
+    padding: 0 3em;
+    margin: 0 auto;
+    top: 5em;
+    left: 0;
+    right: 0;
+}
+
+.files-input {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1em;
+
+    @media #{$tui-mobile} {
+        grid-template-columns: 1fr;
+    }
+}
+
+.file-input {
+    height: 5em;
+}
+
+.translate-button {
+    display: grid;
+}
+
+.important-text {
+    color: var(--important-text);
+}
+
+.center-text {
+    text-align: center;
+}

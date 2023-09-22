@@ -160,5 +160,9 @@
     "gamedata-process-complete-1": "If the file downloaded have extension .txt remove it and it should work fine",
     "gamedata-process-complete-2": "The localization file will automatically been download if not",
     "gamedata-file-description": "This file its located in the directory → Android/data/com.rayark.sdorica/files/imperium/gamedata",
-    "next": "Next"
+    "next": "Next",
+    "waiting": "Waiting",
+    "progress": "Progress",
+    "archive": "Archive",
+    "download": "Download"
 }
