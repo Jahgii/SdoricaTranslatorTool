@@ -47,7 +47,8 @@
     display: flex;
     flex-direction: column;
     padding: 1em;
-    height: calc(100% - var(--header-height) - 6em);
+    height: calc(100% - var(--header-height) - 3em);
+    // height: 100%;
 
     .localization-data-actions {
         display: flex;
@@ -75,7 +76,7 @@
 }
 
 .localization-keys {
-    grid-column: 2;
+    height: 100%;
 }
 
 .sticky-header {
@@ -84,11 +85,7 @@
 }
 
 .viewport {
-    height: calc(100vh - var(--header-height) - 6em);
-
-    @media #{$tui-mobile} {
-        height: calc(100vh - var(--header-height) - 9em);
-    }
+    height: inherit;
 }
 
 .row-selected {

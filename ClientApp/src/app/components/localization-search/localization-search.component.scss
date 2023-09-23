@@ -1,15 +1,11 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.scss';
 
 .viewport {
-    height: calc(100vh - var(--header-height) - 6em);
-
-    @media #{$tui-mobile} {
-        height: calc(100vh - var(--header-height) - 9em);
-    }
+    height: inherit;
 }
 
 .localization-keys {
-    grid-column: 2;
+    height: 100%;
 }
 
 .row-selected {
