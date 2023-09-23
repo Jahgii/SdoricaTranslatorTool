@@ -8,6 +8,8 @@ import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
+import { LocalizationService } from 'src/app/core/services/localization.service';
+import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 
 const STRINGIFY_CATEGORIES: TuiStringHandler<ILocalizationCategory> = (c: ILocalizationCategory) =>
   c ? `${c.Name}` : '***';
@@ -63,6 +65,8 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     private fB: FormBuilder,
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
+    public localization: LocalizationService,
+    private languageOrigin: LanguageOriginService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
   ) {
@@ -176,11 +180,18 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
       key.Translated[langKey] = false;
     }
 
-    await firstValueFrom(this.api.post('localizationkeys', key))
+    await firstValueFrom(this.api.post<ILocalizationKey>('localizationkeys', key))
       .then(
         r => {
           this.createOther$.next(true);
-          this.created.emit();
+          if (this.localization.selectedCategory?.Name == 'SEARCH') return;
+
+          if (this.localization.keys) {
+            this.localization.keys?.push(r);
+            this.localization.keys = [...this.localization.keys];
+            this.localization.selectedCategory.Keys[this.languageOrigin.localizationLang] += 1;
+          }
+          // this.created.emit();
         },
         error => { }
       );
