@@ -113,7 +113,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
   public onShowCreate(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
     firstValueFrom(this.breakpointService$)
       .then(v => {
-        if (v == 'desktopLarge' || v == 'desktopSmall') {
+        if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.dialogState.isHidden = !this.dialogState.isHidden;
         }
         else {

@@ -98,7 +98,7 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
   public onShowCreateNew(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
     firstValueFrom(this.breakpointService$)
       .then(v => {
-        if (v == 'desktopLarge' || v == 'desktopSmall') {
+        if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.dialogState.isHidden = !this.dialogState.isHidden;
 
@@ -125,7 +125,7 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
   public onShowList(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
     firstValueFrom(this.breakpointService$)
       .then(v => {
-        if (v == 'desktopLarge' || v == 'desktopSmall') {
+        if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.listDialogState.isHidden = !this.listDialogState.isHidden;
 
