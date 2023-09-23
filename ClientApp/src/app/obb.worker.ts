@@ -2,11 +2,11 @@
 
 import * as JSZip from 'jszip';
 import { IDialogAssetExport } from './core/interfaces/i-dialog-asset';
-import { IOnMessage, ProgressState } from './core/interfaces/i-export-progress';
+import { IOnMessage, ProgressStatus } from './core/interfaces/i-export-progress';
 
 addEventListener('message', async ({ data }) => {
   var dialogs: IDialogAssetExport[] = [];
-  const message: IOnMessage = { maxPg: 100, pg: 0, pgState: ProgressState.retrivingServerData };
+  const message: IOnMessage = { maxPg: 100, pg: 0, pgState: ProgressStatus.retrivingServerData };
   postMessage(message);
 
   var promise = fetch('dialogassets/export', {
@@ -19,23 +19,23 @@ addEventListener('message', async ({ data }) => {
   await promise.then(
     async res => {
       dialogs = await res.json();
-      message.pgState = ProgressState.retrivingServerDataSucess;
+      message.pgState = ProgressStatus.retrivingServerDataSucess;
       postMessage(message);
     },
     error => {
-      message.pgState = ProgressState.retrivingServerDataError;
+      message.pgState = ProgressStatus.retrivingServerDataError;
       postMessage(message);
     }
   );
 
   if (!(dialogs.length > 0)) {
-    message.pgState = ProgressState.retrivingServerDataEmpty;
+    message.pgState = ProgressStatus.retrivingServerDataEmpty;
     postMessage(message);
     return;
   }
 
   const zip = new JSZip();
-  message.pgState = ProgressState.replacingContent;
+  message.pgState = ProgressStatus.replacingContent;
   postMessage(message);
 
   zip.loadAsync(data.file).then(() => {
@@ -59,7 +59,7 @@ addEventListener('message', async ({ data }) => {
       postMessage(message);
     }
 
-    message.pgState = ProgressState.generatingNewFile;
+    message.pgState = ProgressStatus.generatingNewFile;
     message.maxPg = 100;
     message.pg = 0;
 
@@ -69,7 +69,7 @@ addEventListener('message', async ({ data }) => {
       message.pg = metadata.percent;
       postMessage(message);
     }).then(zipBlob => {
-      message.pgState = ProgressState.finish;
+      message.pgState = ProgressStatus.finish;
       message.blob = zipBlob;
       postMessage(message);
     });

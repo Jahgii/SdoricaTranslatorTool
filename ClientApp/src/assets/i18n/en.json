@@ -164,5 +164,7 @@
     "waiting": "Waiting",
     "progress": "Progress",
     "archive": "Archive",
-    "download": "Download"
+    "download": "Download",
+    "not-support": "Not Supported",
+    "not-support-mobile": "Due to platform limitations, this file is not supported on a phone, use a computer."
 }

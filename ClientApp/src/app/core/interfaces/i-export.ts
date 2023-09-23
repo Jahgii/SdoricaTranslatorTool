@@ -1,6 +1,6 @@
 import { FormControl } from "@angular/forms";
 import { BehaviorSubject, Observable } from "rxjs";
-import { ProgressState } from "./i-export-progress";
+import { ProgressStatus } from "./i-export-progress";
 import { TuiFileLike } from "@taiga-ui/kit";
 
 export interface IFileControl {
@@ -9,8 +9,9 @@ export interface IFileControl {
     verifyingFile$: BehaviorSubject<boolean>;
     verifiedFile$: BehaviorSubject<boolean>;
     verificationCallback: (file: File, fileControl: IFileControl) => any;
-    progressStatus$: BehaviorSubject<ProgressState>;
+    progressStatus$: BehaviorSubject<ProgressStatus>;
     progress$: BehaviorSubject<number>;
     progressMax$: BehaviorSubject<number>;
     url: string | undefined;
+    skip?: BehaviorSubject<boolean>;
 }

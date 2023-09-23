@@ -35,3 +35,12 @@
 .center-text {
     text-align: center;
 }
+
+.not-support {
+    background-color: var(--tui-warning-fill);
+    mix-blend-mode: difference;
+}
+
+.text-blend {
+    mix-blend-mode: var(--blend-mode);
+}

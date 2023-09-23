@@ -119,42 +119,53 @@
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename"
     let-onreject="onreject">
-    <tui-input-files *ngIf="!filecontrol.control.value" class="file-input" [formControl]="filecontrol.control"
-        [maxFileSize]="filesize" [accept]="accept" [multiple]="false" (reject)="onreject($event)" tuiMode="onLight">
-        <ng-template let-dragged>
-            <div *ngIf="dragged; else base" class="content">
-                <tui-marker-icon mode="white" src="tuiIconDroplet" size="xs"></tui-marker-icon>
-                <div>¡Suelta!</div>
-            </div>
-            <ng-template #base>
-                <div class="content">
-                    <tui-marker-icon mode="white" src="tuiIconUploadCloud" size="xs"></tui-marker-icon>
-                    <div>{{filename}}</div>
-                </div>
-            </ng-template>
-        </ng-template>
-    </tui-input-files>
-    <ng-container *ngIf="filecontrol.loadedFile$ | async as file">
-        <tui-island size="s">
-            <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false"
-                style="position: absolute; right: 0.5em; top: 0.5em;">
-                <tui-svg [src]="'tuiIconCheckCircle'" style="position: relative; top: 0.25em;">
-                </tui-svg>
-            </tui-loader>
-            <p class="tui-island__category">{{'archive' | translate}}</p>
-            <h3 class="tui-island__title">{{filename}}</h3>
-            <p class="tui-island__paragraph">
-                {{(filecontrol.progressStatus$ | async) ?? '' | translate}}
-            </p>
-            <p class="tui-island__paragraph">
-                {{'progress' | translate}}: {{((filecontrol.progress$ | async) |
-                number:'1.0-2')}}/{{(filecontrol.progressMax$ | async)}}
-            </p>
-            <p class="tui-island__paragraph tui-island__paragraph_link" *ngIf="filecontrol.url">
-                <a href="{{filecontrol.url}}" download="{{filecontrol.control.value.name}}" type="File" tuiLink>
-                    {{'download' | translate}}
-                </a>
+    <ng-container *ngIf="filecontrol.skip && filecontrol.skip | async; else noSkip">
+        <tui-island size="s" class="not-support">
+            <p class="text-blend tui-island__category">{{'not-support' | translate}}</p>
+            <h3 class="text-blend tui-island__title">{{filename}}</h3>
+            <p class="text-blend tui-island__paragraph">
+                {{'not-support-mobile' | translate}}
             </p>
         </tui-island>
     </ng-container>
+    <ng-template #noSkip>
+        <tui-input-files *ngIf="!filecontrol.control.value" class="file-input" [formControl]="filecontrol.control"
+            [maxFileSize]="filesize" [accept]="accept" [multiple]="false" (reject)="onreject($event)" tuiMode="onLight">
+            <ng-template let-dragged>
+                <div *ngIf="dragged; else base" class="content">
+                    <tui-marker-icon mode="white" src="tuiIconDroplet" size="xs"></tui-marker-icon>
+                    <div>¡Suelta!</div>
+                </div>
+                <ng-template #base>
+                    <div class="content">
+                        <tui-marker-icon mode="white" src="tuiIconUploadCloud" size="xs"></tui-marker-icon>
+                        <div>{{filename}}</div>
+                    </div>
+                </ng-template>
+            </ng-template>
+        </tui-input-files>
+        <ng-container *ngIf="filecontrol.loadedFile$ | async as file">
+            <tui-island size="s">
+                <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false"
+                    style="position: absolute; right: 0.5em; top: 0.5em;">
+                    <tui-svg [src]="'tuiIconCheckCircle'" style="position: relative; top: 0.25em;">
+                    </tui-svg>
+                </tui-loader>
+                <p class="tui-island__category">{{'archive' | translate}}</p>
+                <h3 class="tui-island__title">{{filename}}</h3>
+                <p class="tui-island__paragraph">
+                    {{(filecontrol.progressStatus$ | async) ?? '' | translate}}
+                </p>
+                <p class="tui-island__paragraph">
+                    {{'progress' | translate}}: {{((filecontrol.progress$ | async) |
+                    number:'1.0-2')}}/{{(filecontrol.progressMax$ | async)}}
+                </p>
+                <p class="tui-island__paragraph tui-island__paragraph_link" *ngIf="filecontrol.url">
+                    <a href="{{filecontrol.url}}" download="{{filecontrol.control.value.name}}" type="File" tuiLink>
+                        {{'download' | translate}}
+                    </a>
+                </p>
+            </tui-island>
+        </ng-container>
+    </ng-template>
 </ng-template>

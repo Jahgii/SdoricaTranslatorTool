@@ -2,10 +2,10 @@ export interface IOnMessage {
     maxPg: number;
     pg: number;
     blob?: Blob;
-    pgState: ProgressState;
+    pgState: ProgressStatus;
 }
 
-export enum ProgressState {
+export enum ProgressStatus {
     waiting = 'waiting',
     retrivingServerData = 'retriving-server-data',
     retrivingServerDataSucess = 'retriving-server-data-sucess',

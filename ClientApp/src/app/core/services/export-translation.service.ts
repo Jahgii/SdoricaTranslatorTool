@@ -6,9 +6,10 @@ import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLate
 import { ILocalization } from '../interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
 import { IGamedata } from '../interfaces/i-gamedata';
-import * as JSZip from 'jszip';
 import { IFileControl } from '../interfaces/i-export';
-import { ProgressState, IOnMessage } from '../interfaces/i-export-progress';
+import { ProgressStatus as ProgressStatus, IOnMessage } from '../interfaces/i-export-progress';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import * as JSZip from 'jszip';
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,11 @@ export class ExportTranslationService {
     verificationCallback: this.onVerificationObb.bind(this),
     loadedFile$: undefined,
     verifiedFile$: new BehaviorSubject<boolean>(false),
-    progressStatus$: new BehaviorSubject<ProgressState>(ProgressState.waiting),
+    progressStatus$: new BehaviorSubject<ProgressStatus>(ProgressStatus.waiting),
     progress$: new BehaviorSubject<number>(0),
     progressMax$: new BehaviorSubject<number>(100),
-    url: undefined
+    url: undefined,
+    skip: new BehaviorSubject<boolean>(false)
   };
 
   public localization: IFileControl = {
@@ -36,7 +38,7 @@ export class ExportTranslationService {
     verificationCallback: this.onVerificationLocalization.bind(this),
     loadedFile$: undefined,
     verifiedFile$: new BehaviorSubject<boolean>(false),
-    progressStatus$: new BehaviorSubject<ProgressState>(ProgressState.waiting),
+    progressStatus$: new BehaviorSubject<ProgressStatus>(ProgressStatus.waiting),
     progress$: new BehaviorSubject<number>(0),
     progressMax$: new BehaviorSubject<number>(100),
     url: undefined
@@ -48,7 +50,7 @@ export class ExportTranslationService {
     verificationCallback: this.onVerificationGamedata.bind(this),
     loadedFile$: undefined,
     verifiedFile$: new BehaviorSubject<boolean>(false),
-    progressStatus$: new BehaviorSubject<ProgressState>(ProgressState.waiting),
+    progressStatus$: new BehaviorSubject<ProgressStatus>(ProgressStatus.waiting),
     progress$: new BehaviorSubject<number>(0),
     progressMax$: new BehaviorSubject<number>(100),
     url: undefined
@@ -68,12 +70,13 @@ export class ExportTranslationService {
     this.localization.progressStatus$,
     this.gamedata.progressStatus$],
     (one, two, three) => {
-      return (one == ProgressState.finish && two == ProgressState.finish && three == ProgressState.finish);
+      return (one == ProgressStatus.finish && two == ProgressStatus.finish && three == ProgressStatus.finish);
     }
   );
 
   constructor(
-    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
+    @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
+    private ddS: DeviceDetectorService
   ) {
     this.obb.loadedFile$ = this.obb.control
       .valueChanges
@@ -104,6 +107,12 @@ export class ExportTranslationService {
           of(null)
         ))
       );
+
+    if (this.ddS.isMobile()) {
+      this.obb.skip?.next(true);
+      this.obb.verifiedFile$.next(true);
+      this.obb.progressStatus$.next(ProgressStatus.finish);
+    }
   }
 
   public onReject(file: TuiFileLike | readonly TuiFileLike[]): void {
@@ -144,7 +153,7 @@ export class ExportTranslationService {
 
     this.zipObb = new JSZip();
     try {
-      await this.zipObb.loadAsync(file);
+      await this.zipObb.loadAsync(file, {});
     } catch (error) {
       fileControl.verifyingFile$.next(false);
       firstValueFrom(alert);
@@ -260,13 +269,13 @@ export class ExportTranslationService {
     locWorker.onmessage = ({ data }) => this.onMessage(data, this.localization);
     gamWorker.onmessage = ({ data }) => this.onMessage(data, this.gamedata);
 
-    obbWorker.postMessage({ file: this.obb.control.value, lang: 'English' });
+    if (!this.obb.skip?.value) obbWorker.postMessage({ file: this.obb.control.value, lang: 'English' });
     locWorker.postMessage({ decodeResult: this.dataLoc, lang: 'English' });
     gamWorker.postMessage({ decodeResult: this.dataGam, lang: 'English' });
   }
 
   private onMessage(message: IOnMessage, fileControl: IFileControl) {
-    if (message.pgState == ProgressState.finish && message.blob) {
+    if (message.pgState == ProgressStatus.finish && message.blob) {
       fileControl.url = window.URL.createObjectURL(message.blob);
       // this.onAutoDownload(fileControl);
     }

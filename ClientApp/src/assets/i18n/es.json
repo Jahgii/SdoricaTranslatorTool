@@ -164,5 +164,7 @@
     "waiting": "En Espera",
     "progress": "Progreso",
     "archive": "Archivo",
-    "download": "Descargar"
+    "download": "Descargar",
+    "not-support": "No soportado",
+    "not-support-mobile": "Debido a limitaciones de la plataforma, este archivo no es soportado en telefono, utiliza una computadora."
 }

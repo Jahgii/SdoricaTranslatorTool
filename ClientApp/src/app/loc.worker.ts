@@ -1,13 +1,13 @@
 /// <reference lib="webworker" />
 
 import { encode } from '@msgpack/msgpack';
-import { IOnMessage, ProgressState } from './core/interfaces/i-export-progress';
+import { IOnMessage, ProgressStatus } from './core/interfaces/i-export-progress';
 import { ILocalization, ILocalizationKey } from './core/interfaces/i-localizations';
 
 addEventListener('message', async ({ data }) => {
   var keys: ILocalizationKey[] = [];
   var decodeResult = data.decodeResult as ILocalization;
-  const message: IOnMessage = { maxPg: 100, pg: 0, blob: undefined, pgState: ProgressState.retrivingServerData };
+  const message: IOnMessage = { maxPg: 100, pg: 0, blob: undefined, pgState: ProgressStatus.retrivingServerData };
   postMessage(message);
 
   var promise = fetch('localizationkeys/export', {
@@ -21,22 +21,22 @@ addEventListener('message', async ({ data }) => {
   await promise.then(
     async res => {
       keys = await res.json();
-      message.pgState = ProgressState.retrivingServerDataSucess;
+      message.pgState = ProgressStatus.retrivingServerDataSucess;
       postMessage(message);
     },
     error => {
-      message.pgState = ProgressState.retrivingServerDataError;
+      message.pgState = ProgressStatus.retrivingServerDataError;
       postMessage(message);
     }
   );
 
   if (!(keys.length > 0)) {
-    message.pgState = ProgressState.retrivingServerDataEmpty;
+    message.pgState = ProgressStatus.retrivingServerDataEmpty;
     postMessage(message);
     return;
   }
 
-  message.pgState = ProgressState.replacingContent;
+  message.pgState = ProgressStatus.replacingContent;
   postMessage(message);
   for (let key of keys) {
     let keyIndexPosition = decodeResult.C[key.Category].K.findIndex(e => e === 'Key');
@@ -60,7 +60,7 @@ addEventListener('message', async ({ data }) => {
     decodeResult.C[key.Category].D[keyIndex][languageIndex] = key.Translations[data.lang];
   }
 
-  message.pgState = ProgressState.generatingNewFile;
+  message.pgState = ProgressStatus.generatingNewFile;
   message.maxPg = 100;
   message.pg = 0;
 
@@ -72,7 +72,7 @@ addEventListener('message', async ({ data }) => {
     type: ''
   });
 
-  message.pgState = ProgressState.finish;
+  message.pgState = ProgressStatus.finish;
   message.blob = blob;
   message.pg = 100;
   postMessage(message);
