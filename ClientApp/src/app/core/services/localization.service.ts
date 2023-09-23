@@ -54,6 +54,7 @@ export class LocalizationService implements OnDestroy {
 
   public keys$!: Observable<ILocalizationKey[]>;
   public keys: ILocalizationKey[] | undefined;
+  public saving$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public searchCategory$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public alreadySearch$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -141,6 +142,7 @@ export class LocalizationService implements OnDestroy {
   }
 
   public async onTranslatedCheck(check: boolean, keys: ILocalizationKey[], key: ILocalizationKey) {
+    this.saving$.next(true);
     if (check) {
       this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
       this.searchTotalTranslated++;
@@ -170,6 +172,8 @@ export class LocalizationService implements OnDestroy {
       keyToPropagate.Translated[this.languageOrigin.localizationLang] = check;
       await this.onKeyTranslated(keyToPropagate);
     }
+
+    this.saving$.next(false);
   }
 
   public onTranslationChange(translation: string, keys: ILocalizationKey[], key: ILocalizationKey) {

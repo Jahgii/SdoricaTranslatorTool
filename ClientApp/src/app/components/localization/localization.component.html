@@ -232,6 +232,7 @@
                                                             <div
                                                                 style="display: flex; align-items: center; justify-content: center; height: 100%;">
                                                                 <tui-checkbox
+                                                                    [disabled]="(localization.saving$ | async) ?? false"
                                                                     [(ngModel)]="item.Translated[localization.language]"
                                                                     (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"></tui-checkbox>
                                                             </div>
@@ -343,6 +344,7 @@
                                                                     <div
                                                                         style="display: flex; align-items: center; justify-content: center; height: 100%;">
                                                                         <tui-checkbox
+                                                                            [disabled]="(localization.saving$ | async) ?? false"
                                                                             [(ngModel)]="item.Translated[localization.language]"
                                                                             (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"></tui-checkbox>
                                                                     </div>
