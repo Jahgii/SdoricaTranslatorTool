@@ -154,7 +154,10 @@ export class LocalizationService implements OnDestroy {
 
     await this.onKeyTranslated(key);
 
-    if (!this.propagateTranslation) return;
+    if (!this.propagateTranslation) {
+      this.saving$.next(false);
+      return;
+    }
 
     let propagateKeys = this.getPropagateKeys(keys, key);
 
