@@ -19,6 +19,7 @@ import { ThemeService } from 'src/app/core/services/theme.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavMenuComponent implements OnInit {
+  public openMenu: boolean = false;
   public openSetting: boolean = false;
 
   public langControl: FormControl = new FormControl();
@@ -64,6 +65,10 @@ export class NavMenuComponent implements OnInit {
       this.localStorage.setAppLang('en');
       this.langControl.patchValue('en');
     }
+  }
+
+  public onToogleMenu() {
+    this.openMenu = !this.openMenu;
   }
 
   public onToogleSettings() {

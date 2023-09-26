@@ -166,5 +166,6 @@
     "archive": "Archivo",
     "download": "Descargar",
     "not-support": "No soportado",
-    "not-support-mobile": "Debido a limitaciones de la plataforma, este archivo no es soportado en telefono, utiliza una computadora."
+    "not-support-mobile": "Debido a limitaciones de la plataforma, este archivo no es soportado en telefono, utiliza una computadora.",
+    "home": "Página Principal"
 }

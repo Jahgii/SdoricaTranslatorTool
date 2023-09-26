@@ -1,4 +1,35 @@
 <header class="header">
+    <button tuiIconButton appearance="icon" [icon]="'tuiIconMenu'" (click)="onToogleMenu()"
+        (tuiActiveZoneChange)="onToogleMenu()" size="xs" class="tui-space_right-2">
+        <tui-scrollbar *tuiSidebar="openMenu; direction: 'left'">
+            <div class="menu-header">
+                <h3>Menu</h3>
+            </div>
+            <div style="padding: 1em;">
+                <div style="display: flex; flex-direction: column; gap: 2rem;">
+                    <a icon="tuiIconHome" iconAlign="left" tuiLink [routerLink]="['/']" tuiMode="onLight">
+                        {{'home' | translate}}
+                    </a>
+                    <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/localization']"
+                        tuiMode="onLight">
+                        {{'main_localization' | translate}}
+                    </a>
+                    <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/dialogsAsset']"
+                        tuiMode="onLight">
+                        {{'chapter-dialog-localization' | translate}}
+                    </a>
+                    <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/loading']"
+                        tuiMode="onLight">
+                        {{'re-import-files' | translate}}
+                    </a>
+                    <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/export']"
+                        tuiMode="onLight">
+                        {{'export-files' | translate}}
+                    </a>
+                </div>
+            </div>
+        </tui-scrollbar>
+    </button>
     <ng-container *ngIf="breakpointService$ | async as breakpoint">
         <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
             <h1 style="margin-right: auto;">{{'sdorica-translator-tool' | translate}}</h1>
@@ -16,9 +47,9 @@
     <button tuiIconButton appearance="icon" [icon]="'tuiIconSettings'" (click)="onToogleSettings()"
         (tuiActiveZoneChange)="onToogleSettings()">
         <tui-scrollbar *tuiSidebar="openSetting; direction: 'right'">
+            <h3 style="text-align: center; padding: 1em 1em 0 1em;">{{'language-configuration' | translate}}</h3>
+            <hr>
             <div style="padding: 1em;">
-                <h3 style="text-align: center;">{{'language-configuration' | translate}}</h3>
-                <hr>
                 <h4>{{'app-language' | translate}}</h4>
                 <div orientation="vertical" tuiGroup class="w-100" [collapsed]="true">
                     <ng-container *ngFor="let lang of langs">
