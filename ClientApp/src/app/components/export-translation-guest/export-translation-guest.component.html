@@ -6,16 +6,21 @@
             siguiente vez que vuelvas por aquí. Los porcentajes son generales.
         </p>
 
-        <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s">
+        <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s"
+            *ngIf="eTS.progressPerc$ | async as p; else loading">
             <li class="tui-list__item">
                 IU: Corresponde a menus, descripciones de objetos, habilidades, personajes, etc.
-                → <b>0%</b>
+                → <b>{{p.Keys}}%</b>
             </li>
             <li class="tui-list__item">
                 Dialogos: Corresponde a la historia principal, de personajes y eventos.
-                → <b>0%</b>
+                → <b>{{p.Dialogs}}%</b>
             </li>
         </ol>
+
+        <ng-template #loading>
+            <tui-loader [showLoader]="true"></tui-loader>
+        </ng-template>
 
         <h3>A Traducir</h3>
         <p>Es hora de traducir, arrastra o da click sobre los recuadros de la parte inferior y proporciona los archivos

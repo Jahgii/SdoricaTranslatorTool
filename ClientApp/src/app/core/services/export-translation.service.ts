@@ -6,10 +6,11 @@ import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLate
 import { ILocalization } from '../interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
 import { IGamedata } from '../interfaces/i-gamedata';
-import { IFileControl } from '../interfaces/i-export';
+import { IExportPercentages, IFileControl } from '../interfaces/i-export';
 import { ProgressStatus as ProgressStatus, IOnMessage } from '../interfaces/i-export-progress';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import * as JSZip from 'jszip';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -74,9 +75,13 @@ export class ExportTranslationService {
     }
   );
 
+  public progressPerc$: Observable<IExportPercentages> = this.api
+    .getWithHeaders('exportpercentages', { lang: 'English' });
+
   constructor(
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
-    private ddS: DeviceDetectorService
+    private ddS: DeviceDetectorService,
+    private api: ApiService
   ) {
     this.obb.loadedFile$ = this.obb.control
       .valueChanges

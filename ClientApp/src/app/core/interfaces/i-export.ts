@@ -15,3 +15,8 @@ export interface IFileControl {
     url: string | undefined;
     skip?: BehaviorSubject<boolean>;
 }
+
+export interface IExportPercentages{
+    Dialogs: number;
+    Keys: number;
+}
