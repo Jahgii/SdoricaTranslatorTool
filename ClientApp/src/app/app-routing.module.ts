@@ -8,15 +8,20 @@ import { LocalizationComponent } from './components/localization/localization.co
 import { MainGroupsComponent } from './components/main-groups/main-groups.component';
 import { ExportTranslationComponent } from './components/export-translation/export-translation.component';
 import { LoginComponent } from './components/login/login.component';
+import { ExportTranslationGuestComponent } from './components/export-translation-guest/export-translation-guest.component';
+import { authentificationGuard } from './core/guards/authentification.guard';
+import { authorizationGuard } from './core/guards/authorization.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'localization', component: LocalizationComponent },
-  { path: 'dialogsAsset', component: MainGroupsComponent },
-  { path: 'dialogsAsset/:mid', component: GroupsComponent },
-  { path: 'dialogsAsset/:mid/:gid', component: DialogAssetsComponent },
-  { path: 'loading', component: LoadFileWizardComponent },
-  { path: 'export', component: ExportTranslationComponent },
+  { path: '', component: ExportTranslationGuestComponent, canActivate: [authentificationGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'home', component: HomeComponent, canActivate: [authentificationGuard, authorizationGuard] },
+  { path: 'localization', component: LocalizationComponent, canActivate: [authentificationGuard, authorizationGuard] },
+  { path: 'dialogsAsset', component: MainGroupsComponent, canActivate: [authentificationGuard, authorizationGuard] },
+  { path: 'dialogsAsset/:mid', component: GroupsComponent, canActivate: [authentificationGuard, authorizationGuard] },
+  { path: 'dialogsAsset/:mid/:gid', component: DialogAssetsComponent, canActivate: [authentificationGuard, authorizationGuard] },
+  { path: 'loading', component: LoadFileWizardComponent, canActivate: [authentificationGuard, authorizationGuard] },
+  { path: 'export', component: ExportTranslationComponent, canActivate: [authentificationGuard, authorizationGuard] },
 ];
 
 @NgModule({

@@ -4,7 +4,7 @@ using MongoDB.Driver;
 namespace SdoricaTranslatorTool.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CommonWords : Controller
     {
         readonly ICustomMongoClient _cMongoClient;

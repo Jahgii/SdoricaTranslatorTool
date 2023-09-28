@@ -35,8 +35,14 @@ export class AuthService {
           .then(
             res => {
               this.userDB = res;
-              if (this.userDB.Rol == 'guest' || this.userDB.Rol == 'admin')
+              if (this.userDB.Rol == 'guest') {
                 this.rol = this.userDB.Rol;
+                this.route.navigateByUrl('');
+              }
+              else if (this.userDB.Rol == 'admin') {
+                this.rol = this.userDB.Rol;
+                this.route.navigateByUrl('home');
+              }
               this.authenticated$.next(true);
             },
             error => {

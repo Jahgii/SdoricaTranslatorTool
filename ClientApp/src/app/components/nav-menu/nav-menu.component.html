@@ -7,7 +7,7 @@
             </div>
             <div style="padding: 1em;">
                 <div style="display: flex; flex-direction: column; gap: 2rem;">
-                    <a icon="tuiIconHome" iconAlign="left" tuiLink [routerLink]="['/']" tuiMode="onLight">
+                    <a icon="tuiIconHome" iconAlign="left" tuiLink [routerLink]="['/home']" tuiMode="onLight">
                         {{'home' | translate}}
                     </a>
                     <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/localization']"
@@ -32,10 +32,10 @@
     </button>
     <ng-container *ngIf="breakpointService$ | async as breakpoint">
         <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
-            <h1 style="margin-right: auto;">{{'sdorica-translator-tool' | translate}}</h1>
+            <h2 style="margin-right: auto;">{{'sdorica-translator-tool' | translate}}</h2>
         </ng-container>
         <ng-container *ngIf="breakpoint === 'mobile'">
-            <h1 style="margin-right: auto;">{{'sdorica-translator-tool-small' | translate}}</h1>
+            <h2 style="margin-right: auto;">{{'sdorica-translator-tool-small' | translate}}</h2>
         </ng-container>
     </ng-container>
     <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
