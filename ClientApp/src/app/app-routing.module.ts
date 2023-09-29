@@ -11,17 +11,79 @@ import { LoginComponent } from './components/login/login.component';
 import { ExportTranslationGuestComponent } from './components/export-translation-guest/export-translation-guest.component';
 import { authentificationGuard } from './core/guards/authentification.guard';
 import { authorizationGuard } from './core/guards/authorization.guard';
+import { translationLanguageGuard } from './core/guards/translation-language.guard';
 
 const routes: Routes = [
-  { path: '', component: ExportTranslationGuestComponent, canActivate: [authentificationGuard] },
-  { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomeComponent, canActivate: [authentificationGuard, authorizationGuard] },
-  { path: 'localization', component: LocalizationComponent, canActivate: [authentificationGuard, authorizationGuard] },
-  { path: 'dialogsAsset', component: MainGroupsComponent, canActivate: [authentificationGuard, authorizationGuard] },
-  { path: 'dialogsAsset/:mid', component: GroupsComponent, canActivate: [authentificationGuard, authorizationGuard] },
-  { path: 'dialogsAsset/:mid/:gid', component: DialogAssetsComponent, canActivate: [authentificationGuard, authorizationGuard] },
-  { path: 'loading', component: LoadFileWizardComponent, canActivate: [authentificationGuard, authorizationGuard] },
-  { path: 'export', component: ExportTranslationComponent, canActivate: [authentificationGuard, authorizationGuard] },
+  {
+    path: '',
+    component: ExportTranslationGuestComponent,
+    canActivate: [authentificationGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [
+      authentificationGuard,
+      authorizationGuard
+    ]
+  },
+  {
+    path: 'localization',
+    component: LocalizationComponent,
+    canActivate: [
+      authentificationGuard,
+      authorizationGuard,
+      translationLanguageGuard
+    ]
+  },
+  {
+    path: 'dialogsAsset',
+    component: MainGroupsComponent,
+    canActivate: [
+      authentificationGuard,
+      authorizationGuard,
+      translationLanguageGuard
+    ]
+  },
+  {
+    path: 'dialogsAsset/:mid',
+    component: GroupsComponent,
+    canActivate: [
+      authentificationGuard,
+      authorizationGuard,
+      translationLanguageGuard
+    ]
+  },
+  {
+    path: 'dialogsAsset/:mid/:gid',
+    component: DialogAssetsComponent,
+    canActivate: [
+      authentificationGuard,
+      authorizationGuard,
+      translationLanguageGuard
+    ],
+  },
+  {
+    path: 'loading',
+    component: LoadFileWizardComponent,
+    canActivate: [
+      authentificationGuard,
+      authorizationGuard
+    ]
+  },
+  {
+    path: 'export',
+    component: ExportTranslationComponent,
+    canActivate: [
+      authentificationGuard,
+      authorizationGuard,
+      translationLanguageGuard
+    ]
+  },
 ];
 
 @NgModule({

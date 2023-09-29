@@ -16,7 +16,10 @@ export class LanguageOriginService {
   public language: FormControl = new FormControl(undefined);
   public localizationLang: string = '';
 
-  constructor(private api: ApiService, private local: LocalStorageService) { }
+  constructor(
+    private api: ApiService,
+    private local: LocalStorageService
+  ) { }
 
   public async onRetriveLanguages() {
     return await firstValueFrom(this.api.get<ILanguage[]>('languages'))
