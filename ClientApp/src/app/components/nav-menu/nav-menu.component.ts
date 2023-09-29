@@ -75,10 +75,6 @@ export class NavMenuComponent implements OnInit {
     this.openSetting = !this.openSetting;
   }
 
-  public changeLang(lang: string) {
-    this.translate.use(lang);
-  }
-
   @tuiPure
   stringify(
     items: readonly ILibreTranslateLanguages[],

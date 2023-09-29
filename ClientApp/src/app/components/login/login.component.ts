@@ -14,5 +14,7 @@ export class LoginComponent {
     public authService: AuthService,
     public theme: ThemeService
   ) {
+    if (this.authService.authenticated$.value == true)
+      this.router.navigateByUrl('/');
   }
 }

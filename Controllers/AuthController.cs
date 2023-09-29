@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -23,9 +24,14 @@ namespace SdoricaTranslatorTool.Controllers
             _config = configuration;
         }
 
+        public IConfiguration Get_config()
+        {
+            return _config;
+        }
+
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] AuthValidation authValidation)
+        public async Task<ActionResult> Post([FromBody] AuthValidation authValidation, IConfiguration _config)
         {
             using (var session = await _cMongoClient.StartSessionAsync())
             {
@@ -59,7 +65,12 @@ namespace SdoricaTranslatorTool.Controllers
                         user = newUser;
                     }
 
-                    user.Token = GenerateToken();
+                    if (user.Rol == "guest")
+                        user.Token = GenerateToken(0.12);
+                    else if (user.Rol == "admin")
+                        user.Token = GenerateToken(12);
+                    else
+                        return Unauthorized();
 
                     return Ok(user);
                 }
@@ -73,7 +84,7 @@ namespace SdoricaTranslatorTool.Controllers
         }
 
 
-        private string GenerateToken()
+        private string GenerateToken(double hours)
         {
             var sSK = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["IssuerSigningKey"] ?? ""));
             var sC = new SigningCredentials(sSK, SecurityAlgorithms.HmacSha256);
@@ -81,7 +92,7 @@ namespace SdoricaTranslatorTool.Controllers
                 issuer: _config["Issuer"],
                 audience: _config["Audience"],
                 claims: new List<Claim>(),
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddHours(hours),
                 signingCredentials: sC
             );
             return new JwtSecurityTokenHandler().WriteToken(jwtST);

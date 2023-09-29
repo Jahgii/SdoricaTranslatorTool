@@ -4,6 +4,9 @@ import { BehaviorSubject, Subject, firstValueFrom } from 'rxjs';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from './local-storage.service';
+import { LanguageOriginService } from './language-origin.service';
+import { TuiAlertService } from '@taiga-ui/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +23,14 @@ export class AuthService {
     private authService: SocialAuthService,
     private local: LocalStorageService,
     private api: ApiService,
-    private route: Router
+    private route: Router,
+    private languageOrigin: LanguageOriginService,
+    private alert: TuiAlertService,
+    private translate: TranslateService
   ) {
     this.authService
       .authState
       .subscribe(async (user) => {
-        this.user = user;
         this.authenticating$.next(true);
 
         let authValidation: IAuthValidation = {
@@ -33,11 +38,12 @@ export class AuthService {
           idToken: user.idToken
         }
 
-        firstValueFrom(this.api.post<IUser>('auth', authValidation))
+        await firstValueFrom(this.api.post<IUser>('auth', authValidation))
           .then(
-            res => {
-              this.userDB = res;
+            async res => {
               this.local.setToken(res.Token);
+              this.userDB = res;
+              await this.languageOrigin.onRetriveLanguages();
               if (this.userDB.Rol == 'guest') {
                 this.rol = this.userDB.Rol;
                 this.route.navigateByUrl('');
@@ -47,11 +53,21 @@ export class AuthService {
                 this.route.navigateByUrl('home');
               }
               this.authenticated$.next(true);
+              this.user = user;
             },
             error => {
+              let alert = this.alert.open(this.translate.instant('can-not-login'), {
+                label: 'Error',
+                status: 'error',
+                autoClose: true
+              });
 
+              firstValueFrom(alert);
             }
           );
+
+
+        this.authenticating$.next(false);
       });
   }
 

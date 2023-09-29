@@ -3,7 +3,7 @@
         class="tui-space_vertical-6 image" />
 
     <h4 style="max-width: 500px;" tuiSlot="top">
-        Bienvenido a la herramienta de traducción de Sdorica, para continuar inicia sesión.
+        {{'welcome-login' | translate}}
     </h4>
     <tui-loader class="loader" [inheritColor]="true" [overlay]="true"
         [showLoader]="(authService.authenticating$ | async) ?? false">

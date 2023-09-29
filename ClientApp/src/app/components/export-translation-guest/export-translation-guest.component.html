@@ -1,40 +1,33 @@
 <main class="main-container">
     <div class="files">
-        <h3>Progreso de Traducción</h3>
+        <h3>{{'translation-progress' | translate}}</h3>
         <p>
-            Aqui puedes ver el porcentaje de la traducción, es recomendable guardar los porcentajes y comparar la
-            siguiente vez que vuelvas por aquí. Los porcentajes son generales.
+            {{'translation-progress-description' | translate}}
         </p>
 
         <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s"
-            *ngIf="eTS.progressPerc$ | async as p; else loading">
+            *ngIf="{values: eTS.progressPerc$ | async} as progress;" [style.--tui-skeleton-radius.px]="4">
             <li class="tui-list__item">
-                IU: Corresponde a menus, descripciones de objetos, habilidades, personajes, etc.
-                → <b>{{p.Keys}}%</b>
+                {{'translation-ui' | translate}}
+                → <b [class.tui-skeleton]="!progress.values">
+                    {{progress.values?.Keys}}%
+                </b>
             </li>
             <li class="tui-list__item">
-                Dialogos: Corresponde a la historia principal, de personajes y eventos.
-                → <b>{{p.Dialogs}}%</b>
+                {{'translation-dialogs' | translate}}
+                → <b [class.tui-skeleton]="!progress.values">
+                    {{progress.values?.Dialogs}}%
+                </b>
             </li>
         </ol>
 
-        <ng-template #loading>
-            <tui-loader [showLoader]="true"></tui-loader>
-        </ng-template>
-
-        <h3>A Traducir</h3>
-        <p>Es hora de traducir, arrastra o da click sobre los recuadros de la parte inferior y proporciona los archivos
-            especificados, una vez hecho da click en 'Aplicar
-            Traducción'.</p>
+        <h3>{{'to-translate' | translate}}</h3>
+        <p>{{'to-translate-description' | translate}}</p>
         <ul class="tui-list tui-list_ordered tui-list_nested tui-text_body-s">
-            <li class="tui-list__item"><b>OBB</b>: Este archivo esta localizado en el directorio →
-                Android/obb/com.rayark.sdorica
+            <li class="tui-list__item"><b>OBB</b>: {{'obb-description' | translate}}
             </li>
-            <li class="tui-list__item"><b>Localization</b>: Este archivo esta localizado en el
-                directorio →
-                Android/data/com.rayark.sdorica/files/imperium/localization</li>
-            <li class="tui-list__item"><b>Gamedata</b>: Este archivo esta localizado en el directorio →
-                Android/data/com.rayark.sdorica/files/imperium/gamedata</li>
+            <li class="tui-list__item"><b>Localization</b>: {{'localization-description' | translate}} </li>
+            <li class="tui-list__item"><b>Gamedata</b>: {{'gamedata-description' | translate}}</li>
         </ul>
 
         <div class="files-input tui-space_top-6">
@@ -67,43 +60,32 @@
         <tui-expand [expanded]="(eTS.filesVerified$ | async) && !(eTS.filesCompleted$ | async)">
             <ng-template tuiExpandContent>
                 <p>
-                    Antes de traducir hay que pasar por caja, naaa, es una broma.
-                    Pero si quieres y puedes apoyar el proyecto puedes donar en
+                    {{'before-translation-apply-0' | translate}}
                     <span class="important-text">Buy Me a Coffee</span>.
-                    Claro primero prueba la traducción.
+                    {{'before-translation-apply-1' | translate}}
                 </p>
 
                 <p>
-                    Todo el proceso de traducción sucede en el cliente(su equipo), del servidor
-                    solo se obtienen los textos, asi que la velocidad de modificación de los archivos
-                    depende de la potencia de su equipo.
+                    {{'before-translation-apply-2' | translate}}
                 </p>
 
                 <p>
-                    No olvides realizar un reespaldo de los archivos a reemplazar.
+                    {{'before-translation-apply-3' | translate}}
                 </p>
             </ng-template>
         </tui-expand>
 
         <tui-expand [expanded]="(eTS.filesCompleted$ | async)">
             <p class="important-text">
-                Importante: Si al descargar los archivos de LOCALIZATION y GAMEDATA se les agrego la extensión txt o
-                cualquier otra, solo elimina la extensión antes de moverlos a su correspondiente directorio.
+                {{'after-translation-apply-0' | translate}}
             </p>
 
             <p>
-                Si las descargas no comenzaron automaticamente puedes descargar los archivos dando click en el texto
-                "Descargar" en su correspondiente recuadro.
+                {{'after-translation-apply-1' | translate}}
             </p>
 
             <p>
-                No olvides compartir la traducción y reportar cualquier error u horror que encuentren sus desdichados
-                ojos.
-                Tambien puede proponer mejoras y/o sugerencias sí asi lo desea.
-            </p>
-
-            <p class="center-text">
-                ¡Que disfrutes la traducción!
+                {{'after-translation-apply-2' | translate}}
             </p>
         </tui-expand>
 
@@ -111,12 +93,12 @@
             <button *ngIf="!(eTS.filesCompleted$ | async)" tuiButton appearance="outline"
                 [showLoader]="(eTS.isTranslating$ | async) ?? false" (click)="eTS.onApplyTranslation()"
                 [disabled]="!(eTS.filesVerified$ | async)"
-                [tuiHint]="!(eTS.filesVerified$ | async) ? 'Por favor proporcina todos los archivos para aplicar la traducción' : undefined"
+                [tuiHint]="!(eTS.filesVerified$ | async) ? ('missing-files' | translate) : undefined"
                 [tuiHintAppearance]="!(eTS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
-                {{'Aplicar Traducción' | translate}}
+                {{'apply-translation' | translate}}
             </button>
             <button *ngIf="(eTS.filesCompleted$ | async)" tuiButton appearance="outline">
-                {{'PUGGGGIIIIIIIIII'}}
+                {{'after-translation-apply-3' | translate}}
             </button>
         </div>
     </div>
@@ -139,7 +121,9 @@
             <ng-template let-dragged>
                 <div *ngIf="dragged; else base" class="content">
                     <tui-marker-icon mode="white" src="tuiIconDroplet" size="xs"></tui-marker-icon>
-                    <div>¡Suelta!</div>
+                    <div>
+                        {{'drop' | translate}}
+                    </div>
                 </div>
                 <ng-template #base>
                     <div class="content">

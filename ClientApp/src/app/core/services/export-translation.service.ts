@@ -9,8 +9,8 @@ import { IGamedata } from '../interfaces/i-gamedata';
 import { IExportPercentages, IFileControl } from '../interfaces/i-export';
 import { ProgressStatus as ProgressStatus, IOnMessage } from '../interfaces/i-export-progress';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import * as JSZip from 'jszip';
 import { ApiService } from './api.service';
+import * as JSZip from 'jszip';
 
 @Injectable({
   providedIn: 'root'

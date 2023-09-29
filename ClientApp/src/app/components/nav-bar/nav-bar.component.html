@@ -1,12 +1,31 @@
 <tui-app-bar class="app-bar">
     <div tuiSlot="left" style="display: flex; align-items: center;">
-        <tui-avatar size="s" [rounded]="true" [text]="auth.user?.name ? auth.user?.name ?? '' : '?'"
-            [avatarUrl]="auth.user?.photoUrl ? auth.user?.photoUrl ?? '' : null">
-
-        </tui-avatar>
-        <span class="tui-space_left-2">{{auth.user?.name ? 'Hola, ' + auth.user?.name : 'Desconocido'}}</span>
+        <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
+            <tui-avatar size="s" [rounded]="true" [text]="auth.user?.name ? auth.user?.name ?? '' : '?'"
+                [avatarUrl]="auth.user?.photoUrl ? auth.user?.photoUrl ?? '' : null">
+            </tui-avatar>
+        </tui-loader>
+        <span class="tui-space_left-2">
+            {{auth.user?.name ? ('hi-user' | translate) + auth.user?.name : ('unknown-user' | translate)}}
+        </span>
     </div>
 
+    <tui-hosted-dropdown #dropdown [content]="content" [tuiDropdownMaxHeight]="300" tuiSlot="right">
+        <button appearance="icon" tuiIconButton type="button" icon="tuiIconGlobe"></button>
+    </tui-hosted-dropdown>
+    <ng-template #content>
+        <tui-data-list size="l" class="list">
+            <tui-opt-group>
+                <button tuiOption (click)="translate.use('en')">
+                    {{'en' | translate}}
+                </button>
+                <button tuiOption (click)="translate.use('es')">
+                    {{'es' | translate}}
+                </button>
+            </tui-opt-group>
+        </tui-data-list>
+    </ng-template>
+    
     <button tuiIconButton appearance="icon" [icon]="(theme.nightMode$ | async)? 'tuiIconMoon' : 'tuiIconSun'"
         (click)="theme.switchTheme()" tuiSlot="right">
     </button>
