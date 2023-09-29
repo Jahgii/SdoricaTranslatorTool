@@ -3,6 +3,7 @@ import { SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
 import { BehaviorSubject, Subject, firstValueFrom } from 'rxjs';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class AuthService {
 
   constructor(
     private authService: SocialAuthService,
+    private local: LocalStorageService,
     private api: ApiService,
     private route: Router
   ) {
@@ -35,6 +37,7 @@ export class AuthService {
           .then(
             res => {
               this.userDB = res;
+              this.local.setToken(res.Token);
               if (this.userDB.Rol == 'guest') {
                 this.rol = this.userDB.Rol;
                 this.route.navigateByUrl('');
@@ -58,6 +61,7 @@ interface IUser {
   Email: string;
   TranslationCount: number;
   Rol: string;
+  Token: string;
 }
 
 interface IAuthValidation {

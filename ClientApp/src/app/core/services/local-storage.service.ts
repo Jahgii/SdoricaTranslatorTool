@@ -46,4 +46,12 @@ export class LocalStorageService {
   setAppLang(lang: string) {
     localStorage.setItem('appLang', lang);
   }
+
+  getToken() {
+    return localStorage.getItem('token') ?? undefined;
+  }
+
+  setToken(token: string) {
+    localStorage.setItem('token', token);
+  }
 }

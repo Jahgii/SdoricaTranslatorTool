@@ -11,6 +11,8 @@ namespace SdoricaTranslatorTool.Entities
         public required string Email { get; set; }
         public required int TranslationCount { get; set; }
         public required string Rol { get; set; }
+        [BsonIgnore]
+        public string? Token { get; set; }
     }
 
     public class AuthValidation

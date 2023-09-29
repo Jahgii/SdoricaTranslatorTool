@@ -16,6 +16,6 @@ export class AppComponent {
     public authService: AuthService,
     public theme: ThemeService
   ) {
-    this.languageOrigin.onRetriveLanguages();
+    // this.languageOrigin.onRetriveLanguages();
   }
 }

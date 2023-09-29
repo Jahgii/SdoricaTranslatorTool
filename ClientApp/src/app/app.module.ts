@@ -47,6 +47,8 @@ import { of } from "rxjs";
 import { LoginComponent } from "./components/login/login.component";
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ExportTranslationGuestComponent } from './components/export-translation-guest/export-translation-guest.component';
+import { JwtModule } from "@auth0/angular-jwt";
+import { environment } from "src/environments/environment";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -146,6 +148,12 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => localStorage.getItem("token"),
+        allowedDomains: [environment.allowedDomains]
+      },
+    }),
   ],
   providers: [
     {
@@ -155,9 +163,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              'REPLACE'
-            )
+            provider: new GoogleLoginProvider(environment.googleClientId)
           }
         ],
         onError: (err) => {

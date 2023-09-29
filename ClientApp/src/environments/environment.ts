@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  allowedDomains: process.env.ALLOWED_DOMAIN as string,
+  googleClientId: process.env.GOOGLE_CLIEND_ID as string
 };
 
 /*

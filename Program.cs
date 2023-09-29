@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using SdoricaTranslatorTool;
 
 var cors = "CustomCors";
@@ -8,9 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddControllers()
     .AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-});
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
+
+//JWT
+builder.Services.ConfigureJwt(builder.Configuration);
 
 // CORS
 builder.Services
@@ -40,11 +44,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
+app.UseAuthorization();
 app.UseCors(cors);
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}"
-);
+).RequireAuthorization();
 
 app.MapFallbackToFile("index.html");
 
