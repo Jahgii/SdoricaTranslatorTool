@@ -178,7 +178,8 @@
                                                                 *ngIf="localization.focusRow == i; else showNormalText">
                                                                 <tui-scrollbar class="translation-content-cell">
                                                                     <span appCommonDictionary
-                                                                        [text]="onRenderDefaultLanguage(item.Original)"></span>
+                                                                        [text]="onRenderDefaultLanguage(item.Original)">
+                                                                </span>
                                                                 </tui-scrollbar>
                                                             </ng-container>
                                                             <ng-template #showNormalText>
@@ -288,22 +289,17 @@
                                                         <td *tuiCell="'Language'" tuiTd class="tooltip-name-cell">
                                                             <div class="cell-content">
                                                                 <div class="cell-content-original">
-                                                                    <div style="flex: 1;" [tuiHint]="tooltip"
+                                                                    <div [tuiHint]="tooltip"
                                                                         [tuiHintAppearance]="'onDark'"
                                                                         [tuiHintShowDelay]="200">
                                                                         <ng-container
                                                                             *ngIf="localization.focusRow == i; else showNormalText">
-                                                                            <tui-scrollbar
-                                                                                class="translation-content-cell">
-                                                                                <span appCommonDictionary
-                                                                                    [text]="onRenderDefaultLanguage(item.Original)"></span>
-                                                                            </tui-scrollbar>
+                                                                            <div appCommonDictionary
+                                                                                [text]="onRenderDefaultLanguage(item.Original)">
+                                                                            </div>
                                                                         </ng-container>
                                                                         <ng-template #showNormalText>
-                                                                            <tui-scrollbar
-                                                                                class="translation-content-cell">
-                                                                                <span>{{onRenderDefaultLanguage(item.Original)}}</span>
-                                                                            </tui-scrollbar>
+                                                                            <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                                                         </ng-template>
                                                                         <span
                                                                             class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
@@ -350,7 +346,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div>
-                                                                    <tui-text-area style="transform: translate(0);"
+                                                                    <tui-text-area
                                                                         [(ngModel)]="item.Translations[localization.language]"
                                                                         [expandable]="true"
                                                                         (focusedChange)="localization.focusRow = i"
