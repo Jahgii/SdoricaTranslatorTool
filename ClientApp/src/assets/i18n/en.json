@@ -191,5 +191,6 @@
     "welcome-login": "Welcome to the Sdorica translation tool, to continue log in.",
     "unknown-user": "Unknown",
     "hi-user": "Hi, ",
-    "can-not-login": "Can't log in, try again later."
+    "can-not-login": "Can't log in, try again later.",
+    "empty-db-guest": "It seems you are too fast here, let the translators work a little more, come back later."
 }

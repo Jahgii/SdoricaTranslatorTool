@@ -1,4 +1,4 @@
-<main class="main-container">
+<main class="main-container" *ngIf="(languageOrigin.language.value); else empty">
     <div class="files">
         <h3>{{'translation-progress' | translate}}</h3>
         <p>
@@ -103,6 +103,15 @@
         </div>
     </div>
 </main>
+
+<ng-template #empty>
+    <tui-block-status>
+        <img tuiSlot="top" alt="main localization" src="./assets/images/localization-not.svg"
+            class="tui-space_vertical-6 image" />
+
+        <h4 style="max-width: 500px;" tuiSlot="top">{{'empty-db-guest' | translate}}</h4>
+    </tui-block-status>
+</ng-template>
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename"
     let-onreject="onreject">

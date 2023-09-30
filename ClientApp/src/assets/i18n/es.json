@@ -191,5 +191,6 @@
     "welcome-login": "Bienvenido a la herramienta de traducción de Sdorica, para continuar inicia sesión.",
     "unknown-user": "Desconocido",
     "hi-user": "Hola, ",
-    "can-not-login": "No se puede iniciar sesión, intente de nuevo más tarde."
+    "can-not-login": "No se puede iniciar sesión, intente de nuevo más tarde.",
+    "empty-db-guest": "Parece que estás demasiado rápido aquí, deja que los traductores trabajen un poco más, vuelve más tarde."
 }

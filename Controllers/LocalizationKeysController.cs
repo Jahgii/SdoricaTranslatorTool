@@ -159,11 +159,11 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost("bulk")]
         public async Task<ActionResult> PostBulk(List<LocalizationKey> keys)
         {
+            List<string> KeysToReplaced = new List<string>();
             using (var session = await _cMongoClient.StartSessionAsync())
             {
                 session.StartTransaction();
 
-                var list = new List<WriteModel<LocalizationKey>>();
 
                 try
                 {
@@ -178,8 +178,7 @@ namespace SdoricaTranslatorTool.Controllers
                 }
             }
 
-
-            return Ok();
+            return Ok(KeysToReplaced);
         }
 
         [HttpPut]

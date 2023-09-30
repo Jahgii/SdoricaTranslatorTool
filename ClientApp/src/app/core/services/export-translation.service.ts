@@ -11,6 +11,7 @@ import { ProgressStatus as ProgressStatus, IOnMessage } from '../interfaces/i-ex
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ApiService } from './api.service';
 import * as JSZip from 'jszip';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -81,6 +82,7 @@ export class ExportTranslationService {
   constructor(
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
     private ddS: DeviceDetectorService,
+    private local: LocalStorageService,
     private api: ApiService
   ) {
     this.obb.loadedFile$ = this.obb.control
@@ -274,9 +276,9 @@ export class ExportTranslationService {
     locWorker.onmessage = ({ data }) => this.onMessage(data, this.localization);
     gamWorker.onmessage = ({ data }) => this.onMessage(data, this.gamedata);
 
-    if (!this.obb.skip?.value) obbWorker.postMessage({ file: this.obb.control.value, lang: 'English' });
-    locWorker.postMessage({ decodeResult: this.dataLoc, lang: 'English' });
-    gamWorker.postMessage({ decodeResult: this.dataGam, lang: 'English' });
+    if (!this.obb.skip?.value) obbWorker.postMessage({ file: this.obb.control.value, lang: 'English', token: this.local.getToken() });
+    locWorker.postMessage({ decodeResult: this.dataLoc, lang: 'English', token: this.local.getToken() });
+    gamWorker.postMessage({ decodeResult: this.dataGam, lang: 'English', token: this.local.getToken() });
   }
 
   private onMessage(message: IOnMessage, fileControl: IFileControl) {

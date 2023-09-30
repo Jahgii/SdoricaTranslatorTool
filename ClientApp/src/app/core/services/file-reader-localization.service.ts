@@ -5,6 +5,7 @@ import { decode, encode } from '@msgpack/msgpack';
 import { ApiService } from './api.service';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { LanguageOriginService } from './language-origin.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable()
 export class FileReaderLocalizationService {
@@ -24,7 +25,11 @@ export class FileReaderLocalizationService {
   private uploadStackSize = 1000;
   private maxThreads = 5;
 
-  constructor(private api: ApiService, private languageOrigin: LanguageOriginService) {
+  constructor(
+    private api: ApiService,
+    private languageOrigin: LanguageOriginService,
+    private local: LocalStorageService
+  ) {
     this.switchUploadKeysUrl();
   }
 
@@ -179,7 +184,7 @@ export class FileReaderLocalizationService {
         var keys = this.localizationKeys.splice(0, spliceCount);
         var uploadStackSize = this.uploadStackSize;
         var url = this.uploadKeysUrl;
-        workers[threadIndex].postMessage({ keys, uploadStackSize, url, threadIndex });
+        workers[threadIndex].postMessage({ keys, uploadStackSize, url, threadIndex, token: this.local.getToken() });
       }
     }
     else

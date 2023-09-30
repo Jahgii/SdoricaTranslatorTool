@@ -3,10 +3,11 @@
 addEventListener('message', async ({ data }) => {
   while (data.keys.length > 0) {
     let keysSet = data.keys.splice(0, data.uploadStackSize);
-    var promise = fetch(data.url, {
+    var promise = fetch(`api/${data.url}`, {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": `Bearer ${data.token}`
       },
       body: JSON.stringify(keysSet)
     });

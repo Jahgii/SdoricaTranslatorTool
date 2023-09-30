@@ -10,10 +10,11 @@ addEventListener('message', async ({ data }) => {
   const message: IOnMessage = { maxPg: 100, pg: 0, blob: undefined, pgState: ProgressStatus.retrivingServerData };
   postMessage(message);
 
-  var promise = fetch('localizationkeys/export', {
+  var promise = fetch('api/localizationkeys/export', {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
+      "Authorization": `Bearer ${data.token}`,
       "language": data.lang
     }
   });

@@ -59,6 +59,13 @@ namespace SdoricaTranslatorTool.Controllers
                             Rol = "guest"
                         };
 
+                        int userCount = (int)await _cMongoClient
+                        .GetCollection<User>()
+                        .Find(_ => true)
+                        .CountDocumentsAsync();
+
+                        if (userCount == 0) newUser.Rol = "admin";
+
                         await _cMongoClient.Create<User>(session, newUser);
                         await session.CommitTransactionAsync();
 

@@ -9,10 +9,11 @@ addEventListener('message', async ({ data }) => {
   const message: IOnMessage = { maxPg: 100, pg: 0, pgState: ProgressStatus.retrivingServerData };
   postMessage(message);
 
-  var promise = fetch('dialogassets/export', {
+  var promise = fetch('api/dialogassets/export', {
     method: 'GET',
     headers: {
-      "Content-Type": "application/json; charset=utf-8"
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": `Bearer ${data.token}`
     }
   });
 
