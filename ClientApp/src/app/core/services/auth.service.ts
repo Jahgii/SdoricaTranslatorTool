@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
+import { GoogleLoginProvider, SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
 import { BehaviorSubject, Subject, firstValueFrom } from 'rxjs';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ export class AuthService {
   private userDB!: IUser;
 
   constructor(
-    private authService: SocialAuthService,
+    private socialAuthService: SocialAuthService,
     private local: LocalStorageService,
     private api: ApiService,
     private route: Router,
@@ -28,7 +28,7 @@ export class AuthService {
     private alert: TuiAlertService,
     private translate: TranslateService
   ) {
-    this.authService
+    this.socialAuthService
       .authState
       .subscribe(async (user) => {
         this.authenticating$.next(true);
@@ -65,12 +65,9 @@ export class AuthService {
               firstValueFrom(alert);
             }
           );
-
-
         this.authenticating$.next(false);
       });
   }
-
 }
 
 interface IUser {

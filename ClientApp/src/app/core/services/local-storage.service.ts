@@ -18,7 +18,7 @@ export class LocalStorageService {
   getLibreTranslateSource() {
     return localStorage.getItem('lTSource') ?? undefined;
   }
-  
+
   setLibreTranslateSource(url: string) {
     localStorage.setItem('lTSource', url);
   }

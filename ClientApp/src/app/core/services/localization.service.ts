@@ -57,6 +57,7 @@ export class LocalizationService implements OnDestroy {
   public saving$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public searchCategory$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public alreadySearch$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public selectedCategory$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public selectedCategory!: ILocalizationCategory;
   public propagateTranslation: boolean = true;
@@ -125,7 +126,14 @@ export class LocalizationService implements OnDestroy {
     this.keys = undefined;
     this.restartFilters();
 
+    if (!category) {
+      this.selectedCategory$.next(false);
+      return;
+    }
+
+    this.selectedCategory$.next(true);
     this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
+
 
     if (category.Name == 'SEARCH') {
       this.keys = undefined;
@@ -135,6 +143,7 @@ export class LocalizationService implements OnDestroy {
     }
     else {
       this.searchCategory$.next(false);
+      this.alreadySearch$.next(true);
       this.loading$.next(true)
       await firstValueFrom(this.keys$).then(r => this.keys = r, e => undefined);
       this.loading$.next(false);

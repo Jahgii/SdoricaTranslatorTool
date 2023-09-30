@@ -1,6 +1,6 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
 import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiButtonModule, TuiModeModule, TuiSvgModule, TuiThemeNightModule, TuiLoaderModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiTooltipModule, TuiHintModule, TuiGroupModule, TuiDropdownModule, TuiHostedDropdownModule, TuiExpandModule, TuiLinkModule } from "@taiga-ui/core";
-import { TuiAvatarModule, TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiComboBoxModule, TuiDataListWrapperModule, TuiFilterByInputPipeModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiInputNumberModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiRadioBlockModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextAreaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
+import { TuiAvatarModule, TuiBadgeModule, TuiCheckboxBlockModule, TuiCheckboxModule, TuiComboBoxModule, TuiDataListWrapperModule, TuiFilterByInputPipeModule, TuiFilterModule, TuiInputFilesModule, TuiInputInlineModule, TuiInputModule, TuiInputNumberModule, TuiIslandModule, TuiMarkerIconModule, TuiProgressModule, TuiRadioBlockModule, TuiSelectModule, TuiStepperModule, TuiTabsModule, TuiTextareaModule, TuiTilesModule, TuiToggleModule } from '@taiga-ui/kit';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiTableFiltersModule, TuiTableModule } from "@taiga-ui/addon-table";
 import { ScrollingModule } from "@angular/cdk/scrolling";
@@ -34,7 +34,6 @@ import { LoadFileLocalizationComponent } from './components/load-file-localizati
 import { LocalizationComponent } from './components/localization/localization.component';
 import { MainGroupsComponent } from './components/main-groups/main-groups.component';
 import { ExportTranslationComponent } from './components/export-translation/export-translation.component';
-import { LocalizationSearchComponent } from './components/localization-search/localization-search.component';
 import { LoadObbFileExportComponent } from './components/load-obb-file-export/load-obb-file-export.component';
 import { DraggableElementDirective } from './core/directives/draggable-element.directive';
 import { LocalizationKeyComponent } from './components/localization-key/localization-key.component';
@@ -49,6 +48,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ExportTranslationGuestComponent } from './components/export-translation-guest/export-translation-guest.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { environment } from "src/environments/environment";
+import { LocalizationTableComponent } from './components/localization/localization-table/localization-table.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -69,7 +69,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     LocalizationComponent,
     MainGroupsComponent,
     ExportTranslationComponent,
-    LocalizationSearchComponent,
     LoadObbFileExportComponent,
     DraggableElementDirective,
     LocalizationKeyComponent,
@@ -80,7 +79,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CommonWordsComponent,
     LoginComponent,
     NavBarComponent,
-    ExportTranslationGuestComponent
+    ExportTranslationGuestComponent,
+    LocalizationTableComponent
   ],
   imports: [
     BrowserModule,
@@ -121,7 +121,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     TuiTabsModule,
     TuiTooltipModule,
     TuiHintModule,
-    TuiTextAreaModule,
+    TuiTextareaModule,
     TuiGroupModule,
     TuiToggleModule,
     TuiInputInlineModule,

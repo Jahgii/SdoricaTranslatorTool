@@ -4,20 +4,8 @@
     height: inherit;
 }
 
-.localization-keys {
-    height: 100%;
-}
-
-.row-selected {
-    background: var(--tui-neutral-bg-hover);
-}
-
 .tooltip-original-cell {
     max-height: 15rem;
-}
-
-.tooltip-name-cell {
-    padding-bottom: 1rem;
 }
 
 .tooltip-name-cell:hover .tooltip-span-name-cell {
@@ -53,7 +41,6 @@
     }
 }
 
-
 .cell-content {
     display: flex;
     flex-direction: column;
@@ -61,5 +48,7 @@
     .cell-content-original {
         display: flex;
         padding: 0.75rem;
+        align-items: center;
+        justify-content: space-between;
     }
 }
