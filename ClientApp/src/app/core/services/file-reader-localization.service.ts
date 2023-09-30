@@ -22,7 +22,7 @@ export class FileReaderLocalizationService {
   public file: TuiFileLike | null = null;
   public url: string | undefined;
 
-  private uploadStackSize = 1000;
+  private uploadStackSize = 500;
   private maxThreads = 5;
 
   constructor(
@@ -38,7 +38,7 @@ export class FileReaderLocalizationService {
       .then(
         r => {
           this.uploadKeysUrl = r.Bulk ? 'localizationkeys/bulk' : 'localizationkeys/import';
-          this.uploadStackSize = r.Bulk ? 1000 : 25;
+          this.uploadStackSize = r.Bulk ? 500 : 25;
         },
         error => { console.error("CANT CONNECT TO SERVER"); }
       );

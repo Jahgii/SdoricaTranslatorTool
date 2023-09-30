@@ -123,7 +123,7 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost("import")]
         public async Task<ActionResult> Post(List<LocalizationKey> keys)
         {
-            List<string> KeysToReplaced = new List<string>();
+            List<string> KeysToReplaced = new();
             using (var session = await _cMongoClient.StartSessionAsync())
             {
                 session.StartTransaction();
@@ -159,21 +159,18 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost("bulk")]
         public async Task<ActionResult> PostBulk(List<LocalizationKey> keys)
         {
-            List<string> KeysToReplaced = new List<string>();
+            List<string> KeysToReplaced = new();
             using (var session = await _cMongoClient.StartSessionAsync())
             {
                 session.StartTransaction();
-
-
                 try
                 {
                     await _cMongoClient.Create<LocalizationKey>(session, keys);
-
                     await session.CommitTransactionAsync();
                 }
                 catch
                 {
-                    await session.AbortTransactionAsync();
+                    if (session.IsInTransaction) await session.AbortTransactionAsync();
                     return StatusCode(500);
                 }
             }
