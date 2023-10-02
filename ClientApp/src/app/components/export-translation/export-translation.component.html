@@ -1,18 +1,20 @@
 <ng-container *ngIf="breakpointService$ | async as breakpoint">
     <main class="main-wizard">
-        <tui-stepper #stepper class="wizard-stepper"
-            [orientation]="(breakpoint == 'desktopSmall' || breakpoint == 'mobile') ? 'horizontal' : 'vertical'"
-            [activeItemIndex]="activeItemIndex">
-            <button tuiStep disabled>
-                Load Obb File
-            </button>
-            <button tuiStep disabled>
-                Load Localization File
-            </button>
-            <button tuiStep disabled>
-                Load Gamedata File
-            </button>
-        </tui-stepper>
+        <div class="wizard-stepper-main">
+            <tui-stepper #stepper class="wizard-stepper"
+                [orientation]="(breakpoint == 'desktopSmall' || breakpoint == 'mobile') ? 'horizontal' : 'vertical'"
+                [activeItemIndex]="activeItemIndex">
+                <button tuiStep disabled>
+                    Load Obb File
+                </button>
+                <button tuiStep disabled>
+                    Load Localization File
+                </button>
+                <button tuiStep disabled>
+                    Load Gamedata File
+                </button>
+            </tui-stepper>
+        </div>
 
         <div class="wizard-content">
             <ng-container [ngTemplateOutlet]="{

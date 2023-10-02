@@ -129,6 +129,29 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(value);
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromBody] GamedataValue value)
+        {
+            using (var session = await _cMongoClient.StartSessionAsync())
+            {
+                session.StartTransaction();
+
+                try
+                {
+                    await _cMongoClient.Delete<GamedataValue>(session, e => e.Id == value.Id);
+
+                    await session.CommitTransactionAsync();
+                }
+                catch
+                {
+                    await session.AbortTransactionAsync();
+                    return StatusCode(500);
+                }
+            }
+
+            return Ok();
+        }
+
         private async Task<bool> VerifiedIfValueExist(string category, string name)
         {
             var query = await _cMongoClient.GetCollection<GamedataValue>().FindAsync<GamedataValue>(e => e.Category == category && e.Name == name);

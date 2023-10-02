@@ -1,31 +1,33 @@
 <ng-container *ngIf="breakpointService$ | async as breakpoint">
     <main class="main-wizard">
-        <tui-stepper #stepper class="wizard-stepper"
-            [orientation]="(breakpoint == 'desktopSmall' || breakpoint == 'mobile') ? 'horizontal' : 'vertical'"
-            [activeItemIndex]="activeItemIndex">
-            <button tuiStep [stepState]="(fileReader.fileProgressState$ | async) == 'finish' ? 'pass': 'normal'"
-                disabled>
-                {{'load-obb-file' | translate}}
-            </button>
-            <button tuiStep disabled>
-                {{'choose-languages' | translate}}
-            </button>
-            <button tuiStep disabled>
-                {{'uploading-data' | translate}}
-            </button>
-            <button tuiStep disabled>
-                {{'creating-main-groups-and-groups' | translate}}
-            </button>
-            <button tuiStep disabled>
-                {{'load-localization-file' | translate}}
-            </button>
-            <button tuiStep disabled>
-                {{'load-gamedata-file' | translate}}
-            </button>
-            <button tuiStep disabled>
-                {{'lets-translate' | translate}}
-            </button>
-        </tui-stepper>
+        <div class="wizard-stepper-main">
+            <tui-stepper #stepper class="wizard-stepper"
+                [orientation]="(breakpoint == 'desktopSmall' || breakpoint == 'mobile') ? 'horizontal' : 'vertical'"
+                [activeItemIndex]="activeItemIndex">
+                <button tuiStep [stepState]="(fileReader.fileProgressState$ | async) == 'finish' ? 'pass': 'normal'"
+                    disabled>
+                    {{'load-obb-file' | translate}}
+                </button>
+                <button tuiStep disabled>
+                    {{'choose-languages' | translate}}
+                </button>
+                <button tuiStep disabled>
+                    {{'uploading-data' | translate}}
+                </button>
+                <button tuiStep disabled>
+                    {{'creating-main-groups-and-groups' | translate}}
+                </button>
+                <button tuiStep disabled>
+                    {{'load-localization-file' | translate}}
+                </button>
+                <button tuiStep disabled>
+                    {{'load-gamedata-file' | translate}}
+                </button>
+                <button tuiStep disabled>
+                    {{'lets-translate' | translate}}
+                </button>
+            </tui-stepper>
+        </div>
 
         <div class="wizard-content">
             <ng-container [ngTemplateOutlet]="{

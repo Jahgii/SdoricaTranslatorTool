@@ -13,7 +13,11 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
   templateUrl: './load-file-wizard.component.html',
   styleUrls: ['./load-file-wizard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [FileReaderService, FileReaderLocalizationService, FileReaderGamedataService]
+  providers: [
+    FileReaderService,
+    FileReaderLocalizationService,
+    FileReaderGamedataService
+  ]
 })
 export class LoadFileWizardComponent implements OnDestroy {
   @ViewChild(TuiStepperComponent) stepper!: TuiStepperComponent;
@@ -24,7 +28,7 @@ export class LoadFileWizardComponent implements OnDestroy {
   private subsStepperfive!: Subscription;
   private subsSteppersix!: Subscription;
 
-  public activeItemIndex = 4;
+  public activeItemIndex = 0;
   public languageSelected = false;
 
   public languagesSelected!: string[];

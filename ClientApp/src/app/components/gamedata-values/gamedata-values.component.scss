@@ -1,3 +1,5 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+
 .main-form {
     position: absolute;
     z-index: 1000;
@@ -83,4 +85,31 @@
 
 .viewport-dialog {
     height: 50vh;
+}
+
+.confirm-delete-column {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    left: 0;
+    width: 100%;
+    height: calc(var(--tui-height-m) - 1px);
+    background: var(--tui-error-bg);
+    backdrop-filter: blur(6px);
+    margin: 0;
+    padding: 0;
+
+    .text {
+        font-weight: bold;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 30ch;
+        overflow: hidden;
+
+        @media #{$tui-mobile} {
+            width: 10ch;
+        }
+    }
 }

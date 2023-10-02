@@ -27,7 +27,7 @@
         </button>
     </div>
     <tui-scrollbar class="main-form-content">
-        <form [formGroup]="contentForm" style="padding: 0 1rem;">
+        <form [formGroup]="gamedataService.contentForm" style="padding: 0 1rem;">
             <div>
                 <div>
                     <h3 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">
@@ -80,17 +80,19 @@
         </form>
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
-            <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
-                    [showLoader]="(creating$ | async) ?? false"
-                    [disabled]="(availableKeyName$ | async) != 'valid' || buffInfoForm.invalid"
-                    [tuiHint]="((availableKeyName$ | async) == 'invalid' || buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
+            <ng-container *ngIf="!(gamedataService.createOther$ | async); else createOther">
+                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'"
+                    (click)="gamedataService.onCreateKey()" size="m"
+                    [showLoader]="(gamedataService.creating$ | async) ?? false"
+                    [disabled]="(gamedataService.availableKeyName$ | async) != 'valid' || gamedataService.buffInfoForm.invalid"
+                    [tuiHint]="((gamedataService.availableKeyName$ | async) == 'invalid' || gamedataService.buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error">
                     {{'create' | translate}}
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
+                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'"
+                    (click)="gamedataService.onCreateOther()" size="m">
                     {{'created-other' | translate}}
                 </button>
             </ng-template>
@@ -99,7 +101,7 @@
 </main>
 <ng-template #createTemplate>
     <tui-scrollbar class="main-form-content">
-        <form [formGroup]="contentForm" style="padding: 0 1rem;">
+        <form [formGroup]="gamedataService.contentForm" style="padding: 0 1rem;">
             <div>
                 <div>
                     <h4 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">
@@ -152,17 +154,19 @@
         </form>
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
-            <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
-                    [showLoader]="(creating$ | async) ?? false"
-                    [disabled]="(availableKeyName$ | async) != 'valid' || buffInfoForm.invalid"
-                    [tuiHint]="((availableKeyName$ | async) == 'invalid' || buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
+            <ng-container *ngIf="!(gamedataService.createOther$ | async); else createOther">
+                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'"
+                    (click)="gamedataService.onCreateKey()" size="m"
+                    [showLoader]="(gamedataService.creating$ | async) ?? false"
+                    [disabled]="(gamedataService.availableKeyName$ | async) != 'valid' || gamedataService.buffInfoForm.invalid"
+                    [tuiHint]="((gamedataService.availableKeyName$ | async) == 'invalid' || gamedataService.buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error">
                     {{'create' | translate}}
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
+                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'"
+                    (click)="gamedataService.onCreateOther()" size="m">
                     {{'created-other' | translate}}
                 </button>
             </ng-template>
@@ -171,7 +175,7 @@
 </ng-template>
 
 <ng-template #availableKeyNameTemplate>
-    <ng-container *ngIf="availableKeyName$ | async as status">
+    <ng-container *ngIf="gamedataService.availableKeyName$ | async as status">
         <ng-container [ngSwitch]="status">
             <p *ngSwitchCase="'verifying'">
                 <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
@@ -202,12 +206,12 @@
 
     <h4 class="tui-space_horizontal-3">{{'buffinfo-description' | translate}}</h4>
 
-    <ng-container *ngIf="gamedataValues$ | async as values">
+    <ng-container *ngIf="gamedataService.store$ | async as values">
         <cdk-virtual-scroll-viewport #viewport tuiScrollable
             class="main-form-content tui-space_horizontal-3 tui-space_bottom-3 viewport tui-zero-scrollbar"
             [itemSize]="45">
             <table class="tui-table" style="table-layout: fixed;" tuiTable
-                [columns]="['id', 'iconKey', 'localizationInfoKey', 'localizationNameKey', 'order', 'viewable', 'custom']"
+                [columns]="['id', 'iconKey', 'localizationInfoKey', 'localizationNameKey', 'order', 'viewable', 'custom', 'confirmDelete']"
                 [size]="'s'" [@popIn]>
                 <thead>
                     <tr tuiThGroup>
@@ -235,14 +239,17 @@
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
                             {{'viewable' | translate}}
                         </th>
-                        <th tuiTh *tuiHead="'custom'" [sticky]="true" style="width: 48px;"
+                        <th tuiTh *tuiHead="'custom'" [sticky]="true" style="width: 64px;"
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
 
+                        </th>
+                        <th tuiTh *tuiHead="'confirmDelete'" style="width: 0px; padding: 0; border: none;"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
                         </th>
                     </tr>
                 </thead>
                 <tbody tuiTbody>
-                    <tr *cdkVirtualFor="let v of values" tuiTr>
+                    <tr *cdkVirtualFor="let v of values; index as i;" tuiTr>
                         <td *tuiCell="'id'" tuiTd>
                             <tui-input [(ngModel)]="v.Content.id">
                                 {{'id' | translate}}
@@ -278,14 +285,38 @@
                             </div>
                         </td>
                         <td *tuiCell="'custom'" tuiTd>
-                            <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
-                                [overlay]="true">
-                                <button *ngIf="v.Custom" appearance="flat" icon="tuiIconSave" shape="rounded" size="xs"
-                                    title="{{'update' | translate}}" tuiIconButton type="button" class="remove"
-                                    (click)="onUpdateValue(v)">
-                                </button>
-                            </tui-loader>
+                            <div style="display: flex; align-items: center; justify-content: center;">
+                                <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
+                                    [overlay]="true">
+                                    <button *ngIf="v.Custom" appearance="flat" icon="tuiIconTrash" shape="rounded"
+                                        size="xs" title="{{'remove' | translate}}" tuiIconButton type="button"
+                                        class="remove" (click)="gamedataService.confirmDelete(v)" tuiMode="onLight">
+                                    </button>
+                                </tui-loader>
+                                <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
+                                    [overlay]="true">
+                                    <button *ngIf="v.Custom" appearance="flat" icon="tuiIconSave" shape="rounded"
+                                        size="xs" title="{{'update' | translate}}" tuiIconButton type="button"
+                                        class="remove" (click)="gamedataService.onUpdateValue(v, i)" tuiMode="onLight">
+                                    </button>
+                                </tui-loader>
+                            </div>
                         </td>
+                        <ng-template [ngIf]="(v.confirm | async) ?? false">
+                            <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
+                                <p class="text">{{'confirm-text-delete-gamevalue' | translate}}</p>
+                                <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    (click)="gamedataService.onDelete(v, i)"
+                                    [showLoader]="(gamedataService.deleting$ | async) ?? false" appearance="accent">
+                                    {{'confirm-frienly' | translate}}
+                                </button>
+                                <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    (click)="gamedataService.cancelDelete(v)"
+                                    [showLoader]="(gamedataService.deleting$ | async) ?? false" appearance="flat">
+                                    {{'unconfirm-frienly' | translate}}
+                                </button>
+                            </td>
+                        </ng-template>
                     </tr>
                 </tbody>
             </table>
@@ -295,12 +326,12 @@
 <ng-template #listTemplate>
     <h5 class="tui-space_horizontal-3">{{'buffinfo-description' | translate}}</h5>
 
-    <ng-container *ngIf="gamedataValues$ | async as values">
+    <ng-container *ngIf="gamedataService.store$ | async as values">
         <cdk-virtual-scroll-viewport #viewport tuiScrollable
             class="main-form-content tui-space_horizontal-3 tui-space_bottom-3 viewport-dialog tui-zero-scrollbar"
             [itemSize]="45">
             <table class="tui-table" style="table-layout: fixed;" tuiTable
-                [columns]="['id', 'iconKey', 'localizationInfoKey', 'localizationNameKey', 'order', 'viewable', 'custom']"
+                [columns]="['id', 'iconKey', 'localizationInfoKey', 'localizationNameKey', 'order', 'viewable', 'custom', 'confirmDelete']"
                 [size]="'s'" [@popIn]>
                 <thead>
                     <tr tuiThGroup>
@@ -328,14 +359,16 @@
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
                             {{'viewable' | translate}}
                         </th>
-                        <th tuiTh *tuiHead="'custom'" [sticky]="true" style="width: 48px;"
+                        <th tuiTh *tuiHead="'custom'" [sticky]="true" style="width: 64px;"
                             [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
-
+                        </th>
+                        <th tuiTh *tuiHead="'confirmDelete'" style="width: 0px; padding: 0; border: none;"
+                            [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
                         </th>
                     </tr>
                 </thead>
                 <tbody tuiTbody>
-                    <tr *cdkVirtualFor="let v of values" tuiTr>
+                    <tr *cdkVirtualFor="let v of values; index as i" tuiTr>
                         <td *tuiCell="'id'" tuiTd>
                             <tui-input [(ngModel)]="v.Content.id">
                                 {{'id' | translate}}
@@ -371,14 +404,38 @@
                             </div>
                         </td>
                         <td *tuiCell="'custom'" tuiTd>
-                            <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
-                                [overlay]="true">
-                                <button *ngIf="v.Custom" appearance="flat" icon="tuiIconSave" shape="rounded" size="xs"
-                                    title="{{'update' | translate}}" tuiIconButton type="button" class="remove"
-                                    (click)="onUpdateValue(v)">
-                                </button>
-                            </tui-loader>
+                            <div style="display: flex; align-items: center; justify-content: center;">
+                                <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
+                                    [overlay]="true">
+                                    <button *ngIf="v.Custom" appearance="flat" icon="tuiIconTrash" shape="rounded"
+                                        size="xs" title="{{'remove' | translate}}" tuiIconButton type="button"
+                                        class="remove" (click)="gamedataService.confirmDelete(v)" tuiMode="onLight">
+                                    </button>
+                                </tui-loader>
+                                <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
+                                    [overlay]="true">
+                                    <button *ngIf="v.Custom" appearance="flat" icon="tuiIconSave" shape="rounded"
+                                        size="xs" title="{{'update' | translate}}" tuiIconButton type="button"
+                                        class="remove" (click)="gamedataService.onUpdateValue(v, i)" tuiMode="onLight">
+                                    </button>
+                                </tui-loader>
+                            </div>
                         </td>
+                        <ng-template [ngIf]="(v.confirm | async) ?? false">
+                            <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
+                                <p class="text tui-text_body-xs">{{'confirm-text-delete-gamevalue-short' | translate}}</p>
+                                <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    (click)="gamedataService.onDelete(v, i)"
+                                    [showLoader]="(gamedataService.deleting$ | async) ?? false" appearance="accent">
+                                    {{'confirm-frienly' | translate}}
+                                </button>
+                                <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    (click)="gamedataService.cancelDelete(v)"
+                                    [showLoader]="(gamedataService.deleting$ | async) ?? false" appearance="flat">
+                                    {{'unconfirm-frienly' | translate}}
+                                </button>
+                            </td>
+                        </ng-template>
                     </tr>
                 </tbody>
             </table>

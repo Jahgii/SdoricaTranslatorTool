@@ -95,7 +95,7 @@
     "key-name": "Key Name",
     "languages": "Languages",
     "create": "Create",
-    "create-other": "Created - Other?",
+    "created-other": "Created - Other?",
     "form-error": "The form has errors",
     "buffinfo": "Buff Info",
     "see-all": "List",
@@ -192,5 +192,7 @@
     "unknown-user": "Unknown",
     "hi-user": "Hi, ",
     "can-not-login": "Can't log in, try again later.",
-    "empty-db-guest": "It seems you are too fast here, let the translators work a little more, come back later."
+    "empty-db-guest": "It seems you are too fast here, let the translators work a little more, come back later.",
+    "confirm-text-gamevalue-word": "I you sure you want to delete this value?",
+    "confirm-text-delete-gamevalue-short": "I you sure?"
 }

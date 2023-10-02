@@ -9,9 +9,47 @@
     }
 }
 
+.wizard-stepper-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    padding: 0 0.5em;
+
+    @media #{$tui-tablet} {
+        &:before {
+            content: '';
+            height: 100%;
+            width: 1em;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--tui-base-01);
+            z-index: 1;
+            filter: blur(3px);
+        }
+
+        &:after {
+            content: '';
+            height: 100%;
+            width: 1em;
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--tui-base-01);
+            z-index: 1;
+            overflow: hidden;
+            filter: blur(3px);
+        }
+    }
+}
+
 .wizard-stepper {
     padding: 1em;
-    margin: 0 auto;
+    position: relative;
 
     @media #{$tui-desktop-min} {
         margin: inherit;

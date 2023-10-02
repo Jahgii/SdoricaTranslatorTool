@@ -81,7 +81,7 @@ namespace SdoricaTranslatorTool.Controllers
 
                     return Ok(user);
                 }
-                catch (Exception ex)
+                catch
                 {
                     await session.AbortTransactionAsync();
                     return Unauthorized();
