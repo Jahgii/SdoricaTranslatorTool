@@ -7,7 +7,7 @@ module.exports = {
     plugins: [
         new EnvironmentPlugin([
             'ALLOWED_DOMAIN',
-            'GOOGLE_CLIEND_ID'
+            'GOOGLE_CLIENT_ID'
         ])
     ]
 }

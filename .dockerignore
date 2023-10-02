@@ -1,0 +1,12 @@
+# directories
+**/bin/
+**/obj/
+**/out/
+**/node_modules/
+**/.angular/
+**/.vscode/
+**/.git/
+
+# files
+Dockerfile*
+**/*.md

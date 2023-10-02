@@ -46,10 +46,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors(cors);
+
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}"
-).RequireAuthorization();
+        name: "default",
+        pattern: "{controller}/{action=Index}/{id?}"
+    ).RequireAuthorization();
+
+app.MapControllers().RequireAuthorization();
 
 app.MapFallbackToFile("index.html");
 

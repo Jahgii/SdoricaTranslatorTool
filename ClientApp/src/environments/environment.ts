@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   allowedDomains: process.env.ALLOWED_DOMAIN as string,
-  googleClientId: process.env.GOOGLE_CLIEND_ID as string
+  googleClientId: process.env.GOOGLE_CLIENT_ID as string
 };
 
 /*

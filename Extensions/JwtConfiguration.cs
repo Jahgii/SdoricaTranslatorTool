@@ -27,13 +27,6 @@ namespace SdoricaTranslatorTool
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["IssuerSigningKey"] ?? ""))
                 };
             });
-
-            services.AddAuthorization(opts =>
-            {
-                opts.FallbackPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build();
-            });
         }
     }
 }
