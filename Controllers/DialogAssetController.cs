@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
@@ -33,7 +34,7 @@ namespace SdoricaTranslatorTool.Controllers
             var cursor = _cMongoClient.GetCollection<DialogAsset>()
                 .Find(e =>
                     e.Language == language
-                    && e.Model.Content.Any(d => d.OriginalText.ToLower().Contains(text.ToLower()))   
+                    && e.Model.Content.Any(d => d.OriginalText.ToLower().Contains(text.ToLower()))
                 )
                 .SortBy(e => e.Number);
             var data = await cursor.ToListAsync();
@@ -41,6 +42,40 @@ namespace SdoricaTranslatorTool.Controllers
             return Ok(data);
         }
 
+        [HttpGet("searchothers")]
+        public async Task<ActionResult> SearchOtherText(
+            [FromHeader] string language,
+            [FromHeader] string mainGroup,
+            [FromHeader] string group,
+            [FromHeader] int number,
+            [FromHeader] string id
+        )
+        {
+            var cursor = await _cMongoClient.GetCollection<DialogAsset>()
+                .FindAsync(e =>
+                    // e.Language != language &&
+                    e.MainGroup == mainGroup &&
+                    e.Group == group &&
+                    e.Number == number
+                // && e.Model.Content.Any(m => m.ID == id)
+                );
+
+            var results = await cursor.ToListAsync();
+
+            Dictionary<string, string> LanguageText = new Dictionary<string, string>();
+
+            int index = results.Find(e => e.Language == language)?.Model.Content.FindIndex(e => e.ID == id) ?? -1;
+
+            if (index == -1) return NoContent();
+
+            results.ForEach(r =>
+            {
+                string originalText = r.Model.Content[index].OriginalText ?? "";
+                LanguageText.Add(r.Language, originalText);
+            });
+
+            return Ok(LanguageText);
+        }
 
         [HttpGet("export")]
         public async Task<ActionResult> GetTranslated()

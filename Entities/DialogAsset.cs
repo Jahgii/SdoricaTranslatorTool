@@ -16,26 +16,26 @@ namespace SdoricaTranslatorTool
         public int Number { get; set; }
         public required string Language { get; set; }
         public bool Translated { get; set; }
-        public DialogAssetModel? Model { get; set; }
-        public DialogAssetArray? ReferenceAavatarImage { get; set; }
-        public DialogAssetArray? ReferenceDialogAudio { get; set; }
-        public DialogAssetArray? _objectReferences { get; set; }
-        public DialogAssetArray? _serializedStateKeys { get; set; }
-        public DialogAssetArray? _serializedStateValues { get; set; }
+        public required DialogAssetModel Model { get; set; }
+        public required DialogAssetArray ReferenceAavatarImage { get; set; }
+        public required DialogAssetArray ReferenceDialogAudio { get; set; }
+        public required DialogAssetArray _objectReferences { get; set; }
+        public required DialogAssetArray _serializedStateKeys { get; set; }
+        public required DialogAssetArray _serializedStateValues { get; set; }
     }
 
     public class DialogAssetModel
     {
         [BsonElement("$content")]
         [JsonPropertyName("$content")]
-        public List<Dialog>? Content { get; set; }
+        public required List<Dialog> Content { get; set; }
     }
 
     public class DialogAssetArray
     {
         [BsonElement("$content")]
         [JsonPropertyName("$content")]
-        public List<string>? Content { get; set; }
+        public required List<string> Content { get; set; }
     }
 
     public class Dialog

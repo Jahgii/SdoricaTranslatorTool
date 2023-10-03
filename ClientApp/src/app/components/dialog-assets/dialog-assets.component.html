@@ -66,7 +66,11 @@
                                     </thead>
                                     <tbody tuiTbody>
                                         <tr *cdkVirtualFor="let item of dialogAsset.Model['$content']" tuiTr>
-                                            <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell">
+                                            <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell"
+                                                [tuiDropdown]="otherLanguages" tuiDropdownHover
+                                                [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200"
+                                                [tuiDropdownAlign]="'right'" [tuiDropdownOffset]="0"
+                                                (mouseenter)="onGetOtherOriginalText(dialogAsset.Number, item.ID)">
                                                 {{item.OriginalText}}
                                             </td>
                                             <td *tuiCell="'Translation'" tuiTd>
@@ -78,7 +82,7 @@
                                                             style="transform: scaleX(-1);"
                                                             src="/assets/images/dialog_paper.png" alt="dialot_paper">
                                                     </div>
-                                                    <div style="position: relative; left: -6px;">
+                                                    <div style="position: relative; left: -6px;" *ngIf="item.IconName">
                                                         <img style="width: 128px; height: 128px; position: absolute; bottom: 24px; left: 24px;"
                                                             src="/assets/images/figure_base2.png" alt="base"
                                                             loading="lazy">
@@ -172,7 +176,10 @@
                             <cdk-virtual-scroll-viewport tuiScrollable itemSize="5" class="viewport tui-zero-scrollbar">
                                 <ng-container
                                     *cdkVirtualFor="let item of data[activeItemIndex].Model['$content']; let last = last">
-                                    <p class="tui-text_body-s">
+                                    <p class="tui-text_body-s" [tuiDropdown]="otherLanguages" tuiDropdownHover
+                                        [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200"
+                                        [tuiDropdownAlign]="'right'" [tuiDropdownOffset]="0"
+                                        (mouseenter)="onGetOtherOriginalText(data[activeItemIndex].Number, item.ID)">
                                         <span class="tui-text_body-m">{{'original' | translate}}: </span>
                                         {{item.OriginalText}}
                                     </p>
@@ -216,14 +223,30 @@
             </ng-container>
         </ng-container>
     </ng-container>
-    <ng-template #loading>
-        <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">
-            <tui-block-status>
-                <h4>{{'loading-3-dots' | translate}}</h4>
-            </tui-block-status>
-        </tui-loader>
-    </ng-template>
 </div>
+
+<ng-template #loading>
+    <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">
+        <tui-block-status>
+            <h4>{{'loading-3-dots' | translate}}</h4>
+        </tui-block-status>
+    </tui-loader>
+</ng-template>
+
+<ng-template #otherLanguages>
+    <div style="padding: var(--tui-padding-s);">
+        <ng-container *ngIf="(otherText$ | async) as data; else loading">
+            <ng-container *ngFor="let key of data | keyvalue">
+                <p>
+                    <span class="tooltip-important-text">
+                        {{$any(key.key) | translate}}
+                    </span>:
+                    {{key.value}}
+                </p>
+            </ng-container>
+        </ng-container>
+    </div>
+</ng-template>
 
 <ng-template #propagationTooltip>
     {{'propagation' | translate}}: {{'propagation-dialog-description-0' | translate}}

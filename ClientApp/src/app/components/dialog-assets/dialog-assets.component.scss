@@ -98,8 +98,8 @@
 
 .dialog-translation-background {
     width: 320px;
-    filter: brightness(0);
-    opacity: 0.1;
+    opacity: 0.5;
+    filter: contrast(0) brightness(0);
 }
 
 .wrapper {
@@ -116,4 +116,9 @@
 
 .tabs-mobil {
     width: 15.625rem;
+}
+
+.tooltip-important-text {
+    font-weight: bold;
+    color: var(--important-text);
 }

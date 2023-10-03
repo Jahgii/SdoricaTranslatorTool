@@ -37,6 +37,9 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
   public activeItemIndex: number = 0;
   public dialogAssets$!: Observable<IDialogAsset[]>;
   private subsLanguage!: Subscription;
+  public otherText$!: Observable<any>;
+  public tempId!: string;
+  public tempNumber!: number;
 
   constructor(
     private api: ApiService,
@@ -70,6 +73,21 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsLanguage.unsubscribe();
     this.subsChanges.unsubscribe();
+  }
+
+  onGetOtherOriginalText(number: number, id: string) {
+    if (this.tempId == id && this.tempNumber == number) return;
+
+    this.tempNumber = number;
+    this.tempId = id;
+
+    this.otherText$ = this.api.getWithHeaders('dialogassets/searchothers', {
+      language: this.languageOrigin.language.value,
+      mainGroup: this.route.snapshot.params['mid'],
+      group: this.route.snapshot.params['gid'],
+      number: number,
+      id: id
+    });
   }
 
   public onTranslatedChange(data: IDialogAsset[]) {
@@ -125,7 +143,7 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
     this.downloadURL(url, dialogFileName ?? "RENAME THE FILE TO CORRECT DIALOG NAME FILE");
   }
 
-  downloadURL = (data: any, fileName: string) => {
+  private downloadURL = (data: any, fileName: string) => {
     const a = document.createElement('a');
     a.href = data;
     a.download = fileName;

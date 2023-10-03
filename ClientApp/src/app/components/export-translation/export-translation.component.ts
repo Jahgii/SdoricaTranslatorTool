@@ -13,7 +13,7 @@ import { FileReaderService } from 'src/app/core/services/file-reader.service';
   providers: [FileReaderService, FileReaderLocalizationService, FileReaderGamedataService]
 })
 export class ExportTranslationComponent implements OnInit, OnDestroy {
-  public activeItemIndex = 1;
+  public activeItemIndex = 0;
   public languageSelected = false;
 
   private subsSteppertwo!: Subscription;
