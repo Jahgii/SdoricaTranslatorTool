@@ -4,6 +4,7 @@ export interface IGamedataCategory {
 }
 
 export interface IGamedataValue {
+    Id?: string;
     Category: string;
     Name: string;
     Custom?: boolean;

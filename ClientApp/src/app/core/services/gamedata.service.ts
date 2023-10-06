@@ -8,7 +8,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { IGamedataValue } from '../interfaces/i-gamedata';
 import { StoreService } from './store.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GamedataService extends StoreService<IGamedataValue> {
 
   public buffInfoForm: FormGroup = this.fB.group({
@@ -100,6 +102,7 @@ export class GamedataService extends StoreService<IGamedataValue> {
     (value as any)['loader'] = new BehaviorSubject<Boolean>(true);
 
     let tempValue: IGamedataValue = {
+      Id: value.Id,
       Category: value.Category,
       Name: value.Name,
       Content: value.Content,
@@ -120,6 +123,7 @@ export class GamedataService extends StoreService<IGamedataValue> {
     this.deleting$.next(true);
 
     let tempValue: IGamedataValue = {
+      Id: value.Id,
       Category: value.Category,
       Name: value.Name,
       Content: value.Content,

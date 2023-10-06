@@ -63,8 +63,10 @@ namespace SdoricaTranslatorTool.Controllers
                 try
                 {
                     var updateGroupName = Builders<Group>.Update.Set(e => e.Name, group.Name);
+                    var updateImageLink = Builders<Group>.Update.Set(e => e.ImageLink, group.ImageLink);
 
                     await _cMongoClient.Update<Group>(session, e => e.Id == group.Id, updateGroupName);
+                    await _cMongoClient.Update<Group>(session, e => e.Id == group.Id, updateImageLink);
 
                     await session.CommitTransactionAsync();
                 }

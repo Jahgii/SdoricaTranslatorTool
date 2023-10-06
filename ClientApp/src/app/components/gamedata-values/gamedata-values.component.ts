@@ -15,7 +15,6 @@ import { fadeinAnimation } from 'src/app/core/animations/fadein';
   templateUrl: './gamedata-values.component.html',
   styleUrls: ['./gamedata-values.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [GamedataService],
   animations: [
     popinAnimation,
     fadeinAnimation

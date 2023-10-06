@@ -184,7 +184,7 @@ export class LocalizationService implements OnDestroy {
       keyToPropagate.Translated[this.languageOrigin.localizationLang] = check;
       await this.onKeyTranslated(keyToPropagate);
     }
-
+    
     this.saving$.next(false);
   }
 

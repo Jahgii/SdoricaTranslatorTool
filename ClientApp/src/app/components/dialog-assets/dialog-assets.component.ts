@@ -99,7 +99,6 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
     if (this.propagateTranslation)
       data[this.activeItemIndex].Model.$content.forEach(e => {
         if (e.SpeakerName == this.previousPropagationValue) e.SpeakerName = name;
-
       });
     this.previousPropagationValue = name;
     this.pendingChanges$.next(true);

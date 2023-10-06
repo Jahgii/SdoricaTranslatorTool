@@ -14,6 +14,10 @@ export class StoreService<T> {
       });
   }
 
+  public getData() {
+    return this.store.value;
+  }
+
   public add(el: T) {
     this.store.next([...this.store.value, el]);
   }

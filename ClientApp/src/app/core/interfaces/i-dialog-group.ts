@@ -12,6 +12,7 @@ export interface IMainGroup {
 }
 
 export interface IGroup {
+    Id?: string;
     Language: string;
     MainGroup: string;
     OriginalName: string;

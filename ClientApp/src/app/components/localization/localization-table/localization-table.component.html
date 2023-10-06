@@ -125,12 +125,26 @@
                             </span>
                         </td>
                         <td *tuiCell="'Translation'" tuiTd>
-                            <tui-textarea [(ngModel)]="item.Translations[localization.language]" [expandable]="true"
-                                (focusedChange)="localization.focusRow = i" [tuiTextfieldSize]="'m'"
+                            <tui-textarea #tranlationTextArea [(ngModel)]="item.Translations[localization.language]"
+                                [expandable]="true" (focusedChange)="localization.focusRow = i" [tuiTextfieldSize]="'m'"
                                 (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
-                                [rows]="8">
+                                [rows]="8" tuiDropdownSelectionPosition="word" [pseudoFocus]="(driver | async) || null"
+                                [tuiDropdown]="buffSelection" [tuiDropdownSelection]="predicate"
+                                (keydown.arrowDown)="onArrow($event, 'first')"
+                                (keydown.arrowUp)="onArrow($event, 'last')">
                                 ......
                             </tui-textarea>
+                            <ng-template #buffSelection>
+                                <tui-data-list *ngIf="tranlationTextArea.nativeFocusableElement" class="menu"
+                                    (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
+                                    <button tuiOption
+                                        *ngFor="let buff of filterItems(tranlationTextArea.nativeFocusableElement)"
+                                        (click)="onClick(item, buff.Name, tranlationTextArea.nativeFocusableElement)">
+                                        {{ buff.Name }}
+                                    </button>
+
+                                </tui-data-list>
+                            </ng-template>
                         </td>
                         <td *tuiCell="'Translated'" tuiTd>
                             <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
