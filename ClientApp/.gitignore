@@ -43,3 +43,7 @@ Thumbs.db
 
 # Ignore Portraits Images
 /src/assets/images/portraits
+# Ignore Chapters Images
+/src/assets/images/chapters
+# Ignore Characters Images
+/src/assets/images/characters

@@ -130,6 +130,6 @@ describe('GroupsComponent', () => {
     expect(editButton).toBeTruthy();
     editButton.nativeElement.click();
     expect(component.toogle).toHaveBeenCalledTimes(1);
-  })
+  });
 
 });

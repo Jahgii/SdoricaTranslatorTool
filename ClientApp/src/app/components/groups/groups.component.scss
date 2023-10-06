@@ -1,16 +1,17 @@
 @import 'node_modules/@taiga-ui/core/styles/taiga-ui-local.scss';
 
+$background-content-tile: color-mix(in srgb, var(--tui-base-01) 50%, transparent);
+
 .tiles {
     gap: 1rem;
-    grid-auto-rows: minmax(180px, auto);
-    grid-template-columns: repeat(auto-fit, minmax(320px, auto));
+    grid-auto-rows: minmax(280px, auto);
+    grid-template-columns: repeat(auto-fit, minmax(420px, auto));
 }
 
 .content {
     @include transition(box-shadow);
     height: 100%;
     padding: 1rem;
-    background: var(--tui-base-01);
     box-sizing: border-box;
     border-radius: var(--tui-radius-l);
     border: 1px solid var(--tui-base-03);
@@ -19,4 +20,47 @@
 
 .title {
     margin: 0 0 1rem;
+}
+
+.tile {}
+
+.tile-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 24px;
+    background-color: $background-content-tile;
+    border-radius: var(--tui-radius-s);
+    padding: 0 0.25em;
+}
+
+.tile-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+    white-space: nowrap;
+}
+
+.tile-file {
+    background-color: $background-content-tile;
+    border-radius: var(--tui-radius-s);
+    width: fit-content;
+    padding: 0 0.25em;
+}
+
+.tile-image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: var(--tui-radius-l);
+    z-index: -1;
+}
+
+.tile-go-button {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background-color: $background-content-tile;
 }

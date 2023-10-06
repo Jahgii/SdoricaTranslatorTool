@@ -1,44 +1,73 @@
 <div class="container-m">
     <ng-container *ngIf="(languageOrigin.language$ | async)">
         <ng-container *ngIf="(groups$ | async) as data; else loading">
-            <tui-tiles class="tiles tui-space_top-3" [debounce]="100" [(order)]="order" [@popIn]>
-                <tui-tile *ngFor="let group of data; let index = index" class="tile" [style.order]="order.get(index)"
-                    [width]="1" [height]="1" [@popIn]>
-                    <div class="content">
-                        <h2>
-                            <tui-input-inline *ngIf="group.editing; else groupName;" tuiAutoFocus
-                                [(ngModel)]="group.Name" (focusedChange)="onFocusedChange($any($event), group)"
-                                (keydown.enter.prevent)="onEditGroupName(group)">
-                                {{'type-name' | translate}}
-                            </tui-input-inline>
-                            <ng-template #groupName>
-                                <div style="display: flex;">
-                                    <span>{{ group.Name }}</span>
-                                    <button tuiIconButton type="button" title="{{'edit-name' | translate}}" size="xs"
-                                        appearance="icon" icon="tuiIconEdit2" class="tui-space_left-1"
-                                        (click)="toogle(group)"></button>
+            <ng-container *ngIf="data.length > 0; else empty">
+                <tui-tiles class="tiles tui-space_top-3" [debounce]="100" [@popIn]>
+                    <tui-tile *ngFor="let group of data; let index = index" class="tile" [width]="1" [height]="1"
+                        [@popIn]>
+                        <div class="content">
+                            <img *ngIf="group.ImageLink" src="{{group.ImageLink}}" alt="groupImage" class="tile-image">
+                            <h2>
+                                <div class="tile-name" *ngIf="group.editing; else groupName;">
+                                    <tui-input-inline tuiAutoFocus [(ngModel)]="group.Name"
+                                        (focusedChange)="onFocusedChange($any($event), group)"
+                                        (keydown.enter.prevent)="onEditGroupName(group)">
+                                        {{'type-name' | translate}}
+                                    </tui-input-inline>
+                                </div>
+                                <ng-template #groupName>
+                                    <div class="tile-name">
+                                        <span class="tile-title">{{ group.Name }}</span>
+                                        <div>
+                                            <button tuiIconButton type="button" title="{{'edit-name' | translate}}"
+                                                size="xs" appearance="icon" icon="tuiIconEdit2" class="tui-space_left-1"
+                                                (click)="toogle(group)"></button>
+                                            <button tuiIconButton type="button" title="{{'edit-image' | translate}}"
+                                                size="xs" appearance="icon" icon="tuiIconImage" class="tui-space_left-1"
+                                                [tuiDropdown]="dropdownContent" tuiDropdownHover></button>
+                                            <ng-template #dropdownContent>
+                                                <div class="tui-space_vertical-2 tui-space_horizontal-3">
+                                                    <p>Change the image Url to show on the tile</p>
+                                                    <tui-input [(ngModel)]="group.ImageLink"
+                                                        (ngModelChange)="updateGroup(group)" tuiTextfieldSize="s">
+                                                    </tui-input>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </h2>
+                            <ng-container *ngIf="(group.TranslatedFiles/group.Files) < 1; else completed">
+                                <div class="tile-file">
+                                    {{ "translated" | translate }}: {{ group.TranslatedFiles }} / {{ group.Files }}
+                                </div>
+                            </ng-container>
+                            <ng-template #completed>
+                                <div class="tile-file">
+                                    {{ "translated" | translate }}: <tui-svg src="tuiIconCheckCircle"></tui-svg>
                                 </div>
                             </ng-template>
-                        </h2>
-                        <ng-container *ngIf="(group.TranslatedFiles/group.Files) < 1; else completed">
-                            {{ "translated" | translate }}: {{ group.TranslatedFiles }} / {{ group.Files }}
-                        </ng-container>
-                        <ng-template #completed>
-                            {{ "translated" | translate }}: <tui-svg src="tuiIconCheckCircle"></tui-svg>
-                        </ng-template>
-                        <button style="position: absolute; bottom: 0; right: 0;" tuiIconButton
-                            icon="tuiIconArrowRightCircle" appearance="icon" shape="square"
-                            routerLink="{{group.OriginalName}}"></button>
-                    </div>
-                </tui-tile>
-            </tui-tiles>
+                            <button class="tile-go-button" tuiIconButton
+                                icon="tuiIconArrowRightCircle" appearance="icon" shape="square" size="s"
+                                routerLink="{{group.OriginalName}}" tuiMode="onLight"></button>
+                        </div>
+                    </tui-tile>
+                </tui-tiles>
+            </ng-container>
         </ng-container>
-        <ng-template #loading>
-            <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" [@popIn]>
-                <tui-block-status>
-                    <h4>{{'loading-3-dots' | translate}}</h4>
-                </tui-block-status>
-            </tui-loader>
-        </ng-template>
     </ng-container>
 </div>
+
+<ng-template #empty>
+    <tui-block-status class="empty-groups">
+        <h4>{{'empty-groups' | translate}}</h4>
+    </tui-block-status>
+</ng-template>
+
+<ng-template #loading>
+    <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" [@popIn]>
+        <tui-block-status>
+            <h4>{{'loading-3-dots' | translate}}</h4>
+        </tui-block-status>
+    </tui-loader>
+</ng-template>
