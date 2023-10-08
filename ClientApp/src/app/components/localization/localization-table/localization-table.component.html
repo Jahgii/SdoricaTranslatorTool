@@ -119,7 +119,12 @@
                                     <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                 </tui-scrollbar>
                             </ng-template>
-                            <span class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
+                            <span *ngIf="localization.focusRow != i"
+                                class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs" [@fadeIn]>
+                                <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
+                                    <tui-svg src="tuiIconInbox" style="font: inherit;"></tui-svg>
+                                    {{item.Category}}
+                                </div>
                                 <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
                                 {{item.Name}}
                             </span>
@@ -206,7 +211,13 @@
                                         <ng-template #showNormalText>
                                             <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                         </ng-template>
-                                        <span class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
+                                        <span *ngIf="localization.focusRow != i"
+                                            class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs"
+                                            [@fadeIn]>
+                                            <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
+                                                <tui-svg src="tuiIconInbox" style="font: inherit;"></tui-svg>
+                                                {{item.Category}}
+                                            </div>
                                             <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
                                             {{item.Name}}
                                         </span>

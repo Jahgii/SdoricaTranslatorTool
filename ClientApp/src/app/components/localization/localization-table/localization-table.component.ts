@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, QueryLi
 import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from '@taiga-ui/cdk';
 import { TuiBreakpointService, TuiDriver, TuiOptionComponent, TuiScrollbarComponent, tuiGetWordRange } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IGamedataValue } from 'src/app/core/interfaces/i-gamedata';
 import { ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
@@ -17,7 +18,8 @@ const ESPECIAL_CHARACTER = '@'
   styleUrls: ['./localization-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    popinAnimation
+    popinAnimation,
+    fadeinAnimation
   ]
 })
 export class LocalizationTableComponent implements OnInit {
