@@ -24,7 +24,10 @@ export class LibreTranslateService {
   public source: string | undefined;
   public target: string | undefined;
 
-  constructor(private http: HttpClient, private local: LocalStorageService) {
+  constructor(
+    private http: HttpClient,
+    private local: LocalStorageService
+  ) {
     this.onInit();
   }
 

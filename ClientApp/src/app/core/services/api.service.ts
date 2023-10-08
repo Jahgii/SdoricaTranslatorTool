@@ -7,7 +7,10 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
+  constructor(
+    private http: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string
+  ) { }
 
   public get<T>(endpoint: string): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}api/${endpoint}`);
