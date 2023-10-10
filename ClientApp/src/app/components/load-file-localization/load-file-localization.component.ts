@@ -12,20 +12,21 @@ import { FileReaderLocalizationService } from 'src/app/core/services/file-reader
 export class LoadFileLocalizationComponent {
   @Input() mode: 'import' | 'export' = 'import';
 
-  readonly loadedFile$ = this.fLR.fileControl.valueChanges.pipe(
+  readonly fileControl: FormControl<TuiFileLike | null> = new FormControl();
+  readonly loadedFile$ = this.fileControl.valueChanges.pipe(
     switchMap(file => (file ? this.onReadFile(file) : of(null)))
   );
 
-  constructor(public fLR: FileReaderLocalizationService) {
+  constructor(public fileLocalizationReader: FileReaderLocalizationService) {
   }
 
   onReadFile(file: TuiFileLike) {
     switch (this.mode) {
       case 'import':
-        this.fLR.onReadFile(file as File);
+        this.fileLocalizationReader.onReadFile(file as File);
         break;
       case 'export':
-        this.fLR.onExportFile(file as File);
+        this.fileLocalizationReader.onExportFile(file as File);
         break;
     }
     return of(file);
@@ -36,6 +37,6 @@ export class LoadFileLocalizationComponent {
   }
 
   onNext() {
-    this.fLR.fileProgressState$.next('finish');
+    this.fileLocalizationReader.fileProgressState$.next('finish');
   }
 }
