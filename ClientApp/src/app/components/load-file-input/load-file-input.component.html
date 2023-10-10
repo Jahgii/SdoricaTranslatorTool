@@ -10,7 +10,7 @@
 <ng-template #uploadFile>
     <h3>{{'obb-file-description' | translate}}</h3>
 
-    <tui-input-files *ngIf="!fileControl.value" class="file-upload-input" [formControl]="fileControl" [accept]="'.obb'"
+    <tui-input-files *ngIf="!fileReader.fileControl.value" class="file-upload-input" [formControl]="fileReader.fileControl" [accept]="'.obb'"
         [maxFileSize]="(1024*1024*1024*2)" [multiple]="false" (reject)="onRejectFile($event)">
         <ng-template let-dragged>
             <div *ngIf="dragged; else base" class="content">

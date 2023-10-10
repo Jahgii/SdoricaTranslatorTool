@@ -12,6 +12,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { ApiService } from './api.service';
 import * as JSZip from 'jszip';
 import { LocalStorageService } from './local-storage.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -83,7 +84,8 @@ export class ExportTranslationService {
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
     private ddS: DeviceDetectorService,
     private local: LocalStorageService,
-    private api: ApiService
+    private api: ApiService,
+    private translate: TranslateService
   ) {
     this.obb.loadedFile$ = this.obb.control
       .valueChanges
@@ -150,7 +152,7 @@ export class ExportTranslationService {
   public async onVerificationObb(file: File, fileControl: IFileControl) {
     let alert = this.alerts
       .open(
-        'El archivo OBB proporcionado no es valido, verifique que sea el archivo correcto e intente de nuevo.',
+        this.translate.instant('error-file-obb'),
         {
           label: 'Error',
           status: 'error',

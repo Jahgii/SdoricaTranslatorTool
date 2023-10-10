@@ -194,5 +194,7 @@
     "can-not-login": "No se puede iniciar sesión, intente de nuevo más tarde.",
     "empty-db-guest": "Parece que estás demasiado rápido aquí, deja que los traductores trabajen un poco más, vuelve más tarde.",
     "confirm-text-delete-gamevalue": "¿Estás seguro que deseas borrar este valor?",
-    "confirm-text-delete-gamevalue-short": "¿Seguro?"
+    "confirm-text-delete-gamevalue-short": "¿Seguro?",
+    "error-file-obb": "El archivo OBB proporcionado no es valido, verifique que sea el archivo correcto e intente de nuevo.",
+    "error-file-localization": "El archivo LOCALIZATION proporcionado no es valido, verifique que sea el archivo correcto e intente de nuevo."
 }

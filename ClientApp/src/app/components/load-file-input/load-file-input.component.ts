@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { TuiAlertService } from '@taiga-ui/core';
 import { TuiFileLike } from '@taiga-ui/kit';
-import { of, switchMap } from 'rxjs';
+import { firstValueFrom, of, switchMap } from 'rxjs';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 
 @Component({
@@ -11,12 +12,16 @@ import { FileReaderService } from 'src/app/core/services/file-reader.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadFileInputComponent {
-  readonly fileControl: FormControl<TuiFileLike | null> = new FormControl();
-  readonly loadedFile$ = this.fileControl.valueChanges.pipe(
+
+  readonly loadedFile$ = this.fileReader.fileControl.valueChanges.pipe(
     switchMap(file => (file ? this.onReadFile(file) : of(null)))
   );
 
-  constructor(public fileReader: FileReaderService) {
+  constructor(
+    public fileReader: FileReaderService,
+    private alert: TuiAlertService,
+    private translate: TranslateService
+  ) {
   }
 
   onReadFile(file: TuiFileLike) {
@@ -25,7 +30,9 @@ export class LoadFileInputComponent {
   }
 
   onRejectFile(file: TuiFileLike | readonly TuiFileLike[]): void {
-    console.log("REJECTED FILE");
+    let alert = this.alert.open(this.translate.instant('error-file-obb'), { label: 'Error' });
+
+    firstValueFrom(alert);
   }
 
 }

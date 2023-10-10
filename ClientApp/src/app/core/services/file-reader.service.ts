@@ -7,6 +7,8 @@ import { IWizardUpload } from '../interfaces/i-wizard-upload';
 import { IGroup, ILanguage, IMainGroup } from '../interfaces/i-dialog-group';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import * as JSZip from 'jszip';
+import { TuiAlertService } from '@taiga-ui/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class FileReaderService {
@@ -28,27 +30,33 @@ export class FileReaderService {
   public file: TuiFileLike | null = null;
   public defaultLanguage: FormControl = this.fB.control(undefined, Validators.required);
 
+  readonly fileControl: FormControl<TuiFileLike | null> = new FormControl();
+
   public url: string | undefined;
 
   private uploadStackSize = 50;
 
-  constructor(private api: ApiService, private fB: FormBuilder) { }
+  constructor(
+    private api: ApiService,
+    private fB: FormBuilder,
+    private alerts: TuiAlertService,
+    private translate: TranslateService
+  ) { }
 
   //#region ReadFile OBB Logic
-  public onReadFile(file: File) {
+  public async onReadFile(file: File) {
+    if (!(await this.onVerificationObb(file))) return;
+
     this.file = file;
     this.fileProgressState$.next('reading');
     let ext = file.name.split(".")[file.name.split(".").length - 1];
-    if (ext == "dialog") {
-      var reader = new FileReader();
-      reader.onload = (ev: ProgressEvent<FileReader>) => this.onReadFileDialog(reader, file.name, ev);
-      reader.readAsText(file);
-    }
-    else if (ext == "obb") {
+    if (ext == "obb") {
       this.onReadFileObb(file);
     }
     else {
-      console.error("INCORRECT FILE");
+      let alert = this.alerts.open(this.translate.instant('error-file-obb'), { label: 'Error' });
+
+      firstValueFrom(alert);
     }
   }
 
@@ -64,6 +72,39 @@ export class FileReaderService {
       this.fileProgressBar$.next(index + 1);
     }
     this.fileProgressState$.next('finish');
+  }
+
+  public async onVerificationObb(file: File) {
+    let alert = this.alerts
+      .open(
+        this.translate.instant('error-file-obb'),
+        {
+          label: 'Error',
+          status: 'error',
+          autoClose: true
+        }
+      );
+
+    let zipObb = new JSZip();
+    try {
+      await zipObb.loadAsync(file, {});
+    } catch (error) {
+      firstValueFrom(alert);
+      this.file = null;
+      this.fileControl.setValue(null);
+      return false;
+    }
+
+    let dialogFolder = zipObb.files['assets/DialogAssets/'];
+
+    if (!dialogFolder) {
+      firstValueFrom(alert);
+      this.file = null;
+      this.fileControl.setValue(null);
+      return false;
+    }
+
+    return true;
   }
 
   private onReadFileDialog(reader: FileReader, fileName: string, ev: ProgressEvent<FileReader>) {
