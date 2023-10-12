@@ -32,7 +32,8 @@ export class ExportTranslationService {
     progress$: new BehaviorSubject<number>(0),
     progressMax$: new BehaviorSubject<number>(100),
     url: undefined,
-    skip: new BehaviorSubject<boolean>(false)
+    skip: new BehaviorSubject<boolean>(false),
+    notSupported: new BehaviorSubject<boolean>(false)
   };
 
   public localization: IFileControl = {
@@ -44,7 +45,8 @@ export class ExportTranslationService {
     progressStatus$: new BehaviorSubject<ProgressStatus>(ProgressStatus.waiting),
     progress$: new BehaviorSubject<number>(0),
     progressMax$: new BehaviorSubject<number>(100),
-    url: undefined
+    url: undefined,
+    skip: new BehaviorSubject<boolean>(false)
   };
 
   public gamedata: IFileControl = {
@@ -56,7 +58,8 @@ export class ExportTranslationService {
     progressStatus$: new BehaviorSubject<ProgressStatus>(ProgressStatus.waiting),
     progress$: new BehaviorSubject<number>(0),
     progressMax$: new BehaviorSubject<number>(100),
-    url: undefined
+    url: undefined,
+    skip: new BehaviorSubject<boolean>(false)
   };
 
   public isTranslating$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -87,6 +90,10 @@ export class ExportTranslationService {
     private api: ApiService,
     private translate: TranslateService
   ) {
+    this.init();
+  }
+
+  private init() {
     this.obb.loadedFile$ = this.obb.control
       .valueChanges
       .pipe(
@@ -118,7 +125,8 @@ export class ExportTranslationService {
       );
 
     if (this.ddS.isMobile()) {
-      this.obb.skip?.next(true);
+      this.obb.skip.next(true);
+      this.obb.notSupported?.next(true);
       this.obb.verifiedFile$.next(true);
       this.obb.progressStatus$.next(ProgressStatus.finish);
     }
@@ -307,6 +315,12 @@ export class ExportTranslationService {
     a.style.display = 'none';
     a.click();
     a.remove();
+  }
+
+  public onSkipFile(fileControl: IFileControl) {
+    fileControl.skip?.next(true);
+    fileControl.verifiedFile$.next(true);
+    fileControl.progressStatus$.next(ProgressStatus.finish);
   }
 
 }

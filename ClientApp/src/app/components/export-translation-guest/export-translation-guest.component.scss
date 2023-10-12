@@ -44,3 +44,10 @@
 .text-blend {
     mix-blend-mode: var(--blend-mode);
 }
+
+.skip-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}

@@ -13,7 +13,8 @@ export interface IFileControl {
     progress$: BehaviorSubject<number>;
     progressMax$: BehaviorSubject<number>;
     url: string | undefined;
-    skip?: BehaviorSubject<boolean>;
+    skip: BehaviorSubject<boolean>;
+    notSupported?: BehaviorSubject<boolean>;
 }
 
 export interface IExportPercentages{

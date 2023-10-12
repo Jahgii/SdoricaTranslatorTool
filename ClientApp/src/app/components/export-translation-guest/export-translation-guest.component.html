@@ -115,14 +115,24 @@
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename"
     let-onreject="onreject">
-    <ng-container *ngIf="filecontrol.skip && filecontrol.skip | async; else noSkip">
-        <tui-island size="s" class="not-support">
+    <ng-container *ngIf="filecontrol.skip | async; else noSkip">
+        <tui-island size="s" class="not-support"
+            *ngIf="filecontrol.notSupported && filecontrol.notSupported | async; else skipN">
             <p class="text-blend tui-island__category">{{'not-support' | translate}}</p>
             <h3 class="text-blend tui-island__title">{{filename}}</h3>
             <p class="text-blend tui-island__paragraph">
                 {{'not-support-mobile' | translate}}
             </p>
         </tui-island>
+        <ng-template #skipN>
+            <tui-island size="s" class="not-support">
+                <p class="text-blend tui-island__category">{{'file-skip' | translate}}</p>
+                <h3 class="text-blend tui-island__title">{{filename}}</h3>
+                <p class="text-blend tui-island__paragraph">
+                    {{'file-skip-description' | translate}}
+                </p>
+            </tui-island>
+        </ng-template>
     </ng-container>
     <ng-template #noSkip>
         <tui-input-files *ngIf="!filecontrol.control.value" class="file-input" [formControl]="filecontrol.control"
@@ -136,6 +146,9 @@
                 </div>
                 <ng-template #base>
                     <div class="content">
+                        <button class="skip-button" tuiIconButton
+                            icon="tuiIconXCircle" size="xs" appearance="icon" (click)="eTS.onSkipFile(filecontrol)">
+                        </button>
                         <tui-marker-icon mode="white" src="tuiIconUploadCloud" size="xs"></tui-marker-icon>
                         <div>{{filename}}</div>
                     </div>

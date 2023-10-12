@@ -194,5 +194,9 @@
     "can-not-login": "Can't log in, try again later.",
     "empty-db-guest": "It seems you are too fast here, let the translators work a little more, come back later.",
     "confirm-text-gamevalue-word": "I you sure you want to delete this value?",
-    "confirm-text-delete-gamevalue-short": "I you sure?"
+    "confirm-text-delete-gamevalue-short": "I you sure?",
+    "error-file-obb": "The OBB file provided is not valid, verify that it is the correct file and try again.",
+    "error-file-localization": "The LOCALIZATION file provided is not valid, verify that it is the correct file and try again.",
+    "file-skip": "Skipped File",
+    "file-skip-description": "The file will be skipped in the translation process"
 }
