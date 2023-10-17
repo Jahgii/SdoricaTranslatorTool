@@ -26,7 +26,6 @@
     "@angular/platform-server": "^16.1.7",
     "@angular/router": "^16.1.7",
     "@auth0/angular-jwt": "^5.1.2",
-    "@floating-ui/dom": "^1.5.2",
     "@msgpack/msgpack": "^3.0.0-beta2",
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",

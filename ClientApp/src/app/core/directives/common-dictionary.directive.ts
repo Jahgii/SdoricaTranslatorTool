@@ -1,5 +1,4 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
-import { computePosition, flip, shift, arrow, autoUpdate } from '@floating-ui/dom';
 import { ICommonWord } from '../interfaces/i-common-word';
 import { CommonWordsService } from '../services/common-words.service';
 
