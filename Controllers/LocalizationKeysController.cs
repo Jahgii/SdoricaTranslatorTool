@@ -245,6 +245,8 @@ namespace SdoricaTranslatorTool.Controllers
                 }
             }
 
+            if (OldKey._version != key._version) updated = true;
+
             return updated ? OldKey : null;
         }
 

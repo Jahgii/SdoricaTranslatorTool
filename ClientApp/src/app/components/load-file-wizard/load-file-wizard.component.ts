@@ -28,7 +28,7 @@ export class LoadFileWizardComponent implements OnDestroy {
   private subsStepperfive!: Subscription;
   private subsSteppersix!: Subscription;
 
-  public activeItemIndex = 4;
+  public activeItemIndex = 0;
   public languageSelected = false;
 
   public languagesSelected!: string[];

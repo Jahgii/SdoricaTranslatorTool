@@ -70,12 +70,15 @@ export class FileReaderLocalizationService {
 
       let langName;
       let keyIndex = decodeResult.C[categoryName].K.findIndex(e => e === 'Key');
+      let versionIndex = decodeResult.C[categoryName].K.findIndex(e => e === '_version');
 
       for (let dataIndex = 0; dataIndex < decodeResult.C[categoryName].D.length; dataIndex++) {
         let new_key: ILocalizationKey | undefined = undefined;
         for (let langIndex = 0; langIndex < decodeResult.C[categoryName].K.length; langIndex++) {
           if (keyIndex === langIndex) continue;
+          if (versionIndex === langIndex) continue;
           let keyName = decodeResult.C[categoryName].D[dataIndex][keyIndex]
+          let _version = decodeResult.C[categoryName].D[dataIndex][versionIndex]
           langName = decodeResult.C[categoryName].K[langIndex];
           let text = decodeResult.C[categoryName].D[dataIndex][langIndex];
 
@@ -83,6 +86,7 @@ export class FileReaderLocalizationService {
             new_key = {
               Category: categoryName,
               Name: keyName,
+              _version: Number(_version ?? -1),
               Translated: {},
               Original: {},
               Translations: {}
@@ -97,6 +101,8 @@ export class FileReaderLocalizationService {
         if (new_key) this.localizationKeys.push(new_key);
       }
     }
+
+    console.log(this.localizationKeys);
 
     this.onUploadLocalization();
   }
@@ -126,7 +132,12 @@ export class FileReaderLocalizationService {
 
     for (let serverKey of this.localizationKeys) {
       let keyIndexPosition = decodeResult.C[serverKey.Category].K.findIndex(e => e === 'Key');
+      let versionIndexPosition = decodeResult.C[serverKey.Category].K.findIndex(e => e === '_version');
       let keyIndex = decodeResult.C[serverKey.Category].D.findIndex(e => e[keyIndexPosition] === serverKey.Name);
+
+      //Not need to use because the file already have the version
+      let versionIndex = decodeResult.C[serverKey.Category].D.findIndex(e => e[versionIndexPosition] === serverKey.Name);
+
 
       if (keyIndex == -1) {
         let customLocalizationKey: string[] = [];
@@ -145,6 +156,8 @@ export class FileReaderLocalizationService {
       let languageIndex = decodeResult.C[serverKey.Category].K.findIndex(e => e === this.languageOrigin.localizationLang);
       decodeResult.C[serverKey.Category].D[keyIndex][languageIndex] = serverKey.Translations[this.languageOrigin.localizationLang];
     }
+
+    console.log(decodeResult);
     this.fileExportProgressState$.next('finish');
 
     this.onDownloadLocalization(decodeResult, fileName);

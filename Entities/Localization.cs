@@ -20,6 +20,7 @@ namespace SdoricaTranslatorTool.Entities
         public string? Id { get; set; }
         public required string Category { get; set; }
         public required string Name { get; set; }
+        public required int _version { get; set; }
         public bool? Custom { get; set; }
         public required Dictionary<string, bool> Translated { get; set; }
         public required Dictionary<string, string> Original { get; set; }
