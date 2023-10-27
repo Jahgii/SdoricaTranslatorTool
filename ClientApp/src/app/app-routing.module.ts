@@ -77,7 +77,7 @@ const routes: Routes = [
   },
   {
     path: 'export',
-    component: ExportTranslationComponent,
+    component: ExportTranslationGuestComponent,
     canActivate: [
       authentificationGuard,
       authorizationGuard,

@@ -287,8 +287,8 @@ export class ExportTranslationService {
     gamWorker.onmessage = ({ data }) => this.onMessage(data, this.gamedata);
 
     if (!this.obb.skip?.value) obbWorker.postMessage({ file: this.obb.control.value, lang: 'English', token: this.local.getToken() });
-    locWorker.postMessage({ decodeResult: this.dataLoc, lang: 'English', token: this.local.getToken() });
-    gamWorker.postMessage({ decodeResult: this.dataGam, lang: 'English', token: this.local.getToken() });
+    if (!this.localization.skip?.value) locWorker.postMessage({ decodeResult: this.dataLoc, lang: 'English', token: this.local.getToken() });
+    if (!this.gamedata.skip?.value) gamWorker.postMessage({ decodeResult: this.dataGam, lang: 'English', token: this.local.getToken() });
   }
 
   private onMessage(message: IOnMessage, fileControl: IFileControl) {
