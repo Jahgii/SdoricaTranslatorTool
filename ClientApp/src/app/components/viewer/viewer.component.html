@@ -1,1 +1,6 @@
-<ng-template adHost></ng-template>
+<div tuiResizeable class="viewer-resizer-container">
+    <tui-scrollbar class="viewer-container">
+        <ng-template adHost></ng-template>
+    </tui-scrollbar>
+    <div class="left-middle-handle handle" [tuiResizer]="[1, 0]"></div>
+</div>
