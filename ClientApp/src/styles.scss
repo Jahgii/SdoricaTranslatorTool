@@ -1,8 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --header-height: 3.9375rem;
+  --header-height: 0rem;
   --important-text: red;
   --blend-mode: normal;
+  --menu-width: 0rem;
+  --min-width-viewer: 4rem;
 }
 
 @font-face {
@@ -27,6 +29,50 @@ code {
   color: #e01a76;
 }
 
+.main-grid {
+  display: grid;
+  height: 100%;
+  grid-template-columns: var(--menu-width) 1fr;
+  grid-template-rows: var(--header-height) 1fr;
+  grid-template-areas:
+    "sidebar header"
+    "sidebar content";
+}
+
+.sidebar {
+  grid-area: sidebar;
+  // background: var(--tui-text-01);
+  // background: color-mix(in srgb, var(--tui-text-01) 100%, transparent);
+  // box-shadow: 0 8px 32px 0 color-mix(in srgb, var(--tui-text-01) 20%, transparent);
+  // backdrop-filter: blur(20px);
+  // -webkit-backdrop-filter: blur(20px);
+  // border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: 3.9375rem;
+  align-items: center;
+  justify-items: center;
+
+  a {
+    opacity: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.sidebar-link-icon {
+  filter: brightness(0) invert(0);
+  width: 28px;
+  height: 28px;
+}
+
 .container-m {
   padding: 1em;
   max-width: 1680px;
@@ -35,4 +81,10 @@ code {
 
 .common-word {
   color: var(--important-text);
+}
+
+.main-viewer {
+  display: flex;
+  overflow: hidden;
+  height: 100%;
 }

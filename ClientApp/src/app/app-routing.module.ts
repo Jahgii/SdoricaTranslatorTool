@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoadFileWizardComponent } from './components/load-file-wizard/load-file-wizard.component';
-import { HomeComponent } from './components/home/home.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { DialogAssetsComponent } from './components/dialog-assets/dialog-assets.component';
 import { LocalizationComponent } from './components/localization/localization.component';
 import { MainGroupsComponent } from './components/main-groups/main-groups.component';
-import { ExportTranslationComponent } from './components/export-translation/export-translation.component';
 import { LoginComponent } from './components/login/login.component';
 import { ExportTranslationGuestComponent } from './components/export-translation-guest/export-translation-guest.component';
 import { authentificationGuard } from './core/guards/authentification.guard';
 import { authorizationGuard } from './core/guards/authorization.guard';
 import { translationLanguageGuard } from './core/guards/translation-language.guard';
+import { ViewerMainComponent } from './components/viewer-main/viewer-main.component';
 
 const routes: Routes = [
   {
@@ -25,7 +24,7 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent,
+    component: ViewerMainComponent,
     canActivate: [
       authentificationGuard,
       authorizationGuard

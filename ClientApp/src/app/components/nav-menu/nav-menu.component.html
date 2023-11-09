@@ -1,41 +1,10 @@
 <header class="header">
-    <button tuiIconButton appearance="icon" [icon]="'tuiIconMenu'" (click)="onToogleMenu()"
-        (tuiActiveZoneChange)="onToogleMenu()" size="xs" class="tui-space_right-2">
-        <tui-scrollbar *tuiSidebar="openMenu; direction: 'left'">
-            <div class="menu-header">
-                <h3>Menu</h3>
-            </div>
-            <div style="padding: 1em;">
-                <div style="display: flex; flex-direction: column; gap: 2rem;">
-                    <a icon="tuiIconHome" iconAlign="left" tuiLink [routerLink]="['/home']" tuiMode="onLight">
-                        {{'home' | translate}}
-                    </a>
-                    <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/localization']"
-                        tuiMode="onLight">
-                        {{'main_localization' | translate}}
-                    </a>
-                    <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/dialogsAsset']"
-                        tuiMode="onLight">
-                        {{'chapter-dialog-localization' | translate}}
-                    </a>
-                    <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/loading']"
-                        tuiMode="onLight">
-                        {{'re-import-files' | translate}}
-                    </a>
-                    <a icon="tuiIconArrowRightCircle" iconAlign="left" tuiLink [routerLink]="['/export']"
-                        tuiMode="onLight">
-                        {{'export-files' | translate}}
-                    </a>
-                </div>
-            </div>
-        </tui-scrollbar>
-    </button>
     <ng-container *ngIf="breakpointService$ | async as breakpoint">
         <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
-            <h2 style="margin-right: auto;">{{'sdorica-translator-tool' | translate}}</h2>
+            <h2 style="margin-right: auto;"></h2>
         </ng-container>
         <ng-container *ngIf="breakpoint === 'mobile'">
-            <h2 style="margin-right: auto;">{{'sdorica-translator-tool-small' | translate}}</h2>
+            <h2 style="margin-right: auto;"></h2>
         </ng-container>
     </ng-container>
     <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
@@ -161,6 +130,4 @@
             </div>
         </tui-scrollbar>
     </button>
-    <tui-avatar size="s" [rounded]="true" [text]="authService.user?.name ? authService.user?.name ?? '' : '?'"
-        [avatarUrl]="authService.user?.photoUrl ? authService.user?.photoUrl ?? '' : null"></tui-avatar>
 </header>

@@ -2,9 +2,42 @@
   <tui-theme-night *ngIf="!(theme.nightMode$ | async)"></tui-theme-night>
   <app-theme-dark *ngIf="!(theme.nightMode$ | async)"></app-theme-dark>
 
-  <app-nav-menu #navMenu *ngIf="authService.rol == 'admin'; else guestBar"></app-nav-menu>
-  <ng-template #guestBar>
-    <app-nav-bar></app-nav-bar>
-  </ng-template>
-  <router-outlet></router-outlet>
+  <main class="main-grid">
+    <ng-container [ngTemplateOutlet]="{
+      'admin': admin,
+      'guest': guest,
+   }[authService.rol] ?? default"></ng-container>
+
+    <router-outlet style="position: absolute;"></router-outlet>
+  </main>
 </tui-root>
+
+<ng-template #admin>
+  <div class="sidebar">
+    <a [routerLink]="['/home']">
+      <tui-marker-icon src="tuiIconHome"size="xs"></tui-marker-icon>
+    </a>
+    <a [routerLink]="['/localization']">
+      <tui-marker-icon src="tuiIconType"size="xs"></tui-marker-icon>
+    </a>
+    <a [routerLink]="['/dialogsAsset']">
+      <tui-marker-icon src="tuiIconMessageCircle"size="xs"></tui-marker-icon>
+    </a>
+    <a [routerLink]="['/loading']">
+      <tui-marker-icon src="tuiIconUpload"size="xs"></tui-marker-icon>
+    </a>
+    <a [routerLink]="['/export']">
+      <tui-marker-icon src="tuiIconDownload"size="xs"></tui-marker-icon>
+    </a>
+  </div>
+  <app-nav-menu style="grid-area: header" #navMenu>
+  </app-nav-menu>
+</ng-template>
+<ng-template #guest>
+  <app-nav-bar style="grid-area: header"></app-nav-bar>
+</ng-template>
+<ng-template #default>
+  <div></div>
+  <div></div>
+  <div></div>
+</ng-template>

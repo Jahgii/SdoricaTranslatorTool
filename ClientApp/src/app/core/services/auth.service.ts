@@ -49,6 +49,10 @@ export class AuthService {
                 this.route.navigateByUrl('');
               }
               else if (this.userDB.Rol == 'admin') {
+                var element = document.querySelector(':root') as any;
+                element.style.setProperty('--header-height', '3.9375rem');
+                element.style.setProperty('--menu-width', '3rem');
+
                 this.rol = this.userDB.Rol;
                 this.route.navigateByUrl('home');
               }

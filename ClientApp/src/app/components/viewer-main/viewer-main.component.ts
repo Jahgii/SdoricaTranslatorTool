@@ -38,6 +38,10 @@ export class ViewerMainComponent implements OnInit {
       .createComponent<ViewerComponent>(ViewerComponent);
 
     this.views.push(view);
+
+    if (this.views.length > 1) {
+      this.views[0].setInput("showResizer", true);
+    }
   }
 
   public Resizers() {

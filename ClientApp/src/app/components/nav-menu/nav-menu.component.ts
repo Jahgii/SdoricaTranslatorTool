@@ -29,11 +29,6 @@ export class NavMenuComponent implements OnInit {
     { lang: 'es', value: 'es' }
   ];
 
-  readonly flags = new Map<TuiLanguageName, TuiCountryIsoCode>([
-    ['english', TuiCountryIsoCode.GB],
-    ['spanish', TuiCountryIsoCode.ES]
-  ]);
-
   constructor(
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,

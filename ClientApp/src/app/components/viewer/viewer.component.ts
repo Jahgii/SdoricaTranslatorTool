@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from '../home/home.component';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
@@ -23,6 +23,8 @@ import { TuiScrollbarModule } from '@taiga-ui/core';
 export class ViewerComponent implements OnInit {
   @ViewChild(TuiResizerDirective, { static: true }) adResizer!: TuiResizerDirective;
   @ViewChild(AdHostDirective, { static: true }) adHost!: AdHostDirective;
+
+  @Input() showResizer = false;
 
   constructor() { }
 

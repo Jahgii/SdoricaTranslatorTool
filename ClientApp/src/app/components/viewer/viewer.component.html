@@ -2,5 +2,5 @@
     <tui-scrollbar class="viewer-container">
         <ng-template adHost></ng-template>
     </tui-scrollbar>
-    <div class="left-middle-handle handle" [tuiResizer]="[1, 0]"></div>
+    <div *ngIf="showResizer" class="left-middle-handle handle" [tuiResizer]="[1, 0]"></div>
 </div>
