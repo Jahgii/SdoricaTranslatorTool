@@ -11,6 +11,7 @@ import { LanguageOriginService } from 'src/app/core/services/language-origin.ser
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
+import { ViewersService } from 'src/app/core/services/viewers.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -35,6 +36,7 @@ export class NavMenuComponent implements OnInit {
     readonly translate: TranslateService,
     private localStorage: LocalStorageService,
     public authService: AuthService,
+    private viewers: ViewersService,
     public theme: ThemeService,
     @Inject(TuiLanguageSwitcher) readonly switcher: TuiLanguageSwitcher,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
@@ -68,6 +70,10 @@ export class NavMenuComponent implements OnInit {
 
   public onToogleSettings() {
     this.openSetting = !this.openSetting;
+  }
+
+  public onSplitModeToggle() {
+    this.viewers.splitMode();
   }
 
   @tuiPure

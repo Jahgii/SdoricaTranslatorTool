@@ -102,8 +102,6 @@ export class FileReaderLocalizationService {
       }
     }
 
-    console.log(this.localizationKeys);
-
     this.onUploadLocalization();
   }
 
@@ -157,7 +155,6 @@ export class FileReaderLocalizationService {
       decodeResult.C[serverKey.Category].D[keyIndex][languageIndex] = serverKey.Translations[this.languageOrigin.localizationLang];
     }
 
-    console.log(decodeResult);
     this.fileExportProgressState$.next('finish');
 
     this.onDownloadLocalization(decodeResult, fileName);

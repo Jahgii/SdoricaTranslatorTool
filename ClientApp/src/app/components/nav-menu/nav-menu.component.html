@@ -1,4 +1,7 @@
 <header class="header">
+    <button tuiIconButton appearance="icon" icon="tuiIconColumns"
+        (click)="onSplitModeToggle()">
+    </button>
     <ng-container *ngIf="breakpointService$ | async as breakpoint">
         <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
             <h2 style="margin-right: auto;"></h2>

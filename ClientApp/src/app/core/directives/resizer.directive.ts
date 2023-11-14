@@ -8,7 +8,7 @@ import { ViewerComponent } from 'src/app/components/viewer/viewer.component';
 })
 export class ResizerDirective {
   @Input() elementRef!: HTMLElement;
-  @Input() views!: ViewerComponent[];
+  @Input() views: ViewerComponent[] = [];
 
   public resizerState: ResizerElementState = {
     isResizing: false,
@@ -26,6 +26,7 @@ export class ResizerDirective {
   constructor() { }
 
   @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent) {
+    if (this.views.length <= 1) return;
     this.resizerState.isResizing = true;
     this.resizerState.xDiff = e.pageX;
     this.resizerState.yDiff = e.pageY;

@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, ElementRef, HostBinding, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewerComponent } from '../viewer/viewer.component';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { ViewerResizerComponent } from '../viewer-resizer/viewer-resizer.component';
+import { ViewersService } from 'src/app/core/services/viewers.service';
 
 @Component({
   selector: 'app-viewer-main',
@@ -16,50 +17,22 @@ import { ViewerResizerComponent } from '../viewer-resizer/viewer-resizer.compone
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewerMainComponent implements OnInit {
-  @HostBinding('class') classes = 'main-viewer';
-  @ViewChild(AdHostDirective, { static: true }) adHost!: AdHostDirective;
+  @HostBinding('class')
+  private classes = 'main-viewer';
+  @ViewChild(AdHostDirective, { static: true })
+  private adHost!: AdHostDirective;
 
-  public views: ComponentRef<ViewerComponent>[] = [];
-
-  constructor() { }
-
-  ngOnInit() {
-    this.AddViewer();
-    this.AddViewer();
-    this.resizeViewers();
-  }
-
-  public AddViewer() {
-    let resizer;
-    if (this.views.length >= 1) {
-      resizer = this.adHost
-        .viewContainerRef
-        .createComponent<ViewerResizerComponent>(ViewerResizerComponent);
-
-      resizer.instance.views = [this.views[this.views.length - 1].instance];
-    }
-
-    let view = this.adHost
-      .viewContainerRef
-      .createComponent<ViewerComponent>(ViewerComponent);
-
-    this.views.push(view);
-
-    if (resizer) {
-      resizer.instance.views.push(view.instance);
-    }
-  }
-
-  public resizeViewers() {
-    let width: number = 100 / this.views.length;
-
-    this.views.forEach(v => {
-      v.instance.widthPercentage = `${width}%`
+  constructor(
+    private viewers: ViewersService,
+    private cd: ChangeDetectorRef
+  ) {
+    this.viewers.notifier.subscribe(e => {
+      this.cd.markForCheck();
     });
   }
 
-  public Resizers() {
-    this.views.forEach(e => e.setInput('showResizer', true));
-    this.views[this.views.length - 1].setInput('showResizer', false);
+  ngOnInit() {
+    this.viewers.init(this.adHost);
   }
+
 }
