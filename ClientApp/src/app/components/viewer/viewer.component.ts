@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from '../home/home.component';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
-import { TuiResizerModule } from '@taiga-ui/cdk';
 import { TuiScrollbarModule } from '@taiga-ui/core';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-viewer',
@@ -12,22 +13,23 @@ import { TuiScrollbarModule } from '@taiga-ui/core';
     CommonModule,
 
     //Taiga
-    TuiResizerModule,
     TuiScrollbarModule,
+    TuiBlockStatusModule,
 
+    TranslateModule,
     AdHostDirective
   ],
   templateUrl: './viewer.component.html',
   styleUrls: ['./viewer.component.scss']
 })
 export class ViewerComponent implements OnInit {
-  @ViewChild("viewerContent", { static: true }) content!: ElementRef;
-  @ViewChild(AdHostDirective, { static: true }) adHost!: AdHostDirective;
+  @ViewChild(AdHostDirective, { static: true })
+  adHost!: AdHostDirective;
   @HostBinding('style.width')
   widthPercentage = "100%";
 
-  @Input() showResizer = false;
-
+  public componentLoaded: any;
+  
   constructor(private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
@@ -40,6 +42,10 @@ export class ViewerComponent implements OnInit {
   }
 
   public loadComponent() {
-    this.adHost.viewContainerRef.createComponent<HomeComponent>(HomeComponent);
+    // let component = this.adHost
+    //   .viewContainerRef
+    //   .createComponent<HomeComponent>(HomeComponent);
+    
+    // this.componentLoaded = component;
   }
 }

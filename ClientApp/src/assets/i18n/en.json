@@ -198,5 +198,6 @@
     "error-file-obb": "The OBB file provided is not valid, verify that it is the correct file and try again.",
     "error-file-localization": "The LOCALIZATION file provided is not valid, verify that it is the correct file and try again.",
     "file-skip": "Skipped File",
-    "file-skip-description": "The file will be skipped in the translation process"
+    "file-skip-description": "The file will be skipped in the translation process",
+    "viewer-not-selected": "Nothing to show"
 }
