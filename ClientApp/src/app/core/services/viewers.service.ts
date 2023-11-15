@@ -1,22 +1,27 @@
-import { ComponentRef, Injectable, signal } from '@angular/core';
+import { ComponentRef, Injectable, Type } from '@angular/core';
 import { ViewerComponent } from 'src/app/components/viewer/viewer.component';
 import { AdHostDirective } from '../directives/host-directive';
 import { ViewerResizerComponent } from 'src/app/components/viewer-resizer/viewer-resizer.component';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { MainGroupsComponent } from 'src/app/components/main-groups/main-groups.component';
+import { GroupsComponent } from 'src/app/components/groups/groups.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ViewersService {
   public views: ComponentRef<ViewerComponent>[] = [];
+  public activeView!: ComponentRef<ViewerComponent>;
   private adHost!: AdHostDirective;
   public notifier: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   public init(adHost: AdHostDirective) {
     this.adHost = adHost;
     this.AddViewer();
+    this.loadComponent(GroupsComponent, { mainGroup: 'main' })
   }
 
   private AddViewer() {
@@ -34,6 +39,8 @@ export class ViewersService {
       .createComponent<ViewerComponent>(ViewerComponent);
 
     this.views.push(view);
+
+    this.activeView = view;
 
     if (resizer) {
       resizer.instance.views.push(view.instance);
@@ -61,5 +68,9 @@ export class ViewersService {
     }
 
     this.notifier.next(true);
+  }
+
+  private loadComponent(component: Type<any>, args: { [arg: string]: any }) {
+    this.activeView.instance.loadComponent(component, args);
   }
 }

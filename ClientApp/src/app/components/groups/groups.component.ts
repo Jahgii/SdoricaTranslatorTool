@@ -18,6 +18,7 @@ import { LanguageOriginService } from 'src/app/core/services/language-origin.ser
 export class GroupsComponent {
   public groups$!: Observable<IGroup[]>;
   private subsLanguage!: Subscription;
+  public mainGroup!: string;
 
   constructor(
     private api: ApiService,
@@ -26,10 +27,11 @@ export class GroupsComponent {
   ) { }
 
   ngOnInit(): void {
-    let mainGroup = this.route.snapshot.params['mid'];
+    if(!this.mainGroup)
+    this.mainGroup = this.route.snapshot.params['mid'];
 
     this.subsLanguage = this.languageOrigin.language$.subscribe((lang: string) => {
-      this.groups$ = this.api.getWithHeaders<IGroup[]>('groups', { language: lang, mainGroup: mainGroup })
+      this.groups$ = this.api.getWithHeaders<IGroup[]>('groups', { language: lang, mainGroup: this.mainGroup })
         .pipe(
           map(array => array.map(
             g => {
