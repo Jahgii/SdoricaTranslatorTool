@@ -8,8 +8,8 @@ describe('LoadFileWizardGroupsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadFileWizardGroupsComponent]
-    });
+    imports: [LoadFileWizardGroupsComponent]
+});
     fixture = TestBed.createComponent(LoadFileWizardGroupsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

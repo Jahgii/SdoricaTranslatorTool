@@ -8,8 +8,8 @@ describe('ExportTranslationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ExportTranslationComponent]
-    });
+    imports: [ExportTranslationComponent]
+});
     fixture = TestBed.createComponent(ExportTranslationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

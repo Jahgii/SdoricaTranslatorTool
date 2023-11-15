@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { AbstractTuiThemeSwitcher } from '@taiga-ui/cdk';
 
 @Component({
-  selector: 'app-theme-dark',
-  template: '',
-  styleUrls: ['./theme-dark.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-theme-dark',
+    template: '',
+    styleUrls: ['./theme-dark.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class ThemeDarkComponent extends AbstractTuiThemeSwitcher {
 

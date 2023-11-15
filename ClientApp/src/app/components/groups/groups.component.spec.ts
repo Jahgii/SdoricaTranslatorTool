@@ -63,29 +63,25 @@ describe('GroupsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        GroupsComponent,
-      ],
-      imports: [
+    imports: [
         RouterTestingModule,
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-
         TuiTilesModule,
         TuiSvgModule,
         TuiButtonModule,
         TuiBlockStatusModule,
         TuiInputInlineModule,
-
         TranslateModule.forRoot({}),
-      ],
-      providers: [
+        GroupsComponent,
+    ],
+    providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { params: { 'mid': 'value' } } } },
         { provide: LanguageOriginService, useValue: { language$: of(MOCKLANG) } },
         { provide: ApiService, useValue: { getWithHeaders: (url: string, headers: {}) => of(MOCKGROUPS) } }
-      ]
-    }).overrideComponent(GroupsComponent, {
+    ]
+}).overrideComponent(GroupsComponent, {
       set: { changeDetection: ChangeDetectionStrategy.Default }
     });
 

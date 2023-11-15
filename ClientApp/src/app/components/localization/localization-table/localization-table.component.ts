@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiDriver, TuiOptionComponent, TuiScrollbarComponent, tuiGetWordRange } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDriver, TuiOptionComponent, TuiScrollbarComponent, tuiGetWordRange, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
@@ -9,18 +9,35 @@ import { ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { GamedataService } from 'src/app/core/services/gamedata.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LocalizationService } from 'src/app/core/services/localization.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
+import { TuiAppBarModule } from '@taiga-ui/addon-mobile';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
+import { CommonDictionaryDirective } from '../../../core/directives/common-dictionary.directive';
+import { TuiHintModule } from '@taiga-ui/core/directives/hint';
+import { TuiCheckboxModule } from '@taiga-ui/kit/components/checkbox';
+import { TuiSvgModule } from '@taiga-ui/core/components/svg';
+import { TuiTooltipModule } from '@taiga-ui/core/components/tooltip';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TuiToggleModule, TuiInputModule, TuiTextareaModule } from '@taiga-ui/kit';
+import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { TuiTableFiltersModule, TuiTableModule } from '@taiga-ui/addon-table';
+import { NgIf, NgTemplateOutlet, NgFor, AsyncPipe, KeyValuePipe } from '@angular/common';
 
 const ESPECIAL_CHARACTER = '@'
 
 @Component({
-  selector: 'app-localization-table',
-  templateUrl: './localization-table.component.html',
-  styleUrls: ['./localization-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    popinAnimation,
-    fadeinAnimation
-  ]
+    selector: 'app-localization-table',
+    templateUrl: './localization-table.component.html',
+    styleUrls: ['./localization-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        popinAnimation,
+        fadeinAnimation
+    ],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, TuiTableFiltersModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, TuiScrollbarModule, TuiTableModule, TuiToggleModule, FormsModule, TuiTooltipModule, TuiSvgModule, TuiInputModule, ReactiveFormsModule, TuiTextfieldControllerModule, TuiCheckboxModule, CdkVirtualForOf, TuiHintModule, NgFor, CommonDictionaryDirective, TuiTextareaModule, TuiDropdownModule, TuiDataListModule, TuiBlockStatusModule, TuiAppBarModule, TuiLoaderModule, AsyncPipe, KeyValuePipe, TranslateModule]
 })
 export class LocalizationTableComponent implements OnInit {
   @ViewChildren(TuiOptionComponent, { read: ElementRef })

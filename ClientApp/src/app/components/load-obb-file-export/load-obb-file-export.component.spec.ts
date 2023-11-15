@@ -8,8 +8,8 @@ describe('LoadObbFileExportComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadObbFileExportComponent]
-    });
+    imports: [LoadObbFileExportComponent]
+});
     fixture = TestBed.createComponent(LoadObbFileExportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

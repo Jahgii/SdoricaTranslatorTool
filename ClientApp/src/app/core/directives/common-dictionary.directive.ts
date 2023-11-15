@@ -6,7 +6,8 @@ const REGEXP_SPECIAL_CHAR =
   /[\!\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-]/g;
 
 @Directive({
-  selector: '[appCommonDictionary]'
+    selector: '[appCommonDictionary]',
+    standalone: true
 })
 export class CommonDictionaryDirective implements OnInit {
   @Input() text!: string;

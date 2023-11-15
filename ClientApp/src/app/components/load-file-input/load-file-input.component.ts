@@ -1,15 +1,21 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { TuiAlertService } from '@taiga-ui/core';
-import { TuiFileLike } from '@taiga-ui/kit';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TuiAlertService, TuiLinkModule } from '@taiga-ui/core';
+import { TuiFileLike, TuiInputFilesModule, TuiMarkerIconModule, TuiProgressModule } from '@taiga-ui/kit';
 import { firstValueFrom, of, switchMap } from 'rxjs';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { NgIf, AsyncPipe, DecimalPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-load-file-input',
-  templateUrl: './load-file-input.component.html',
-  styleUrls: ['./load-file-input.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-load-file-input',
+    templateUrl: './load-file-input.component.html',
+    styleUrls: ['./load-file-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, TuiBlockStatusModule, TuiButtonModule, TuiInputFilesModule, FormsModule, ReactiveFormsModule, TuiMarkerIconModule, TuiLinkModule, TuiProgressModule, AsyncPipe, DecimalPipe, TranslateModule]
 })
 export class LoadFileInputComponent {
 

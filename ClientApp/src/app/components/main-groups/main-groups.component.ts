@@ -5,15 +5,41 @@ import { popinAnimation } from 'src/app/core/animations/popin';
 import { IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
+import { RouterLink } from '@angular/router';
+import { TuiSvgModule } from '@taiga-ui/core/components/svg';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { FormsModule } from '@angular/forms';
+import { TuiAutoFocusModule } from '@taiga-ui/cdk';
+import { TuiTilesModule, TuiInputInlineModule } from '@taiga-ui/kit';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-main-groups',
-  templateUrl: './main-groups.component.html',
-  styleUrls: ['./main-groups.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    popinAnimation
-  ],
+    selector: 'app-main-groups',
+    templateUrl: './main-groups.component.html',
+    styleUrls: ['./main-groups.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        popinAnimation
+    ],
+    standalone: true,
+    imports: [
+        NgIf,
+        TuiTilesModule,
+        NgFor,
+        TuiInputInlineModule,
+        TuiAutoFocusModule,
+        FormsModule,
+        TuiButtonModule,
+        TuiSvgModule,
+        RouterLink,
+        TuiLoaderModule,
+        TuiBlockStatusModule,
+        AsyncPipe,
+        TranslateModule,
+    ],
 })
 export class MainGroupsComponent {
   public mainGroups$!: Observable<IMainGroup[]>;

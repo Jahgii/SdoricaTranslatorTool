@@ -8,8 +8,8 @@ describe('ThemeDarkComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ThemeDarkComponent]
-    });
+    imports: [ThemeDarkComponent]
+});
     fixture = TestBed.createComponent(ThemeDarkComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

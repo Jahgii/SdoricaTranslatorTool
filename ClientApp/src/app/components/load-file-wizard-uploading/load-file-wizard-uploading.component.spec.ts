@@ -8,8 +8,8 @@ describe('LoadFileWizardUploadingComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadFileWizardUploadingComponent]
-    });
+    imports: [LoadFileWizardUploadingComponent]
+});
     fixture = TestBed.createComponent(LoadFileWizardUploadingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

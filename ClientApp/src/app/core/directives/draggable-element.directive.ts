@@ -2,7 +2,8 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { Observable, fromEvent, take, takeWhile } from 'rxjs';
 
 @Directive({
-  selector: '[appDraggableElement]'
+    selector: '[appDraggableElement]',
+    standalone: true
 })
 export class DraggableElementDirective {
   @Input() elementRef!: HTMLElement;

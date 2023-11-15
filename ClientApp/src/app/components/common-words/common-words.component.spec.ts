@@ -8,8 +8,8 @@ describe('CommonWordsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CommonWordsComponent]
-    });
+    imports: [CommonWordsComponent]
+});
     fixture = TestBed.createComponent(CommonWordsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

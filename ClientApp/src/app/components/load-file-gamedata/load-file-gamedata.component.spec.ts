@@ -8,8 +8,8 @@ describe('LoadFileGamedataComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadFileGamedataComponent]
-    });
+    imports: [LoadFileGamedataComponent]
+});
     fixture = TestBed.createComponent(LoadFileGamedataComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

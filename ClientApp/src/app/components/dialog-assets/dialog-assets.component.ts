@@ -1,22 +1,60 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TuiBreakpointService } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiScrollbarModule } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IDialogAsset, IDialogAssetExport } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
+import { TuiTableModule } from '@taiga-ui/addon-table';
+import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
+import { TuiHintModule } from '@taiga-ui/core/directives/hint';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { TuiTooltipModule } from '@taiga-ui/core/components/tooltip';
+import { TuiSvgModule } from '@taiga-ui/core/components/svg';
+import { TuiItemModule } from '@taiga-ui/cdk';
+import { TuiTabsModule, TuiToggleModule } from '@taiga-ui/kit';
+import { NgIf, NgFor, NgStyle, AsyncPipe, KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-dialog-assets',
-  templateUrl: './dialog-assets.component.html',
-  styleUrls: ['./dialog-assets.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    popinAnimation
-  ],
+    selector: 'app-dialog-assets',
+    templateUrl: './dialog-assets.component.html',
+    styleUrls: ['./dialog-assets.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        popinAnimation
+    ],
+    standalone: true,
+    imports: [
+        NgIf,
+        TuiTabsModule,
+        NgFor,
+        TuiItemModule,
+        TuiSvgModule,
+        TuiToggleModule,
+        FormsModule,
+        TuiTooltipModule,
+        TuiButtonModule,
+        TuiHintModule,
+        TuiLoaderModule,
+        TuiScrollbarModule,
+        CdkVirtualScrollViewport,
+        CdkFixedSizeVirtualScroll,
+        TuiTableModule,
+        CdkVirtualForOf,
+        TuiDropdownModule,
+        NgStyle,
+        TuiBlockStatusModule,
+        AsyncPipe,
+        KeyValuePipe,
+        TranslateModule,
+    ],
 })
 export class DialogAssetsComponent implements OnInit, OnDestroy {
   readonly filterForm = new FormGroup({

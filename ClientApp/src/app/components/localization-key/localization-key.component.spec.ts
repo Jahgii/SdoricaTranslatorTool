@@ -8,8 +8,8 @@ describe('LocalizationKeyComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LocalizationKeyComponent]
-    });
+    imports: [LocalizationKeyComponent]
+});
     fixture = TestBed.createComponent(LocalizationKeyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

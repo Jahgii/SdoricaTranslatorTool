@@ -1,23 +1,37 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, ViewChild } from '@angular/core';
-import { TuiBreakpointService } from '@taiga-ui/core';
-import { TuiStepperComponent } from '@taiga-ui/kit';
+import { TuiBreakpointService, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiDataListModule } from '@taiga-ui/core';
+import { TuiStepperComponent, TuiStepperModule, TuiSelectModule, TuiCheckboxBlockModule } from '@taiga-ui/kit';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FileReaderGamedataService } from 'src/app/core/services/file-reader-gamedata.service';
 import { FileReaderLocalizationService } from 'src/app/core/services/file-reader-localization.service';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { LoadFileGamedataComponent } from '../load-file-gamedata/load-file-gamedata.component';
+import { LoadFileLocalizationComponent } from '../load-file-localization/load-file-localization.component';
+import { LoadFileWizardGroupsComponent } from '../load-file-wizard-groups/load-file-wizard-groups.component';
+import { LoadFileWizardUploadingComponent } from '../load-file-wizard-uploading/load-file-wizard-uploading.component';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoadFileInputComponent } from '../load-file-input/load-file-input.component';
+import { NgIf, NgTemplateOutlet, NgFor, AsyncPipe, KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-load-file-wizard',
-  templateUrl: './load-file-wizard.component.html',
-  styleUrls: ['./load-file-wizard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    FileReaderService,
-    FileReaderLocalizationService,
-    FileReaderGamedataService
-  ]
+    selector: 'app-load-file-wizard',
+    templateUrl: './load-file-wizard.component.html',
+    styleUrls: ['./load-file-wizard.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        FileReaderService,
+        FileReaderLocalizationService,
+        FileReaderGamedataService
+    ],
+    standalone: true,
+    imports: [NgIf, TuiStepperModule, NgTemplateOutlet, LoadFileInputComponent, TuiSelectModule, TuiTextfieldControllerModule, FormsModule, ReactiveFormsModule, TuiPrimitiveTextfieldModule, TuiDataListModule, TuiDataListWrapperModule, NgFor, TuiCheckboxBlockModule, TuiButtonModule, LoadFileWizardUploadingComponent, LoadFileWizardGroupsComponent, LoadFileLocalizationComponent, LoadFileGamedataComponent, TuiBlockStatusModule, RouterLink, AsyncPipe, KeyValuePipe, TranslateModule]
 })
 export class LoadFileWizardComponent implements OnDestroy {
   @ViewChild(TuiStepperComponent) stepper!: TuiStepperComponent;

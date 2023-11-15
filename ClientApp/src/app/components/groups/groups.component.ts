@@ -1,19 +1,50 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, Subscription, firstValueFrom, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { TuiSvgModule } from '@taiga-ui/core/components/svg';
+import { TuiTextfieldControllerModule, TuiModeModule } from '@taiga-ui/core';
+import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { FormsModule } from '@angular/forms';
+import { TuiAutoFocusModule } from '@taiga-ui/cdk';
+import { TuiTilesModule, TuiInputInlineModule, TuiInputModule } from '@taiga-ui/kit';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-groups',
-  templateUrl: './groups.component.html',
-  styleUrls: ['./groups.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    popinAnimation
-  ],
+    selector: 'app-groups',
+    templateUrl: './groups.component.html',
+    styleUrls: ['./groups.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        popinAnimation
+    ],
+    standalone: true,
+    imports: [
+        NgIf,
+        TuiTilesModule,
+        NgFor,
+        TuiInputInlineModule,
+        TuiAutoFocusModule,
+        FormsModule,
+        TuiButtonModule,
+        TuiDropdownModule,
+        TuiInputModule,
+        TuiTextfieldControllerModule,
+        TuiSvgModule,
+        TuiModeModule,
+        RouterLink,
+        TuiBlockStatusModule,
+        TuiLoaderModule,
+        AsyncPipe,
+        TranslateModule,
+    ],
 })
 export class GroupsComponent {
   public groups$!: Observable<IGroup[]>;

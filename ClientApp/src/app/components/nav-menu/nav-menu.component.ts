@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { tuiPure, TuiStringHandler, TuiContextWithImplicit } from '@taiga-ui/cdk';
-import { TuiBreakpointService } from '@taiga-ui/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { tuiPure, TuiStringHandler, TuiContextWithImplicit, TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';
+import { TuiBreakpointService, TuiScrollbarModule, TuiGroupModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiDataListModule } from '@taiga-ui/core';
 import { TuiCountryIsoCode, TuiLanguageName, TuiLanguageSwitcher } from '@taiga-ui/i18n';
 import { BehaviorSubject } from 'rxjs';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
@@ -12,12 +12,20 @@ import { LibreTranslateService } from 'src/app/core/services/libre-translate.ser
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { ViewersService } from 'src/app/core/services/viewers.service';
+import { TuiBadgeModule } from '@taiga-ui/kit/components/badge';
+import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
+import { TuiRadioBlockModule, TuiSelectModule, TuiInputModule } from '@taiga-ui/kit';
+import { TuiSidebarModule } from '@taiga-ui/addon-mobile';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
 
 @Component({
-  selector: 'app-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-nav-menu',
+    templateUrl: './nav-menu.component.html',
+    styleUrls: ['./nav-menu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [TuiButtonModule, NgIf, TuiActiveZoneModule, TuiSidebarModule, TuiScrollbarModule, TuiGroupModule, NgFor, TuiRadioBlockModule, FormsModule, ReactiveFormsModule, TuiSelectModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiDataListModule, TuiDataListWrapperModule, TuiInputModule, TuiBadgeModule, TuiLetModule, AsyncPipe, TranslateModule]
 })
 export class NavMenuComponent implements OnInit {
   public openMenu: boolean = false;

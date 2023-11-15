@@ -1,13 +1,20 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { TuiFileLike } from '@taiga-ui/kit';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TuiFileLike, TuiInputFilesModule, TuiMarkerIconModule, TuiProgressModule } from '@taiga-ui/kit';
 import { switchMap, of } from 'rxjs';
 import { FileReaderLocalizationService } from 'src/app/core/services/file-reader-localization.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { TuiLinkModule } from '@taiga-ui/core';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { NgTemplateOutlet, NgIf, AsyncPipe, DecimalPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-load-file-localization',
-  templateUrl: './load-file-localization.component.html',
-  styleUrls: ['./load-file-localization.component.scss']
+    selector: 'app-load-file-localization',
+    templateUrl: './load-file-localization.component.html',
+    styleUrls: ['./load-file-localization.component.scss'],
+    standalone: true,
+    imports: [NgTemplateOutlet, NgIf, TuiBlockStatusModule, TuiButtonModule, TuiInputFilesModule, FormsModule, ReactiveFormsModule, TuiMarkerIconModule, TuiLinkModule, TuiProgressModule, AsyncPipe, DecimalPipe, TranslateModule]
 })
 export class LoadFileLocalizationComponent {
   @Input() mode: 'import' | 'export' = 'import';

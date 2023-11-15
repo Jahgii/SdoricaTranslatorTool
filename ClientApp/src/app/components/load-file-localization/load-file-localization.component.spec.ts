@@ -8,8 +8,8 @@ describe('LoadFileLocalizationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadFileLocalizationComponent]
-    });
+    imports: [LoadFileLocalizationComponent]
+});
     fixture = TestBed.createComponent(LoadFileLocalizationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

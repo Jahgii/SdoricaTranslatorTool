@@ -1,23 +1,36 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize } from '@taiga-ui/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiHostedDropdownModule, TuiModeModule, TuiDataListModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule } from '@taiga-ui/core';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { ICommonWord } from 'src/app/core/interfaces/i-common-word';
 import { CommonWordsService } from 'src/app/core/services/common-words.service';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
+import { TuiTableModule } from '@taiga-ui/addon-table';
+import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { TuiHintModule } from '@taiga-ui/core/directives/hint';
+import { TuiInputModule } from '@taiga-ui/kit';
+import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { TuiSvgModule } from '@taiga-ui/core/components/svg';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
 
 @Component({
-  selector: 'app-common-words',
-  templateUrl: './common-words.component.html',
-  styleUrls: ['./common-words.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    popinAnimation,
-    fadeinAnimation
-  ]
+    selector: 'app-common-words',
+    templateUrl: './common-words.component.html',
+    styleUrls: ['./common-words.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        popinAnimation,
+        fadeinAnimation
+    ],
+    standalone: true,
+    imports: [TuiHostedDropdownModule, TuiDropdownModule, TuiButtonModule, TuiModeModule, TuiDataListModule, TuiSvgModule, NgIf, DraggableElementDirective, TuiScrollbarModule, FormsModule, ReactiveFormsModule, TuiInputModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiHintModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, TuiTableModule, CdkVirtualForOf, TuiLoaderModule, TuiBlockStatusModule, AsyncPipe, TranslateModule]
 })
 export class CommonWordsComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;

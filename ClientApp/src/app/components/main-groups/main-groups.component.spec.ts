@@ -8,8 +8,8 @@ describe('MainGroupsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MainGroupsComponent]
-    });
+    imports: [MainGroupsComponent]
+});
     fixture = TestBed.createComponent(MainGroupsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

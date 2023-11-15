@@ -2,12 +2,23 @@ import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewChild } 
 import { BehaviorSubject } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { FileReaderService } from 'src/app/core/services/file-reader.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { TuiInputModule } from '@taiga-ui/kit';
+import { NgFor, NgIf, AsyncPipe, KeyValuePipe } from '@angular/common';
+import { TuiTableModule } from '@taiga-ui/addon-table';
+import { FormsModule } from '@angular/forms';
+import { TuiScrollbarModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule } from '@taiga-ui/core';
+import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 
 @Component({
-  selector: 'app-load-file-wizard-groups',
-  templateUrl: './load-file-wizard-groups.component.html',
-  styleUrls: ['./load-file-wizard-groups.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-load-file-wizard-groups',
+    templateUrl: './load-file-wizard-groups.component.html',
+    styleUrls: ['./load-file-wizard-groups.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [TuiLoaderModule, TuiScrollbarModule, FormsModule, TuiTableModule, NgFor, TuiInputModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, NgIf, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf, TuiButtonModule, AsyncPipe, KeyValuePipe, TranslateModule]
 })
 export class LoadFileWizardGroupsComponent implements OnDestroy {
   @ViewChild('formMainGroup') formMainGroup!: ElementRef<HTMLFormElement>;

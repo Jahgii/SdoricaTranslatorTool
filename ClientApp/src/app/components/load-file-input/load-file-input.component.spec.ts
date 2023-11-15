@@ -8,8 +8,8 @@ describe('LoadFileInputComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadFileInputComponent]
-    });
+    imports: [LoadFileInputComponent]
+});
     fixture = TestBed.createComponent(LoadFileInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
