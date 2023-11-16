@@ -1,11 +1,8 @@
 import { ComponentRef, Injectable, Type } from '@angular/core';
-import { ViewerComponent } from 'src/app/components/viewer/viewer.component';
+import { ViewerComponent } from 'src/app/mainlayout/viewer/viewer.component';
 import { AdHostDirective } from '../directives/host-directive';
-import { ViewerResizerComponent } from 'src/app/components/viewer-resizer/viewer-resizer.component';
+import { ViewerResizerComponent } from 'src/app/mainlayout/viewer-resizer/viewer-resizer.component';
 import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
-import { MainGroupsComponent } from 'src/app/components/main-groups/main-groups.component';
-import { GroupsComponent } from 'src/app/components/groups/groups.component';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +13,11 @@ export class ViewersService {
   private adHost!: AdHostDirective;
   public notifier: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-  constructor(private router: Router) { }
+  constructor() { }
 
   public init(adHost: AdHostDirective) {
     this.adHost = adHost;
     this.AddViewer();
-    this.loadComponent(GroupsComponent, { mainGroup: 'main' })
   }
 
   private AddViewer() {
@@ -39,8 +35,11 @@ export class ViewersService {
       .createComponent<ViewerComponent>(ViewerComponent);
 
     this.views.push(view);
+    this.onChangeActiveView(view);
 
     this.activeView = view;
+    this.activeView.instance.active = true;
+    this.activeView.instance.setActiveViewer = () => this.onChangeActiveView(view);
 
     if (resizer) {
       resizer.instance.views.push(view.instance);
@@ -65,12 +64,19 @@ export class ViewersService {
       this.adHost.viewContainerRef.remove(1);
       this.views.pop();
       this.resizeViewers();
+      this.onChangeActiveView(this.views[0]);
     }
 
     this.notifier.next(true);
   }
 
-  private loadComponent(component: Type<any>, args: { [arg: string]: any }) {
+  public loadComponent(component: Type<any>, args: { [arg: string]: any }) {
     this.activeView.instance.loadComponent(component, args);
+  }
+  
+  private onChangeActiveView(view: ComponentRef<ViewerComponent>) {
+    this.views.forEach(v => v.instance.active = false);
+    view.instance.active = true;
+    this.activeView = view;
   }
 }

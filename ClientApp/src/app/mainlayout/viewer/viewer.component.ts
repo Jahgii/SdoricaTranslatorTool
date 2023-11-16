@@ -1,12 +1,10 @@
-import { ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit, Type, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentRef, HostBinding, HostListener, OnInit, Type, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from '../home/home.component';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { TuiScrollbarModule } from '@taiga-ui/core';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TranslateModule } from '@ngx-translate/core';
-import { Router } from '@angular/router';
-import { forEach } from 'jszip';
+import { ViewersService } from 'src/app/core/services/viewers.service';
 
 @Component({
   selector: 'app-viewer',
@@ -27,14 +25,17 @@ import { forEach } from 'jszip';
 export class ViewerComponent implements OnInit {
   @ViewChild(AdHostDirective, { static: true })
   adHost!: AdHostDirective;
+  @HostListener('click')
+  setActiveViewer = (viewer: ComponentRef<ViewerComponent>): void => console.log("CLICK");
   @HostBinding('style.width')
   widthPercentage = "100%";
 
   public componentLoaded!: ComponentRef<any>;
+  public active: boolean = false;
 
   constructor(
     private ref: ChangeDetectorRef,
-    private router: Router
+    private viewersService: ViewersService
   ) { }
 
   ngOnInit(): void {
@@ -46,6 +47,10 @@ export class ViewerComponent implements OnInit {
   }
 
   public loadComponent(component: Type<any>, args: { [arg: string]: any }) {
+    if (this.componentLoaded && this.adHost.viewContainerRef.length > 0) {
+      this.adHost.viewContainerRef.clear();
+    }
+
     this.componentLoaded = this.adHost
       .viewContainerRef
       .createComponent<any>(component);
@@ -53,5 +58,7 @@ export class ViewerComponent implements OnInit {
     Object.keys(args).forEach(k => {
       this.componentLoaded.instance[k] = args[k];
     });
+
+    this.ref.markForCheck();
   }
 }

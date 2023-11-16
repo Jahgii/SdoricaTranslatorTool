@@ -10,7 +10,7 @@ import { ExportTranslationGuestComponent } from './components/export-translation
 import { authentificationGuard } from './core/guards/authentification.guard';
 import { authorizationGuard } from './core/guards/authorization.guard';
 import { translationLanguageGuard } from './core/guards/translation-language.guard';
-import { ViewerMainComponent } from './components/viewer-main/viewer-main.component';
+import { ViewerMainComponent } from './mainlayout/viewer-main/viewer-main.component';
 
 const routes: Routes = [
   {

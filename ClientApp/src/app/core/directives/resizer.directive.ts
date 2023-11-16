@@ -1,6 +1,6 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { Observable, fromEvent, take, takeWhile } from 'rxjs';
-import { ViewerComponent } from 'src/app/components/viewer/viewer.component';
+import { ViewerComponent } from 'src/app/mainlayout/viewer/viewer.component';
 
 @Directive({
   selector: '[appResizer]',

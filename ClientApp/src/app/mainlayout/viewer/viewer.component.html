@@ -1,0 +1,10 @@
+<tui-scrollbar class="viewer-container" [ngClass]="{'active': active}">
+    <ng-template adHost></ng-template>
+    @if (!componentLoaded) {
+    <tui-block-status class="card" [card]="true">
+        <img alt="hidden content" src="assets/images/localization-not.svg" tuiSlot="top" class="image" />
+
+        {{'viewer-not-selected' | translate}}
+    </tui-block-status>
+    }
+</tui-scrollbar>

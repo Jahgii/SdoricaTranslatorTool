@@ -1,0 +1,25 @@
+$border-size: 1px;
+$border-color: var(--tui-base-04);
+$border-active-color: var(--tui-base-09);
+
+.viewer-container {
+    height: 100%;
+    min-width: var(--min-width-viewer);
+    padding-top: 1px;
+    border-top: $border-size solid $border-color;
+}
+
+.image {
+    width: 5.5rem;
+    height: 5.5rem;
+}
+
+.card {
+    background-color: var(--tui-base-02);
+    min-width: 15rem;
+    height: 100%;
+}
+
+.active {
+    border-top: $border-size solid $border-active-color;
+}

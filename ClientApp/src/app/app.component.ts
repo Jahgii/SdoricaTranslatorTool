@@ -4,11 +4,11 @@ import { AuthService } from './core/services/auth.service';
 import { ThemeService } from './core/services/theme.service';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
-import { TuiMarkerIconModule } from '@taiga-ui/kit';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { ThemeDarkComponent } from './components/theme-dark/theme-dark.component';
 import { NgIf, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
+import { SidebarComponent } from './mainlayout/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-root',
@@ -23,11 +23,11 @@ import { TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
 
     //Taiga UI
     TuiRootModule,
-    TuiMarkerIconModule,
     TuiThemeNightModule,
 
     //App Components
     ThemeDarkComponent,
+    SidebarComponent,
     NavMenuComponent,
     NavBarComponent,
   ]
