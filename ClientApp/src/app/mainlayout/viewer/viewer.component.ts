@@ -4,7 +4,6 @@ import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { TuiScrollbarModule } from '@taiga-ui/core';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TranslateModule } from '@ngx-translate/core';
-import { ViewersService } from 'src/app/core/services/viewers.service';
 
 @Component({
   selector: 'app-viewer',
@@ -34,8 +33,7 @@ export class ViewerComponent implements OnInit {
   public active: boolean = false;
 
   constructor(
-    private ref: ChangeDetectorRef,
-    private viewersService: ViewersService
+    private ref: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {

@@ -7,6 +7,7 @@ import { DialogAssetsComponent } from 'src/app/components/dialog-assets/dialog-a
 import { LoadFileWizardComponent } from 'src/app/components/load-file-wizard/load-file-wizard.component';
 import { ExportTranslationGuestComponent } from 'src/app/components/export-translation-guest/export-translation-guest.component';
 import { MainGroupsComponent } from 'src/app/components/main-groups/main-groups.component';
+import { DialogSelectionComponent } from 'src/app/components/dialog-selection/dialog-selection.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,7 +24,7 @@ export class SidebarComponent {
 
   public viewers: { [component: string]: Type<any> } = {
     localization: LocalizationComponent,
-    dialogs: MainGroupsComponent,
+    dialogs: DialogSelectionComponent,
     import: LoadFileWizardComponent,
     export: ExportTranslationGuestComponent
   };

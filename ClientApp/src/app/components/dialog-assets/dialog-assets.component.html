@@ -1,3 +1,4 @@
+@if (mainGroup) {
 <div style="padding: 1em;">
     <ng-container *ngIf="(languageOrigin.language$ | async)">
         <ng-container *ngIf="breakpointService$ | async as breakpoint">
@@ -39,8 +40,8 @@
                                 [inheritColor]="true" [overlay]="true">
                                 <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox"
                                     [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
-                                    ('libretranslate-button-ready' | translate):
-                                    ('libretranslate-button-disabled' | translate)"
+                                        ('libretranslate-button-ready' | translate):
+                                        ('libretranslate-button-disabled' | translate)"
                                     [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
                                     (click)="onMachineTranslate(data)"
                                     [disabled]="!(libreTranslate.serverReady$ | async)">
@@ -109,7 +110,7 @@
                                                                 (ngModelChange)="onTextChange(dialogAsset)"
                                                                 [disabled]="(libreTranslate.translating$ | async) ?? true"
                                                                 class="dialog-translation">
-                                                            </textarea>
+                                                                </textarea>
                                                         </div>
                                                     </ng-container>
                                                     <ng-template #fullDialog>
@@ -119,7 +120,7 @@
                                                                 (ngModelChange)="onTextChange(dialogAsset)"
                                                                 [disabled]="(libreTranslate.translating$ | async) ?? true"
                                                                 class="dialog-translation">
-                                                        </textarea>
+                                                            </textarea>
                                                         </div>
                                                     </ng-template>
                                                 </div>
@@ -173,8 +174,8 @@
                                         [inheritColor]="true" [overlay]="true">
                                         <button tuiIconButton type="button" appearance="icon" shape="square"
                                             icon="tuiIconBox" [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
-                                            ('libretranslate-button-ready' | translate):
-                                            ('libretranslate-button-disabled' | translate)"
+                                                ('libretranslate-button-ready' | translate):
+                                                ('libretranslate-button-disabled' | translate)"
                                             [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
                                             (click)="onMachineTranslate(data)"
                                             [disabled]="!(libreTranslate.serverReady$ | async)">
@@ -225,7 +226,7 @@
                                                 <textarea [(ngModel)]="item.Text"
                                                     [disabled]="(libreTranslate.translating$ | async) ?? true" cols="4"
                                                     class="dialog-translation">
-                                                </textarea>
+                                                    </textarea>
                                             </div>
                                         </ng-container>
                                         <ng-template #fullDialog>
@@ -233,7 +234,7 @@
                                                 <textarea [(ngModel)]="item.Text"
                                                     [disabled]="(libreTranslate.translating$ | async) ?? true"
                                                     class="dialog-translation">
-                                            </textarea>
+                                                </textarea>
                                             </div>
                                         </ng-template>
                                     </div>
@@ -247,6 +248,12 @@
         </ng-container>
     </ng-container>
 </div>
+}
+@else {
+<tui-block-status>
+    <h4>{{'select-group-tree' | translate}}</h4>
+</tui-block-status>
+}
 
 <ng-template #loading>
     <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">

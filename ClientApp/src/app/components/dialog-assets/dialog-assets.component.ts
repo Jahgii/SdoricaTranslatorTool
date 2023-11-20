@@ -23,38 +23,38 @@ import { TuiTabsModule, TuiToggleModule } from '@taiga-ui/kit';
 import { NgIf, NgFor, NgStyle, AsyncPipe, KeyValuePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-dialog-assets',
-    templateUrl: './dialog-assets.component.html',
-    styleUrls: ['./dialog-assets.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        popinAnimation
-    ],
-    standalone: true,
-    imports: [
-        NgIf,
-        TuiTabsModule,
-        NgFor,
-        TuiItemModule,
-        TuiSvgModule,
-        TuiToggleModule,
-        FormsModule,
-        TuiTooltipModule,
-        TuiButtonModule,
-        TuiHintModule,
-        TuiLoaderModule,
-        TuiScrollbarModule,
-        CdkVirtualScrollViewport,
-        CdkFixedSizeVirtualScroll,
-        TuiTableModule,
-        CdkVirtualForOf,
-        TuiDropdownModule,
-        NgStyle,
-        TuiBlockStatusModule,
-        AsyncPipe,
-        KeyValuePipe,
-        TranslateModule,
-    ],
+  selector: 'app-dialog-assets',
+  templateUrl: './dialog-assets.component.html',
+  styleUrls: ['./dialog-assets.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    popinAnimation
+  ],
+  standalone: true,
+  imports: [
+    NgIf,
+    TuiTabsModule,
+    NgFor,
+    TuiItemModule,
+    TuiSvgModule,
+    TuiToggleModule,
+    FormsModule,
+    TuiTooltipModule,
+    TuiButtonModule,
+    TuiHintModule,
+    TuiLoaderModule,
+    TuiScrollbarModule,
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    TuiTableModule,
+    CdkVirtualForOf,
+    TuiDropdownModule,
+    NgStyle,
+    TuiBlockStatusModule,
+    AsyncPipe,
+    KeyValuePipe,
+    TranslateModule,
+  ],
 })
 export class DialogAssetsComponent implements OnInit, OnDestroy {
   readonly filterForm = new FormGroup({
@@ -78,6 +78,8 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
   public otherText$!: Observable<any>;
   public tempId!: string;
   public tempNumber!: number;
+  public mainGroup: string = "";
+  public group: string = "";
 
   constructor(
     private api: ApiService,
@@ -88,29 +90,38 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    let mainGroup = this.route.snapshot.params['mid'];
-    let group = this.route.snapshot.params['gid'];
-    this.subsLanguage = this.languageOrigin.language$.subscribe((lang: string) => {
-      this.dialogAssets$ = this.api.getWithHeaders('dialogassets', { language: lang, mainGroup: mainGroup, group: group });
-    });
-    this.subsChanges = this.changes$.pipe(
-      debounceTime(1000)
-    ).subscribe(async dialogAsset => {
-      if (!dialogAsset) return;
-      await firstValueFrom(this.api.put('dialogassets', dialogAsset))
-        .then(
-          r => {
+  }
 
-          },
-          error => { console.log("CANT SAVE DATA"); }
-        );
-      this.pendingChanges$.next(false);
-    });
+  public onSelectGroup(mainGroup: string, group: string) {
+    if (this.subsLanguage) this.subsChanges.unsubscribe();
+    if (this.subsChanges) this.subsChanges.unsubscribe();
+
+    this.mainGroup = mainGroup;
+    this.group = group;
+
+    this.subsLanguage = this.languageOrigin.language$
+      .subscribe((lang: string) => {
+        this.dialogAssets$ = this.api.getWithHeaders('dialogassets', { language: lang, mainGroup: this.mainGroup, group: this.group });
+      });
+
+    this.subsChanges = this.changes$
+      .pipe(debounceTime(1000))
+      .subscribe(async dialogAsset => {
+        if (!dialogAsset) return;
+        await firstValueFrom(this.api.put('dialogassets', dialogAsset))
+          .then(
+            r => {
+
+            },
+            error => { console.log("CANT SAVE DATA"); }
+          );
+        this.pendingChanges$.next(false);
+      });
   }
 
   ngOnDestroy(): void {
-    this.subsLanguage.unsubscribe();
-    this.subsChanges.unsubscribe();
+    if (this.subsLanguage) this.subsLanguage.unsubscribe();
+    if (this.subsChanges) this.subsChanges.unsubscribe();
   }
 
   onGetOtherOriginalText(number: number, id: string) {
@@ -121,8 +132,8 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
 
     this.otherText$ = this.api.getWithHeaders('dialogassets/searchothers', {
       language: this.languageOrigin.language.value,
-      mainGroup: this.route.snapshot.params['mid'],
-      group: this.route.snapshot.params['gid'],
+      mainGroup: this.mainGroup,
+      group: this.group,
       number: number,
       id: id
     });

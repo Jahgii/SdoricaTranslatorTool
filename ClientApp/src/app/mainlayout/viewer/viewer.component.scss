@@ -7,6 +7,7 @@ $border-active-color: var(--tui-base-09);
     min-width: var(--min-width-viewer);
     padding-top: 1px;
     border-top: $border-size solid $border-color;
+    position: relative;
 }
 
 .image {

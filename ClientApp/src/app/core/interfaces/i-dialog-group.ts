@@ -1,4 +1,5 @@
 export interface IMainGroup {
+    Id?: string;
     Language: string;
     OriginalName: string;
     Name: string;

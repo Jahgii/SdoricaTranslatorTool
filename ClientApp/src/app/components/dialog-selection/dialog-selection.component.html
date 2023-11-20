@@ -1,0 +1,19 @@
+<tui-scrollbar class="group-tree" [ngClass]="{'group-tree-hide': groupSelected$ | async}">
+    @for (node of treeNodes$ | async; track $index) {
+    <tui-tree class="tree" [childrenHandler]="handler" [content]="content" [tuiTreeController]="false"
+        [value]="node"></tui-tree>
+    }
+
+    <ng-template #content let-node>
+        <div style="display: contents;" (click)="onSelectGroup(node.MainGroup, node.OriginalName)">
+            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                {{ node.Name }} [{{ node.TranslatedFiles }} / {{node.Files }}]
+            </span>
+            <!-- <button tuiIconButton style="margin-left: auto;" appearance="icon" [icon]="'tuiIconEdit2'" size="xs"
+                (click)="$event.preventDefault()">
+            </button> -->
+        </div>
+    </ng-template>
+</tui-scrollbar>
+
+<app-dialog-assets></app-dialog-assets>
