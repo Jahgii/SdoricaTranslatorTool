@@ -5,22 +5,34 @@
 <tui-scrollbar #scrollbar class="group-tree" [hidden]="(hiddenScroll$ | async) === true"
     [ngClass]="{'group-tree-hide': groupSelected$ | async}" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
 
-    @for (node of treeNodes$ | async; track $index) {
-    <tui-tree class="tree" [childrenHandler]="handler" [content]="content" [tuiTreeController]="false"
-        [value]="node"></tui-tree>
+    <tui-elastic-container>
+        @for (node of treeNodes$ | async; track $index) {
+        <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: node}"></ng-container>
+        }
+    </tui-elastic-container>
+</tui-scrollbar>
+
+<ng-template #nodeTemplate let-node>
+    <div class="tree"
+        (click)="node.children? node.expanded = !node.expanded : onSelectGroup(node.MainGroup, node.OriginalName)">
+        <div style="display: contents;">
+            <tui-svg class="tui-space_right-2" [src]="node.children?'tuiIconFolder': 'tuiIconFile'"></tui-svg>
+            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                {{ node.Name }}
+                @if((node.TranslatedFiles / node.Files) < 1){ [{{ node.TranslatedFiles }} / {{node.Files }}] } @else {
+                    <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                    }
+            </span>
+        </div>
+    </div>
+    @for (childNode of node.children; track $index) {
+    <tui-expand class="tui-space_left-6" [expanded]="node.expanded ?? false">
+        <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: childNode}">
+        </ng-container>
+    </tui-expand>
     }
 
-    <ng-template #content let-node>
-        <div style="display: contents;" (click)="onSelectGroup(node.MainGroup, node.OriginalName)">
-            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                {{ node.Name }} [{{ node.TranslatedFiles }} / {{node.Files }}]
-            </span>
-            <!-- <button tuiIconButton style="margin-left: auto;" appearance="icon" [icon]="'tuiIconEdit2'" size="xs"
-                (click)="$event.preventDefault()">
-            </button> -->
-        </div>
-    </ng-template>
-</tui-scrollbar>
+</ng-template>
 
 <div style="display: flex;">
     <div style="width: 2rem;"></div>

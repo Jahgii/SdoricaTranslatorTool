@@ -1,11 +1,15 @@
-.tile-image {
-    width: 100%;
-    height: 100%;
-    // position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: var(--tui-radius-l);
-    z-index: -1;
+.tree {
+    position: relative;
+    height: var(--tui-height-s);
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    border-radius: var(--tui-radius-xs);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--tui-base-02);
+    }
 }
 
 .group-tree {
