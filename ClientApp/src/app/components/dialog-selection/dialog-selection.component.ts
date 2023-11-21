@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TUI_TREE_CONTENT, TuiTreeModule } from '@taiga-ui/kit';
 import { EMPTY_ARRAY, TuiHandler } from '@taiga-ui/cdk';
@@ -7,11 +7,11 @@ import { DialogTreeContentComponent } from './dialog-tree-content/dialog-tree-co
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
 import { IGroup, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
-import { flatMap, map, mergeMap, toArray } from 'rxjs/operators';
+import { map, mergeMap, toArray } from 'rxjs/operators';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
-import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiButtonModule, TuiScrollbarModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-dialog-selection',
@@ -23,6 +23,7 @@ import { TuiButtonModule, TuiScrollbarModule } from '@taiga-ui/core';
     TuiTreeModule,
     TuiScrollbarModule,
     TuiButtonModule,
+    TuiSvgModule,
 
     DialogTreeContentComponent,
     DialogAssetsComponent
@@ -34,7 +35,8 @@ import { TuiButtonModule, TuiScrollbarModule } from '@taiga-ui/core';
     },
   ],
   templateUrl: './dialog-selection.component.html',
-  styleUrl: './dialog-selection.component.scss'
+  styleUrl: './dialog-selection.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogSelectionComponent implements OnInit, OnDestroy {
   @ViewChild(DialogAssetsComponent) dialogs!: DialogAssetsComponent;
@@ -42,6 +44,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   public treeNodes$!: Observable<TreeNode[]>;
   private subsLanguage!: Subscription;
   public groupSelected$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public hiddenScroll$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   readonly handler: TuiHandler<TreeNode, readonly TreeNode[]> = item =>
     item.children || EMPTY_ARRAY;
@@ -105,6 +108,16 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
     if (!mainGroup || !group) return;
     this.groupSelected$.next(true);
     this.dialogs.onSelectGroup(mainGroup, group);
+  }
+
+  public onMouseEnter() {
+    this.hiddenScroll$.next(false);
+    console.log("ENTER", this.hiddenScroll$.value);
+  }
+
+  public onMouseLeave() {
+    this.hiddenScroll$.next(true);
+    console.log("LEAVE", this.hiddenScroll$.value);
   }
 
 }

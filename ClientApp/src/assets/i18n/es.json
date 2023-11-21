@@ -199,5 +199,6 @@
     "error-file-localization": "El archivo LOCALIZATION proporcionado no es valido, verifique que sea el archivo correcto e intente de nuevo.",
     "file-skip": "Archivo Omitido",
     "file-skip-description": "El archivo se omitira en el proceso de traducción",
-    "viewer-not-selected": "Sin nada que mostrar"
+    "viewer-not-selected": "Sin nada que mostrar",
+    "select-group-tree": "Selecciona una opción"
 }

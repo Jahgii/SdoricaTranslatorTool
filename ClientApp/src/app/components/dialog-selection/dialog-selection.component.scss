@@ -13,19 +13,26 @@
     width: auto;
     max-width: 20rem;
     max-height: calc(100% - 1px);
-    z-index: 100;
+    z-index: 1;
     backdrop-filter: blur(10px);
     transition: all 0.25s ease-out;
 }
 
 .group-tree-hide {
     width: 2rem;
-    // height: 2rem;
+    height: 100%;
     backdrop-filter: blur(0px);
 
     &:hover {
         width: 20rem;
-        // height: 100%;
         backdrop-filter: blur(10px);
     }
+}
+
+.hidden-arrow {
+    position: absolute;
+    top: 50%;
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+    z-index: 2;
 }

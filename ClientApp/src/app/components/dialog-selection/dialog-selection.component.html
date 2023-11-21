@@ -1,4 +1,10 @@
-<tui-scrollbar class="group-tree" [ngClass]="{'group-tree-hide': groupSelected$ | async}">
+@if ((hiddenScroll$ | async) && (groupSelected$ | async)) {
+<tui-svg src="tuiIconArrowRight" class="hidden-arrow"></tui-svg>
+}
+
+<tui-scrollbar #scrollbar class="group-tree" [hidden]="(hiddenScroll$ | async) === true"
+    [ngClass]="{'group-tree-hide': groupSelected$ | async}" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+
     @for (node of treeNodes$ | async; track $index) {
     <tui-tree class="tree" [childrenHandler]="handler" [content]="content" [tuiTreeController]="false"
         [value]="node"></tui-tree>
@@ -16,4 +22,7 @@
     </ng-template>
 </tui-scrollbar>
 
-<app-dialog-assets></app-dialog-assets>
+<div style="display: flex;">
+    <div style="width: 2rem;"></div>
+    <app-dialog-assets style="width: 100%;"></app-dialog-assets>
+</div>
