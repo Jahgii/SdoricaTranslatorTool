@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TuiBreakpointService, TuiScrollbarModule } from '@taiga-ui/core';
@@ -26,7 +26,7 @@ import { NgIf, NgFor, NgStyle, AsyncPipe, KeyValuePipe } from '@angular/common';
   selector: 'app-dialog-assets',
   templateUrl: './dialog-assets.component.html',
   styleUrls: ['./dialog-assets.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     popinAnimation
   ],
@@ -84,6 +84,7 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
   constructor(
     private api: ApiService,
     private route: ActivatedRoute,
+    private ref: ChangeDetectorRef,
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
@@ -95,6 +96,8 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
   public onSelectGroup(mainGroup: string, group: string) {
     if (this.subsLanguage) this.subsChanges.unsubscribe();
     if (this.subsChanges) this.subsChanges.unsubscribe();
+
+    if (this.mainGroup == mainGroup && this.group == group) return;
 
     this.mainGroup = mainGroup;
     this.group = group;
@@ -117,6 +120,8 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
           );
         this.pendingChanges$.next(false);
       });
+
+    this.ref.markForCheck();
   }
 
   ngOnDestroy(): void {
