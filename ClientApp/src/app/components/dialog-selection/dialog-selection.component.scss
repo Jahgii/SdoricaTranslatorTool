@@ -14,7 +14,7 @@
 
 .group-tree {
     position: absolute;
-    width: auto;
+    width: 20rem;
     max-width: 20rem;
     max-height: calc(100% - 1px);
     z-index: 1;
@@ -39,4 +39,50 @@
     border-radius: 50%;
     backdrop-filter: blur(10px);
     z-index: 2;
+}
+
+.tree-content {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-between;
+
+    .tree-left-content {
+        display: flex;
+        flex: 1;
+
+        .tree-name {
+            width: 0px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .tree-right-content {
+        display: flex;
+
+        .tree-status {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+    }
+
+    .active {
+        background: var(--tui-primary);
+        border-radius: var(--tui-radius-xs);
+    }
+
+}
+
+.input_name_overflow {
+    max-width: max-content;
+}
+
+.input_empty {
+    opacity: 0.75;
 }

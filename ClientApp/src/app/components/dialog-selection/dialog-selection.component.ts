@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TuiElasticContainerModule, TuiTreeModule } from '@taiga-ui/kit';
+import { TuiElasticContainerModule, TuiInputInlineModule, TuiTreeModule } from '@taiga-ui/kit';
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
 import { IGroup, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -9,20 +9,22 @@ import { LanguageOriginService } from 'src/app/core/services/language-origin.ser
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiButtonModule, TuiExpandModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-selection',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     TranslateModule,
 
-    TuiTreeModule,
     TuiScrollbarModule,
     TuiButtonModule,
     TuiSvgModule,
     TuiElasticContainerModule,
     TuiExpandModule,
+    TuiInputInlineModule,
 
     DialogAssetsComponent
   ],

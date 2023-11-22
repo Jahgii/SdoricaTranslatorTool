@@ -15,14 +15,24 @@
 <ng-template #nodeTemplate let-node>
     <div class="tree"
         (click)="node.children? node.expanded = !node.expanded : onSelectGroup(node.MainGroup, node.OriginalName)">
-        <div style="display: contents;">
-            <tui-svg class="tui-space_right-2" [src]="node.children?'tuiIconFolder': 'tuiIconFile'"></tui-svg>
-            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                {{ node.Name }}
-                @if((node.TranslatedFiles / node.Files) < 1){ [{{ node.TranslatedFiles }} / {{node.Files }}] } @else {
+        <div class="tree-content">
+            <div class="tree-left-content">
+                <tui-svg class="tui-space_right-2" [src]="node.children?'tuiIconFolder': 'tuiIconFile'"></tui-svg>
+                <div class="tree-name tui-space_right-2">
+                    <tui-input-inline #input [(ngModel)]="node.Name" [class.input_empty]="!input.value"
+                        (click)="$event.stopPropagation()">
+                        {{node.OriginalName}}
+                    </tui-input-inline>
+                </div>
+            </div>
+            <div class="tree-right-content">
+                @if((node.TranslatedFiles / node.Files) < 1){ <span class="tree-status">
+                    [{{ node.TranslatedFiles }} /{{node.Files }}]
+                    </span>
+                    } @else {
                     <tui-svg src="tuiIconCheckCircle"></tui-svg>
                     }
-            </span>
+            </div>
         </div>
     </div>
     @for (childNode of node.children; track $index) {
@@ -31,7 +41,6 @@
         </ng-container>
     </tui-expand>
     }
-
 </ng-template>
 
 <div style="display: flex;">
