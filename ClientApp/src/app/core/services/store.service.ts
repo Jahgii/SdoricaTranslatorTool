@@ -4,8 +4,13 @@ export class StoreService<T> {
   private store!: BehaviorSubject<T[]>;
   public store$!: Observable<T[]>;
 
-  constructor(data: Observable<T[]>) {
+  constructor(data?: Observable<T[]>) {
     this.store = new BehaviorSubject<T[]>([]);
+    if (data)
+      this.initData(data);
+  }
+
+  public initData(data: Observable<T[]>) {
     firstValueFrom(data)
       .then(r => {
         this.store.next(r);
