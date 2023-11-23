@@ -13,27 +13,32 @@
 </tui-scrollbar>
 
 <ng-template #nodeTemplate let-node>
-    <div class="tree"
-        (click)="node.children? node.expanded = !node.expanded : onSelectGroup(node.MainGroup, node.OriginalName)">
-        <div class="tree-content">
-            <div class="tree-left-content">
-                <tui-svg class="tui-space_right-2" [src]="node.children?'tuiIconFolder': 'tuiIconFile'"></tui-svg>
-                <div class="tree-name tui-space_right-2">
-                    <tui-input-inline #input [(ngModel)]="node.Name" [class.input_empty]="!input.value"
-                        (click)="$event.stopPropagation()">
-                        {{node.OriginalName}}
-                    </tui-input-inline>
+    <div style="position: relative;">
+        <div class="tree"
+            (click)="node.children? node.expanded = !node.expanded : onSelectGroup(node.MainGroup, node.OriginalName)">
+            <div class="tree-content">
+                <div class="tree-left-content">
+                    <tui-svg class="tui-space_right-2" [src]="node.children?'tuiIconFolder': 'tuiIconFile'"></tui-svg>
+                    <div class="tree-name tui-space_right-2">
+                        <tui-input-inline #input [(ngModel)]="node.Name" [class.input_empty]="!input.value"
+                            (click)="$event.stopPropagation()" (focusedChange)="onFocusName($event, input, node)">
+                            {{node.OriginalName}}
+                        </tui-input-inline>
+                    </div>
+                </div>
+                <div class="tree-right-content">
+                    @if((node.TranslatedFiles / node.Files) < 1){ <span class="tree-status">
+                        [{{ node.TranslatedFiles }} /{{node.Files }}]
+                        </span>
+                        } @else {
+                        <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                        }
                 </div>
             </div>
-            <div class="tree-right-content">
-                @if((node.TranslatedFiles / node.Files) < 1){ <span class="tree-status">
-                    [{{ node.TranslatedFiles }} /{{node.Files }}]
-                    </span>
-                    } @else {
-                    <tui-svg src="tuiIconCheckCircle"></tui-svg>
-                    }
-            </div>
         </div>
+        @if (node.saving | async) {
+        <progress class="tree-progress-bar" max="100" tuiProgressBar></progress>
+        }
     </div>
     @for (childNode of node.children; track $index) {
     <tui-expand class="tui-space_left-6" [expanded]="node.expanded ?? false">
