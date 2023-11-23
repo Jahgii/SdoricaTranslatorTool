@@ -5,20 +5,25 @@
 <tui-scrollbar #scrollbar class="group-tree" [hidden]="(hiddenScroll$ | async) === true"
     [ngClass]="{'group-tree-hide': groupSelected$ | async}" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
 
+    @if (loadingNodes$ | async) {
+        <tui-loader class="tui-space_top-3" [inheritColor]="true"></tui-loader>
+    }
+    @else {
     <tui-elastic-container>
-        @for (node of treeNodes$ | async; track $index) {
+        @for (node of treeNodes$ | async; track node.Id) {
         <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: node}"></ng-container>
         }
     </tui-elastic-container>
+    }
 </tui-scrollbar>
 
 <ng-template #nodeTemplate let-node>
-    <div style="position: relative;">
-        <div class="tree"
-            (click)="node.children? node.expanded = !node.expanded : onSelectGroup(node.MainGroup, node.OriginalName)">
+    <div class="tree-main">
+        <div class="tree" (click)="node.children? node.expanded = !node.expanded : onSelectGroup(node)">
             <div class="tree-content">
                 <div class="tree-left-content">
-                    <tui-svg class="tui-space_right-2" [src]="node.children?'tuiIconFolder': 'tuiIconFile'"></tui-svg>
+                    <tui-svg class="tui-space_right-2" [ngClass]="{'active-tree': node.selected | async}"
+                        [src]="node.children?'tuiIconFolder': 'tuiIconFile'"></tui-svg>
                     <div class="tree-name tui-space_right-2">
                         <tui-input-inline #input [(ngModel)]="node.Name" [class.input_empty]="!input.value"
                             (click)="$event.stopPropagation()" (focusedChange)="onFocusName($event, input, node)">
@@ -40,7 +45,7 @@
         <progress class="tree-progress-bar" max="100" tuiProgressBar></progress>
         }
     </div>
-    @for (childNode of node.children; track $index) {
+    @for (childNode of node.children; track childNode.Id) {
     <tui-expand class="tui-space_left-6" [expanded]="node.expanded ?? false">
         <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: childNode}">
         </ng-container>

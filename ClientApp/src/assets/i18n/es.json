@@ -200,5 +200,9 @@
     "file-skip": "Archivo Omitido",
     "file-skip-description": "El archivo se omitira en el proceso de traducción",
     "viewer-not-selected": "Sin nada que mostrar",
-    "select-group-tree": "Selecciona una opción"
+    "select-group-tree": "Selecciona una opción",
+    "alert-error": "Error",
+    "alert-error-label": "Hubo un error, intente de nuevo más tarde",
+    "alert-success": "Correctamente",
+    "alert-success-label": "Datos correctamente actualizados"
 }

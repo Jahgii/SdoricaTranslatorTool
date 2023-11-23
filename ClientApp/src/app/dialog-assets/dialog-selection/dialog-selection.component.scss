@@ -1,3 +1,7 @@
+.tree-main {
+    position: relative;
+}
+
 .tree {
     position: relative;
     height: var(--tui-height-s);
@@ -43,7 +47,7 @@
         }
     }
 
-    .active {
+    .active-tree {
         background: var(--tui-primary);
         border-radius: var(--tui-radius-xs);
     }

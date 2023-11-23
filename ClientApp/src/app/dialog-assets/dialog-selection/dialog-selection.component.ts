@@ -8,7 +8,7 @@ import { debounceTime, map, mergeMap, take, takeUntil, takeWhile, tap, toArray }
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiButtonModule, TuiExpandModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiExpandModule, TuiLoaderModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 import { error } from 'console';
 import { DGroupsService, TreeNode } from './d-groups.service';
@@ -28,6 +28,7 @@ import { DGroupsService, TreeNode } from './d-groups.service';
     TuiExpandModule,
     TuiInputInlineModule,
     TuiProgressModule,
+    TuiLoaderModule,
 
     DialogAssetsComponent
   ],
@@ -39,9 +40,11 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   @ViewChild(DialogAssetsComponent) dialogs!: DialogAssetsComponent;
 
   public treeNodes$: Observable<TreeNode[]> = this.groupService.store$;
+  public loadingNodes$: Observable<boolean> = this.groupService.loadingStore$;
   public groupSelected$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public hiddenScroll$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   private subsName: Subscription | undefined;
+  private nodeSelected!: TreeNode;
 
   constructor(
     private groupService: DGroupsService
@@ -50,16 +53,35 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.onInit();
+  }
 
+  private onInit() {
+    if (!this.treeNodes$)
+      this.groupService
+        .loadingStore$
+        .pipe(takeWhile(_ => !this.treeNodes$))
+        .subscribe(_ => this.treeNodes$ = this.groupService.store$);
   }
 
   ngOnDestroy(): void {
+    this.nodeSelected?.selected?.next(false);
   }
 
-  public onSelectGroup(mainGroup: string, group: string) {
+  public onSelectGroup(node: TreeNode) {
+    if (node.selected?.value === true) return;
+
+    let mainGroup = (node as IGroup).MainGroup;
+    let group = node.OriginalName;
+
     if (!mainGroup || !group) return;
+
     this.groupSelected$.next(true);
     this.dialogs.onSelectGroup(mainGroup, group);
+
+    this.nodeSelected?.selected?.next(false);
+    this.nodeSelected = node;
+    this.nodeSelected.selected?.next(true);
   }
 
   public onMouseEnter() {
@@ -74,12 +96,13 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
 
   public onFocusName(focus: boolean, input: TuiInputInlineComponent, node: TreeNode) {
     if (focus) {
+      let oldName = `${node.Name}`;
       this.subsName = input.control?.valueChanges
         .pipe(
           tap(_ => node.saving?.next(true)),
           debounceTime(1000),
-        ).subscribe(async name => {
-          await this.groupService.onChangeName(node);
+        ).subscribe(async _ => {
+          await this.groupService.onChangeName(node, oldName, input);
           node.saving?.next(false);
         });
     }

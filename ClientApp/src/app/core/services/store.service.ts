@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs'
 export class StoreService<T> {
   private store!: BehaviorSubject<T[]>;
   public store$!: Observable<T[]>;
+  public loadingStore$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(data?: Observable<T[]>) {
     this.store = new BehaviorSubject<T[]>([]);
@@ -10,13 +11,17 @@ export class StoreService<T> {
       this.initData(data);
   }
 
-  public initData(data: Observable<T[]>) {
-    firstValueFrom(data)
+  public async initData(data: Observable<T[]>) {
+    this.loadingStore$.next(true);
+    
+    await firstValueFrom(data)
       .then(r => {
         this.store.next(r);
         this.store$ = this.store.asObservable();
       }, error => {
       });
+    
+    this.loadingStore$.next(false);
   }
 
   public getData() {

@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { TuiAlertService } from '@taiga-ui/core';
+import { TuiInputInlineComponent } from '@taiga-ui/kit';
 import { BehaviorSubject, Subscription, firstValueFrom, map, mergeMap, toArray } from 'rxjs';
 import { IGroup, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -16,18 +19,19 @@ export interface TreeNode extends IMainGroup {
   providedIn: 'root'
 })
 export class DGroupsService extends StoreService<TreeNode> {
-  private subsLanguage!: Subscription;
-
+  
   constructor(
     private api: ApiService,
+    private translate: TranslateService,
     readonly languageOrigin: LanguageOriginService,
+    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
     super();
     this.init();
   }
 
   private init() {
-    this.subsLanguage = this.languageOrigin.language$
+    this.languageOrigin.language$
       .subscribe((lang: string) => {
         let mainNodes = this.api
           .getWithHeaders<TreeNode[]>('maingroups', { language: lang })
@@ -73,7 +77,7 @@ export class DGroupsService extends StoreService<TreeNode> {
       );
   }
 
-  public async onChangeName(node: TreeNode) {
+  public async onChangeName(node: TreeNode, oldName: string, input: TuiInputInlineComponent) {
     let updateNode: IMainGroup = {
       Id: node.Id,
       Name: node.Name,
@@ -96,10 +100,31 @@ export class DGroupsService extends StoreService<TreeNode> {
     }
 
     await firstValueFrom(this.api.put(url, updateNode))
-      .then(r => {
-
-      }, error => {
-
+      .then(_ => {
+        this.alerts.open(this.translate.instant('alert-success-label'),
+          {
+            label: this.translate.instant('alert-success'),
+            autoClose: true,
+            hasCloseButton: false,
+            status: 'success'
+          }
+        ).subscribe({
+          complete: () => {
+          },
+        });
+      }, _ => {
+        input.control?.patchValue(oldName, { emitEvent: false });
+        this.alerts.open(this.translate.instant('alert-error-label'),
+          {
+            label: this.translate.instant('alert-error'),
+            autoClose: true,
+            hasCloseButton: false,
+            status: 'error'
+          }
+        ).subscribe({
+          complete: () => {
+          },
+        });
       });
   }
 }

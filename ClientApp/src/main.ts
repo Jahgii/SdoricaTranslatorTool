@@ -1,6 +1,5 @@
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 
-import { HttpLoaderFactory } from './app/app.module';
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -15,11 +14,16 @@ import { tuiLanguageSwitcher } from '@taiga-ui/i18n/switch';
 import { of } from 'rxjs';
 import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE } from '@taiga-ui/i18n';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
-import { TUI_SANITIZER, TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
+import { TUI_SANITIZER, TuiAlertModule, TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
+}
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 if (environment.production) {
@@ -40,6 +44,7 @@ bootstrapApplication(AppComponent, {
 
             //Taiga
             TuiRootModule,
+            TuiAlertModule,
             TuiThemeNightModule,
 
             TranslateModule.forRoot({
