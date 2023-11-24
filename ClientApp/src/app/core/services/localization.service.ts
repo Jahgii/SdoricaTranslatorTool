@@ -1,32 +1,36 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map, takeWhile } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localizations';
 import { LanguageOriginService } from './language-origin.service';
 import { LibreTranslateService } from './libre-translate.service';
 import { FormGroup, FormControl } from '@angular/forms';
+import { LocalizationCategoriesService } from 'src/app/components/localization/localization-categories.service';
+import { TuiAlertService } from '@taiga-ui/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
-  public categories$: Observable<ILocalizationCategory[]> = this.api.get<ILocalizationCategory[]>('localizationcategories')
-    .pipe(map(r => {
-      let searchCategory: ILocalizationCategory = {
-        Name: "SEARCH",
-        Keys: {
-          [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-            return ac + v.Keys[this.languageOrigin.localizationLang];
-          }, 0)
-        },
+  public categories$!: Observable<ILocalizationCategory[]>;
+  // public categories$: Observable<ILocalizationCategory[]> = this.api.get<ILocalizationCategory[]>('localizationcategories')
+  //   .pipe(map(r => {
+  //     let searchCategory: ILocalizationCategory = {
+  //       Name: "SEARCH",
+  //       Keys: {
+  //         [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
+  //           return ac + v.Keys[this.languageOrigin.localizationLang];
+  //         }, 0)
+  //       },
 
-        KeysTranslated: {
-          [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-            return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
-          }, 0)
-        }
-      }
-      r.unshift(searchCategory);
-      return r;
-    }));
+  //       KeysTranslated: {
+  //         [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
+  //           return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
+  //         }, 0)
+  //       }
+  //     }
+  //     r.unshift(searchCategory);
+  //     return r;
+  //   }));
 
   //#region Table Filters
   readonly filterForm = new FormGroup({
@@ -58,8 +62,10 @@ export class LocalizationService implements OnDestroy {
   public searchCategory$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public alreadySearch$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public selectedCategory$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public loadingCategories$: Observable<boolean> = this.lCS.loadingStore$;
   public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public selectedCategory!: ILocalizationCategory;
+  public selectedCategoryIndex!: number;
   public propagateTranslation: boolean = true;
   public language: string = '';
   public focusRow: number = -1;
@@ -77,36 +83,41 @@ export class LocalizationService implements OnDestroy {
 
   constructor(
     private api: ApiService,
+    private lCS: LocalizationCategoriesService,
     private languageOrigin: LanguageOriginService,
-    public libreTranslate: LibreTranslateService
+    public libreTranslate: LibreTranslateService,
+    private translate: TranslateService,
+    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
     this.language = this.languageOrigin.localizationLang;
 
-    this.languageOrigin.language.valueChanges.subscribe(v => {
+    if (!this.categories$)
+      this.lCS
+        .loadingStore$
+        .pipe(takeWhile(_ => !this.categories$))
+        .subscribe(_ => this.categories$ = this.lCS.store$);
+
+    this.languageOrigin.language.valueChanges.subscribe(_ => {
       this.language = this.languageOrigin.localizationLang;
-      this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories')
-        .pipe(map(r => {
-          let searchCategory: ILocalizationCategory = {
-            Name: "SEARCH",
-            Keys: {
-              [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-                return ac + v.Keys[this.languageOrigin.localizationLang];
-              }, 0)
-            },
-            KeysTranslated: {
-              [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-                return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
-              }, 0)
-            }
-          }
-          r.unshift(searchCategory);
 
-          let index = r.findIndex(c => c.Name === this.selectedCategory.Name);
-          this.selectedCategory = r[index];
-          if (this.alreadySearch$.value && this.lastSearch != null) this.lastSearch();
+      let r = this.lCS.getData();
+      let seachCategory = this.lCS.getData()[0];
 
-          return r;
-        }));
+      seachCategory.Keys[this.language] =
+        r.reduce((ac, v, i) => {
+          if (i === 0) return 0;
+          return ac + v.Keys[this.language] ?? 0;
+        }, 0);
+
+      seachCategory.KeysTranslated[this.language] =
+        r.reduce((ac, v, i) => {
+          if (i === 0) return 0;
+          return ac + v.KeysTranslated[this.language] ?? 0;
+        }, 0);
+
+      this.selectedCategoryIndex = r.findIndex(c => c.Name === this.selectedCategory.Name);
+      this.selectedCategory = r[this.selectedCategoryIndex];
+      if (this.alreadySearch$.value && this.lastSearch != null) this.lastSearch();
     });
 
     this.autoSearch();
@@ -136,12 +147,14 @@ export class LocalizationService implements OnDestroy {
 
 
     if (category.Name == 'SEARCH') {
+      this.selectedCategoryIndex = 0;
       this.keys = undefined;
       this.searchCategory$.next(true);
       this.alreadySearch$.next(false);
       this.searchTotalTranslated = 0;
     }
     else {
+      this.selectedCategoryIndex = this.lCS.getData().findIndex(c => c.Name === this.selectedCategory.Name);
       this.searchCategory$.next(false);
       this.alreadySearch$.next(true);
       this.loading$.next(true)
@@ -153,11 +166,13 @@ export class LocalizationService implements OnDestroy {
   public async onTranslatedCheck(check: boolean, keys: ILocalizationKey[], key: ILocalizationKey) {
     this.saving$.next(true);
     if (check) {
-      this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
+      this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
+      // this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
       this.searchTotalTranslated++;
     }
     else {
-      this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
+      this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
+      // this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
       this.searchTotalTranslated--;
     }
 
@@ -174,17 +189,19 @@ export class LocalizationService implements OnDestroy {
       let keyToPropagate = propagateKeys[index];
       if (keyToPropagate.Translated[this.languageOrigin.localizationLang] === check) return;
       if (check) {
-        this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
+        this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
+        // this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
         this.searchTotalTranslated++;
       }
       else {
-        this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
+        this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
+        // this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
         this.searchTotalTranslated--;
       }
       keyToPropagate.Translated[this.languageOrigin.localizationLang] = check;
       await this.onKeyTranslated(keyToPropagate);
     }
-    
+
     this.saving$.next(false);
   }
 
@@ -211,34 +228,45 @@ export class LocalizationService implements OnDestroy {
 
         },
         error => {
+          this.alerts.open(this.translate.instant('alert-error-label'),
+            {
+              label: this.translate.instant('alert-error'),
+              autoClose: true,
+              hasCloseButton: false,
+              status: 'success'
+            }
+          ).subscribe({
+            complete: () => {
+            },
+          });
         }
       );
   }
 
-  public refreshAll() {
-    this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories')
-      .pipe(map(r => {
-        let searchCategory: ILocalizationCategory = {
-          Name: "SEARCH",
-          Keys: {
-            [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-              return ac + v.Keys[this.languageOrigin.localizationLang];
-            }, 0)
-          },
+  // public refreshAll() {
+  //   this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories')
+  //     .pipe(map(r => {
+  //       let searchCategory: ILocalizationCategory = {
+  //         Name: "SEARCH",
+  //         Keys: {
+  //           [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
+  //             return ac + v.Keys[this.languageOrigin.localizationLang];
+  //           }, 0)
+  //         },
 
-          KeysTranslated: {
-            [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-              return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
-            }, 0)
-          }
-        }
-        r.unshift(searchCategory);
-        return r;
-      }));
+  //         KeysTranslated: {
+  //           [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
+  //             return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
+  //           }, 0)
+  //         }
+  //       }
+  //       r.unshift(searchCategory);
+  //       return r;
+  //     }));
 
-    if (this.selectedCategory?.Name == 'SEARCH') return;
-    this.keys$ = this.api.getWithHeaders('localizationkeys', { category: this.selectedCategory.Name });
-  }
+  //   if (this.selectedCategory?.Name == 'SEARCH') return;
+  //   this.keys$ = this.api.getWithHeaders('localizationkeys', { category: this.selectedCategory.Name });
+  // }
 
   public onMachineTranslate() {
     if (this.keys)

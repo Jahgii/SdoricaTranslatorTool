@@ -1,7 +1,14 @@
 <!-- <button tuiButton appearance="outline" (click)="onResetCategories()"> RESET </button> -->
 
-@if ((languageOrigin.language$ | async)) {
-<div class="localization-container" *ngIf="localization.categories$ | async as categories; else loadingCategories">
+@if (localization.loadingCategories$ | async) {
+<ng-template #loadingCategories>
+    <tui-block-status>
+        <h4>{{'loading-categories' | translate}}</h4>
+    </tui-block-status>
+</ng-template>
+}
+@else{
+<div class="localization-container" *ngIf="localization.categories$ | async as categories">
     <div class="localization-data-actions tui-space_bottom-3">
         <tui-combo-box class="category-input" [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'m'"
             [valueContent]="categoryInputContent" [stringify]="stringify"
@@ -21,7 +28,7 @@
                 <tui-hosted-dropdown bottomRight [content]="content" tuiMode="onLight">
                     <button tuiButton appearance="flat" icon="tuiIconFilter" size="s" title="{{'filters' | translate}}">
                         {{'results' | translate}}:
-                        {{localization.searchTotalTranslated}}/{{localization.keys?.length ??0}}
+                        {{localization.searchTotalTranslated}}/{{localization.keys?.length ?? 0}}
                     </button>
                 </tui-hosted-dropdown>
                 <ng-template #content>
@@ -36,9 +43,8 @@
                             <input tuiTextfield type="text" />
                         </tui-input>
 
-                        <tui-input class="tui-space_bottom-3 limit-width"
-                            [formControl]="localization.searchTranslation" [tuiTextfieldSize]="'m'"
-                            [tuiTextfieldCustomContent]="'tuiIconSearch'">
+                        <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.searchTranslation"
+                            [tuiTextfieldSize]="'m'" [tuiTextfieldCustomContent]="'tuiIconSearch'">
                             {{'search-by-translation' | translate}}
                             <input tuiTextfield type="text" />
                         </tui-input>
@@ -54,8 +60,8 @@
             <ng-template #normalH>
                 <button tuiButton type="button" appearance="flat" size="s" tuiMode="onLight" icon="tuiIconBox"
                     [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
-                            ('libretranslate-button-ready' | translate):
-                            ('libretranslate-button-disabled' | translate)"
+                                ('libretranslate-button-ready' | translate):
+                                ('libretranslate-button-disabled' | translate)"
                     [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
                     tuiHintDirection="right" (click)="localization.onMachineTranslate()"
                     [disabled]="!(libreTranslate.serverReady$ | async)"
@@ -69,9 +75,3 @@
     <app-localization-table class="localization-keys"></app-localization-table>
 </div>
 }
-
-<ng-template #loadingCategories>
-    <tui-block-status>
-        <h4>{{'loading-categories' | translate}}</h4>
-    </tui-block-status>
-</ng-template>
