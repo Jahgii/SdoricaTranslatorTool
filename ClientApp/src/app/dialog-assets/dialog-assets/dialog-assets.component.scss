@@ -1,55 +1,38 @@
 @import 'node_modules/@taiga-ui/core/styles/taiga-ui-local.scss';
 
-.localization-container {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    padding: 1em;
-    height: calc(100% - var(--header-height) - 6em);
-}
-
-.localization-categories {
-    height: 100%
-}
-
-.localization-keys {
-    grid-column: 2;
-}
-
-.localization-keys-toolbar {}
-
-.sticky-header {
-    top: 0;
-    position: sticky;
-}
-
 .viewport {
-    height: calc(100vh - var(--header-height) - 8em);
-}
-
-.row-selected {
-    background: var(--tui-neutral-bg-hover);
-}
-
-.tooltip-original-cell {
-    max-height: 15rem;
-}
-
-.tooltip-name-cell:hover .tooltip-span-name-cell {
-    opacity: 0;
-}
-
-.tooltip-span-name-cell {
-    text-align: right;
-    position: absolute;
-    right: 0.5em;
-    bottom: 0.1em;
-    background: var(--tui-base-01);
-    transition: opacity 300ms;
+    height: calc(100vh - var(--header-height) - 5rem);
 }
 
 .tooltip-important-text {
     font-weight: bold;
     color: var(--important-text);
+}
+
+.other-languages-container{
+    padding: var(--tui-padding-s);
+}
+
+.top-main-options {
+    @include inset-border(bottom, light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .option-child {
+        display: flex;
+        align-items: center;
+
+        .pending-changes-text {
+            width: 60px;
+            text-align: center;
+        }
+    }
+
+    .tabs {
+        justify-content: flex-end;
+        box-shadow: none;
+    }
 }
 
 .dialog-speaker-name {
@@ -96,29 +79,126 @@
     }
 }
 
+.dialog-translation-container {
+    display: flex;
+}
+
 .dialog-translation-background {
     width: 320px;
     opacity: 0.5;
     filter: contrast(0) brightness(0);
 }
 
-.wrapper {
-    @include inset-border(bottom, light);
+.desktop-main {
+    height: 100%;
+    padding: 0 1rem;
+
+    .dialogs-table {
+        table-layout: fixed;
+
+        .column-original {
+            width: 100%;
+        }
+    }
+
+    .dialog-translation-portrait-container {
+        position: relative;
+        left: -6px;
+
+        .dialog-translation-portrait {
+            width: 128px;
+            height: 128px;
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+        }
+    }
+
+    .dialog-translation-frame {
+        width: 148px;
+        height: 148px;
+        position: absolute;
+        bottom: 12px;
+        left: 18px;
+        opacity: 0.50;
+    }
+
+    .dialog-translation-speaker {
+        position: absolute;
+        top: 30px;
+        left: 168px;
+    }
+
+    .dialog-translation-input {
+        position: absolute;
+        top: 64px;
+        left: 168px;
+        max-width: 450px;
+    }
+
+    .dialog-translation-full {
+        position: absolute;
+        top: 44px;
+        left: 120px;
+        max-width: 450px;
+    }
+}
+
+.mobile-main {
+    padding-left: 1rem;
+    min-width: 320px;
+
+    .mobile-dialog {
+        position: relative;
+        margin-left: 1.4em;
+
+        .mobile-dialog-portrait-container {
+            position: relative;
+            left: -6px;
+
+            .mobile-dialog-portrait {
+                width: 128px;
+                height: 128px;
+                position: absolute;
+                bottom: 32px;
+                left: 24px;
+            }
+
+            .mobile-dialog-frame {
+                width: 148px;
+                height: 148px;
+                position: absolute;
+                bottom: 20px;
+                left: 18px;
+                opacity: 0.50;
+            }
+        }
+
+        .mobile-dialog-speaker {
+            position: absolute;
+            top: 30px;
+            left: 168px;
+        }
+
+        .mobile-dialog-input {
+            position: absolute;
+            top: 64px;
+            left: 168px;
+            max-width: 450px;
+        }
+
+        .mobile-dialog-full {
+            position: absolute;
+            top: 44px;
+            left: 120px;
+            max-width: 450px;
+        }
+
+    }
+}
+
+.mobile-dropdown-container {
+    padding: 1em;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-}
-
-.tabs {
-    justify-content: flex-end;
-    box-shadow: none;
-}
-
-.tabs-mobil {
-    width: 15.625rem;
-}
-
-.tooltip-important-text {
-    font-weight: bold;
-    color: var(--important-text);
 }

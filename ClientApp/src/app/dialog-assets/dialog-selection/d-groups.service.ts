@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TuiInputInlineComponent } from '@taiga-ui/kit';
-import { BehaviorSubject, Subscription, firstValueFrom, map, mergeMap, toArray } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, mergeMap, toArray } from 'rxjs';
 import { IGroup, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
@@ -19,7 +19,7 @@ export interface TreeNode extends IMainGroup {
   providedIn: 'root'
 })
 export class DGroupsService extends StoreService<TreeNode> {
-  
+
   constructor(
     private api: ApiService,
     private translate: TranslateService,

@@ -1,16 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TuiElasticContainerModule, TuiInputInlineComponent, TuiInputInlineModule, TuiProgressModule, TuiTreeModule } from '@taiga-ui/kit';
+import { TuiElasticContainerModule, TuiInputInlineComponent, TuiInputInlineModule, TuiProgressModule } from '@taiga-ui/kit';
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
-import { IGroup, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
-import { ApiService } from 'src/app/core/services/api.service';
-import { debounceTime, map, mergeMap, take, takeUntil, takeWhile, tap, toArray } from 'rxjs/operators';
-import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
-import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
+import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
+import { debounceTime, take, takeWhile, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiButtonModule, TuiExpandModule, TuiLoaderModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
-import { error } from 'console';
 import { DGroupsService, TreeNode } from './d-groups.service';
 
 @Component({
@@ -37,7 +34,7 @@ import { DGroupsService, TreeNode } from './d-groups.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogSelectionComponent implements OnInit, OnDestroy {
-  @ViewChild(DialogAssetsComponent) dialogs!: DialogAssetsComponent;
+  @Input() dialogs!: DialogAssetsComponent;
 
   public treeNodes$: Observable<TreeNode[]> = this.groupService.store$;
   public loadingNodes$: Observable<boolean> = this.groupService.loadingStore$;

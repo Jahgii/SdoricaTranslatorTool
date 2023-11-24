@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { TuiBreakpointService, TuiScrollbarModule } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
@@ -20,7 +19,8 @@ import { TuiTooltipModule } from '@taiga-ui/core/components/tooltip';
 import { TuiSvgModule } from '@taiga-ui/core/components/svg';
 import { TuiItemModule } from '@taiga-ui/cdk';
 import { TuiTabsModule, TuiToggleModule } from '@taiga-ui/kit';
-import { NgIf, NgFor, NgStyle, AsyncPipe, KeyValuePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 
 @Component({
   selector: 'app-dialog-assets',
@@ -32,29 +32,28 @@ import { NgIf, NgFor, NgStyle, AsyncPipe, KeyValuePipe } from '@angular/common';
   ],
   standalone: true,
   imports: [
-    NgIf,
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+
     TuiTabsModule,
-    NgFor,
     TuiItemModule,
     TuiSvgModule,
     TuiToggleModule,
-    FormsModule,
     TuiTooltipModule,
     TuiButtonModule,
     TuiHintModule,
     TuiLoaderModule,
     TuiScrollbarModule,
-    CdkVirtualScrollViewport,
-    CdkFixedSizeVirtualScroll,
     TuiTableModule,
-    CdkVirtualForOf,
     TuiDropdownModule,
-    NgStyle,
     TuiBlockStatusModule,
-    AsyncPipe,
-    KeyValuePipe,
-    TranslateModule,
   ],
+  providers: [ElementBreakpointService]
 })
 export class DialogAssetsComponent implements OnInit, OnDestroy {
   readonly filterForm = new FormGroup({
@@ -83,11 +82,11 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: ApiService,
-    private route: ActivatedRoute,
     private ref: ChangeDetectorRef,
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
-    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
+    @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService
   ) { }
 
   ngOnInit(): void {

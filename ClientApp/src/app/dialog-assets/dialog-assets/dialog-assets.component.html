@@ -1,259 +1,249 @@
 @if (mainGroup) {
-<div style="padding: 1em;">
-    <ng-container *ngIf="(languageOrigin.language$ | async)">
-        <ng-container *ngIf="breakpointService$ | async as breakpoint">
-            <ng-container *ngIf="(dialogAssets$ | async) as data; else loading;">
-                <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
-                    <div class="wrapper tui-space_bottom-2">
-                        <div style="display: flex; align-items: center;">
-                            <span class="tui-text_h6 tui-space_right-4">{{'file-number' | translate}}:</span>
-                            <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="activeItemIndex" class="tabs">
-                                <ng-container *ngFor="let item of data">
-                                    <button *tuiItem tuiTab>
-                                        {{item.Number}}
-                                    </button>
-                                </ng-container>
-                                <ng-template #more>
-                                    <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
-                                </ng-template>
-                            </tui-tabs-with-more>
-                        </div>
-                        <div style="display: flex; align-items: center;">
-                            <span *ngIf="pendingChanges$ | async" class="tui-space_right-5">
-                                {{'saving-changes' | translate}}
-                            </span>
-                            <span class="tui-space_right-1">
-                                {{'translated' | translate}}:
-                            </span>
-                            <tui-toggle class="tui-space_right-4" [showIcons]="true"
-                                [(ngModel)]="data[activeItemIndex].Translated"
-                                (ngModelChange)="onTranslatedChange(data)" appareance="outline"></tui-toggle>
-                            <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
-                            <tui-toggle [showIcons]="true" [(ngModel)]="propagateTranslation"></tui-toggle>
-                            <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
-                            </tui-tooltip>
-                            <button tuiIconButton type="button" appearance="icon" shape="square"
-                                tuiHint="{{'download-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
-                                (click)="onDownload(data[activeItemIndex])" icon="tuiIconDownload">
-                            </button>
-                            <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false"
-                                [inheritColor]="true" [overlay]="true">
-                                <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox"
-                                    [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
-                                        ('libretranslate-button-ready' | translate):
-                                        ('libretranslate-button-disabled' | translate)"
-                                    [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-                                    (click)="onMachineTranslate(data)"
-                                    [disabled]="!(libreTranslate.serverReady$ | async)">
-                                </button>
-                            </tui-loader>
-                        </div>
-                    </div>
-                    <ng-container *ngIf="data[activeItemIndex] as dialogAsset">
-                        <tui-scrollbar>
-                            <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar"
-                                [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
-                                <table style="table-layout: fixed;" tuiTable [columns]="['OriginalText', 'Translation']"
-                                    [@popIn]>
-                                    <thead>
-                                        <tr tuiThGroup>
-                                            <th tuiTh *tuiHead="'OriginalText'" [sorter]="null" style="width: 100%;">
-                                                {{'original' | translate}}
-                                            </th>
-                                            <th tuiTh *tuiHead="'Translation'" [sorter]="null">
-                                                {{'translation' | translate}}
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody tuiTbody>
-                                        <tr *cdkVirtualFor="let item of dialogAsset.Model['$content']" tuiTr>
-                                            <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell"
-                                                [tuiDropdown]="otherLanguages" tuiDropdownHover
-                                                [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200"
-                                                [tuiDropdownAlign]="'right'" [tuiDropdownOffset]="0"
-                                                (mouseenter)="onGetOtherOriginalText(dialogAsset.Number, item.ID)">
-                                                {{item.OriginalText}}
-                                            </td>
-                                            <td *tuiCell="'Translation'" tuiTd>
-                                                <div [ngStyle]="{'zoom': breakpoint === 'desktopSmall' ? '0.8' : 1}">
-                                                    <div style="display: flex;">
-                                                        <img class="dialog-translation-background"
-                                                            src="/assets/images/dialog_paper.png" alt="dialot_paper">
-                                                        <img class="dialog-translation-background"
-                                                            style="transform: scaleX(-1);"
-                                                            src="/assets/images/dialog_paper.png" alt="dialot_paper">
-                                                    </div>
-                                                    <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
-                                                        <div style="position: relative; left: -6px;"
-                                                            *ngIf="item.IconName">
-                                                            <img style="width: 128px; height: 128px; position: absolute; bottom: 24px; left: 24px;"
-                                                                src="/assets/images/figure_base2.png" alt="base"
-                                                                loading="lazy">
-                                                            <img style="width: 128px; height: 128px; position: absolute; bottom: 24px; left: 24px;"
-                                                                src="/assets/images/portraits/{{item.IconName}}.png"
-                                                                onerror="this.src='/assets/images/portrait-miss.svg'"
-                                                                alt="portrait not found" width="100" height="120"
-                                                                loading="lazy">
-                                                            <img style="width: 148px; height: 148px; position: absolute; bottom: 12px; left: 18px; opacity: 0.50;"
-                                                                src="/assets/images/figure_frame.png" alt="base"
-                                                                loading="lazy">
-                                                        </div>
-                                                        <div style="position: absolute; top: 30px; left: 168px;">
-                                                            <input [(ngModel)]="item.SpeakerName"
-                                                                (focus)="previousPropagationValue = item.SpeakerName"
-                                                                (ngModelChange)="onSpeakerNameChange($event, data)"
-                                                                class="dialog-speaker-name" />
-                                                        </div>
-                                                        <div
-                                                            style="position: absolute; top: 64px; left: 168px; max-width: 450px;">
-                                                            <textarea [(ngModel)]="item.Text"
-                                                                (ngModelChange)="onTextChange(dialogAsset)"
-                                                                [disabled]="(libreTranslate.translating$ | async) ?? true"
-                                                                class="dialog-translation">
-                                                                </textarea>
-                                                        </div>
-                                                    </ng-container>
-                                                    <ng-template #fullDialog>
-                                                        <div
-                                                            style="position: absolute; top: 44px; left: 120px; max-width: 450px;">
-                                                            <textarea [(ngModel)]="item.Text"
-                                                                (ngModelChange)="onTextChange(dialogAsset)"
-                                                                [disabled]="(libreTranslate.translating$ | async) ?? true"
-                                                                class="dialog-translation">
-                                                            </textarea>
-                                                        </div>
-                                                    </ng-template>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </cdk-virtual-scroll-viewport>
-                        </tui-scrollbar>
-                    </ng-container>
-                </ng-container>
-                <ng-container *ngIf="breakpoint === 'mobile'">
-                    <div class="wrapper tui-space_bottom-2">
-                        <div style="display: flex; align-items: center;">
-                            <span class="tui-text_h6 tui-space_right-2">{{'file-number' | translate}}: </span>
-                            <tui-tabs-with-more [itemsLimit]="1" [(activeItemIndex)]="activeItemIndex"
-                                [moreContent]="more" class="tabs">
-                                <ng-container *ngFor="let item of data">
-                                    <button *tuiItem tuiTab>
-                                        {{item.Number}}
-                                    </button>
-                                </ng-container>
-                                <ng-template #more>
-                                    <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
-                                </ng-template>
-                            </tui-tabs-with-more>
-                        </div>
-                        <div style="display: flex; align-items: center;">
-                            <span *ngIf="pendingChanges$ | async" style="width: 60px; text-align: center;">
-                                {{'saving-changes' | translate}}
-                            </span>
-                            <button tuiIconButton type="button" appearance="icon" shape="square"
-                                [tuiDropdown]="dropdownContent" [tuiDropdownManual]="openOption"
-                                (click)="openOption = !openOption" icon="tuiIconMoreVerticalLarge"></button>
-                            <ng-template #dropdownContent>
-                                <div style="padding: 1em; display: flex; align-items: center;">
-                                    <div>
-                                        <span class="tui-space_right-1">{{'translated' | translate}}:</span>
-                                        <tui-toggle class="tui-space_right-4" [showIcons]="true"
-                                            [(ngModel)]="data[activeItemIndex].Translated"
-                                            (ngModelChange)="onTranslatedChange(data)"></tui-toggle>
-                                    </div>
-                                    <div>
-                                        <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
-                                        <tui-toggle [showIcons]="true" [(ngModel)]="propagateTranslation"></tui-toggle>
-                                        <tui-tooltip [content]="propagationTooltip" direction="right"
-                                            [appearance]="'onDark'">
-                                        </tui-tooltip>
-                                    </div>
-                                    <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false"
-                                        [inheritColor]="true" [overlay]="true">
-                                        <button tuiIconButton type="button" appearance="icon" shape="square"
-                                            icon="tuiIconBox" [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
-                                                ('libretranslate-button-ready' | translate):
-                                                ('libretranslate-button-disabled' | translate)"
-                                            [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-                                            (click)="onMachineTranslate(data)"
-                                            [disabled]="!(libreTranslate.serverReady$ | async)">
-                                        </button>
-                                    </tui-loader>
-                                </div>
-                            </ng-template>
-                        </div>
-                    </div>
-                    <div #container>
-                        <tui-scrollbar>
-                            <cdk-virtual-scroll-viewport tuiScrollable itemSize="5" class="viewport tui-zero-scrollbar">
-                                <ng-container
-                                    *cdkVirtualFor="let item of data[activeItemIndex].Model['$content']; let last = last">
-                                    <p class="tui-text_body-s" [tuiDropdown]="otherLanguages" tuiDropdownHover
-                                        [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200"
-                                        [tuiDropdownAlign]="'right'" [tuiDropdownOffset]="0"
-                                        (mouseenter)="onGetOtherOriginalText(data[activeItemIndex].Number, item.ID)">
-                                        <span class="tui-text_body-m">{{'original' | translate}}: </span>
-                                        {{item.OriginalText}}
-                                    </p>
-                                    <div style="position: relative; margin-left: 1.4em;"
-                                        [ngStyle]="{'zoom': container.offsetWidth * 1.12 / 767}">
-                                        <div style="display: flex;">
-                                            <img class="dialog-translation-background"
-                                                src="/assets/images/dialog_paper.png" alt="dialot_paper">
-                                            <img class="dialog-translation-background" style="transform: scaleX(-1);"
-                                                src="/assets/images/dialog_paper.png" alt="dialot_paper">
-                                        </div>
-                                        <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
-                                            <div style="position: relative; left: -6px;">
-                                                <img style="width: 128px; height: 128px; position: absolute; bottom: 24px; left: 24px;"
-                                                    src="/assets/images/figure_base2.png" alt="base" loading="lazy">
-                                                <img style="width: 128px; height: 128px; position: absolute; bottom: 24px; left: 24px;"
-                                                    src="/assets/images/portraits/{{item.IconName}}.png"
-                                                    onerror="this.src='/assets/images/portrait-miss.svg';"
-                                                    alt="portrait not found" width="100" height="120" loading="lazy">
-                                                <img style="width: 148px; height: 148px; position: absolute; bottom: 12px; left: 18px; opacity: 0.50;"
-                                                    src="/assets/images/figure_frame.png" alt="base" loading="lazy">
-                                            </div>
-                                            <div style="position: absolute; top: 30px; left: 168px;">
-                                                <input [(ngModel)]="item.SpeakerName"
-                                                    (focus)="previousPropagationValue = item.SpeakerName"
-                                                    (ngModelChange)="onSpeakerNameChange($event, data)"
-                                                    class="dialog-speaker-name" />
-                                            </div>
-                                            <div style="position: absolute; top: 64px; left: 168px; max-width: 450px;">
-                                                <textarea [(ngModel)]="item.Text"
-                                                    [disabled]="(libreTranslate.translating$ | async) ?? true" cols="4"
-                                                    class="dialog-translation">
-                                                    </textarea>
-                                            </div>
-                                        </ng-container>
-                                        <ng-template #fullDialog>
-                                            <div style="position: absolute; top: 44px; left: 120px; max-width: 450px;">
-                                                <textarea [(ngModel)]="item.Text"
-                                                    [disabled]="(libreTranslate.translating$ | async) ?? true"
-                                                    class="dialog-translation">
-                                                </textarea>
-                                            </div>
-                                        </ng-template>
-                                    </div>
-                                    <hr class="tui-space_top-2" *ngIf="!$any(last)">
-                                </ng-container>
-                            </cdk-virtual-scroll-viewport>
-                        </tui-scrollbar>
-                    </div>
-                </ng-container>
-            </ng-container>
-        </ng-container>
+<ng-container *ngIf="(languageOrigin.language$ | async)">
+    <ng-container *ngIf="(dialogAssets$ | async) as data; else loading;">
+        @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) ===
+        'desktopSmall') {
+        <ng-container [ngTemplateOutlet]="desktopUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
+        }
+        @else if ((breakpointService.mode$ | async) === 'mobile') {
+        <ng-container [ngTemplateOutlet]="mobileUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
+        }
     </ng-container>
-</div>
+</ng-container>
 }
 @else {
 <tui-block-status>
     <h4>{{'select-group-tree' | translate}}</h4>
 </tui-block-status>
 }
+
+<ng-template #desktopUI let-data>
+    <div class="desktop-main">
+        <div class="top-main-options tui-space_bottom-2">
+            <div class="option-child">
+                <span class="tui-text_h6 tui-space_right-4">{{'file-number' | translate}}:</span>
+                <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="activeItemIndex" class="tabs">
+                    <ng-container *ngFor="let item of data">
+                        <button *tuiItem tuiTab>
+                            {{item.Number}}
+                        </button>
+                    </ng-container>
+                    <ng-template #more>
+                        <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
+                    </ng-template>
+                </tui-tabs-with-more>
+            </div>
+            <div class="option-child">
+                <span *ngIf="pendingChanges$ | async" class="tui-space_right-5">
+                    {{'saving-changes' | translate}}
+                </span>
+                <span class="tui-space_right-1">
+                    {{'translated' | translate}}:
+                </span>
+                <tui-toggle class="tui-space_right-4" [showIcons]="true" [(ngModel)]="data[activeItemIndex].Translated"
+                    (ngModelChange)="onTranslatedChange(data)" appareance="outline"></tui-toggle>
+                <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
+                <tui-toggle [showIcons]="true" [(ngModel)]="propagateTranslation"></tui-toggle>
+                <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
+                </tui-tooltip>
+                <button tuiIconButton type="button" appearance="icon" shape="square"
+                    tuiHint="{{'download-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
+                    (click)="onDownload(data[activeItemIndex])" icon="tuiIconDownload">
+                </button>
+                <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
+                    [overlay]="true">
+                    <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox" [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
+                                                            ('libretranslate-button-ready' | translate):
+                                                            ('libretranslate-button-disabled' | translate)"
+                        [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
+                        (click)="onMachineTranslate(data)" [disabled]="!(libreTranslate.serverReady$ | async)">
+                    </button>
+                </tui-loader>
+            </div>
+        </div>
+        <ng-container *ngIf="data[activeItemIndex] as dialogAsset">
+            <tui-scrollbar>
+                <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="45"
+                    [maxBufferPx]="500" [minBufferPx]="400">
+                    <table class="dialogs-table" tuiTable [columns]="['OriginalText', 'Translation']" [@popIn]>
+                        <thead>
+                            <tr tuiThGroup>
+                                <th tuiTh *tuiHead="'OriginalText'" [sorter]="null" class="column-original">
+                                    {{'original' | translate}}
+                                </th>
+                                <th tuiTh *tuiHead="'Translation'" [sorter]="null">
+                                    {{'translation' | translate}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody tuiTbody>
+                            <tr *cdkVirtualFor="let item of dialogAsset.Model['$content']" tuiTr>
+                                <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell"
+                                    [tuiDropdown]="otherLanguages" tuiDropdownHover [tuiDropdownShowDelay]="200"
+                                    [tuiDropdownHideDelay]="200" [tuiDropdownAlign]="'right'" [tuiDropdownOffset]="0"
+                                    (mouseenter)="onGetOtherOriginalText(dialogAsset.Number, item.ID)">
+                                    {{item.OriginalText}}
+                                </td>
+                                <td *tuiCell="'Translation'" tuiTd>
+                                    <div
+                                        [ngStyle]="{'zoom': (breakpointService.mode$ | async) === 'desktopSmall' ? '0.8' : 1}">
+                                        <div class="dialog-translation-container">
+                                            <img class="dialog-translation-background"
+                                                src="/assets/images/dialog_paper.png" alt="dialot_paper">
+                                            <img class="dialog-translation-background" style="transform: scaleX(-1);"
+                                                src="/assets/images/dialog_paper.png" alt="dialot_paper">
+                                        </div>
+                                        <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
+                                            <div class="dialog-translation-portrait-container" *ngIf="item.IconName">
+                                                <img class="dialog-translation-portrait"
+                                                    src="/assets/images/figure_base2.png" alt="base" loading="lazy">
+                                                <img class="dialog-translation-portrait"
+                                                    src="/assets/images/portraits/{{item.IconName}}.png"
+                                                    onerror="this.src='/assets/images/portrait-miss.svg'"
+                                                    alt="portrait not found" width="100" height="120" loading="lazy">
+                                                <img class="dialog-translation-frame"
+                                                    src="/assets/images/figure_frame.png" alt="base" loading="lazy">
+                                            </div>
+                                            <div class="dialog-translation-speaker">
+                                                <input [(ngModel)]="item.SpeakerName"
+                                                    (focus)="previousPropagationValue = item.SpeakerName"
+                                                    (ngModelChange)="onSpeakerNameChange($event, data)"
+                                                    class="dialog-speaker-name" />
+                                            </div>
+                                            <div class="dialog-translation-input">
+                                                <textarea [(ngModel)]="item.Text"
+                                                    (ngModelChange)="onTextChange(dialogAsset)"
+                                                    [disabled]="(libreTranslate.translating$ | async) ?? true"
+                                                    class="dialog-translation"></textarea>
+                                            </div>
+                                        </ng-container>
+                                        <ng-template #fullDialog>
+                                            <div class="dialog-translation-full">
+                                                <textarea [(ngModel)]="item.Text"
+                                                    (ngModelChange)="onTextChange(dialogAsset)"
+                                                    [disabled]="(libreTranslate.translating$ | async) ?? true"
+                                                    class="dialog-translation"></textarea>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </cdk-virtual-scroll-viewport>
+            </tui-scrollbar>
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #mobileUI let-data>
+    <div class="mobile-main">
+        <div class="top-main-options tui-space_bottom-2">
+            <div class="option-child">
+                <span class="tui-text_h6 tui-space_right-2">{{'file-number' | translate}}: </span>
+                <tui-tabs-with-more [itemsLimit]="1" [(activeItemIndex)]="activeItemIndex" [moreContent]="more"
+                    class="tabs">
+                    <ng-container *ngFor="let item of data">
+                        <button *tuiItem tuiTab>
+                            {{item.Number}}
+                        </button>
+                    </ng-container>
+                    <ng-template #more>
+                        <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
+                    </ng-template>
+                </tui-tabs-with-more>
+            </div>
+            <div class="option-child">
+                <span *ngIf="pendingChanges$ | async" class="pending-changes-text">
+                    {{'saving-changes' | translate}}
+                </span>
+                <button tuiIconButton type="button" appearance="icon" shape="square" [tuiDropdown]="dropdownContent"
+                    [tuiDropdownManual]="openOption" (click)="openOption = !openOption"
+                    icon="tuiIconMoreVerticalLarge"></button>
+                <ng-template #dropdownContent>
+                    <div class="mobile-dropdown-container">
+                        <div>
+                            <span class="tui-space_right-1">{{'translated' | translate}}:</span>
+                            <tui-toggle class="tui-space_right-4" [showIcons]="true"
+                                [(ngModel)]="data[activeItemIndex].Translated"
+                                (ngModelChange)="onTranslatedChange(data)"></tui-toggle>
+                        </div>
+                        <div>
+                            <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
+                            <tui-toggle [showIcons]="true" [(ngModel)]="propagateTranslation"></tui-toggle>
+                            <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
+                            </tui-tooltip>
+                        </div>
+                        <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
+                            [overlay]="true">
+                            <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox"
+                                [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
+                                                                                ('libretranslate-button-ready' | translate):
+                                                                                ('libretranslate-button-disabled' | translate)"
+                                [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
+                                (click)="onMachineTranslate(data)" [disabled]="!(libreTranslate.serverReady$ | async)">
+                            </button>
+                        </tui-loader>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+        <div #container>
+            <tui-scrollbar>
+                <cdk-virtual-scroll-viewport tuiScrollable itemSize="5" class="viewport tui-zero-scrollbar">
+                    <ng-container *cdkVirtualFor="let item of data[activeItemIndex].Model['$content']; let last = last">
+                        <p class="tui-text_body-s" [tuiDropdown]="otherLanguages" tuiDropdownHover
+                            [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200" [tuiDropdownAlign]="'right'"
+                            [tuiDropdownOffset]="0"
+                            (mouseenter)="onGetOtherOriginalText(data[activeItemIndex].Number, item.ID)">
+                            <span class="tui-text_body-s">{{'original' | translate}}: </span>
+                            {{item.OriginalText}}
+                        </p>
+                        <div class="mobile-dialog" [ngStyle]="{'zoom': container.offsetWidth * 1.12 / 767}">
+                            <div class="dialog-translation-container">
+                                <img class="dialog-translation-background" src="/assets/images/dialog_paper.png"
+                                    alt="dialot_paper">
+                                <img class="dialog-translation-background" style="transform: scaleX(-1);"
+                                    src="/assets/images/dialog_paper.png" alt="dialot_paper">
+                            </div>
+                            <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
+                                <div class="mobile-dialog-portrait-container">
+                                    <img class="mobile-dialog-portrait" src="/assets/images/figure_base2.png" alt="base"
+                                        loading="lazy">
+                                    <img class="mobile-dialog-portrait"
+                                        src="/assets/images/portraits/{{item.IconName}}.png"
+                                        onerror="this.src='/assets/images/portrait-miss.svg';" alt="portrait not found"
+                                        width="100" height="120" loading="lazy">
+                                    <img class="mobile-dialog-frame" src="/assets/images/figure_frame.png" alt="base"
+                                        loading="lazy">
+                                </div>
+                                <div class="mobile-dialog-speaker">
+                                    <input [(ngModel)]="item.SpeakerName"
+                                        (focus)="previousPropagationValue = item.SpeakerName"
+                                        (ngModelChange)="onSpeakerNameChange($event, data)"
+                                        class="dialog-speaker-name" />
+                                </div>
+                                <div class="mobile-dialog-input">
+                                    <textarea [(ngModel)]="item.Text"
+                                        [disabled]="(libreTranslate.translating$ | async) ?? true" cols="4"
+                                        class="dialog-translation"></textarea>
+                                </div>
+                            </ng-container>
+                            <ng-template #fullDialog>
+                                <div class="mobile-dialog-full">
+                                    <textarea [(ngModel)]="item.Text"
+                                        [disabled]="(libreTranslate.translating$ | async) ?? true"
+                                        class="dialog-translation"></textarea>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <hr class="tui-space_top-2" *ngIf="!$any(last)">
+                    </ng-container>
+                </cdk-virtual-scroll-viewport>
+            </tui-scrollbar>
+        </div>
+    </div>
+</ng-template>
 
 <ng-template #loading>
     <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">
@@ -264,7 +254,7 @@
 </ng-template>
 
 <ng-template #otherLanguages>
-    <div style="padding: var(--tui-padding-s);">
+    <div class="other-languages-container">
         <ng-container *ngIf="(otherText$ | async) as data; else loading">
             <ng-container *ngFor="let key of data | keyvalue">
                 <p>

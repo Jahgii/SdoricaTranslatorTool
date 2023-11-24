@@ -3,11 +3,9 @@ import { CommonModule } from '@angular/common';
 import { TuiMarkerIconModule } from '@taiga-ui/kit';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { LocalizationComponent } from 'src/app/components/localization/localization.component';
-import { DialogAssetsComponent } from 'src/app/dialog-assets/dialog-assets/dialog-assets.component';
 import { LoadFileWizardComponent } from 'src/app/components/load-file-wizard/load-file-wizard.component';
 import { ExportTranslationGuestComponent } from 'src/app/components/export-translation-guest/export-translation-guest.component';
-import { MainGroupsComponent } from 'src/app/components/main-groups/main-groups.component';
-import { DialogSelectionComponent } from 'src/app/dialog-assets/dialog-selection/dialog-selection.component';
+import { DialogMainComponent } from 'src/app/dialog-assets/dialog-main/dialog-main.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,7 +22,7 @@ export class SidebarComponent {
 
   public viewers: { [component: string]: Type<any> } = {
     localization: LocalizationComponent,
-    dialogs: DialogSelectionComponent,
+    dialogs: DialogMainComponent,
     import: LoadFileWizardComponent,
     export: ExportTranslationGuestComponent
   };
