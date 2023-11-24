@@ -40,7 +40,8 @@
                 <span class="tui-space_right-1">
                     {{'translated' | translate}}:
                 </span>
-                <tui-toggle class="tui-space_right-4" [showIcons]="true" [(ngModel)]="data[dAS.activeItemIndex].Translated"
+                <tui-toggle class="tui-space_right-4" [showIcons]="true"
+                    [(ngModel)]="data[dAS.activeItemIndex].Translated"
                     (ngModelChange)="onTranslatedChange(data, $event)" appareance="outline"></tui-toggle>
                 <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
                 <tui-toggle [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"></tui-toggle>
@@ -174,14 +175,15 @@
                             <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
                             </tui-tooltip>
                         </div>
-                        <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
-                            [overlay]="true">
+                        <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false"
+                            [inheritColor]="true" [overlay]="true">
                             <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox"
                                 [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ? 
                                                                                 ('libretranslate-button-ready' | translate):
                                                                                 ('libretranslate-button-disabled' | translate)"
                                 [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-                                (click)="onMachineTranslate(data)" [disabled]="!(dAS.libreTranslate.serverReady$ | async)">
+                                (click)="onMachineTranslate(data)"
+                                [disabled]="!(dAS.libreTranslate.serverReady$ | async)">
                             </button>
                         </tui-loader>
                     </div>
@@ -191,7 +193,8 @@
         <div #container>
             <tui-scrollbar>
                 <cdk-virtual-scroll-viewport tuiScrollable itemSize="5" class="viewport tui-zero-scrollbar">
-                    <ng-container *cdkVirtualFor="let item of data[dAS.activeItemIndex].Model['$content']; let last = last">
+                    <ng-container
+                        *cdkVirtualFor="let item of data[dAS.activeItemIndex].Model['$content']; let last = last">
                         <p class="tui-text_body-s" [tuiDropdown]="otherLanguages" tuiDropdownHover
                             [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200" [tuiDropdownAlign]="'right'"
                             [tuiDropdownOffset]="0"
@@ -225,6 +228,7 @@
                                 </div>
                                 <div class="mobile-dialog-input">
                                     <textarea [(ngModel)]="item.Text"
+                                        (ngModelChange)="onTextChange(data[dAS.activeItemIndex])"
                                         [disabled]="(dAS.libreTranslate.translating$ | async) ?? true" cols="4"
                                         class="dialog-translation"></textarea>
                                 </div>
@@ -232,6 +236,7 @@
                             <ng-template #fullDialog>
                                 <div class="mobile-dialog-full">
                                     <textarea [(ngModel)]="item.Text"
+                                        (ngModelChange)="onTextChange(data[dAS.activeItemIndex])"
                                         [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
                                         class="dialog-translation"></textarea>
                                 </div>
