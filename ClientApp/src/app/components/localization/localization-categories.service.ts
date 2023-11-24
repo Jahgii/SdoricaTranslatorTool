@@ -69,4 +69,23 @@ export class LocalizationCategoriesService extends StoreService<ILocalizationCat
       this.update(categorySearch, 0);
     }
   }
+
+  public addCategoryKeys(key: ILocalizationKey) {
+    let searchCategory = this.getData()[0];
+
+    let index = this.getData().findIndex(e => e.Name === key.Category);
+    let category = this.getData()[index];
+
+    Object.keys(category.Keys).forEach(k => {
+      category.Keys[k] += 1;
+    });
+
+    Object.keys(searchCategory.Keys).forEach(k => {
+      searchCategory.Keys[k] += 1;
+    });
+
+
+    this.update(category, index);
+    this.update(searchCategory, 0);
+  }
 }

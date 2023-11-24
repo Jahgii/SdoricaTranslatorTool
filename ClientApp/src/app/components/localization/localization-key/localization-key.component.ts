@@ -2,20 +2,29 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TuiStringHandler } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiModeModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule, TuiPrimitiveTextfieldModule } from '@taiga-ui/core';
+import {
+  TuiBreakpointService,
+  TuiDialogContext,
+  TuiDialogService,
+  TuiDialogSize,
+  TuiModeModule,
+  TuiScrollbarModule,
+  TuiTextfieldControllerModule,
+  TuiDataListModule,
+  TuiPrimitiveTextfieldModule
+} from '@taiga-ui/core';
 import { tuiItemsHandlersProvider, TuiSelectModule, TuiInputModule } from '@taiga-ui/kit';
 import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
-import { LocalizationService } from 'src/app/core/services/localization.service';
-import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { TuiHintModule } from '@taiga-ui/core/directives/hint';
 import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
 import { DraggableElementDirective } from '../../../core/directives/draggable-element.directive';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe, KeyValuePipe } from '@angular/common';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { LocalizationCategoriesService } from '../localization-categories.service';
 
 const STRINGIFY_CATEGORIES: TuiStringHandler<ILocalizationCategory> = (c: ILocalizationCategory) =>
   c ? `${c.Name}` : '***';
@@ -23,35 +32,37 @@ const STRINGIFY_CATEGORIES: TuiStringHandler<ILocalizationCategory> = (c: ILocal
 type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
 
 @Component({
-    selector: 'app-localization-key',
-    templateUrl: './localization-key.component.html',
-    styleUrls: ['./localization-key.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [tuiItemsHandlersProvider({ stringify: STRINGIFY_CATEGORIES })],
-    standalone: true,
-    imports: [
-        TuiButtonModule,
-        TuiModeModule,
-        NgIf,
-        DraggableElementDirective,
-        TuiScrollbarModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TuiSelectModule,
-        TuiTextfieldControllerModule,
-        TuiDataListModule,
-        TuiDataListWrapperModule,
-        TuiInputModule,
-        TuiPrimitiveTextfieldModule,
-        NgFor,
-        TuiHintModule,
-        NgSwitch,
-        NgSwitchCase,
-        TuiLoaderModule,
-        AsyncPipe,
-        KeyValuePipe,
-        TranslateModule,
-    ],
+  selector: 'app-localization-key',
+  templateUrl: './localization-key.component.html',
+  styleUrls: ['./localization-key.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [tuiItemsHandlersProvider({ stringify: STRINGIFY_CATEGORIES })],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    NgSwitch,
+    NgSwitchCase,
+    AsyncPipe,
+    KeyValuePipe,
+    ReactiveFormsModule,
+    FormsModule,
+    TranslateModule,
+
+    TuiButtonModule,
+    TuiModeModule,
+    TuiScrollbarModule,
+    TuiSelectModule,
+    TuiTextfieldControllerModule,
+    TuiDataListModule,
+    TuiDataListWrapperModule,
+    TuiInputModule,
+    TuiPrimitiveTextfieldModule,
+    TuiHintModule,
+    TuiLoaderModule,
+
+    DraggableElementDirective,
+  ],
 })
 export class LocalizationKeyComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;
@@ -96,8 +107,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     private fB: FormBuilder,
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
-    public localization: LocalizationService,
-    private languageOrigin: LanguageOriginService,
+    private lCS: LocalizationCategoriesService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
   ) {
@@ -215,14 +225,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
       .then(
         r => {
           this.createOther$.next(true);
-          if (this.localization.selectedCategory?.Name == 'SEARCH') return;
-
-          if (this.localization.keys) {
-            this.localization.keys?.push(r);
-            this.localization.keys = [...this.localization.keys];
-            this.localization.selectedCategory.Keys[this.languageOrigin.localizationLang] += 1;
-          }
-          // this.created.emit();
+          this.lCS.addCategoryKeys(key);
         },
         error => { }
       );
