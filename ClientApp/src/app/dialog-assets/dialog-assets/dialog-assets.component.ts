@@ -90,7 +90,7 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
   }
 
   public onTextChange(dialogAsset: IDialogAsset) {
-    this.onTextChange(dialogAsset);
+    this.dAS.onTextChange(dialogAsset);
   }
 
   public async onMachineTranslate(data: IDialogAsset[]) {
