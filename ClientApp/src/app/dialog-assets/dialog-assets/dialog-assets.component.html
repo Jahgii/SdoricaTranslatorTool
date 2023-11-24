@@ -1,5 +1,4 @@
 @if (dAS.mainGroup) {
-<!-- <ng-container *ngIf="(languageOrigin.language$ | async)"> -->
 <ng-container *ngIf="(dAS.dialogAssets$ | async) as data; else loading;">
     @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) ===
     'desktopSmall') {
@@ -9,10 +8,9 @@
     <ng-container [ngTemplateOutlet]="mobileUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
     }
 </ng-container>
-<!-- </ng-container> -->
 }
 @else {
-<tui-block-status>
+<tui-block-status class="group-no-selected">
     <h4>{{'select-group-tree' | translate}}</h4>
 </tui-block-status>
 }

@@ -1,11 +1,10 @@
-<tui-hosted-dropdown class="tui-space_left-2" tuiDropdownAlign="right" [content]="dropdown" [sided]="true"
-    [(open)]="menuOpen">
-    <button appearance="flat" tuiButton type="button" size="xs" iconRight="tuiIconChevronRight" [icon]="'tuiIconBook'"
-        tuiMode="onLight" [pseudoActive]="menuOpen || null">
-        {{'buffinfo' | translate}}
+<tui-hosted-dropdown tuiDropdownAlign="right" [content]="dropdown" [sided]="true" [(open)]="menuOpen">
+    <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconBook'" tuiMode="onLight"
+        [pseudoActive]="menuOpen || null">
     </button>
 </tui-hosted-dropdown>
 <ng-template #dropdown let-close="close">
+    <p style="text-align: center;">{{'buffinfo' | translate}}</p>
     <tui-data-list>
         <tui-opt-group>
             <button tuiOption (click)="onShowList(listTemplate, 'm')">
@@ -423,7 +422,8 @@
                         </td>
                         <ng-template [ngIf]="(v.confirm | async) ?? false">
                             <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
-                                <p class="text tui-text_body-xs">{{'confirm-text-delete-gamevalue-short' | translate}}</p>
+                                <p class="text tui-text_body-xs">{{'confirm-text-delete-gamevalue-short' | translate}}
+                                </p>
                                 <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
                                     (click)="gamedataService.onDelete(v, i)"
                                     [showLoader]="(gamedataService.deleting$ | async) ?? false" appearance="accent">

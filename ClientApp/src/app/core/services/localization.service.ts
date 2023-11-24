@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map, pairwise } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localizations';
 import { LanguageOriginService } from './language-origin.service';
 import { LibreTranslateService } from './libre-translate.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {

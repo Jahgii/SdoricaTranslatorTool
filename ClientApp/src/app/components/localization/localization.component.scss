@@ -1,141 +1,36 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.scss';
 
-.localization-actions {
-    position: absolute;
-    right: 156px;
-    top: 63px;
-    height: 12px;
-    background: var(--tui-base-01);
-    border-bottom: 1px solid var(--tui-base-03);
-    border-left: 1px solid var(--tui-base-03);
-    border-right: 1px solid var(--tui-base-03);
-    border-radius: 0 0 var(--tui-radius-xl) var(--tui-radius-xl);
-    padding: 0 0.5rem 0.5rem 0.5rem;
-    box-shadow: 0 0.125rem 1rem rgba(0, 0, 0, 0.0784313725);
-    z-index: 1;
-
-    @media #{$tui-desktop-min} {
-        right: 196px;
-    }
-
-    @media #{$tui-mobile} {
-        top: inherit;
-        bottom: 5vh;
-        right: 0;
-        left: 0;
-        border: 1px solid var(--tui-base-03);
-        border-radius: var(--tui-radius-xl);
-        padding: 0;
-        width: 70%;
-        height: inherit;
-        max-width: 30em;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .localization-action-content {
-        position: relative;
-        top: -10px;
-
-        @media #{$tui-mobile} {
-            top: inherit;
-        }
-    }
-}
-
 .localization-container {
     display: flex;
     flex-direction: column;
     padding: 1em;
     height: calc(100% - var(--header-height) - 3em);
-    // height: 100%;
+    min-width: 320px;
 
     .localization-data-actions {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 0.5rem;
 
         .category-input {
-            max-width: 240px;
+            max-width: 320px;
+            min-width: 240px;
             width: 100%;
-
-            @media #{$tui-mobile} {
-                max-width: inherit;
-            }
-        }
-
-        @media #{$tui-mobile} {
-            flex-direction: column;
-            align-items: end;
         }
     }
+
 }
 
-.localization-categories {
-    height: 100%
+.filter-container {
+    padding: 0.5rem;
+
+}
+
+.limit-width {
+    max-width: 200px
 }
 
 .localization-keys {
     height: 100%;
-}
-
-.sticky-header {
-    top: 0;
-    position: sticky;
-}
-
-.viewport {
-    height: inherit;
-}
-
-.row-selected {
-    background: var(--tui-neutral-bg-hover);
-}
-
-.tooltip-original-cell {
-    max-height: 15rem;
-}
-
-.tooltip-name-cell:hover .tooltip-span-name-cell {
-    opacity: 0;
-}
-
-.tooltip-span-name-cell {
-    text-align: right;
-    position: absolute;
-    right: 0.5em;
-    bottom: 0.1em;
-    background: var(--tui-base-01);
-    transition: opacity 300ms;
-}
-
-.tooltip-important-text {
-    font-weight: bold;
-    color: var(--important-text);
-}
-
-.translation-content-cell {
-    max-height: 180px;
-}
-
-.header-content-cell {
-    transform: translate(0);
-    padding-left: 0;
-
-    .header-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-}
-
-
-.cell-content {
-    display: flex;
-    flex-direction: column;
-
-    .cell-content-original {
-        display: flex;
-        padding: 0.75rem;
-    }
 }

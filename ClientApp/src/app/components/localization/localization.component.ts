@@ -1,6 +1,13 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { TuiBreakpointService, TuiScrollbarComponent, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiDataListModule, TuiHostedDropdownModule, TuiModeModule } from '@taiga-ui/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  TuiScrollbarComponent,
+  TuiTextfieldControllerModule,
+  TuiPrimitiveTextfieldModule,
+  TuiDataListModule,
+  TuiHostedDropdownModule,
+  TuiModeModule
+} from '@taiga-ui/core';
+import { firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { ILocalizationCategory } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -15,54 +22,52 @@ import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiComboBoxModule, TuiInputModule, TuiFilterByInputPipeModule } from '@taiga-ui/kit';
-import { CommonWordsComponent } from '../common-words/common-words.component';
-import { GamedataValuesComponent } from '../gamedata-values/gamedata-values.component';
-import { LocalizationKeyComponent } from '../localization-key/localization-key.component';
+import { LocalizationKeyComponent } from './localization-key/localization-key.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-localization',
-    templateUrl: './localization.component.html',
-    styleUrls: ['./localization.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [LocalizationService],
-    animations: [
-        popinAnimation
-    ],
-    standalone: true,
-    imports: [
-        NgIf,
-        LocalizationKeyComponent,
-        GamedataValuesComponent,
-        CommonWordsComponent,
-        TuiComboBoxModule,
-        FormsModule,
-        TuiTextfieldControllerModule,
-        TuiPrimitiveTextfieldModule,
-        TuiDataListModule,
-        TuiDataListWrapperModule,
-        TuiHostedDropdownModule,
-        TuiModeModule,
-        TuiButtonModule,
-        TuiInputModule,
-        ReactiveFormsModule,
-        TuiHintModule,
-        LocalizationTableComponent,
-        TuiBlockStatusModule,
-        AsyncPipe,
-        TuiFilterByInputPipeModule,
-        TranslateModule,
-    ],
+  selector: 'app-localization',
+  templateUrl: './localization.component.html',
+  styleUrls: ['./localization.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    LocalizationService
+  ],
+  animations: [
+    popinAnimation
+  ],
+  standalone: true,
+  imports: [
+    NgIf,
+    AsyncPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+
+    TuiComboBoxModule,
+    TuiTextfieldControllerModule,
+    TuiPrimitiveTextfieldModule,
+    TuiDataListModule,
+    TuiDataListWrapperModule,
+    TuiHostedDropdownModule,
+    TuiModeModule,
+    TuiButtonModule,
+    TuiInputModule,
+    TuiHintModule,
+    TuiBlockStatusModule,
+    TuiFilterByInputPipeModule,
+
+    LocalizationKeyComponent,
+    LocalizationTableComponent
+  ],
 })
 export class LocalizationComponent implements OnInit, OnDestroy {
-  public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(
     private api: ApiService,
     public languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
-    public localization: LocalizationService,
-    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
+    public localization: LocalizationService
   ) {
   }
 
@@ -70,18 +75,6 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  }
-
-  public onRenderDefaultLanguage(translations: { [language: string]: string }): string {
-    return translations[this.languageOrigin.localizationLang];
-  }
-
-  public onTooltipCheck(scrollTooltip?: TuiScrollbarComponent) {
-    let show = false;
-    if (scrollTooltip)
-      show = scrollTooltip['el']['nativeElement']['offsetHeight'] < scrollTooltip['el']['nativeElement']['scrollHeight'];
-
-    this.showTooltipArrow$.next(show);
   }
 
   public onResetCategories() {

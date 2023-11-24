@@ -2,16 +2,25 @@
     <!-- <a (click)="">
         <tui-marker-icon src="tuiIconHome" size="xs"></tui-marker-icon>
     </a> -->
-    <a (click)="loadComponent(viewers.localization)">
-        <tui-marker-icon src="tuiIconType" size="xs"></tui-marker-icon>
-    </a>
-    <a (click)="loadComponent(viewers.dialogs)">
-        <tui-marker-icon src="tuiIconMessageCircle" size="xs"></tui-marker-icon>
-    </a>
-    <a (click)="loadComponent(viewers.import)">
-        <tui-marker-icon src="tuiIconUpload" size="xs"></tui-marker-icon>
-    </a>
-    <a (click)="loadComponent(viewers.export)">
-        <tui-marker-icon src="tuiIconDownload" size="xs"></tui-marker-icon>
-    </a>
+
+    <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconType'" tuiMode="onLight"
+        (click)="loadComponent(viewers.localization)" tuiHint="{{'main-localization' | translate}}"
+        tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
+    </button>
+    <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconMessageCircle'" tuiMode="onLight"
+        (click)="loadComponent(viewers.dialogs)" tuiHint="{{'chapter-dialog-localization' | translate}}"
+        tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
+    </button>
+    <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconUpload'" tuiMode="onLight"
+        (click)="loadComponent(viewers.import)" tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark"
+        [tuiHintShowDelay]="100">
+    </button>
+    <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconDownload'" tuiMode="onLight"
+        (click)="loadComponent(viewers.export)" tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark"
+        [tuiHintShowDelay]="100">
+    </button>
+
+    <!-- <app-localization-key></app-localization-key> -->
+    <app-gamedata-values></app-gamedata-values>
+    <app-common-words></app-common-words>
 </div>

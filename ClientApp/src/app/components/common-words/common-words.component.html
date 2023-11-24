@@ -1,11 +1,10 @@
-<tui-hosted-dropdown class="tui-space_left-2" tuiDropdownAlign="right" [content]="dropdown" [sided]="true"
-    [(open)]="menuOpen">
-    <button appearance="flat" tuiButton type="button" size="xs" iconRight="tuiIconChevronRight" [icon]="'tuiIconBook'"
-        tuiMode="onLight" [pseudoActive]="menuOpen || null">
-        {{'dictionary' | translate}}
+<tui-hosted-dropdown tuiDropdownAlign="right" [content]="dropdown" [sided]="true" [(open)]="menuOpen">
+    <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconBook'" tuiMode="onLight"
+        [pseudoActive]="menuOpen || null">
     </button>
 </tui-hosted-dropdown>
 <ng-template #dropdown let-close="close">
+    <h4 style="text-align: center;">{{'dictionary' | translate}}</h4>
     <tui-data-list>
         <tui-opt-group>
             <button tuiOption (click)="onShowList(listTemplate, 'm')">

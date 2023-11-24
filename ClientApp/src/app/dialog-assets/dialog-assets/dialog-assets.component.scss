@@ -1,5 +1,9 @@
 @import 'node_modules/@taiga-ui/core/styles/taiga-ui-local.scss';
 
+.group-no-selected {
+    min-width: 320px;
+}
+
 .viewport {
     height: calc(100vh - var(--header-height) - 5rem);
 }
@@ -9,7 +13,7 @@
     color: var(--important-text);
 }
 
-.other-languages-container{
+.other-languages-container {
     padding: var(--tui-padding-s);
 }
 

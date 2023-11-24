@@ -1,17 +1,24 @@
-<ng-container *ngIf="localization.selectedCategory$ | async; else selectCategory">
-    <ng-container *ngIf="(localization.alreadySearch$ | async) ?? false; else searchTemplate">
-        <ng-container *ngIf="!(localization.loading$ | async) ?? false; else loading">
-            <ng-container *ngIf="breakpointService$ | async as breakpoint">
-                <ng-container [ngTemplateOutlet]="{
-                    'desktopLarge': desktopTable,
-                    'desktopSmall': desktopTable,
-                    'mobile': mobileTable,
-                 }[breakpoint]">
-                </ng-container>
-            </ng-container>
-        </ng-container>
-    </ng-container>
-</ng-container>
+@if (localization.selectedCategory$ | async) {
+@if ((localization.alreadySearch$ | async) ?? false) {
+@if (localization.loading$ | async) {
+<tui-loader></tui-loader>
+}
+@else {
+@if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) === 'desktopSmall') {
+<ng-container [ngTemplateOutlet]="desktopTable"></ng-container>
+}
+@else if ((breakpointService.mode$ | async) === 'mobile') {
+<ng-container [ngTemplateOutlet]="mobileTable"></ng-container>
+}
+}
+}
+@else {
+<ng-container [ngTemplateOutlet]="searchTemplate"></ng-container>
+}
+}
+@else {
+<ng-container [ngTemplateOutlet]="selectCategory"></ng-container>
+}
 
 <ng-template #desktopTable>
     <ng-container tuiTableFilters>

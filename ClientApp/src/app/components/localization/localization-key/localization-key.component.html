@@ -1,6 +1,6 @@
-<button tuiButton type="button" appearance="flat" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
+<button tuiButton type="button" appearance="icon" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
     (click)="onShowCreate(createTemplate, 'm')">
-    {{'create-new-key' | translate}}
+    <!-- {{'create-new-key' | translate}} -->
 </button>
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement" [elementAnchorRef]="anchor"

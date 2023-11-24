@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from '@taiga-ui/cdk';
 import { TuiBreakpointService, TuiDriver, TuiOptionComponent, TuiScrollbarComponent, tuiGetWordRange, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule } from '@taiga-ui/core';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IGamedataValue } from 'src/app/core/interfaces/i-gamedata';
@@ -23,21 +23,53 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiToggleModule, TuiInputModule, TuiTextareaModule } from '@taiga-ui/kit';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { TuiTableFiltersModule, TuiTableModule } from '@taiga-ui/addon-table';
-import { NgIf, NgTemplateOutlet, NgFor, AsyncPipe, KeyValuePipe } from '@angular/common';
+import { NgIf, NgTemplateOutlet, NgFor, AsyncPipe, KeyValuePipe, CommonModule } from '@angular/common';
+import { ElementBreakpoint, ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 
 const ESPECIAL_CHARACTER = '@'
 
 @Component({
-    selector: 'app-localization-table',
-    templateUrl: './localization-table.component.html',
-    styleUrls: ['./localization-table.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        popinAnimation,
-        fadeinAnimation
-    ],
-    standalone: true,
-    imports: [NgIf, NgTemplateOutlet, TuiTableFiltersModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, TuiScrollbarModule, TuiTableModule, TuiToggleModule, FormsModule, TuiTooltipModule, TuiSvgModule, TuiInputModule, ReactiveFormsModule, TuiTextfieldControllerModule, TuiCheckboxModule, CdkVirtualForOf, TuiHintModule, NgFor, CommonDictionaryDirective, TuiTextareaModule, TuiDropdownModule, TuiDataListModule, TuiBlockStatusModule, TuiAppBarModule, TuiLoaderModule, AsyncPipe, KeyValuePipe, TranslateModule]
+  selector: 'app-localization-table',
+  templateUrl: './localization-table.component.html',
+  styleUrls: ['./localization-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    ElementBreakpointService
+  ],
+  animations: [
+    popinAnimation,
+    fadeinAnimation
+  ],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+
+    TuiTableFiltersModule,
+    TuiScrollbarModule,
+    TuiTableModule,
+    TuiToggleModule,
+    TuiTooltipModule,
+    TuiSvgModule,
+    TuiInputModule,
+    TuiTextfieldControllerModule,
+    TuiCheckboxModule,
+    TuiHintModule,
+    TuiTextareaModule,
+    TuiDropdownModule,
+    TuiDataListModule,
+    TuiBlockStatusModule,
+    TuiAppBarModule,
+    TuiLoaderModule,
+
+    CommonDictionaryDirective
+  ]
 })
 export class LocalizationTableComponent implements OnInit {
   @ViewChildren(TuiOptionComponent, { read: ElementRef })
@@ -51,7 +83,7 @@ export class LocalizationTableComponent implements OnInit {
     public localization: LocalizationService,
     public languageOrigin: LanguageOriginService,
     public buffInfService: GamedataService,
-    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
+    @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService
   ) { }
 
   ngOnInit(): void {
