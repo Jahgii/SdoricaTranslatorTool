@@ -127,4 +127,20 @@ export class DGroupsService extends StoreService<TreeNode> {
         });
       });
   }
+
+  public async onCheckTranslated(node: TreeNode, translated: boolean) {
+    if ((node as IGroup).MainGroup) {
+      let mainGroup = (node as IGroup).MainGroup;
+      let addOrSubs = translated === true ? 1 : -1;
+      node.TranslatedFiles += addOrSubs;
+
+      let parentIndex = this.getData().findIndex(e => e.OriginalName === mainGroup);
+      let parentNode = this.getData()[parentIndex];
+
+      if (parentNode) {
+        parentNode.TranslatedFiles += addOrSubs;
+        this.update(parentNode, parentIndex);
+      }
+    }
+  }
 }

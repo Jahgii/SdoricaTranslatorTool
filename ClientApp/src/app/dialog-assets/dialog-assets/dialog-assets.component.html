@@ -1,15 +1,15 @@
-@if (mainGroup) {
-<ng-container *ngIf="(languageOrigin.language$ | async)">
-    <ng-container *ngIf="(dialogAssets$ | async) as data; else loading;">
-        @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) ===
-        'desktopSmall') {
-        <ng-container [ngTemplateOutlet]="desktopUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
-        }
-        @else if ((breakpointService.mode$ | async) === 'mobile') {
-        <ng-container [ngTemplateOutlet]="mobileUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
-        }
-    </ng-container>
+@if (dAS.mainGroup) {
+<!-- <ng-container *ngIf="(languageOrigin.language$ | async)"> -->
+<ng-container *ngIf="(dAS.dialogAssets$ | async) as data; else loading;">
+    @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) ===
+    'desktopSmall') {
+    <ng-container [ngTemplateOutlet]="desktopUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
+    }
+    @else if ((breakpointService.mode$ | async) === 'mobile') {
+    <ng-container [ngTemplateOutlet]="mobileUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
+    }
 </ng-container>
+<!-- </ng-container> -->
 }
 @else {
 <tui-block-status>
@@ -22,7 +22,7 @@
         <div class="top-main-options tui-space_bottom-2">
             <div class="option-child">
                 <span class="tui-text_h6 tui-space_right-4">{{'file-number' | translate}}:</span>
-                <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="activeItemIndex" class="tabs">
+                <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="dAS.activeItemIndex" class="tabs">
                     <ng-container *ngFor="let item of data">
                         <button *tuiItem tuiTab>
                             {{item.Number}}
@@ -34,34 +34,34 @@
                 </tui-tabs-with-more>
             </div>
             <div class="option-child">
-                <span *ngIf="pendingChanges$ | async" class="tui-space_right-5">
+                <span *ngIf="dAS.pendingChanges$ | async" class="tui-space_right-5">
                     {{'saving-changes' | translate}}
                 </span>
                 <span class="tui-space_right-1">
                     {{'translated' | translate}}:
                 </span>
-                <tui-toggle class="tui-space_right-4" [showIcons]="true" [(ngModel)]="data[activeItemIndex].Translated"
-                    (ngModelChange)="onTranslatedChange(data)" appareance="outline"></tui-toggle>
+                <tui-toggle class="tui-space_right-4" [showIcons]="true" [(ngModel)]="data[dAS.activeItemIndex].Translated"
+                    (ngModelChange)="onTranslatedChange(data, $event)" appareance="outline"></tui-toggle>
                 <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
-                <tui-toggle [showIcons]="true" [(ngModel)]="propagateTranslation"></tui-toggle>
+                <tui-toggle [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"></tui-toggle>
                 <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
                 </tui-tooltip>
                 <button tuiIconButton type="button" appearance="icon" shape="square"
                     tuiHint="{{'download-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
-                    (click)="onDownload(data[activeItemIndex])" icon="tuiIconDownload">
+                    (click)="onDownload(data[dAS.activeItemIndex])" icon="tuiIconDownload">
                 </button>
-                <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
+                <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
                     [overlay]="true">
-                    <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox" [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
+                    <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox" [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ? 
                                                             ('libretranslate-button-ready' | translate):
                                                             ('libretranslate-button-disabled' | translate)"
-                        [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-                        (click)="onMachineTranslate(data)" [disabled]="!(libreTranslate.serverReady$ | async)">
+                        [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
+                        (click)="onMachineTranslate(data)" [disabled]="!(dAS.libreTranslate.serverReady$ | async)">
                     </button>
                 </tui-loader>
             </div>
         </div>
-        <ng-container *ngIf="data[activeItemIndex] as dialogAsset">
+        <ng-container *ngIf="data[dAS.activeItemIndex] as dialogAsset">
             <tui-scrollbar>
                 <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="45"
                     [maxBufferPx]="500" [minBufferPx]="400">
@@ -106,14 +106,14 @@
                                             </div>
                                             <div class="dialog-translation-speaker">
                                                 <input [(ngModel)]="item.SpeakerName"
-                                                    (focus)="previousPropagationValue = item.SpeakerName"
+                                                    (focus)="dAS.previousPropagationValue = item.SpeakerName"
                                                     (ngModelChange)="onSpeakerNameChange($event, data)"
                                                     class="dialog-speaker-name" />
                                             </div>
                                             <div class="dialog-translation-input">
                                                 <textarea [(ngModel)]="item.Text"
                                                     (ngModelChange)="onTextChange(dialogAsset)"
-                                                    [disabled]="(libreTranslate.translating$ | async) ?? true"
+                                                    [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
                                                     class="dialog-translation"></textarea>
                                             </div>
                                         </ng-container>
@@ -121,7 +121,7 @@
                                             <div class="dialog-translation-full">
                                                 <textarea [(ngModel)]="item.Text"
                                                     (ngModelChange)="onTextChange(dialogAsset)"
-                                                    [disabled]="(libreTranslate.translating$ | async) ?? true"
+                                                    [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
                                                     class="dialog-translation"></textarea>
                                             </div>
                                         </ng-template>
@@ -141,7 +141,7 @@
         <div class="top-main-options tui-space_bottom-2">
             <div class="option-child">
                 <span class="tui-text_h6 tui-space_right-2">{{'file-number' | translate}}: </span>
-                <tui-tabs-with-more [itemsLimit]="1" [(activeItemIndex)]="activeItemIndex" [moreContent]="more"
+                <tui-tabs-with-more [itemsLimit]="1" [(activeItemIndex)]="dAS.activeItemIndex" [moreContent]="more"
                     class="tabs">
                     <ng-container *ngFor="let item of data">
                         <button *tuiItem tuiTab>
@@ -154,7 +154,7 @@
                 </tui-tabs-with-more>
             </div>
             <div class="option-child">
-                <span *ngIf="pendingChanges$ | async" class="pending-changes-text">
+                <span *ngIf="dAS.pendingChanges$ | async" class="pending-changes-text">
                     {{'saving-changes' | translate}}
                 </span>
                 <button tuiIconButton type="button" appearance="icon" shape="square" [tuiDropdown]="dropdownContent"
@@ -165,23 +165,23 @@
                         <div>
                             <span class="tui-space_right-1">{{'translated' | translate}}:</span>
                             <tui-toggle class="tui-space_right-4" [showIcons]="true"
-                                [(ngModel)]="data[activeItemIndex].Translated"
-                                (ngModelChange)="onTranslatedChange(data)"></tui-toggle>
+                                [(ngModel)]="data[dAS.activeItemIndex].Translated"
+                                (ngModelChange)="onTranslatedChange(data, $event)"></tui-toggle>
                         </div>
                         <div>
                             <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
-                            <tui-toggle [showIcons]="true" [(ngModel)]="propagateTranslation"></tui-toggle>
+                            <tui-toggle [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"></tui-toggle>
                             <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
                             </tui-tooltip>
                         </div>
-                        <tui-loader [showLoader]="(libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
+                        <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
                             [overlay]="true">
                             <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox"
-                                [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
+                                [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ? 
                                                                                 ('libretranslate-button-ready' | translate):
                                                                                 ('libretranslate-button-disabled' | translate)"
-                                [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-                                (click)="onMachineTranslate(data)" [disabled]="!(libreTranslate.serverReady$ | async)">
+                                [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
+                                (click)="onMachineTranslate(data)" [disabled]="!(dAS.libreTranslate.serverReady$ | async)">
                             </button>
                         </tui-loader>
                     </div>
@@ -191,11 +191,11 @@
         <div #container>
             <tui-scrollbar>
                 <cdk-virtual-scroll-viewport tuiScrollable itemSize="5" class="viewport tui-zero-scrollbar">
-                    <ng-container *cdkVirtualFor="let item of data[activeItemIndex].Model['$content']; let last = last">
+                    <ng-container *cdkVirtualFor="let item of data[dAS.activeItemIndex].Model['$content']; let last = last">
                         <p class="tui-text_body-s" [tuiDropdown]="otherLanguages" tuiDropdownHover
                             [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200" [tuiDropdownAlign]="'right'"
                             [tuiDropdownOffset]="0"
-                            (mouseenter)="onGetOtherOriginalText(data[activeItemIndex].Number, item.ID)">
+                            (mouseenter)="onGetOtherOriginalText(data[dAS.activeItemIndex].Number, item.ID)">
                             <span class="tui-text_body-s">{{'original' | translate}}: </span>
                             {{item.OriginalText}}
                         </p>
@@ -219,20 +219,20 @@
                                 </div>
                                 <div class="mobile-dialog-speaker">
                                     <input [(ngModel)]="item.SpeakerName"
-                                        (focus)="previousPropagationValue = item.SpeakerName"
+                                        (focus)="dAS.previousPropagationValue = item.SpeakerName"
                                         (ngModelChange)="onSpeakerNameChange($event, data)"
                                         class="dialog-speaker-name" />
                                 </div>
                                 <div class="mobile-dialog-input">
                                     <textarea [(ngModel)]="item.Text"
-                                        [disabled]="(libreTranslate.translating$ | async) ?? true" cols="4"
+                                        [disabled]="(dAS.libreTranslate.translating$ | async) ?? true" cols="4"
                                         class="dialog-translation"></textarea>
                                 </div>
                             </ng-container>
                             <ng-template #fullDialog>
                                 <div class="mobile-dialog-full">
                                     <textarea [(ngModel)]="item.Text"
-                                        [disabled]="(libreTranslate.translating$ | async) ?? true"
+                                        [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
                                         class="dialog-translation"></textarea>
                                 </div>
                             </ng-template>
@@ -255,7 +255,7 @@
 
 <ng-template #otherLanguages>
     <div class="other-languages-container">
-        <ng-container *ngIf="(otherText$ | async) as data; else loading">
+        <ng-container *ngIf="(dAS.otherText$ | async) as data; else loading">
             <ng-container *ngFor="let key of data | keyvalue">
                 <p>
                     <span class="tooltip-important-text">

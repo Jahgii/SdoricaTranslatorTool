@@ -41,6 +41,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   public groupSelected$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public hiddenScroll$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   private subsName: Subscription | undefined;
+  private subsCheck: Subscription | undefined;
   private nodeSelected!: TreeNode;
 
   constructor(
@@ -59,10 +60,19 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
         .loadingStore$
         .pipe(takeWhile(_ => !this.treeNodes$))
         .subscribe(_ => this.treeNodes$ = this.groupService.store$);
+
+    this.subsCheck = this.dialogs
+      .dAS
+      .translatedChange
+      .subscribe(change => {
+        if (change)
+          this.groupService.onCheckTranslated(change.node, change.translated);
+      });
   }
 
   ngOnDestroy(): void {
     this.nodeSelected?.selected?.next(false);
+    this.subsCheck?.unsubscribe();
   }
 
   public onSelectGroup(node: TreeNode) {
@@ -74,7 +84,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
     if (!mainGroup || !group) return;
 
     this.groupSelected$.next(true);
-    this.dialogs.onSelectGroup(mainGroup, group);
+    this.dialogs.onSelectGroup(node as IGroup);
 
     this.nodeSelected?.selected?.next(false);
     this.nodeSelected = node;
