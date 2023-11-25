@@ -1,3 +1,5 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+
 /* You can add global styles to this file, and also import other style files */
 :root {
   --header-height: 0rem;
@@ -32,11 +34,17 @@ code {
 .main-grid {
   display: grid;
   height: 100%;
+  transition: grid-template-columns 0.5s ease-in-out;
   grid-template-columns: var(--menu-width) 1fr;
   grid-template-rows: var(--header-height) 1fr;
   grid-template-areas:
     "sidebar header"
     "sidebar content";
+
+  @media #{$tui-mobile} {
+    grid-template-columns: 0 1fr;
+    overflow: hidden;
+  }
 }
 
 .container-m {

@@ -7,9 +7,11 @@ import { ExportTranslationGuestComponent } from 'src/app/components/export-trans
 import { DialogMainComponent } from 'src/app/dialog-assets/dialog-main/dialog-main.component';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
 import { CommonWordsComponent } from 'src/app/components/common-words/common-words.component';
-import { TuiButtonModule, TuiHintModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiHintModule, TuiLoaderModule } from '@taiga-ui/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { LocalizationKeyComponent } from 'src/app/components/localization/localization-key/localization-key.component';
+import { TuiAvatarModule } from '@taiga-ui/kit';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,6 +24,8 @@ import { LocalizationKeyComponent } from 'src/app/components/localization/locali
 
     TuiButtonModule,
     TuiHintModule,
+    TuiLoaderModule,
+    TuiAvatarModule,
 
     LocalizationKeyComponent,
     GamedataValuesComponent,
@@ -37,7 +41,10 @@ export class SidebarComponent {
     export: ExportTranslationGuestComponent
   };
 
-  constructor(private viewersService: ViewersService) { }
+  constructor(
+    public auth: AuthService,
+    private viewersService: ViewersService
+  ) { }
 
   public loadComponent(component: Type<any>) {
     this.viewersService.loadComponent(component, {});
