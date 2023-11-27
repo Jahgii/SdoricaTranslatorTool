@@ -1,7 +1,15 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from '@taiga-ui/cdk';
-import { TuiDriver, TuiOptionComponent, TuiScrollbarComponent, tuiGetWordRange, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule } from '@taiga-ui/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  TuiDriver,
+  TuiOptionComponent,
+  TuiScrollbarComponent,
+  tuiGetWordRange,
+  TuiScrollbarModule,
+  TuiTextfieldControllerModule,
+  TuiDataListModule
+} from '@taiga-ui/core';
+import { BehaviorSubject, Observable, Subscription, pairwise, timeout } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IGamedataValue } from 'src/app/core/interfaces/i-gamedata';
@@ -71,13 +79,15 @@ const ESPECIAL_CHARACTER = '@'
     CommonDictionaryDirective
   ]
 })
-export class LocalizationTableComponent implements OnInit {
+export class LocalizationTableComponent implements OnInit, OnDestroy {
   @ViewChildren(TuiOptionComponent, { read: ElementRef })
   private readonly options: QueryList<ElementRef<HTMLElement>> = EMPTY_QUERY;
   @ViewChild(TuiDriver) readonly driver?: Observable<boolean>;
   public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public predicate: TuiBooleanHandler<Range> = range =>
     tuiGetWordRange(range).toString().startsWith(ESPECIAL_CHARACTER);
+
+  private subsBreakpoint!: Subscription;
 
   constructor(
     public localization: LocalizationService,
@@ -87,6 +97,11 @@ export class LocalizationTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.reapplySearchOnElementResize();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsBreakpoint) this.subsBreakpoint.unsubscribe();
   }
 
   public onRenderDefaultLanguage(translations: { [language: string]: string }): string {
@@ -99,6 +114,39 @@ export class LocalizationTableComponent implements OnInit {
       show = scrollTooltip['el']['nativeElement']['offsetHeight'] < scrollTooltip['el']['nativeElement']['scrollHeight'];
 
     this.showTooltipArrow$.next(show);
+  }
+
+  public reapplySearchOnElementResize() {
+    this.subsBreakpoint = this.breakpointService
+      .mode$
+      .pipe(pairwise())
+      .subscribe(([previousMode, currentMode]) => {
+        if (currentMode != 'none') {
+
+          if (previousMode === 'desktopSmall' && currentMode === 'desktopLarge') return;
+          if (previousMode === 'desktopLarge' && currentMode === 'desktopSmall') return;
+
+          let reapplyFilters = false;
+
+          let filterOriginal = this.localization.filterForm.controls.original;
+          let filterTranslation = this.localization.filterForm.controls.translation;
+          let filterTranslated = this.localization.filterForm.controls.translated;
+
+          if (filterOriginal.value || filterTranslation.value) reapplyFilters = true;
+
+          if (filterTranslated.value !== null) reapplyFilters = true;
+
+          if (reapplyFilters === false) return;
+
+          //Wait Table popin animation
+          setTimeout(() => {
+            this.localization.filterForm.patchValue({
+              original: filterOriginal.value,
+              translation: filterTranslation.value
+            }, { emitEvent: true });
+          }, 250);
+        }
+      });
   }
 
   //#region BuffInfo Autocomplete

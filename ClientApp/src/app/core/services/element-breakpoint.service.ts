@@ -16,6 +16,8 @@ export class ElementBreakpointService {
       else if (this.px_size.x <= 1024) mode = ElementBreakpoint.desktopSmall;
       else mode = ElementBreakpoint.desktopLarge;
 
+      if (this.mode$.value === mode) return;
+
       this.mode$.next(mode);
     });
 
