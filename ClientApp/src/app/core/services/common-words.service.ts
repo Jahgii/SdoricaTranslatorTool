@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { ICommonWord } from '../interfaces/i-common-word';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { TuiAlertService } from '@taiga-ui/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,11 @@ export class CommonWordsService {
   public deleting$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public change$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-  constructor(private api: ApiService) {
+  constructor(
+    private api: ApiService,
+    private translate: TranslateService,
+    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
+  ) {
     this.init();
   }
 
@@ -21,7 +27,19 @@ export class CommonWordsService {
     firstValueFrom(this.api.get<ICommonWord[]>('commonwords'))
       .then(
         words => { this.words = words },
-        error => { }
+        error => {
+          this.alerts.open(this.translate.instant('alert-error-label'),
+            {
+              label: this.translate.instant('alert-error'),
+              autoClose: true,
+              hasCloseButton: false,
+              status: 'success'
+            }
+          ).subscribe({
+            complete: () => {
+            },
+          });
+        }
       );
   }
 
@@ -34,7 +52,19 @@ export class CommonWordsService {
           this.words = [...this.words];
           this.createOther$.next(true);
         },
-        error => { }
+        error => {
+          this.alerts.open(this.translate.instant('alert-error-label'),
+            {
+              label: this.translate.instant('alert-error'),
+              autoClose: true,
+              hasCloseButton: false,
+              status: 'success'
+            }
+          ).subscribe({
+            complete: () => {
+            },
+          });
+        }
       );
     this.creating$.next(false);
   }
@@ -54,6 +84,19 @@ export class CommonWordsService {
       .then(
         updatedWord => {
           this.change$.next(true);
+        },
+        error => {
+          this.alerts.open(this.translate.instant('alert-error-label'),
+            {
+              label: this.translate.instant('alert-error'),
+              autoClose: true,
+              hasCloseButton: false,
+              status: 'success'
+            }
+          ).subscribe({
+            complete: () => {
+            },
+          });
         }
       );
 
@@ -76,7 +119,19 @@ export class CommonWordsService {
           this.words = [...this.words];
           this.change$.next(true);
         },
-        error => { }
+        error => {
+          this.alerts.open(this.translate.instant('alert-error-label'),
+            {
+              label: this.translate.instant('alert-error'),
+              autoClose: true,
+              hasCloseButton: false,
+              status: 'success'
+            }
+          ).subscribe({
+            complete: () => {
+            },
+          });
+        }
       );
 
     this.deleting$.next(false);
