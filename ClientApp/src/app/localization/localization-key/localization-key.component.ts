@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TuiStringHandler } from '@taiga-ui/cdk';
 import {
@@ -21,10 +21,10 @@ import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { TuiHintModule } from '@taiga-ui/core/directives/hint';
 import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
-import { DraggableElementDirective } from '../../../core/directives/draggable-element.directive';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe, KeyValuePipe } from '@angular/common';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { LocalizationCategoriesService } from '../localization-categories.service';
+import { DraggableElementDirective } from 'src/app/core/directives/draggable-element.directive';
 
 const STRINGIFY_CATEGORIES: TuiStringHandler<ILocalizationCategory> = (c: ILocalizationCategory) =>
   c ? `${c.Name}` : '***';

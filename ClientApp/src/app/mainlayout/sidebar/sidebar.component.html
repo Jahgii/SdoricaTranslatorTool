@@ -1,33 +1,118 @@
-<div class="sidebar">
-    <div class="profile-avatar-container">
-        <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
-            <tui-avatar class="avatar" size="s" [rounded]="false"
-                [text]="auth.user?.name ? auth.user?.name ?? '' : '?'" fallback="tuiIconUserLarge"
-                [avatarUrl]="auth.user?.photoUrl ? auth.user?.photoUrl ?? '' : null">
-            </tui-avatar>
-        </tui-loader>
+<div class="sidebar-container">
+    <div class="sidebar">
+        <div class="profile-avatar-container">
+            <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
+                <tui-avatar class="avatar" size="s" [rounded]="false"
+                    [text]="auth.user?.name ? auth.user?.name ?? '' : '?'" fallback="tuiIconUserLarge"
+                    [avatarUrl]="auth.user?.photoUrl ? auth.user?.photoUrl ?? '' : null">
+                </tui-avatar>
+            </tui-loader>
+
+            @if ((breakpointService$ | async) === 'mobile') {
+            <div class="menu-indicator">
+                <tui-svg src="tuiIconArrowDownCircle"></tui-svg>
+            </div>
+            <tui-hosted-dropdown [tuiDropdownDirection]="'bottom'" style="position: absolute;" [content]="dropdownMenu"
+                [(open)]="open">
+                <button tuiIconButton appearance="flat" size="l" type="button" [pseudoActive]="open || null">
+                </button>
+            </tui-hosted-dropdown>
+            <ng-template #dropdownMenu let-close="close" let-activeZone>
+                <div
+                    style="display: flex; flex-direction: column; gap: 1.5rem; padding: 0.65rem; align-items: center; justify-content: center;">
+                    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconType'"
+                        tuiMode="onLight" (click)="loadComponent(viewers.localization)"
+                        tuiHint="{{'main-localization' | translate}}" tuiHintAppearance="onDark"
+                        [tuiHintShowDelay]="100">
+                    </button>
+                    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconMessageCircle'"
+                        tuiMode="onLight" (click)="loadComponent(viewers.dialogs)"
+                        tuiHint="{{'chapter-dialog-localization' | translate}}" tuiHintAppearance="onDark"
+                        [tuiHintShowDelay]="100">
+                    </button>
+                    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconUpload'"
+                        tuiMode="onLight" (click)="loadComponent(viewers.import)"
+                        tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
+                    </button>
+                    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconDownload'"
+                        tuiMode="onLight" (click)="loadComponent(viewers.export)"
+                        tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
+                    </button>
+
+                    <!-- DIALOG OPTIONS -->
+                    <button tuiButton type="button" appearance="icon" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
+                        (click)="localizationKeyDialog.onShowCreate(localizationKeyDialog.createTemplateView, 'm')">
+                    </button>
+
+                    <tui-hosted-dropdown [tuiActiveZoneParent]="activeZone" tuiDropdownAlign="right"
+                        [content]="dropdownGamedata" [sided]="true" [(open)]="gamedataOpen">
+                        <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconBook'"
+                            tuiMode="onLight" [pseudoActive]="gamedataOpen || null">
+                        </button>
+                    </tui-hosted-dropdown>
+                    <ng-template #dropdownGamedata let-close="close">
+                        <p style="text-align: center;">{{'buffinfo' | translate}}</p>
+                        <tui-data-list>
+                            <tui-opt-group>
+                                <button tuiOption
+                                    (click)="gamedataDialog.onShowList(gamedataDialog.listTemplateView, 'm')">
+                                    <tui-svg src="tuiIconBookOpen"></tui-svg> {{'see-all' | translate}}
+                                </button>
+                                <button tuiOption
+                                    (click)="gamedataDialog.onShowCreateNew(gamedataDialog.createTemplateView, 'm')">
+                                    <tui-svg src="tuiIconEdit2"></tui-svg> {{'create-new' | translate}}
+                                </button>
+                            </tui-opt-group>
+                        </tui-data-list>
+                    </ng-template>
+
+                    <tui-hosted-dropdown [tuiActiveZoneParent]="activeZone" tuiDropdownAlign="right"
+                        [content]="dropdownDictionary" [sided]="true" [(open)]="commonOpen">
+                        <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconBook'"
+                            tuiMode="onLight" [pseudoActive]="commonOpen || null">
+                        </button>
+                    </tui-hosted-dropdown>
+                    <ng-template #dropdownDictionary let-close="close">
+                        <h4 style="text-align: center;">{{'dictionary' | translate}}</h4>
+                        <tui-data-list>
+                            <tui-opt-group>
+                                <button tuiOption
+                                    (click)="dictionaryDialog.onShowList(dictionaryDialog.listTemplateView, 'm')">
+                                    <tui-svg src="tuiIconBookOpen"></tui-svg> {{'see-all' | translate}}
+                                </button>
+                                <button tuiOption
+                                    (click)="dictionaryDialog.onShowCreateNew(dictionaryDialog.createTemplateView, 'm')">
+                                    <tui-svg src="tuiIconEdit2"></tui-svg> {{'create-new' | translate}}
+                                </button>
+                            </tui-opt-group>
+                        </tui-data-list>
+                    </ng-template>
+                </div>
+            </ng-template>
+            }
+        </div>
+
+        <div class="blank-space"></div>
+
+        <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconType'" tuiMode="onLight"
+            (click)="loadComponent(viewers.localization)" tuiHint="{{'main-localization' | translate}}"
+            tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
+        </button>
+        <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconMessageCircle'"
+            tuiMode="onLight" (click)="loadComponent(viewers.dialogs)"
+            tuiHint="{{'chapter-dialog-localization' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
+        </button>
+        <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconUpload'" tuiMode="onLight"
+            (click)="loadComponent(viewers.import)" tuiHint="{{'re-import-files' | translate}}"
+            tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
+        </button>
+        <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconDownload'" tuiMode="onLight"
+            (click)="loadComponent(viewers.export)" tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark"
+            [tuiHintShowDelay]="100">
+        </button>
+
+        <app-localization-key></app-localization-key>
+        <app-gamedata-values></app-gamedata-values>
+        <app-common-words></app-common-words>
     </div>
-
-    <div class="blank-space"></div>
-
-    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconType'" tuiMode="onLight"
-        (click)="loadComponent(viewers.localization)" tuiHint="{{'main-localization' | translate}}"
-        tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
-    </button>
-    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconMessageCircle'" tuiMode="onLight"
-        (click)="loadComponent(viewers.dialogs)" tuiHint="{{'chapter-dialog-localization' | translate}}"
-        tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
-    </button>
-    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconUpload'" tuiMode="onLight"
-        (click)="loadComponent(viewers.import)" tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark"
-        [tuiHintShowDelay]="100">
-    </button>
-    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconDownload'" tuiMode="onLight"
-        (click)="loadComponent(viewers.export)" tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark"
-        [tuiHintShowDelay]="100">
-    </button>
-
-    <app-localization-key></app-localization-key>
-    <app-gamedata-values></app-gamedata-values>
-    <app-common-words></app-common-words>
 </div>

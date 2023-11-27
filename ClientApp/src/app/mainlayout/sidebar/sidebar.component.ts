@@ -1,17 +1,18 @@
-import { Component, Type } from '@angular/core';
+import { Component, Inject, Type, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
-import { LocalizationComponent } from 'src/app/components/localization/localization.component';
 import { LoadFileWizardComponent } from 'src/app/components/load-file-wizard/load-file-wizard.component';
 import { ExportTranslationGuestComponent } from 'src/app/components/export-translation-guest/export-translation-guest.component';
 import { DialogMainComponent } from 'src/app/dialog-assets/dialog-main/dialog-main.component';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
 import { CommonWordsComponent } from 'src/app/components/common-words/common-words.component';
-import { TuiButtonModule, TuiHintModule, TuiLoaderModule } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiButtonModule, TuiDataListModule, TuiHintModule, TuiHostedDropdownModule, TuiLoaderModule, TuiSvgModule } from '@taiga-ui/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { LocalizationKeyComponent } from 'src/app/components/localization/localization-key/localization-key.component';
 import { TuiAvatarModule } from '@taiga-ui/kit';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { LocalizationKeyComponent } from 'src/app/localization/localization-key/localization-key.component';
+import { LocalizationComponent } from 'src/app/localization/localization.component';
+import { TuiActiveZoneModule } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-sidebar',
@@ -26,6 +27,10 @@ import { AuthService } from 'src/app/core/services/auth.service';
     TuiHintModule,
     TuiLoaderModule,
     TuiAvatarModule,
+    TuiHostedDropdownModule,
+    TuiDataListModule,
+    TuiSvgModule,
+    TuiActiveZoneModule,
 
     LocalizationKeyComponent,
     GamedataValuesComponent,
@@ -33,7 +38,13 @@ import { AuthService } from 'src/app/core/services/auth.service';
   ],
 })
 export class SidebarComponent {
+  @ViewChild(LocalizationKeyComponent) localizationKeyDialog!: LocalizationKeyComponent;
+  @ViewChild(GamedataValuesComponent) gamedataDialog!: GamedataValuesComponent;
+  @ViewChild(CommonWordsComponent) dictionaryDialog!: CommonWordsComponent;
 
+  public open: boolean = false;
+  public gamedataOpen: boolean = false;
+  public commonOpen: boolean = false;
   public viewers: { [component: string]: Type<any> } = {
     localization: LocalizationComponent,
     dialogs: DialogMainComponent,
@@ -43,11 +54,13 @@ export class SidebarComponent {
 
   constructor(
     public auth: AuthService,
-    private viewersService: ViewersService
+    private viewersService: ViewersService,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 
   public loadComponent(component: Type<any>) {
     this.viewersService.loadComponent(component, {});
+    this.open = false;
   }
 
 }

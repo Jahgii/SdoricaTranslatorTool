@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  TuiScrollbarComponent,
   TuiTextfieldControllerModule,
   TuiPrimitiveTextfieldModule,
   TuiDataListModule,

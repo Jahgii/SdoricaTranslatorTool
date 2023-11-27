@@ -1,11 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiHostedDropdownModule, TuiModeModule, TuiDataListModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule } from '@taiga-ui/core';
-import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
+import {
+  TuiBreakpointService,
+  TuiDialogContext,
+  TuiDialogService,
+  TuiDialogSize,
+  TuiHostedDropdownModule,
+  TuiModeModule,
+  TuiDataListModule,
+  TuiScrollbarModule,
+  TuiTextfieldControllerModule,
+  TuiPrimitiveTextfieldModule
+} from '@taiga-ui/core';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
-import { IGamedataValue } from 'src/app/core/interfaces/i-gamedata';
-import { ApiService } from 'src/app/core/services/api.service';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { GamedataService } from 'src/app/core/services/gamedata.service';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
@@ -22,16 +31,48 @@ import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
 
 @Component({
-    selector: 'app-gamedata-values',
-    templateUrl: './gamedata-values.component.html',
-    styleUrls: ['./gamedata-values.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        popinAnimation,
-        fadeinAnimation
-    ],
-    standalone: true,
-    imports: [TuiHostedDropdownModule, TuiDropdownModule, TuiButtonModule, TuiModeModule, TuiDataListModule, TuiSvgModule, NgIf, DraggableElementDirective, TuiScrollbarModule, FormsModule, ReactiveFormsModule, TuiInputModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiInputNumberModule, TuiHintModule, TuiCheckboxBlockModule, NgSwitch, NgSwitchCase, TuiLoaderModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, TuiTableModule, CdkVirtualForOf, TuiCheckboxModule, AsyncPipe, TranslateModule]
+  selector: 'app-gamedata-values',
+  templateUrl: './gamedata-values.component.html',
+  styleUrls: ['./gamedata-values.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    popinAnimation,
+    fadeinAnimation
+  ],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgSwitch,
+    NgSwitchCase,
+    AsyncPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+
+    TuiHostedDropdownModule,
+    TuiDropdownModule,
+    TuiButtonModule,
+    TuiModeModule,
+    TuiDataListModule,
+    TuiSvgModule,
+    TuiScrollbarModule,
+    TuiInputModule,
+    TuiTextfieldControllerModule,
+    TuiPrimitiveTextfieldModule,
+    TuiInputNumberModule,
+    TuiHintModule,
+    TuiCheckboxBlockModule,
+    TuiLoaderModule,
+    TuiTableModule,
+    TuiCheckboxModule,
+
+    DraggableElementDirective,
+  ]
+
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;
@@ -66,8 +107,6 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
   private dialog: 'list' | 'create' | undefined;
 
   constructor(
-    private fB: FormBuilder,
-    private api: ApiService,
     private cd: ChangeDetectorRef,
     private translate: TranslateService,
     public gamedataService: GamedataService,

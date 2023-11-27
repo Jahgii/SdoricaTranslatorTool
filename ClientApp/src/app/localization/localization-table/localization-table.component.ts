@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiDriver, TuiOptionComponent, TuiScrollbarComponent, tuiGetWordRange, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule } from '@taiga-ui/core';
+import { TuiDriver, TuiOptionComponent, TuiScrollbarComponent, tuiGetWordRange, TuiScrollbarModule, TuiTextfieldControllerModule, TuiDataListModule } from '@taiga-ui/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
@@ -14,7 +14,6 @@ import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { TuiAppBarModule } from '@taiga-ui/addon-mobile';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
-import { CommonDictionaryDirective } from '../../../core/directives/common-dictionary.directive';
 import { TuiHintModule } from '@taiga-ui/core/directives/hint';
 import { TuiCheckboxModule } from '@taiga-ui/kit/components/checkbox';
 import { TuiSvgModule } from '@taiga-ui/core/components/svg';
@@ -23,8 +22,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiToggleModule, TuiInputModule, TuiTextareaModule } from '@taiga-ui/kit';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { TuiTableFiltersModule, TuiTableModule } from '@taiga-ui/addon-table';
-import { NgIf, NgTemplateOutlet, NgFor, AsyncPipe, KeyValuePipe, CommonModule } from '@angular/common';
-import { ElementBreakpoint, ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
+import { CommonModule } from '@angular/common';
+import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
+import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictionary.directive';
 
 const ESPECIAL_CHARACTER = '@'
 

@@ -1,5 +1,9 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.scss';
 
+.sidebar-container {
+    position: relative;
+}
+
 .sidebar {
     display: grid;
     grid-template-columns: 1fr;
@@ -24,16 +28,29 @@
         width: 100%;
         transition: all 0.5s;
 
+        .menu-indicator {
+            position: absolute;
+            bottom: 3px;
+            background-color: transparent;
+            border-radius: var(--tui-radius-s);
+            backdrop-filter: blur(10px);
+        }
+
+        .avatar {
+            background: transparent;
+            left: 0;
+            border: 1px solid var(--tui-base-04);
+            border-radius: var(--tui-radius-m) !important;
+        }
+
         @media #{$tui-mobile} {
             left: 44px;
+
+            .avatar {
+                left: -5px;
+            }
         }
     }
-}
-
-.avatar {
-    background: transparent;
-    border: 1px solid var(--tui-base-04);
-    border-radius: var(--tui-radius-m) !important;
 }
 
 .sidebar-link-icon {

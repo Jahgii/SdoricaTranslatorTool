@@ -1,3 +1,8 @@
+.resizer-container {
+    height: 100%;
+    border-top: 1px solid;
+}
+
 .resizer-line {
     height: calc(100% - (var(--header-height) * 2));
     position: relative;

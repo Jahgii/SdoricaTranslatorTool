@@ -21,16 +21,43 @@ import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
 
 @Component({
-    selector: 'app-common-words',
-    templateUrl: './common-words.component.html',
-    styleUrls: ['./common-words.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        popinAnimation,
-        fadeinAnimation
-    ],
-    standalone: true,
-    imports: [TuiHostedDropdownModule, TuiDropdownModule, TuiButtonModule, TuiModeModule, TuiDataListModule, TuiSvgModule, NgIf, DraggableElementDirective, TuiScrollbarModule, FormsModule, ReactiveFormsModule, TuiInputModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiHintModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, TuiTableModule, CdkVirtualForOf, TuiLoaderModule, TuiBlockStatusModule, AsyncPipe, TranslateModule]
+  selector: 'app-common-words',
+  templateUrl: './common-words.component.html',
+  styleUrls: ['./common-words.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    popinAnimation,
+    fadeinAnimation
+  ],
+  standalone: true,
+  imports: [
+    NgIf,
+    AsyncPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+
+    TuiHostedDropdownModule,
+    TuiDropdownModule,
+    TuiButtonModule,
+    TuiModeModule,
+    TuiDataListModule,
+    TuiSvgModule,
+    TuiScrollbarModule,
+    TuiInputModule,
+    TuiTextfieldControllerModule,
+    TuiPrimitiveTextfieldModule,
+    TuiHintModule,
+    TuiTableModule,
+    TuiLoaderModule,
+    TuiBlockStatusModule,
+
+    DraggableElementDirective
+  ]
 })
 export class CommonWordsComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;

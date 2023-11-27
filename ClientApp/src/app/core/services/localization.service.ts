@@ -5,32 +5,13 @@ import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localiz
 import { LanguageOriginService } from './language-origin.service';
 import { LibreTranslateService } from './libre-translate.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { LocalizationCategoriesService } from 'src/app/components/localization/localization-categories.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
+import { LocalizationCategoriesService } from 'src/app/localization/localization-categories.service';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
   public categories$!: Observable<ILocalizationCategory[]>;
-  // public categories$: Observable<ILocalizationCategory[]> = this.api.get<ILocalizationCategory[]>('localizationcategories')
-  //   .pipe(map(r => {
-  //     let searchCategory: ILocalizationCategory = {
-  //       Name: "SEARCH",
-  //       Keys: {
-  //         [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-  //           return ac + v.Keys[this.languageOrigin.localizationLang];
-  //         }, 0)
-  //       },
-
-  //       KeysTranslated: {
-  //         [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-  //           return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
-  //         }, 0)
-  //       }
-  //     }
-  //     r.unshift(searchCategory);
-  //     return r;
-  //   }));
 
   //#region Table Filters
   readonly filterForm = new FormGroup({
@@ -190,12 +171,10 @@ export class LocalizationService implements OnDestroy {
       if (keyToPropagate.Translated[this.languageOrigin.localizationLang] === check) return;
       if (check) {
         this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
-        // this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
         this.searchTotalTranslated++;
       }
       else {
         this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
-        // this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
         this.searchTotalTranslated--;
       }
       keyToPropagate.Translated[this.languageOrigin.localizationLang] = check;
@@ -242,31 +221,6 @@ export class LocalizationService implements OnDestroy {
         }
       );
   }
-
-  // public refreshAll() {
-  //   this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories')
-  //     .pipe(map(r => {
-  //       let searchCategory: ILocalizationCategory = {
-  //         Name: "SEARCH",
-  //         Keys: {
-  //           [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-  //             return ac + v.Keys[this.languageOrigin.localizationLang];
-  //           }, 0)
-  //         },
-
-  //         KeysTranslated: {
-  //           [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {
-  //             return ac + v.KeysTranslated[this.languageOrigin.localizationLang];
-  //           }, 0)
-  //         }
-  //       }
-  //       r.unshift(searchCategory);
-  //       return r;
-  //     }));
-
-  //   if (this.selectedCategory?.Name == 'SEARCH') return;
-  //   this.keys$ = this.api.getWithHeaders('localizationkeys', { category: this.selectedCategory.Name });
-  // }
 
   public onMachineTranslate() {
     if (this.keys)
