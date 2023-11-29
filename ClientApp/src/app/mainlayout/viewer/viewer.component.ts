@@ -25,10 +25,11 @@ export class ViewerComponent implements OnInit {
   @ViewChild(AdHostDirective, { static: true })
   adHost!: AdHostDirective;
   @HostListener('click')
-  setActiveViewer = (viewer: ComponentRef<ViewerComponent>): void => console.log("CLICK");
+  setActiveViewer = (viewer: ComponentRef<ViewerComponent>): void => undefined;
   @HostBinding('style.width')
   widthPercentage = "100%";
 
+  public componentLoadedName!: string;
   public componentLoaded!: ComponentRef<any>;
   public active: boolean = false;
 

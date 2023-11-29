@@ -12,6 +12,7 @@ export class ViewersService {
   public activeView!: ComponentRef<ViewerComponent>;
   private adHost!: AdHostDirective;
   public notifier: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  public componentOpens: { [componentName: string]: BehaviorSubject<number> } = {};
 
   constructor() { }
 
@@ -62,7 +63,13 @@ export class ViewersService {
     else {
       this.adHost.viewContainerRef.remove(1);
       this.adHost.viewContainerRef.remove(1);
-      this.views.pop();
+      let view = this.views.pop();
+      if (
+        view?.instance.componentLoaded &&
+        view.instance.componentLoadedName != this.views[0].instance.componentLoadedName
+      )
+        this.componentOpens[view.instance.componentLoadedName].next(this.componentOpens[view.instance.componentLoadedName].value - 1);
+
       this.resizeViewers();
       this.onChangeActiveView(this.views[0]);
     }
@@ -71,9 +78,18 @@ export class ViewersService {
   }
 
   public loadComponent(component: Type<any>, args: { [arg: string]: any }) {
+    if (this.activeView.instance.componentLoaded)
+      this.componentOpens[this.activeView.instance.componentLoadedName].next(this.componentOpens[this.activeView.instance.componentLoadedName].value - 1);
+
+    if (!this.componentOpens[component.name])
+      this.componentOpens[component.name] = new BehaviorSubject(1);
+    else
+      this.componentOpens[component.name].next(this.componentOpens[component.name].value + 1);
+
     this.activeView.instance.loadComponent(component, args);
+    this.activeView.instance.componentLoadedName = component.name;
   }
-  
+
   private onChangeActiveView(view: ComponentRef<ViewerComponent>) {
     this.views.forEach(v => v.instance.active = false);
     view.instance.active = true;
