@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { LocalizationKeyComponent } from 'src/app/localization/localization-key/localization-key.component';
 import { LocalizationComponent } from 'src/app/localization/localization.component';
 import { TuiActiveZoneModule } from '@taiga-ui/cdk';
+import { ImportMainComponent } from 'src/app/import/import-main/import-main.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -45,12 +46,16 @@ export class SidebarComponent {
   public open: boolean = false;
   public gamedataOpen: boolean = false;
   public commonOpen: boolean = false;
+
   public viewers: { [component: string]: Type<any> } = {
     localization: LocalizationComponent,
     dialogs: DialogMainComponent,
     import: LoadFileWizardComponent,
+    // import: ImportMainComponent,
     export: ExportTranslationGuestComponent
   };
+
+  public componentOpens = this.viewersService.componentOpens;
 
   constructor(
     public auth: AuthService,

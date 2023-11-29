@@ -18,26 +18,8 @@
                 </button>
             </tui-hosted-dropdown>
             <ng-template #dropdownMenu let-close="close" let-activeZone>
-                <div
-                    style="display: flex; flex-direction: column; gap: 1.5rem; padding: 0.65rem; align-items: center; justify-content: center;">
-                    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconType'"
-                        tuiMode="onLight" (click)="loadComponent(viewers.localization)"
-                        tuiHint="{{'main-localization' | translate}}" tuiHintAppearance="onDark"
-                        [tuiHintShowDelay]="100">
-                    </button>
-                    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconMessageCircle'"
-                        tuiMode="onLight" (click)="loadComponent(viewers.dialogs)"
-                        tuiHint="{{'chapter-dialog-localization' | translate}}" tuiHintAppearance="onDark"
-                        [tuiHintShowDelay]="100">
-                    </button>
-                    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconUpload'"
-                        tuiMode="onLight" (click)="loadComponent(viewers.import)"
-                        tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
-                    </button>
-                    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconDownload'"
-                        tuiMode="onLight" (click)="loadComponent(viewers.export)"
-                        tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
-                    </button>
+                <div class="mobile-menu">
+                    <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
 
                     <!-- DIALOG OPTIONS -->
                     <button tuiButton type="button" appearance="icon" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
@@ -94,25 +76,33 @@
 
         <div class="blank-space"></div>
 
-        <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconType'" tuiMode="onLight"
-            (click)="loadComponent(viewers.localization)" tuiHint="{{'main-localization' | translate}}"
-            tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
-        </button>
-        <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconMessageCircle'"
-            tuiMode="onLight" (click)="loadComponent(viewers.dialogs)"
-            tuiHint="{{'chapter-dialog-localization' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
-        </button>
-        <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconUpload'" tuiMode="onLight"
-            (click)="loadComponent(viewers.import)" tuiHint="{{'re-import-files' | translate}}"
-            tuiHintAppearance="onDark" [tuiHintShowDelay]="100">
-        </button>
-        <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconDownload'" tuiMode="onLight"
-            (click)="loadComponent(viewers.export)" tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark"
-            [tuiHintShowDelay]="100">
-        </button>
+        <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
 
         <app-localization-key></app-localization-key>
         <app-gamedata-values></app-gamedata-values>
         <app-common-words></app-common-words>
     </div>
 </div>
+
+<ng-template #sidebarLoadComponentButtons>
+    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconType'" tuiMode="onLight"
+        (click)="loadComponent(viewers.localization)" tuiHint="{{'main-localization' | translate}}"
+        tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+        [ngStyle]="{'background': (componentOpens['LocalizationComponent'] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+    </button>
+    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconMessageCircle'" tuiMode="onLight"
+        (click)="loadComponent(viewers.dialogs)" tuiHint="{{'chapter-dialog-localization' | translate}}"
+        tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+        [ngStyle]="{'background': (componentOpens['DialogMainComponent'] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+    </button>
+    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconUpload'" tuiMode="onLight"
+        (click)="loadComponent(viewers.import)" tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark"
+        [tuiHintShowDelay]="100"
+        [ngStyle]="{'background': (componentOpens['LoadFileWizardComponent'] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+    </button>
+    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconDownload'" tuiMode="onLight"
+        (click)="loadComponent(viewers.export)" tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark"
+        [tuiHintShowDelay]="100"
+        [ngStyle]="{'background': (componentOpens['ExportTranslationGuestComponent'] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+    </button>
+</ng-template>
