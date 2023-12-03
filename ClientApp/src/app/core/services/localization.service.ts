@@ -49,7 +49,7 @@ export class LocalizationService implements OnDestroy {
   public selectedCategoryIndex!: number;
   public propagateTranslation: boolean = true;
   public language: string = '';
-  public focusRow: number = -1;
+  public focusRow: string = '';
   public searchTotalTranslated = 0;
   private controlCheckbox = 1;
 

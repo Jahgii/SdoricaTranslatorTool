@@ -5,6 +5,7 @@ export interface ILocalizationCategory {
 }
 
 export interface ILocalizationKey {
+    Id?: string;
     Category: string;
     Name: string;
     _version: number;

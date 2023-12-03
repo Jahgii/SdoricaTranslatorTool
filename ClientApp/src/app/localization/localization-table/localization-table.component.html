@@ -92,7 +92,8 @@
                     </tr>
                 </thead>
                 <tbody tuiTbody>
-                    <tr *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i" tuiTr>
+                    <tr *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i; cdkVirtualForTrackBy: trackBy"
+                        tuiTr>
                         <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintAppearance]="'onDark'"
                             [tuiHintShowDelay]="200" class="tooltip-name-cell">
                             <ng-template #tooltip>
@@ -115,7 +116,7 @@
                                     style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);"
                                     src="tuiIconArrowDown" [@popIn]></tui-svg>
                             </ng-template>
-                            <ng-container *ngIf="localization.focusRow == i; else showNormalText">
+                            <ng-container *ngIf="localization.focusRow === item.Id; else showNormalText">
                                 <tui-scrollbar class="translation-content-cell">
                                     <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
                                     </span>
@@ -126,8 +127,8 @@
                                     <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                 </tui-scrollbar>
                             </ng-template>
-                            <span *ngIf="localization.focusRow != i"
-                                class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs" [@fadeIn]>
+                            <span *ngIf="localization.focusRow !== item.Id"
+                                class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
                                 <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
                                     <tui-svg src="tuiIconInbox" style="font: inherit;"></tui-svg>
                                     {{item.Category}}
@@ -138,7 +139,8 @@
                         </td>
                         <td *tuiCell="'Translation'" tuiTd>
                             <tui-textarea #tranlationTextArea [(ngModel)]="item.Translations[localization.language]"
-                                [expandable]="true" (focusedChange)="localization.focusRow = i" [tuiTextfieldSize]="'m'"
+                                [expandable]="true" (focusedChange)="localization.focusRow = item.Id"
+                                [tuiTextfieldSize]="'m'"
                                 (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
                                 [rows]="8" tuiDropdownSelectionPosition="word" [pseudoFocus]="(driver | async) || null"
                                 [tuiDropdown]="buffSelection" [tuiDropdownSelection]="predicate"
@@ -211,16 +213,15 @@
                                 <div #parent class="cell-content-original" [tuiHint]="tooltip"
                                     [tuiHintAppearance]="'onDark'" [tuiHintShowDelay]="200">
                                     <div>
-                                        <ng-container *ngIf="localization.focusRow == i; else showNormalText">
+                                        <ng-container *ngIf="localization.focusRow === item.Id; else showNormalText">
                                             <div appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
                                             </div>
                                         </ng-container>
                                         <ng-template #showNormalText>
                                             <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                         </ng-template>
-                                        <span *ngIf="localization.focusRow != i"
-                                            class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs"
-                                            [@fadeIn]>
+                                        <span *ngIf="localization.focusRow !== item.Id"
+                                            class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
                                             <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
                                                 <tui-svg src="tuiIconInbox" style="font: inherit;"></tui-svg>
                                                 {{item.Category}}
@@ -262,7 +263,7 @@
                                 <div>
                                     <tui-textarea #tranlationTextArea style="transform: translate(0);"
                                         [(ngModel)]="item.Translations[localization.language]" [expandable]="true"
-                                        (focusedChange)="localization.focusRow = i" [tuiTextfieldSize]="'m'"
+                                        (focusedChange)="localization.focusRow = item.Id" [tuiTextfieldSize]="'m'"
                                         (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
                                         [rows]="8" tuiDropdownSelectionPosition="word"
                                         [pseudoFocus]="(driver | async) || null" [tuiDropdown]="buffSelection"
