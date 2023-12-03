@@ -149,10 +149,6 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
       });
   }
 
-  public trackBy(index: number, item: ILocalizationKey) {
-    return item.Id;
-  }
-
   //#region BuffInfo Autocomplete
   public onArrow(event: Event, which: 'first' | 'last'): void {
     const item = this.options[which];

@@ -23,7 +23,7 @@
 <ng-template #desktopTable>
     <ng-container tuiTableFilters>
         <cdk-virtual-scroll-viewport #viewport *ngIf="localization.keys" tuiScrollable
-            class="viewport tui-zero-scrollbar" [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
+            class="viewport tui-zero-scrollbar" [itemSize]="105" [maxBufferPx]="500" [minBufferPx]="400">
 
             <table class="tui-table" style="table-layout: fixed;" tuiTable
                 [columns]="['Language', 'Translation', 'Translated']" [@popIn]>
@@ -92,82 +92,84 @@
                     </tr>
                 </thead>
                 <tbody tuiTbody>
-                    <tr *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i; cdkVirtualForTrackBy: trackBy"
-                        tuiTr>
-                        <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintAppearance]="'onDark'"
-                            [tuiHintShowDelay]="200" class="tooltip-name-cell">
-                            <ng-template #tooltip>
-                                <tui-scrollbar #scrollTooltip class="tooltip-original-cell" [hidden]="true"
-                                    (mouseenter)="onTooltipCheck(scrollTooltip)" (mouseleave)="onTooltipCheck()">
-                                    <ul>
-                                        <li class="tooltip-important-text tui-text_body-xs" style="text-align: right;">
-                                            <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
-                                            {{item.Name}}
-                                        </li>
-                                        <li *ngFor="let key of item.Original | keyvalue">
-                                            <span class="tooltip-important-text">
-                                                {{$any(key.key) | translate}}:
-                                            </span>
-                                            {{key.value}}
-                                        </li>
-                                    </ul>
-                                </tui-scrollbar>
-                                <tui-svg *ngIf="showTooltipArrow$ | async"
-                                    style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);"
-                                    src="tuiIconArrowDown" [@popIn]></tui-svg>
-                            </ng-template>
-                            <ng-container *ngIf="localization.focusRow === item.Id; else showNormalText">
-                                <tui-scrollbar class="translation-content-cell">
-                                    <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
-                                    </span>
-                                </tui-scrollbar>
-                            </ng-container>
-                            <ng-template #showNormalText>
-                                <tui-scrollbar class="translation-content-cell">
-                                    <span>{{onRenderDefaultLanguage(item.Original)}}</span>
-                                </tui-scrollbar>
-                            </ng-template>
-                            <span *ngIf="localization.focusRow !== item.Id"
-                                class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
-                                <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
-                                    <tui-svg src="tuiIconInbox" style="font: inherit;"></tui-svg>
-                                    {{item.Category}}
-                                </div>
-                                <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
-                                {{item.Name}}
-                            </span>
-                        </td>
-                        <td *tuiCell="'Translation'" tuiTd>
-                            <tui-textarea #tranlationTextArea [(ngModel)]="item.Translations[localization.language]"
-                                [expandable]="true" (focusedChange)="localization.focusRow = item.Id"
-                                [tuiTextfieldSize]="'m'"
-                                (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
-                                [rows]="8" tuiDropdownSelectionPosition="word" [pseudoFocus]="(driver | async) || null"
-                                [tuiDropdown]="buffSelection" [tuiDropdownSelection]="predicate"
-                                (keydown.arrowDown)="onArrow($event, 'first')"
-                                (keydown.arrowUp)="onArrow($event, 'last')">
-                                ......
-                            </tui-textarea>
-                            <ng-template #buffSelection>
-                                <tui-data-list *ngIf="tranlationTextArea.nativeFocusableElement" class="menu"
-                                    (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
-                                    <button tuiOption
-                                        *ngFor="let buff of filterItems(tranlationTextArea.nativeFocusableElement)"
-                                        (click)="onClick(item, buff.Name, tranlationTextArea.nativeFocusableElement)">
-                                        {{ buff.Name }}
-                                    </button>
+                    <ng-container *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i;">
+                        <tr tuiTr>
+                            <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintAppearance]="'onDark'"
+                                [tuiHintShowDelay]="200" class="tooltip-name-cell">
+                                <ng-template #tooltip>
+                                    <tui-scrollbar #scrollTooltip class="tooltip-original-cell" [hidden]="true"
+                                        (mouseenter)="onTooltipCheck(scrollTooltip)" (mouseleave)="onTooltipCheck()">
+                                        <ul>
+                                            <li class="tooltip-important-text tui-text_body-xs"
+                                                style="text-align: right;">
+                                                <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
+                                                {{item.Name}}
+                                            </li>
+                                            <li *ngFor="let key of item.Original | keyvalue">
+                                                <span class="tooltip-important-text">
+                                                    {{$any(key.key) | translate}}:
+                                                </span>
+                                                {{key.value}}
+                                            </li>
+                                        </ul>
+                                    </tui-scrollbar>
+                                    <tui-svg *ngIf="showTooltipArrow$ | async"
+                                        style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);"
+                                        src="tuiIconArrowDown" [@popIn]></tui-svg>
+                                </ng-template>
+                                <ng-container *ngIf="localization.focusRow === item.Id; else showNormalText">
+                                    <tui-scrollbar class="translation-content-cell">
+                                        <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
+                                        </span>
+                                    </tui-scrollbar>
+                                </ng-container>
+                                <ng-template #showNormalText>
+                                    <tui-scrollbar class="translation-content-cell">
+                                        <span>{{onRenderDefaultLanguage(item.Original)}}</span>
+                                    </tui-scrollbar>
+                                </ng-template>
+                                <span *ngIf="localization.focusRow !== item.Id"
+                                    class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
+                                    <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
+                                        <tui-svg src="tuiIconInbox" style="font: inherit;"></tui-svg>
+                                        {{item.Category}}
+                                    </div>
+                                    <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
+                                    {{item.Name}}
+                                </span>
+                            </td>
+                            <td *tuiCell="'Translation'" tuiTd>
+                                <tui-textarea #tranlationTextArea [(ngModel)]="item.Translations[localization.language]"
+                                    [expandable]="true" (focusedChange)="localization.focusRow = item.Id"
+                                    [tuiTextfieldSize]="'m'"
+                                    (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
+                                    [rows]="4" tuiDropdownSelectionPosition="word"
+                                    [pseudoFocus]="(driver | async) || null" [tuiDropdown]="buffSelection"
+                                    [tuiDropdownSelection]="predicate" (keydown.arrowDown)="onArrow($event, 'first')"
+                                    (keydown.arrowUp)="onArrow($event, 'last')">
+                                    ......
+                                </tui-textarea>
+                                <ng-template #buffSelection>
+                                    <tui-data-list *ngIf="tranlationTextArea.nativeFocusableElement" class="menu"
+                                        (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
+                                        <button tuiOption
+                                            *ngFor="let buff of filterItems(tranlationTextArea.nativeFocusableElement)"
+                                            (click)="onClick(item, buff.Name, tranlationTextArea.nativeFocusableElement)">
+                                            {{ buff.Name }}
+                                        </button>
 
-                                </tui-data-list>
-                            </ng-template>
-                        </td>
-                        <td *tuiCell="'Translated'" tuiTd>
-                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                <tui-checkbox [disabled]="(localization.saving$ | async) ?? false"
-                                    [(ngModel)]="item.Translated[localization.language]"
-                                    (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"></tui-checkbox>
-                            </div>
-                        </td>
-                    </tr>
+                                    </tui-data-list>
+                                </ng-template>
+                            </td>
+                            <td *tuiCell="'Translated'" tuiTd>
+                                <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                                    <tui-checkbox [disabled]="(localization.saving$ | async) ?? false"
+                                        [(ngModel)]="item.Translated[localization.language]"
+                                        (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"></tui-checkbox>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
         </cdk-virtual-scroll-viewport>
@@ -177,7 +179,7 @@
 <ng-template #mobileTable>
     <ng-container tuiTableFilters>
         <cdk-virtual-scroll-viewport #viewport *ngIf="localization.keys" tuiScrollable
-            class="viewport tui-zero-scrollbar" [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
+            class="viewport tui-zero-scrollbar" [itemSize]="213" [maxBufferPx]="500" [minBufferPx]="400">
 
             <table class="tui-table" style="table-layout: fixed;" tuiTable [columns]="['Language']" [@popIn]>
                 <thead>
@@ -214,11 +216,16 @@
                                     [tuiHintAppearance]="'onDark'" [tuiHintShowDelay]="200">
                                     <div>
                                         <ng-container *ngIf="localization.focusRow === item.Id; else showNormalText">
-                                            <div appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
-                                            </div>
+                                            <tui-scrollbar class="translation-content-cell">
+                                                <div appCommonDictionary
+                                                    [text]="onRenderDefaultLanguage(item.Original)">
+                                                </div>
+                                            </tui-scrollbar>
                                         </ng-container>
                                         <ng-template #showNormalText>
-                                            <span>{{onRenderDefaultLanguage(item.Original)}}</span>
+                                            <tui-scrollbar class="translation-content-cell">
+                                                <span>{{onRenderDefaultLanguage(item.Original)}}</span>
+                                            </tui-scrollbar>
                                         </ng-template>
                                         <span *ngIf="localization.focusRow !== item.Id"
                                             class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
@@ -262,10 +269,10 @@
                                 </div>
                                 <div>
                                     <tui-textarea #tranlationTextArea style="transform: translate(0);"
-                                        [(ngModel)]="item.Translations[localization.language]" [expandable]="true"
+                                        [(ngModel)]="item.Translations[localization.language]" [expandable]="false"
                                         (focusedChange)="localization.focusRow = item.Id" [tuiTextfieldSize]="'m'"
                                         (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
-                                        [rows]="8" tuiDropdownSelectionPosition="word"
+                                        [rows]="4" tuiDropdownSelectionPosition="word"
                                         [pseudoFocus]="(driver | async) || null" [tuiDropdown]="buffSelection"
                                         [tuiDropdownSelection]="predicate"
                                         (keydown.arrowDown)="onArrow($event, 'first')"
