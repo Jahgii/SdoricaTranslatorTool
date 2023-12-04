@@ -52,6 +52,7 @@ export class DialogAssetService {
     this.mainGroup = node.MainGroup;
     this.group = node.OriginalName;
     this.node = node;
+    this.activeItemIndex = 0;
 
     this.subsLanguage = this.languageOrigin.language$
       .subscribe((lang: string) => {

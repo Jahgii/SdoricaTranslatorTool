@@ -62,8 +62,9 @@
         </div>
         <ng-container *ngIf="data[dAS.activeItemIndex] as dialogAsset">
             <tui-scrollbar>
-                <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="45"
-                    [maxBufferPx]="500" [minBufferPx]="400">
+                <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar"
+                    [itemSize]="(breakpointService.mode$ | async) === 'desktopLarge' ? 185 : 148" [maxBufferPx]="500"
+                    [minBufferPx]="400">
                     <table class="dialogs-table" tuiTable [columns]="['OriginalText', 'Translation']" [@popIn]>
                         <thead>
                             <tr tuiThGroup>
@@ -190,14 +191,13 @@
         </div>
         <div #container>
             <tui-scrollbar>
-                <cdk-virtual-scroll-viewport tuiScrollable itemSize="5" class="viewport tui-zero-scrollbar">
+                <cdk-virtual-scroll-viewport tuiScrollable [itemSize]="5" class="viewport tui-zero-scrollbar">
                     <ng-container
                         *cdkVirtualFor="let item of data[dAS.activeItemIndex].Model['$content']; let last = last">
-                        <p class="tui-text_body-s" [tuiDropdown]="otherLanguages" tuiDropdownHover
+                        <p class="tui-text_body-s original-text" [tuiDropdown]="otherLanguages" tuiDropdownHover
                             [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200" [tuiDropdownAlign]="'right'"
                             [tuiDropdownOffset]="0"
                             (mouseenter)="onGetOtherOriginalText(data[dAS.activeItemIndex].Number, item.ID)">
-                            <span class="tui-text_body-s">{{'original' | translate}}: </span>
                             {{item.OriginalText}}
                         </p>
                         <div class="mobile-dialog" [ngStyle]="{'zoom': container.offsetWidth * 1.12 / 767}">
