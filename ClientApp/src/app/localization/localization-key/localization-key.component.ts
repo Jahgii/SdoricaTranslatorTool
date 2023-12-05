@@ -21,10 +21,12 @@ import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { TuiHintModule } from '@taiga-ui/core/directives/hint';
 import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe, KeyValuePipe } from '@angular/common';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe, KeyValuePipe, NgStyle } from '@angular/common';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { LocalizationCategoriesService } from '../localization-categories.service';
 import { DraggableElementDirective } from 'src/app/core/directives/draggable-element.directive';
+import { DialogstateService } from 'src/app/core/services/dialogstate.service';
+import { DialogState } from 'src/app/core/interfaces/i-dialog';
 
 const STRINGIFY_CATEGORIES: TuiStringHandler<ILocalizationCategory> = (c: ILocalizationCategory) =>
   c ? `${c.Name}` : '***';
@@ -43,6 +45,7 @@ type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
     NgFor,
     NgSwitch,
     NgSwitchCase,
+    NgStyle,
     AsyncPipe,
     KeyValuePipe,
     ReactiveFormsModule,
@@ -68,7 +71,8 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;
   @Output() created = new EventEmitter();
 
-  public dialogState = {
+  public dialogStateName = 'locKey';
+  public dialogState: DialogState = {
     isDragging: false,
     isHidden: true,
     xDiff: 0,
@@ -76,7 +80,8 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     x: 5,
     y: 5,
     yTopMargin: 55,
-    yBottomMargin: 10
+    yBottomMargin: 10,
+    zIndex$: new BehaviorSubject(1)
   };
 
   public keyForm: FormGroup = this.fB.group({
@@ -108,10 +113,11 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
     private lCS: LocalizationCategoriesService,
+    private dStateService: DialogstateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
   ) {
-
+    this.dStateService.addState(this.dialogStateName, this.dialogState);
   }
 
   ngOnInit(): void {
@@ -134,7 +140,8 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
       if (v == 'mobile') {
         if (this.dialogState.isHidden === false) {
           this.dialogState.isHidden = true;
-          this.onShowCreate(this.createTemplateView, 'm');
+          if (this.dialogState.zIndex$.value === 2)
+            this.onShowCreate(this.createTemplateView, 'm');
           this.cd.detectChanges();
         }
       }
@@ -160,6 +167,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
       .then(v => {
         if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.dialogState.isHidden = !this.dialogState.isHidden;
+          this.changeIndex(this.dialogState);
         }
         else {
           this.subsDialog = this.dialogs
@@ -242,5 +250,9 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     this.availableKeyName$.next('untoching');
     this.categorySelected$.next(false);
     this.createOther$.next(false);
+  }
+
+  public changeIndex(state: DialogState) {
+    this.dStateService.onChangeIndex(state);
   }
 }

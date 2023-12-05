@@ -17,7 +17,8 @@
     </tui-data-list>
 </ng-template>
 
-<main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
+<main class="main-form" #draggableElement *ngIf="!dialogState.isHidden"
+    [ngStyle]="{'z-index': dialogState.zIndex$ | async}" (click)="changeIndex(dialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
         [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
         <p>{{'common-word-form' | translate}}</p>
@@ -111,7 +112,8 @@
     </tui-scrollbar>
 </ng-template>
 
-<main class="main-list" #draggableListElement *ngIf="!listDialogState.isHidden">
+<main class="main-list" #draggableListElement *ngIf="!listDialogState.isHidden"
+    [ngStyle]="{'z-index': listDialogState.zIndex$ | async}" (click)="changeIndex(listDialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
         [draggableElementState]="listDialogState" [elementAnchorRef]="anchor">
         <p>{{'dictionary' | translate}}</p>

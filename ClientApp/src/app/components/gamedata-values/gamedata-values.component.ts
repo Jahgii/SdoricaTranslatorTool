@@ -13,7 +13,7 @@ import {
   TuiTextfieldControllerModule,
   TuiPrimitiveTextfieldModule
 } from '@taiga-ui/core';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { GamedataService } from 'src/app/core/services/gamedata.service';
@@ -25,10 +25,12 @@ import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { TuiHintModule } from '@taiga-ui/core/directives/hint';
 import { TuiInputModule, TuiInputNumberModule, TuiCheckboxBlockModule } from '@taiga-ui/kit';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
-import { NgIf, NgSwitch, NgSwitchCase, AsyncPipe } from '@angular/common';
+import { NgIf, NgSwitch, NgSwitchCase, AsyncPipe, NgStyle } from '@angular/common';
 import { TuiSvgModule } from '@taiga-ui/core/components/svg';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
+import { DialogState } from 'src/app/core/interfaces/i-dialog';
+import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 
 @Component({
   selector: 'app-gamedata-values',
@@ -44,6 +46,7 @@ import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
     NgIf,
     NgSwitch,
     NgSwitchCase,
+    NgStyle,
     AsyncPipe,
     FormsModule,
     ReactiveFormsModule,
@@ -80,7 +83,8 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
 
   public menuOpen = false;
 
-  public dialogState = {
+  public dialogStateName = 'gamedata';
+  public dialogState: DialogState = {
     isDragging: false,
     isHidden: true,
     xDiff: 0,
@@ -88,10 +92,12 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
     x: 5,
     y: 5,
     yTopMargin: 55,
-    yBottomMargin: 10
+    yBottomMargin: 10,
+    zIndex$: new BehaviorSubject(1)
   };
 
-  public listDialogState = {
+  public dialogListStateName = 'gamedataList';
+  public listDialogState: DialogState = {
     isDragging: false,
     isHidden: true,
     xDiff: 0,
@@ -99,7 +105,8 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
     x: 5,
     y: 5,
     yTopMargin: 50,
-    yBottomMargin: 10
+    yBottomMargin: 10,
+    zIndex$: new BehaviorSubject(1)
   };
 
   private subsBreakpoint!: Subscription | undefined;
@@ -110,10 +117,12 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private translate: TranslateService,
     public gamedataService: GamedataService,
+    private dStateService: DialogstateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
   ) {
-
+    this.dStateService.addState(this.dialogStateName, this.dialogState);
+    this.dStateService.addState(this.dialogListStateName, this.listDialogState);
   }
 
   ngOnInit(): void {
@@ -121,12 +130,14 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
       if (v == 'mobile') {
         if (this.dialogState.isHidden === false) {
           this.dialogState.isHidden = true;
-          this.onShowCreateNew(this.createTemplateView, 'm');
+          if (this.dialogState.zIndex$.value === 2)
+            this.onShowCreateNew(this.createTemplateView, 'm');
           this.cd.detectChanges();
         }
-        else if (this.listDialogState.isHidden === false) {
+        if (this.listDialogState.isHidden === false) {
           this.listDialogState.isHidden = true;
-          this.onShowList(this.listTemplateView, 'm');
+          if (this.listDialogState.zIndex$.value === 2)
+            this.onShowList(this.listTemplateView, 'm');
           this.cd.detectChanges();
         }
       }
@@ -153,7 +164,7 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
         if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.dialogState.isHidden = !this.dialogState.isHidden;
-
+          this.changeIndex(this.dialogState);
           this.cd.detectChanges();
         }
         else {
@@ -176,7 +187,7 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
         if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.listDialogState.isHidden = !this.listDialogState.isHidden;
-
+          this.changeIndex(this.listDialogState);
           this.cd.detectChanges();
         }
         else {
@@ -191,6 +202,10 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
           this.cd.detectChanges();
         }
       });
+  }
+
+  public changeIndex(state: DialogState) {
+    this.dStateService.onChangeIndex(state);
   }
 
 }

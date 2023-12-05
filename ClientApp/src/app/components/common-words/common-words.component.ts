@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiHostedDropdownModule, TuiModeModule, TuiDataListModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule } from '@taiga-ui/core';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { ICommonWord } from 'src/app/core/interfaces/i-common-word';
@@ -15,10 +15,12 @@ import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } 
 import { TuiHintModule } from '@taiga-ui/core/directives/hint';
 import { TuiInputModule } from '@taiga-ui/kit';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { NgIf, AsyncPipe, NgStyle } from '@angular/common';
 import { TuiSvgModule } from '@taiga-ui/core/components/svg';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
+import { DialogstateService } from 'src/app/core/services/dialogstate.service';
+import { DialogState } from 'src/app/core/interfaces/i-dialog';
 
 @Component({
   selector: 'app-common-words',
@@ -32,6 +34,7 @@ import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
   standalone: true,
   imports: [
     NgIf,
+    NgStyle,
     AsyncPipe,
     FormsModule,
     ReactiveFormsModule,
@@ -65,7 +68,8 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
 
   public menuOpen = false;
 
-  public dialogState = {
+  public dialogStateName = 'commonWord';
+  public dialogState: DialogState = {
     isDragging: false,
     isHidden: true,
     xDiff: 0,
@@ -73,10 +77,12 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
     x: 5,
     y: 5,
     yTopMargin: 55,
-    yBottomMargin: 10
+    yBottomMargin: 10,
+    zIndex$: new BehaviorSubject(1)
   };
 
-  public listDialogState = {
+  public dialogListStateName = 'commonWordList';
+  public listDialogState: DialogState = {
     isDragging: false,
     isHidden: true,
     xDiff: 0,
@@ -84,7 +90,8 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
     x: 5,
     y: 5,
     yTopMargin: 50,
-    yBottomMargin: 10
+    yBottomMargin: 10,
+    zIndex$: new BehaviorSubject(1)
   };
 
   public commonWordForm: FormGroup = this.fB.group({
@@ -101,21 +108,27 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
     private fB: FormBuilder,
     private cd: ChangeDetectorRef,
     private translate: TranslateService,
+    private dStateService: DialogstateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
-  ) { }
+  ) {
+    this.dStateService.addState(this.dialogStateName, this.dialogState);
+    this.dStateService.addState(this.dialogListStateName, this.listDialogState);
+  }
 
   ngOnInit(): void {
     this.subsBreakpoint = this.breakpointService$.subscribe(v => {
       if (v == 'mobile') {
         if (this.dialogState.isHidden === false) {
           this.dialogState.isHidden = true;
-          this.onShowCreateNew(this.createTemplateView, 'm');
+          if (this.dialogState.zIndex$.value === 2)
+            this.onShowCreateNew(this.createTemplateView, 'm');
           this.cd.detectChanges();
         }
-        else if (this.listDialogState.isHidden === false) {
+        if (this.listDialogState.isHidden === false) {
           this.listDialogState.isHidden = true;
-          this.onShowList(this.listTemplateView, 'm');
+          if (this.listDialogState.zIndex$.value === 2)
+            this.onShowList(this.listTemplateView, 'm');
           this.cd.detectChanges();
         }
       }
@@ -141,7 +154,7 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
         if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.dialogState.isHidden = !this.dialogState.isHidden;
-
+          this.changeIndex(this.dialogState);
           this.cd.detectChanges();
         }
         else {
@@ -168,7 +181,7 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
         if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.listDialogState.isHidden = !this.listDialogState.isHidden;
-
+          this.changeIndex(this.listDialogState);
           this.cd.detectChanges();
         }
         else {
@@ -198,6 +211,10 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
   public onCreateOther() {
     this.commonWordForm.reset(undefined, { emitEvent: false });
     this.commonWords.createOther$.next(false);
+  }
+
+  public changeIndex(state: DialogState) {
+    this.dStateService.onChangeIndex(state);
   }
 
 }

@@ -1,7 +1,8 @@
 <button tuiButton type="button" appearance="icon" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
     (click)="onShowCreate(createTemplate, 'm')">
 </button>
-<main class="main-form" #draggableElement *ngIf="!dialogState.isHidden">
+<main class="main-form" #draggableElement *ngIf="!dialogState.isHidden"
+    [ngStyle]="{'z-index': dialogState.zIndex$ | async}" (click)="changeIndex(dialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement" [elementAnchorRef]="anchor"
         [draggableElementState]="dialogState">
         <p>{{'new-key-form' | translate}}</p>
