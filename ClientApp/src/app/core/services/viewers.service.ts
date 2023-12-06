@@ -86,6 +86,8 @@ export class ViewersService {
   }
 
   public loadComponent(component: Type<any>, args: { [arg: string]: any }) {
+    if (this.activeView.instance.componentLoadedName === component.name) return;
+
     if (this.activeView.instance.componentLoaded)
       this.componentOpens[this.activeView.instance.componentLoadedName].next(this.componentOpens[this.activeView.instance.componentLoadedName].value - 1);
 
