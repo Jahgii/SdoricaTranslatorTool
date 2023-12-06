@@ -175,7 +175,11 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
               label: this.translate.instant('buffinfo-form'),
               size: size,
             })
-            .subscribe();
+            .subscribe({
+              complete: () => {
+                this.subsDialog = undefined;
+              },
+            });
           this.cd.detectChanges();
         }
       });
@@ -198,7 +202,11 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
               label: this.translate.instant('buffinfo-list'),
               size: size,
             })
-            .subscribe();
+            .subscribe({
+              complete: () => {
+                this.subsDialog = undefined;
+              },
+            });
           this.cd.detectChanges();
         }
       });
