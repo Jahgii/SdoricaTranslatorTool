@@ -148,12 +148,10 @@ export class LocalizationService implements OnDestroy {
     this.saving$.next(true);
     if (check) {
       this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
-      // this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] += 1;
       this.searchTotalTranslated++;
     }
     else {
       this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
-      // this.selectedCategory.KeysTranslated[this.languageOrigin.localizationLang] -= 1;
       this.searchTotalTranslated--;
     }
 
@@ -168,8 +166,11 @@ export class LocalizationService implements OnDestroy {
 
     for (let index = 0; index < propagateKeys.length; index++) {
       let keyToPropagate = propagateKeys[index];
-      if (keyToPropagate.Translated[this.languageOrigin.localizationLang] === check) return;
-      if (check) {
+
+      if (keyToPropagate.Translated[this.languageOrigin.localizationLang] === check) {
+
+      }
+      else if (check) {
         this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, check, key);
         this.searchTotalTranslated++;
       }
