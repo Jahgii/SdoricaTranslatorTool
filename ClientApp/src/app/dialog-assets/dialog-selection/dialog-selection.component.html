@@ -29,7 +29,6 @@
                     <tui-svg class="tui-space_right-2" [ngClass]="{'active-tree': node.selected | async}"
                         [src]="node.children?'tuiIconFolder': 'tuiIconFile'"></tui-svg>
                     <div class="tree-name tui-space_right-2">
-                        <!-- <span>{{node.Name ?? node.OriginalName}}</span> -->
                         <tui-input-inline #input [(ngModel)]="node.Name" [class.input_empty]="!input.value"
                             (click)="$event.stopPropagation()" (focusedChange)="onFocusName($event, input, node)">
                             {{node.OriginalName}}

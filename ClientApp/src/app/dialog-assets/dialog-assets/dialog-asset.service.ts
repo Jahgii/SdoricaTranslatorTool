@@ -26,6 +26,7 @@ export class DialogAssetService {
   public tempNumber!: number;
 
   public dialogAssets$!: Observable<IDialogAsset[]>;
+  public dialogAssetsChange$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public activeItemIndex: number = 0;
   public changes$: BehaviorSubject<IDialogAsset | undefined> = new BehaviorSubject<IDialogAsset | undefined>(undefined);
   public pendingChanges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -62,6 +63,8 @@ export class DialogAssetService {
             mainGroup: this.mainGroup,
             group: this.group
           });
+
+        this.dialogAssetsChange$.next(true);
       });
 
     this.subsChanges = this.changes$

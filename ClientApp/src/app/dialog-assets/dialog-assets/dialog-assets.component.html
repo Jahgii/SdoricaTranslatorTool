@@ -1,5 +1,5 @@
 @if (dAS.mainGroup) {
-<ng-container *ngIf="(dAS.dialogAssets$ | async) as data; else loading;">
+<ng-container *ngIf="(dAS.dialogAssetsChange$ | async) && (dAS.dialogAssets$ | async) as data; else loading;">
     @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) ===
     'desktopSmall') {
     <ng-container [ngTemplateOutlet]="desktopUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
