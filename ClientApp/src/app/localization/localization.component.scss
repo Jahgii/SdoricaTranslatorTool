@@ -3,15 +3,16 @@
 .localization-container {
     display: flex;
     flex-direction: column;
-    padding: 1em;
+    padding: 0 1em;
     height: calc(100% - var(--header-height) - 3em);
     min-width: 320px;
 
     .localization-data-actions {
+        @include inset-border(bottom, light);
+        height: 56px;
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
-        gap: 0.5rem;
+        justify-content: space-between;
 
         .category-input {
             max-width: 320px;

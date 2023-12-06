@@ -9,7 +9,7 @@
 }
 @else{
 <div class="localization-container" *ngIf="localization.categories$ | async as categories">
-    <div class="localization-data-actions tui-space_bottom-3">
+    <div class="localization-data-actions tui-space_bottom-2">
         <tui-combo-box class="category-input" [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'m'"
             [valueContent]="categoryInputContent" [stringify]="stringify"
             (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
@@ -27,7 +27,7 @@
             <ng-container *ngIf="localization.searchCategory$ | async; else normalH;">
                 <tui-hosted-dropdown bottomRight [content]="content" tuiMode="onLight">
                     <button tuiButton appearance="flat" icon="tuiIconFilter" size="s" title="{{'filters' | translate}}">
-                        {{'results' | translate}}:
+                        <span>{{'results' | translate}}:</span>
                         {{localization.searchTotalTranslated}}/{{localization.keys?.length ?? 0}}
                     </button>
                 </tui-hosted-dropdown>

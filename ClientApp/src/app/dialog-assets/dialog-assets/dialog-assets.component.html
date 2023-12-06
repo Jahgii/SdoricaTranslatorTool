@@ -19,7 +19,7 @@
     <div class="desktop-main">
         <div class="top-main-options tui-space_bottom-2">
             <div class="option-child">
-                <span class="tui-text_h6 tui-space_right-4">{{'file-number' | translate}}:</span>
+                <span class="tui-text_body-s tui-space_right-4 text-bold">{{'file-number' | translate}}:</span>
                 <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="dAS.activeItemIndex" class="tabs">
                     <ng-container *ngFor="let item of data">
                         <button *tuiItem tuiTab>
