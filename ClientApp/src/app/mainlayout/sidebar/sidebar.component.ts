@@ -6,7 +6,7 @@ import { ExportTranslationGuestComponent } from 'src/app/components/export-trans
 import { DialogMainComponent } from 'src/app/dialog-assets/dialog-main/dialog-main.component';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
 import { CommonWordsComponent } from 'src/app/components/common-words/common-words.component';
-import { TuiBreakpointService, TuiButtonModule, TuiDataListModule, TuiHintModule, TuiHostedDropdownModule, TuiLoaderModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiButtonModule, TuiDataListModule, TuiHintModule, TuiHostedDropdownModule, TuiLoaderModule, TuiModeModule, TuiSvgModule } from '@taiga-ui/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiAvatarModule } from '@taiga-ui/kit';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -32,6 +32,7 @@ import { ImportMainComponent } from 'src/app/import/import-main/import-main.comp
     TuiDataListModule,
     TuiSvgModule,
     TuiActiveZoneModule,
+    TuiModeModule,
 
     LocalizationKeyComponent,
     GamedataValuesComponent,

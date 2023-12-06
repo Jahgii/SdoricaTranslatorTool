@@ -8,7 +8,7 @@
     <tui-loader class="loader" [inheritColor]="true" [overlay]="true"
         [showLoader]="(authService.authenticating$ | async) ?? false">
         <asl-google-signin-button *ngIf="theme.changeMode$ | async" type='standard' size='large' shape="circle"
-            [theme]="(theme.nightMode$ | async) ? 'filled_black' : 'outline'">
+            [theme]="!(theme.nightMode$ | async) ? 'filled_black' : 'outline'">
         </asl-google-signin-button>
     </tui-loader>
 </tui-block-status>

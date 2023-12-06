@@ -2,9 +2,8 @@ import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/cor
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { tuiPure, TuiStringHandler, TuiContextWithImplicit, TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiScrollbarModule, TuiGroupModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiDataListModule } from '@taiga-ui/core';
-import { TuiCountryIsoCode, TuiLanguageName, TuiLanguageSwitcher } from '@taiga-ui/i18n';
-import { BehaviorSubject } from 'rxjs';
+import { TuiBreakpointService, TuiScrollbarModule, TuiGroupModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiDataListModule, TuiHintModule } from '@taiga-ui/core';
+import { TuiLanguageSwitcher } from '@taiga-ui/i18n';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
@@ -20,12 +19,35 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
 
 @Component({
-    selector: 'app-nav-menu',
-    templateUrl: './nav-menu.component.html',
-    styleUrls: ['./nav-menu.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [TuiButtonModule, NgIf, TuiActiveZoneModule, TuiSidebarModule, TuiScrollbarModule, TuiGroupModule, NgFor, TuiRadioBlockModule, FormsModule, ReactiveFormsModule, TuiSelectModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiDataListModule, TuiDataListWrapperModule, TuiInputModule, TuiBadgeModule, TuiLetModule, AsyncPipe, TranslateModule]
+  selector: 'app-nav-menu',
+  templateUrl: './nav-menu.component.html',
+  styleUrls: ['./nav-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    AsyncPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+
+    TuiButtonModule,
+    TuiActiveZoneModule,
+    TuiSidebarModule,
+    TuiScrollbarModule,
+    TuiGroupModule,
+    TuiRadioBlockModule,
+    TuiSelectModule,
+    TuiTextfieldControllerModule,
+    TuiPrimitiveTextfieldModule,
+    TuiDataListModule,
+    TuiDataListWrapperModule,
+    TuiInputModule,
+    TuiBadgeModule,
+    TuiLetModule,
+    TuiHintModule
+  ]
 })
 export class NavMenuComponent implements OnInit {
   public openMenu: boolean = false;

@@ -12,8 +12,10 @@
     <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
         appearance="icon" [icon]="'tuiIconGithub'">
     </a>
-    <button tuiIconButton appearance="icon" [icon]="(theme.nightMode$ | async)? 'tuiIconMoon' : 'tuiIconSun'"
-        (click)="theme.switchTheme()">
+    <button tuiIconButton appearance="icon" [icon]="(theme.nightMode$ | async)? 'tuiIconSun' : 'tuiIconMoon'"
+        (click)="theme.switchTheme()"
+        [tuiHint]="((theme.nightMode$ | async)? 'toogle-lightmode' : 'toogle-nightmode') | translate"
+        tuiHintAppearance="onDark">
     </button>
     <button tuiIconButton appearance="icon" [icon]="'tuiIconSettings'" (click)="onToogleSettings()"
         (tuiActiveZoneChange)="onToogleSettings()">

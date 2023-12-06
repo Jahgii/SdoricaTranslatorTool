@@ -1,6 +1,6 @@
 <tui-root style="height: 100%;">
-  <tui-theme-night *ngIf="!(theme.nightMode$ | async)"></tui-theme-night>
-  <app-theme-dark *ngIf="!(theme.nightMode$ | async)"></app-theme-dark>
+  <tui-theme-night *ngIf="(theme.nightMode$ | async)"></tui-theme-night>
+  <app-theme-dark *ngIf="(theme.nightMode$ | async)"></app-theme-dark>
 
 
   <main class="main-grid">

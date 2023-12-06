@@ -204,5 +204,13 @@
     "alert-error": "Error",
     "alert-error-label": "There was an error, please try again later",
     "alert-success": "Success",
-    "alert-success-label": "Data Correctly Updated"
+    "alert-success-label": "Data Correctly Updated",
+    "alert-wrong-file-label": "The file provided is not valid, verify that it's the correct file and try again.",
+    "file-import-skip-description": "File will be skipped when importing",
+    "error-file-gamedata": "The GAMEDATA file provided is not valid, verify that it's the correct file and try again.",
+    "file-verified": "Verified File",
+    "begin-import": "Start Import Process",
+    "missing-files-import": "Please provide all files to begin the import process",
+    "toogle-nightmode": "Switch to Dark mode",
+    "toogle-lightmode": "Switch to Light mode"
 }

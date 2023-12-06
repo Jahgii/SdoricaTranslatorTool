@@ -14,7 +14,8 @@
             </div>
             <tui-hosted-dropdown [tuiDropdownDirection]="'bottom'" style="position: absolute;" [content]="dropdownMenu"
                 [(open)]="open">
-                <button tuiIconButton appearance="flat" size="l" type="button" [pseudoActive]="open || null">
+                <button tuiIconButton appearance="flat" size="l" type="button" [pseudoActive]="open || null"
+                    tuiMode="onDark">
                 </button>
             </tui-hosted-dropdown>
             <ng-template #dropdownMenu let-close="close" let-activeZone>

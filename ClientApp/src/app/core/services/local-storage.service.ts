@@ -31,8 +31,18 @@ export class LocalStorageService {
     localStorage.setItem('lTTarget', url);
   }
 
+  getTheme() {
+    let theme = (localStorage.getItem('theme') ?? 'dark') as 'light' | 'dark';
+    if (theme != 'light' && theme != 'dark') theme = 'dark';
+    return theme;
+  }
+
+  setTheme(theme: 'light' | 'dark') {
+    localStorage.setItem('theme', theme);
+  }
+
   getDefaultLang() {
-    return localStorage.getItem('defaultLang') ?? undefined;
+    return localStorage.getItem('defaultLang') ?? 'undefined';
   }
 
   setDefaultLang(lang: string) {
