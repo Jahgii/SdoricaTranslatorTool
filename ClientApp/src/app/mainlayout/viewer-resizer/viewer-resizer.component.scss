@@ -4,18 +4,17 @@
 }
 
 .resizer-line {
-    height: calc(100% - (var(--header-height) * 2));
+    height: 100%;
     position: relative;
-    width: 6px;
+    width: 3px;
+    margin: 0 1px;
     z-index: 100;
-    top: var(--header-height);
     left: 0px;
     background-color: var(--tui-base-04);
-    border-radius: var(--tui-radius-s);
 
     &:hover {
-        width: 6px;
+        width: 3px;
         background-color: var(--tui-base-09);
-        cursor: e-resize;
+        cursor: col-resize;
     }
 }
