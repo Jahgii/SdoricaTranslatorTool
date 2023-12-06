@@ -1,8 +1,9 @@
-import { ComponentRef, Injectable, Type } from '@angular/core';
+import { ComponentRef, Inject, Injectable, Type } from '@angular/core';
 import { ViewerComponent } from 'src/app/mainlayout/viewer/viewer.component';
 import { AdHostDirective } from '../directives/host-directive';
 import { ViewerResizerComponent } from 'src/app/mainlayout/viewer-resizer/viewer-resizer.component';
 import { BehaviorSubject } from 'rxjs';
+import { TuiBreakpointService } from '@taiga-ui/core';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,18 @@ export class ViewersService {
   public notifier: BehaviorSubject<boolean> = new BehaviorSubject(true);
   public componentOpens: { [componentName: string]: BehaviorSubject<number> } = {};
 
-  constructor() { }
+  constructor(
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
+  ) { }
 
   public init(adHost: AdHostDirective) {
     this.adHost = adHost;
     this.AddViewer();
+
+    this.breakpointService$.subscribe(v => {
+      if (v === 'mobile' && this.views.length === 2)
+        this.splitMode();
+    });
   }
 
   private AddViewer() {
