@@ -15,10 +15,11 @@ $border-active-color: var(--tui-base-09);
     height: 5.5rem;
 }
 
-.card {
+.component-not-loaded {
     background-color: var(--tui-base-02);
     min-width: 15rem;
-    height: 100%;
+    height: calc(100svh - var(--header-height));
+    min-height: 30rem;
 }
 
 .active {
