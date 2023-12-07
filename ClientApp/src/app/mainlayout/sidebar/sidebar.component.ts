@@ -1,9 +1,6 @@
 import { Component, Inject, Type, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
-import { LoadFileWizardComponent } from 'src/app/components/load-file-wizard/load-file-wizard.component';
-import { ExportTranslationGuestComponent } from 'src/app/components/export-translation-guest/export-translation-guest.component';
-import { DialogMainComponent } from 'src/app/dialog-assets/dialog-main/dialog-main.component';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
 import { CommonWordsComponent } from 'src/app/components/common-words/common-words.component';
 import { TuiBreakpointService, TuiButtonModule, TuiDataListModule, TuiHintModule, TuiHostedDropdownModule, TuiLoaderModule, TuiModeModule, TuiSvgModule } from '@taiga-ui/core';
@@ -11,9 +8,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TuiAvatarModule } from '@taiga-ui/kit';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LocalizationKeyComponent } from 'src/app/localization/localization-key/localization-key.component';
-import { LocalizationComponent } from 'src/app/localization/localization.component';
 import { TuiActiveZoneModule } from '@taiga-ui/cdk';
-import { ImportMainComponent } from 'src/app/import/import-main/import-main.component';
+import { viewers } from 'src/app/core/viewers';
 
 @Component({
   selector: 'app-sidebar',
@@ -48,13 +44,7 @@ export class SidebarComponent {
   public gamedataOpen: boolean = false;
   public commonOpen: boolean = false;
 
-  public viewers: { [component: string]: Type<any> } = {
-    localization: LocalizationComponent,
-    dialogs: DialogMainComponent,
-    import: LoadFileWizardComponent,
-    // import: ImportMainComponent,
-    export: ExportTranslationGuestComponent
-  };
+  public viewers = viewers;
 
   public componentOpens = this.viewersService.componentOpens;
 
