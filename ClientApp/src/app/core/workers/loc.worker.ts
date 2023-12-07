@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 
 import { encode } from '@msgpack/msgpack';
-import { IOnMessage, ProgressStatus } from './core/interfaces/i-export-progress';
-import { ILocalization, ILocalizationKey } from './core/interfaces/i-localizations';
+import { IOnMessage, ProgressStatus } from '../interfaces/i-export-progress';
+import { ILocalization, ILocalizationKey } from '../interfaces/i-localizations';
 
 addEventListener('message', async ({ data }) => {
   var keys: ILocalizationKey[] = [];

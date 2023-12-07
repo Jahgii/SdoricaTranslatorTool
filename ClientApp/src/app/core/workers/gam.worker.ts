@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 
 import { encode } from '@msgpack/msgpack';
-import { IOnMessage, ProgressStatus } from './core/interfaces/i-export-progress';
-import { IGamedata, IGamedataValue } from './core/interfaces/i-gamedata';
+import { IOnMessage, ProgressStatus } from '../interfaces/i-export-progress';
+import { IGamedata, IGamedataValue } from '../interfaces/i-gamedata';
 
 addEventListener('message', async ({ data }) => {
   var values: IGamedataValue[] = [];

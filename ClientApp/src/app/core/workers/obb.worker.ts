@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 
 import * as JSZip from 'jszip';
-import { IDialogAssetExport } from './core/interfaces/i-dialog-asset';
-import { IOnMessage, ProgressStatus } from './core/interfaces/i-export-progress';
+import { IDialogAssetExport } from '../interfaces/i-dialog-asset';
+import { IOnMessage, ProgressStatus } from '../interfaces/i-export-progress';
 
 addEventListener('message', async ({ data }) => {
   var dialogs: IDialogAssetExport[] = [];

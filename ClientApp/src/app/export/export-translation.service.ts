@@ -3,20 +3,18 @@ import { FormControl } from '@angular/forms';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLatest } from 'rxjs';
-import { ILocalization } from '../interfaces/i-localizations';
+import { ILocalization } from '../core/interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
-import { IGamedata } from '../interfaces/i-gamedata';
-import { IExportPercentages, IFileControl } from '../interfaces/i-export';
-import { ProgressStatus as ProgressStatus, IOnMessage } from '../interfaces/i-export-progress';
+import { IGamedata } from '../core/interfaces/i-gamedata';
+import { IExportPercentages, IFileControl } from '../core/interfaces/i-export';
+import { ProgressStatus as ProgressStatus, IOnMessage } from '../core/interfaces/i-export-progress';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { ApiService } from './api.service';
+import { ApiService } from '../core/services/api.service';
 import * as JSZip from 'jszip';
-import { LocalStorageService } from './local-storage.service';
+import { LocalStorageService } from '../core/services/local-storage.service';
 import { TranslateService } from '@ngx-translate/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ExportTranslationService {
   private zipObb!: JSZip;
   private dataLoc!: ILocalization;
@@ -278,9 +276,9 @@ export class ExportTranslationService {
   }
 
   private onApplyTranslationWorkers() {
-    const obbWorker = new Worker(new URL('../../obb.worker', import.meta.url));
-    const locWorker = new Worker(new URL('../../loc.worker', import.meta.url));
-    const gamWorker = new Worker(new URL('../../gam.worker', import.meta.url));
+    const obbWorker = new Worker(new URL('../core/workers/obb.worker', import.meta.url));
+    const locWorker = new Worker(new URL('../core/workers/loc.worker', import.meta.url));
+    const gamWorker = new Worker(new URL('../core/workers/gam.worker', import.meta.url));
 
     obbWorker.onmessage = ({ data }) => this.onMessage(data, this.obb);
     locWorker.onmessage = ({ data }) => this.onMessage(data, this.localization);

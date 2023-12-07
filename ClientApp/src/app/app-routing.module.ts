@@ -5,7 +5,7 @@ import { GroupsComponent } from './components/groups/groups.component';
 import { DialogAssetsComponent } from './dialog-assets/dialog-assets/dialog-assets.component';
 import { MainGroupsComponent } from './components/main-groups/main-groups.component';
 import { LoginComponent } from './components/login/login.component';
-import { ExportTranslationGuestComponent } from './components/export-translation-guest/export-translation-guest.component';
+import { ExportTranslationGuestComponent } from './export/export-main/export-main.component';
 import { authentificationGuard } from './core/guards/authentification.guard';
 import { authorizationGuard } from './core/guards/authorization.guard';
 import { translationLanguageGuard } from './core/guards/translation-language.guard';

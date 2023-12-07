@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExportTranslationGuestComponent } from './export-translation-guest.component';
+import { ExportTranslationGuestComponent } from './export-main.component';
 
 describe('ExportTranslationGuestComponent', () => {
   let component: ExportTranslationGuestComponent;
