@@ -1,28 +1,24 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.scss';
 
 .main-container {
-    max-width: 1024px;
-    min-width: 320px;
+    max-width: 60rem;
+    min-width: 20rem;
     position: absolute;
-    padding: 0 3em;
+    padding: 0 clamp(1em, 2.5%, 5em);
     margin: 0 auto;
-    top: 5em;
+    top: 2em;
     left: 0;
     right: 0;
 }
 
 .files-input {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(280px, auto));
     gap: 1em;
-
-    @media #{$tui-mobile} {
-        grid-template-columns: 1fr;
-    }
 }
 
 .file-input {
-    height: 5em;
+    height: 128px;
 }
 
 .translate-button {
@@ -40,6 +36,8 @@
 .not-support {
     background-color: var(--tui-warning-fill);
     mix-blend-mode: difference;
+    height: 96px;
+    width: minmax(248px, auto);
 }
 
 .text-blend {
