@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiScrollbarModule } from '@taiga-ui/core';
+import { TuiScrollbarComponent, TuiScrollbarModule } from '@taiga-ui/core';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { TranslateModule } from '@ngx-translate/core';
@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 import { DialogAssetService } from './dialog-asset.service';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-dialog-assets',
@@ -57,6 +58,7 @@ import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
   ]
 })
 export class DialogAssetsComponent implements OnInit, OnDestroy {
+  public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public openOption: boolean = false;
 
   constructor(
@@ -99,6 +101,14 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
 
   public onDownload(dialogAsset: IDialogAsset) {
     this.dAS.onDownload(dialogAsset);
+  }
+
+  public onTooltipCheck(scrollTooltip?: TuiScrollbarComponent) {
+    let show = false;
+    if (scrollTooltip)
+      show = scrollTooltip['el']['nativeElement']['offsetHeight'] < scrollTooltip['el']['nativeElement']['scrollHeight'];
+
+    this.showTooltipArrow$.next(show);
   }
 
 }

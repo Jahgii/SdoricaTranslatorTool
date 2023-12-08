@@ -78,9 +78,8 @@
                         </thead>
                         <tbody tuiTbody>
                             <tr *cdkVirtualFor="let item of dialogAsset.Model['$content']" tuiTr>
-                                <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell"
-                                    [tuiDropdown]="otherLanguages" tuiDropdownHover [tuiDropdownShowDelay]="200"
-                                    [tuiDropdownHideDelay]="200" [tuiDropdownAlign]="'right'" [tuiDropdownOffset]="0"
+                                <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell" [tuiHint]="otherLanguages"
+                                    tuiHintAppearance="onDark"
                                     (mouseenter)="onGetOtherOriginalText(dialogAsset.Number, item.ID)">
                                     {{item.OriginalText}}
                                 </td>
@@ -257,18 +256,22 @@
 </ng-template>
 
 <ng-template #otherLanguages>
-    <div class="other-languages-container">
+    <tui-scrollbar #scrollTooltip class="other-languages-container" [hidden]="true"
+        (mouseenter)="onTooltipCheck(scrollTooltip)" (mouseleave)="onTooltipCheck()">
         <ng-container *ngIf="(dAS.otherText$ | async) as data; else loading">
-            <ng-container *ngFor="let key of data | keyvalue">
-                <p>
+            <ul>
+                <li *ngFor="let key of data | keyvalue">
                     <span class="tooltip-important-text">
                         {{$any(key.key) | translate}}
                     </span>:
                     {{key.value}}
-                </p>
-            </ng-container>
+                </li>
+            </ul>
         </ng-container>
-    </div>
+    </tui-scrollbar>
+    <tui-svg *ngIf="showTooltipArrow$ | async"
+        style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);" src="tuiIconArrowDown"
+        [@popIn]></tui-svg>
 </ng-template>
 
 <ng-template #propagationTooltip>
