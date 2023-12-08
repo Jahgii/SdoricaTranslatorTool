@@ -10,12 +10,12 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
 
     //Taiga
     TuiScrollbarModule,
     TuiBlockStatusModule,
 
-    TranslateModule,
     AdHostDirective
   ],
   templateUrl: './viewer.component.html',
@@ -30,7 +30,7 @@ export class ViewerComponent implements OnInit {
   widthPercentage = "100%";
 
   public componentLoadedName!: string;
-  public componentLoaded!: ComponentRef<any>;
+  public componentLoaded: ComponentRef<any> | undefined;
   public active: boolean = false;
 
   constructor(
@@ -55,9 +55,16 @@ export class ViewerComponent implements OnInit {
       .createComponent<any>(component);
 
     Object.keys(args).forEach(k => {
-      this.componentLoaded.instance[k] = args[k];
+      if (this.componentLoaded)
+        this.componentLoaded.instance[k] = args[k];
     });
 
+    this.ref.markForCheck();
+  }
+
+  public onClearComponent() {
+    this.adHost.viewContainerRef.clear();
+    this.componentLoaded = undefined;
     this.ref.markForCheck();
   }
 }
