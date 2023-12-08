@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { GoogleLoginProvider, SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
-import { BehaviorSubject, Subject, firstValueFrom } from 'rxjs';
+import { SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ApiService } from './api.service';
-import { Router } from '@angular/router';
 import { LocalStorageService } from './local-storage.service';
 import { LanguageOriginService } from './language-origin.service';
 import { TuiAlertService } from '@taiga-ui/core';
@@ -23,7 +22,6 @@ export class AuthService {
     private socialAuthService: SocialAuthService,
     private local: LocalStorageService,
     private api: ApiService,
-    private route: Router,
     private languageOrigin: LanguageOriginService,
     private alert: TuiAlertService,
     private translate: TranslateService
@@ -44,17 +42,15 @@ export class AuthService {
               this.local.setToken(res.Token);
               this.userDB = res;
               await this.languageOrigin.onRetriveLanguages();
+
+              var element = document.querySelector(':root') as any;
+              element.style.setProperty('--header-height', '3.9375rem');
               if (this.userDB.Rol == 'guest') {
                 this.rol = this.userDB.Rol;
-                this.route.navigateByUrl('');
               }
               else if (this.userDB.Rol == 'admin') {
-                var element = document.querySelector(':root') as any;
-                element.style.setProperty('--header-height', '3.9375rem');
                 element.style.setProperty('--menu-width', '3rem');
-
                 this.rol = this.userDB.Rol;
-                this.route.navigateByUrl('home');
               }
               this.authenticated$.next(true);
               this.user = user;

@@ -4,6 +4,9 @@ import { AdHostDirective } from '../directives/host-directive';
 import { ViewerResizerComponent } from 'src/app/mainlayout/viewer-resizer/viewer-resizer.component';
 import { BehaviorSubject } from 'rxjs';
 import { TuiBreakpointService } from '@taiga-ui/core';
+import { viewers } from 'src/app/core/viewers';
+import { LocalStorageService } from './local-storage.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +19,8 @@ export class ViewersService {
   public componentOpens: { [componentName: string]: BehaviorSubject<number> } = {};
 
   constructor(
+    private localStorage: LocalStorageService,
+    private auth: AuthService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) { }
 
@@ -26,6 +31,16 @@ export class ViewersService {
     this.breakpointService$.subscribe(v => {
       if (v === 'mobile' && this.views.length === 2)
         this.splitMode();
+    });
+
+    this.auth.authenticated$.subscribe(auth => {
+      if (!auth) this.loadComponent(viewers.login, {});
+      else {
+        this.activeView.instance.onClearComponent();
+
+        if (this.auth.rol == 'guest')
+          this.loadComponent(viewers.export, {});
+      }
     });
   }
 
@@ -74,6 +89,7 @@ export class ViewersService {
       let view = this.views.pop();
       if (
         view?.instance.componentLoaded &&
+        view.instance.componentLoadedName &&
         view.instance.componentLoadedName != this.views[0].instance.componentLoadedName
       )
         this.componentOpens[view.instance.componentLoadedName].next(this.componentOpens[view.instance.componentLoadedName].value - 1);
@@ -88,7 +104,7 @@ export class ViewersService {
   public loadComponent(component: Type<any>, args: { [arg: string]: any }) {
     if (this.activeView.instance.componentLoadedName === component.name) return;
 
-    if (this.activeView.instance.componentLoaded)
+    if (this.activeView.instance.componentLoaded && this.activeView.instance.componentLoadedName)
       this.componentOpens[this.activeView.instance.componentLoadedName].next(this.componentOpens[this.activeView.instance.componentLoadedName].value - 1);
 
     if (!this.componentOpens[component.name])
