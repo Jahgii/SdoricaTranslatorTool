@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -10,19 +9,25 @@ import { TuiAppBarModule } from '@taiga-ui/addon-mobile';
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: true,
-    imports: [TuiBlockStatusModule, TuiAppBarModule, TuiLoaderModule, NgIf, GoogleSigninButtonModule, AsyncPipe, TranslateModule]
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [
+    NgIf,
+    AsyncPipe,
+    TranslateModule,
+
+    TuiBlockStatusModule,
+    TuiAppBarModule,
+    TuiLoaderModule,
+
+    GoogleSigninButtonModule
+  ]
 })
 export class LoginComponent {
   constructor(
-    private router: Router,
     public authService: AuthService,
     public theme: ThemeService
-  ) {
-    if (this.authService.authenticated$.value == true)
-      this.router.navigateByUrl('/');
-  }
+  ) { }
 }
