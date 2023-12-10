@@ -82,11 +82,11 @@ export class LocalStorageService {
     localStorage.setItem('C2', componentViewerKey);
   }
 
-  getCategory() {
-    return localStorage.getItem('Category') ?? undefined;
+  getCategory(view: number) {
+    return localStorage.getItem('Category' + view) ?? undefined;
   }
 
-  setCategory(categoryId: string) {
-    localStorage.setItem('Category', categoryId);
+  setCategory(view: number, categoryId: string) {
+    localStorage.setItem('Category' + view, categoryId);
   }
 }

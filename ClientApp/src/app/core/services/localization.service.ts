@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map, takeWhile } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, takeWhile } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localizations';
 import { LanguageOriginService } from './language-origin.service';
 import { LibreTranslateService } from './libre-translate.service';
@@ -9,6 +9,7 @@ import { TuiAlertService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalizationCategoriesService } from 'src/app/localization/localization-categories.service';
 import { LocalStorageService } from './local-storage.service';
+import { ViewersService } from './viewers.service';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
@@ -53,6 +54,7 @@ export class LocalizationService implements OnDestroy {
   public focusRow: string = '';
   public searchTotalTranslated = 0;
   private controlCheckbox = 1;
+  private autoLoadCategoryId: string | undefined = undefined;
 
   public search: FormControl = new FormControl('');
   public searchKey: FormControl = new FormControl('');
@@ -70,6 +72,7 @@ export class LocalizationService implements OnDestroy {
     private languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
     private translate: TranslateService,
+    private viewers: ViewersService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
     this.language = this.languageOrigin.localizationLang;
@@ -111,7 +114,14 @@ export class LocalizationService implements OnDestroy {
   }
 
   private initLastCategorySelected() {
-    let category = this.lCS.getData().find(e => e.Id === this.local.getCategory() ?? '')
+    if (this.autoLoadCategoryId === undefined) {
+      this.autoLoadCategoryId = this.local
+        .getCategory(this.viewers.views.findIndex(v => v === this.viewers.activeView)) ?? '';
+    };
+
+    let category = this.lCS
+      .getData()
+      .find(e => e.Id === this.autoLoadCategoryId);
     if (category) {
       this.selectedCategory = category;
       this.onSelectCategory(category);
@@ -133,12 +143,12 @@ export class LocalizationService implements OnDestroy {
     this.restartFilters();
 
     if (!category) {
-      this.local.setCategory('');
+      this.local.setCategory(this.viewers.views.findIndex(v => v === this.viewers.activeView), '');
       this.selectedCategory$.next(false);
       return;
     }
 
-    this.local.setCategory(category.Id);
+    this.local.setCategory(this.viewers.views.findIndex(v => v === this.viewers.activeView), category.Id);
     this.selectedCategory$.next(true);
     this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
 
