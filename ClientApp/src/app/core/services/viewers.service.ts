@@ -2,7 +2,7 @@ import { ComponentRef, Inject, Injectable, Type } from '@angular/core';
 import { ViewerComponent } from 'src/app/mainlayout/viewer/viewer.component';
 import { AdHostDirective } from '../directives/host-directive';
 import { ViewerResizerComponent } from 'src/app/mainlayout/viewer-resizer/viewer-resizer.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { viewers } from 'src/app/core/viewers';
 import { LocalStorageService } from './local-storage.service';
@@ -33,7 +33,7 @@ export class ViewersService {
         this.splitMode();
     });
 
-    this.auth.authenticated$.subscribe(auth => {
+    this.auth.authenticated$.subscribe(async auth => {
       if (!auth) this.loadComponent(viewers.login, {});
       else {
         this.activeView.instance.onClearComponent();
@@ -45,7 +45,7 @@ export class ViewersService {
           let c1 = this.localStorage.getC1();
           let c2 = this.localStorage.getC2();
           if (c1) this.loadComponent(viewers[c1], {});
-          if (c2) {
+          if (c2 && await firstValueFrom(this.breakpointService$) !== 'mobile') {
             this.splitMode();
             this.views[1].instance.loadComponent(viewers[c2], {});
           }
