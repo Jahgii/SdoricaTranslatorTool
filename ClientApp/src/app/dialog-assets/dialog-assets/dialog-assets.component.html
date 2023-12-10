@@ -193,9 +193,7 @@
                 <cdk-virtual-scroll-viewport tuiScrollable [itemSize]="5" class="viewport tui-zero-scrollbar">
                     <ng-container
                         *cdkVirtualFor="let item of data[dAS.activeItemIndex].Model['$content']; let last = last">
-                        <p class="tui-text_body-s original-text" [tuiDropdown]="otherLanguages" tuiDropdownHover
-                            [tuiDropdownShowDelay]="200" [tuiDropdownHideDelay]="200" [tuiDropdownAlign]="'right'"
-                            [tuiDropdownOffset]="0"
+                        <p class="tui-text_body-s original-text" [tuiHint]="otherLanguages" tuiHintAppearance="onDark"
                             (mouseenter)="onGetOtherOriginalText(data[dAS.activeItemIndex].Number, item.ID)">
                             {{item.OriginalText}}
                         </p>
