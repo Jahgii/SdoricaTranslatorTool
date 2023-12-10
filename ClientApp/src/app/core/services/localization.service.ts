@@ -13,6 +13,7 @@ import { ViewersService } from './viewers.service';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
+  viewIndex: number = -1;
   public categories$!: Observable<ILocalizationCategory[]>;
 
   //#region Table Filters
@@ -77,15 +78,6 @@ export class LocalizationService implements OnDestroy {
   ) {
     this.language = this.languageOrigin.localizationLang;
 
-    if (!this.categories$)
-      this.lCS
-        .loadingStore$
-        .pipe(takeWhile(_ => !this.categories$))
-        .subscribe(_ => {
-          this.categories$ = this.lCS.store$
-          this.initLastCategorySelected();
-        });
-
     this.languageOrigin.language.valueChanges.subscribe(_ => {
       this.language = this.languageOrigin.localizationLang;
 
@@ -113,10 +105,26 @@ export class LocalizationService implements OnDestroy {
     this.onTranslatedColumnCheckboxChange();
   }
 
+  public loadStore() {
+    if (!this.categories$)
+      this.lCS
+        .loadingStore$
+        .pipe(takeWhile(_ => !this.categories$))
+        .subscribe(_ => {
+          this.categories$ = this.lCS.store$
+          this.initLastCategorySelected();
+        });
+    else {
+      
+    }
+  }
+
   private initLastCategorySelected() {
+    if (this.viewIndex === -1) return;
+
     if (this.autoLoadCategoryId === undefined) {
       this.autoLoadCategoryId = this.local
-        .getCategory(this.viewers.views.findIndex(v => v === this.viewers.activeView)) ?? '';
+        .getCategory(this.viewIndex);
     };
 
     let category = this.lCS
@@ -143,12 +151,12 @@ export class LocalizationService implements OnDestroy {
     this.restartFilters();
 
     if (!category) {
-      this.local.setCategory(this.viewers.views.findIndex(v => v === this.viewers.activeView), '');
+      this.local.setCategory(this.viewIndex, '');
       this.selectedCategory$.next(false);
       return;
     }
 
-    this.local.setCategory(this.viewers.views.findIndex(v => v === this.viewers.activeView), category.Id);
+    this.local.setCategory(this.viewIndex, category.Id);
     this.selectedCategory$.next(true);
     this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
 

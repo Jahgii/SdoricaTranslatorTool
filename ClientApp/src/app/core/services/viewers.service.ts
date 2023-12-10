@@ -47,7 +47,7 @@ export class ViewersService {
           if (c1) this.loadComponent(viewers[c1], {});
           if (c2 && await firstValueFrom(this.breakpointService$) !== 'mobile') {
             this.splitMode();
-            this.views[1].instance.loadComponent(viewers[c2], {});
+            this.loadComponent(viewers[c2], {});
           }
         }
 
@@ -74,6 +74,7 @@ export class ViewersService {
 
     this.activeView = view;
     this.activeView.instance.active = true;
+    this.activeView.instance.viewIndex = this.views.length - 1;
     this.activeView.instance.setActiveViewer = () => this.onChangeActiveView(view);
 
     if (resizer) {

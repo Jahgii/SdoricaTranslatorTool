@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiElasticContainerModule, TuiInputInlineComponent, TuiInputInlineModule, TuiProgressModule } from '@taiga-ui/kit';
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
@@ -9,6 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TuiButtonModule, TuiExpandModule, TuiLoaderModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 import { DGroupsService, TreeNode } from './d-groups.service';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { ViewersService } from 'src/app/core/services/viewers.service';
 
 @Component({
   selector: 'app-dialog-selection',
@@ -35,6 +37,7 @@ import { DGroupsService, TreeNode } from './d-groups.service';
 })
 export class DialogSelectionComponent implements OnInit, OnDestroy {
   @Input() dialogs!: DialogAssetsComponent;
+  @Input() viewIndex!: number;
 
   public treeNodes$: Observable<TreeNode[]> = this.groupService.store$;
   public loadingNodes$: Observable<boolean> = this.groupService.loadingStore$;
@@ -43,9 +46,13 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   private subsName: Subscription | undefined;
   private subsCheck: Subscription | undefined;
   private nodeSelected!: TreeNode;
+  private autoLoadGroupId: string | undefined;
 
   constructor(
-    private groupService: DGroupsService
+    private ref: ChangeDetectorRef,
+    private groupService: DGroupsService,
+    private local: LocalStorageService,
+    private viewers: ViewersService,
   ) {
 
   }
@@ -59,7 +66,13 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
       this.groupService
         .loadingStore$
         .pipe(takeWhile(_ => !this.treeNodes$))
-        .subscribe(_ => this.treeNodes$ = this.groupService.store$);
+        .subscribe(_ => {
+          this.treeNodes$ = this.groupService.store$;
+          this.initLastGroupSelected();
+        });
+    else {
+      this.initLastGroupSelected();
+    }
 
     this.subsCheck = this.dialogs
       .dAS
@@ -68,6 +81,23 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
         if (change)
           this.groupService.onCheckTranslated(change.node, change.translated);
       });
+  }
+
+  private initLastGroupSelected() {
+    if (this.autoLoadGroupId === undefined) {
+      this.autoLoadGroupId = this.local
+        .getGroup(this.viewIndex);
+    };
+
+    let group = this.groupService
+      .getData()
+      .find(e => e.children?.find(c => c.Id === this.autoLoadGroupId))
+      ?.children?.find(e => e.Id === this.autoLoadGroupId);
+    if (group) {
+      this.onSelectGroup(group);
+      this.ref.markForCheck();
+    }
+
   }
 
   ngOnDestroy(): void {
@@ -89,6 +119,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
     this.nodeSelected?.selected?.next(false);
     this.nodeSelected = node;
     this.nodeSelected.selected?.next(true);
+    this.local.setGroup(this.viewIndex, node.Id ?? '');
   }
 
   public onMouseEnter() {

@@ -29,6 +29,8 @@ export class AuthService {
     this.socialAuthService
       .authState
       .subscribe(async (user) => {
+        if (!user) return;
+
         this.authenticating$.next(true);
 
         let authValidation: IAuthValidation = {

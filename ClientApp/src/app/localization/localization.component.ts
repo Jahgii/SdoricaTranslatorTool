@@ -61,6 +61,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
   ],
 })
 export class LocalizationComponent implements OnInit, OnDestroy {
+  viewIndex: number = -1;
 
   constructor(
     private api: ApiService,
@@ -71,6 +72,8 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.localization.viewIndex = this.viewIndex;
+    this.localization.loadStore();
   }
 
   ngOnDestroy(): void {

@@ -99,7 +99,7 @@
     <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconUpload'" tuiMode="onLight"
         (click)="loadComponent(viewers.import)" tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark"
         [tuiHintShowDelay]="100"
-        [ngStyle]="{'background': (componentOpens['LoadFileWizardComponent'] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+        [ngStyle]="{'background': (componentOpens['ImportMainComponent'] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
     </button>
     <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconDownload'" tuiMode="onLight"
         (click)="loadComponent(viewers.export)" tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark"

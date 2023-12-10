@@ -24,6 +24,7 @@ import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component'
   providers: [ElementBreakpointService]
 })
 export class DialogMainComponent {
+  viewIndex: number = -1;
 
   constructor(
     @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService

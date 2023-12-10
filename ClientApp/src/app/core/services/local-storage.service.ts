@@ -89,4 +89,12 @@ export class LocalStorageService {
   setCategory(view: number, categoryId: string) {
     localStorage.setItem('Category' + view, categoryId);
   }
+
+  getGroup(view: number) {
+    return localStorage.getItem('Group' + view) ?? undefined;
+  }
+
+  setGroup(view: number, groupId: string) {
+    localStorage.setItem('Group' + view, groupId);
+  }
 }

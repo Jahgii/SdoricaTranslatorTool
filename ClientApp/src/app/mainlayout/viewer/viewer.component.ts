@@ -32,6 +32,7 @@ export class ViewerComponent implements OnInit {
   public componentLoadedName!: string;
   public componentLoaded: ComponentRef<any> | undefined;
   public active: boolean = false;
+  public viewIndex = -1;
 
   constructor(
     private ref: ChangeDetectorRef
@@ -53,6 +54,8 @@ export class ViewerComponent implements OnInit {
     this.componentLoaded = this.adHost
       .viewContainerRef
       .createComponent<any>(component);
+
+    this.componentLoaded.instance.viewIndex = this.viewIndex;
 
     Object.keys(args).forEach(k => {
       if (this.componentLoaded)
