@@ -64,4 +64,12 @@ export class LocalStorageService {
   setToken(token: string) {
     localStorage.setItem('token', token);
   }
+
+  getC1() {
+    return localStorage.getItem('C1') ?? undefined;
+  }
+
+  setC1(componentViewerKey: string) {
+    localStorage.setItem('C1', componentViewerKey);
+  }
 }

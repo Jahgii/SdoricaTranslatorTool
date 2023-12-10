@@ -40,6 +40,14 @@ export class ViewersService {
 
         if (this.auth.rol == 'guest')
           this.loadComponent(viewers.export, {});
+
+        else if (this.auth.rol == 'admin') {
+          let c1 = this.localStorage.getC1();
+          if (c1) {
+            this.loadComponent(viewers[c1], {});
+          }
+        }
+
       }
     });
   }
@@ -114,6 +122,12 @@ export class ViewersService {
 
     this.activeView.instance.loadComponent(component, args);
     this.activeView.instance.componentLoadedName = component.name;
+
+    if (this.activeView == this.views[0])
+      Object.keys(viewers).forEach(k => {
+        if (k === 'login') return;
+        if (viewers[k] === component) this.localStorage.setC1(k);
+      });
   }
 
   private onChangeActiveView(view: ComponentRef<ViewerComponent>) {
