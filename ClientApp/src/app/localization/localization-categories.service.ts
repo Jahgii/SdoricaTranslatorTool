@@ -25,6 +25,7 @@ export class LocalizationCategoriesService extends StoreService<ILocalizationCat
           .get<ILocalizationCategory[]>('localizationcategories')
           .pipe(map(r => {
             let searchCategory: ILocalizationCategory = {
+              Id: 'SEARCH',
               Name: "SEARCH",
               Keys: {
                 [this.languageOrigin.localizationLang]: r.reduce((ac, v) => {

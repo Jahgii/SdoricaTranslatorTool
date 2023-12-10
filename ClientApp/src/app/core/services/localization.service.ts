@@ -8,6 +8,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalizationCategoriesService } from 'src/app/localization/localization-categories.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
@@ -64,6 +65,7 @@ export class LocalizationService implements OnDestroy {
 
   constructor(
     private api: ApiService,
+    private local: LocalStorageService,
     private lCS: LocalizationCategoriesService,
     private languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
@@ -76,7 +78,10 @@ export class LocalizationService implements OnDestroy {
       this.lCS
         .loadingStore$
         .pipe(takeWhile(_ => !this.categories$))
-        .subscribe(_ => this.categories$ = this.lCS.store$);
+        .subscribe(_ => {
+          this.categories$ = this.lCS.store$
+          this.initLastCategorySelected();
+        });
 
     this.languageOrigin.language.valueChanges.subscribe(_ => {
       this.language = this.languageOrigin.localizationLang;
@@ -105,6 +110,15 @@ export class LocalizationService implements OnDestroy {
     this.onTranslatedColumnCheckboxChange();
   }
 
+  private initLastCategorySelected() {
+    let category = this.lCS.getData().find(e => e.Id === this.local.getCategory() ?? '')
+    if (category) {
+      this.selectedCategory = category;
+      this.onSelectCategory(category);
+    }
+
+  }
+
   ngOnDestroy(): void {
     this.subsSearch.unsubscribe();
     this.subsSearchKey.unsubscribe();
@@ -119,13 +133,14 @@ export class LocalizationService implements OnDestroy {
     this.restartFilters();
 
     if (!category) {
+      this.local.setCategory('');
       this.selectedCategory$.next(false);
       return;
     }
 
+    this.local.setCategory(category.Id);
     this.selectedCategory$.next(true);
     this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
-
 
     if (category.Name == 'SEARCH') {
       this.selectedCategoryIndex = 0;
@@ -142,6 +157,8 @@ export class LocalizationService implements OnDestroy {
       await firstValueFrom(this.keys$).then(r => this.keys = r, e => undefined);
       this.loading$.next(false);
     }
+
+
   }
 
   public async onTranslatedCheck(check: boolean, keys: ILocalizationKey[], key: ILocalizationKey) {

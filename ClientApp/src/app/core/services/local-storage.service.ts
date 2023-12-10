@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ILocalizationCategory } from '../interfaces/i-localizations';
 
 @Injectable({
   providedIn: 'root'
@@ -79,5 +80,13 @@ export class LocalStorageService {
 
   setC2(componentViewerKey: string) {
     localStorage.setItem('C2', componentViewerKey);
+  }
+
+  getCategory() {
+    return localStorage.getItem('Category') ?? undefined;
+  }
+
+  setCategory(categoryId: string) {
+    localStorage.setItem('Category', categoryId);
   }
 }
