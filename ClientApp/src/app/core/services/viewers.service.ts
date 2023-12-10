@@ -43,8 +43,11 @@ export class ViewersService {
 
         else if (this.auth.rol == 'admin') {
           let c1 = this.localStorage.getC1();
-          if (c1) {
-            this.loadComponent(viewers[c1], {});
+          let c2 = this.localStorage.getC2();
+          if (c1) this.loadComponent(viewers[c1], {});
+          if (c2) {
+            this.splitMode();
+            this.views[1].instance.loadComponent(viewers[c2], {});
           }
         }
 
@@ -102,6 +105,8 @@ export class ViewersService {
       )
         this.componentOpens[view.instance.componentLoadedName].next(this.componentOpens[view.instance.componentLoadedName].value - 1);
 
+      this.localStorage.setC2('');
+
       this.resizeViewers();
       this.onChangeActiveView(this.views[0]);
     }
@@ -123,11 +128,15 @@ export class ViewersService {
     this.activeView.instance.loadComponent(component, args);
     this.activeView.instance.componentLoadedName = component.name;
 
-    if (this.activeView == this.views[0])
-      Object.keys(viewers).forEach(k => {
-        if (k === 'login') return;
-        if (viewers[k] === component) this.localStorage.setC1(k);
-      });
+    Object.keys(viewers).forEach(k => {
+      if (k === 'login') return;
+      if (viewers[k] === component) {
+        if (this.activeView == this.views[0])
+          this.localStorage.setC1(k);
+        else if (this.views[1] && this.activeView == this.views[1])
+          this.localStorage.setC2(k);
+      }
+    });
   }
 
   private onChangeActiveView(view: ComponentRef<ViewerComponent>) {
