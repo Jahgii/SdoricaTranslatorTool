@@ -1,0 +1,23 @@
+.main-container {
+    max-width: 1024px;
+    min-width: 320px;
+    padding: 0 3em;
+    margin: 0 auto;
+}
+
+.accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.file-input {
+    min-width: 200px;
+}
+
+.wizard-choose-lang {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-gap: 0.5em;
+    grid-auto-rows: minmax(100px, auto);
+}
