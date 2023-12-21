@@ -4,7 +4,7 @@ import { AdHostDirective } from '../directives/host-directive';
 import { ViewerResizerComponent } from 'src/app/mainlayout/viewer-resizer/viewer-resizer.component';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { TuiBreakpointService } from '@taiga-ui/core';
-import { viewers } from 'src/app/core/viewers';
+import { AppViews, viewers } from 'src/app/core/viewers';
 import { LocalStorageService } from './local-storage.service';
 import { AuthService } from './auth.service';
 
@@ -34,20 +34,20 @@ export class ViewersService {
     });
 
     this.auth.authenticated$.subscribe(async auth => {
-      if (!auth) this.loadComponent(viewers.login, {});
+      if (!auth) this.loadComponent(AppViews.login, viewers.login, {});
       else {
         this.activeView.instance.onClearComponent();
 
         if (this.auth.rol == 'guest')
-          this.loadComponent(viewers.export, {});
+          this.loadComponent(AppViews.export, viewers.export, {});
 
         else if (this.auth.rol == 'admin') {
           let c1 = this.localStorage.getC1();
           let c2 = this.localStorage.getC2();
-          if (c1) this.loadComponent(viewers[c1], {});
+          if (c1) this.loadComponent(c1 as AppViews, viewers[c1], {});
           if (c2 && await firstValueFrom(this.breakpointService$) !== 'mobile') {
             this.splitMode();
-            this.loadComponent(viewers[c2], {});
+            this.loadComponent(c2 as AppViews, viewers[c2], {});
           }
         }
 
@@ -115,19 +115,19 @@ export class ViewersService {
     this.notifier.next(true);
   }
 
-  public loadComponent(component: Type<any>, args: { [arg: string]: any }) {
-    if (this.activeView.instance.componentLoadedName === component.name) return;
+  public loadComponent(viewerKey: AppViews, component: Type<any>, args: { [arg: string]: any }) {
+    if (this.activeView.instance.componentLoadedName === viewerKey) return;
 
     if (this.activeView.instance.componentLoaded && this.activeView.instance.componentLoadedName)
       this.componentOpens[this.activeView.instance.componentLoadedName].next(this.componentOpens[this.activeView.instance.componentLoadedName].value - 1);
 
-    if (!this.componentOpens[component.name])
-      this.componentOpens[component.name] = new BehaviorSubject(1);
+    if (!this.componentOpens[viewerKey])
+      this.componentOpens[viewerKey] = new BehaviorSubject(1);
     else
-      this.componentOpens[component.name].next(this.componentOpens[component.name].value + 1);
+      this.componentOpens[viewerKey].next(this.componentOpens[viewerKey].value + 1);
 
     this.activeView.instance.loadComponent(component, args);
-    this.activeView.instance.componentLoadedName = component.name;
+    this.activeView.instance.componentLoadedName = viewerKey;
 
     Object.keys(viewers).forEach(k => {
       if (k === 'login') return;

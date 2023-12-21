@@ -14,3 +14,11 @@ export var viewers: Viewers = {
     import: ImportMainComponent,
     export: ExportTranslationGuestComponent
 };
+
+export enum AppViews {
+    login = "login",
+    localization = "localization",
+    dialogs = "dialogs",
+    import = "import",
+    export = "export"
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, Type, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Type, ViewChild, ViewRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
@@ -9,7 +9,7 @@ import { TuiAvatarModule } from '@taiga-ui/kit';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LocalizationKeyComponent } from 'src/app/localization/localization-key/localization-key.component';
 import { TuiActiveZoneModule } from '@taiga-ui/cdk';
-import { viewers } from 'src/app/core/viewers';
+import { AppViews, viewers } from 'src/app/core/viewers';
 
 @Component({
   selector: 'app-sidebar',
@@ -45,6 +45,7 @@ export class SidebarComponent {
   public gamedataOpen: boolean = false;
   public commonOpen: boolean = false;
 
+  public appViews = AppViews;
   public viewers = viewers;
 
   public componentOpens = this.viewersService.componentOpens;
@@ -55,8 +56,9 @@ export class SidebarComponent {
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 
-  public loadComponent(component: Type<any>) {
-    this.viewersService.loadComponent(component, {});
+  public loadComponent(viewerKey: AppViews) {
+    viewers[viewerKey];
+    this.viewersService.loadComponent(viewerKey, viewers[viewerKey], {});
     this.open = false;
   }
 
