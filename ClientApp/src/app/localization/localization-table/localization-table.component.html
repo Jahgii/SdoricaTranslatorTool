@@ -23,7 +23,8 @@
 <ng-template #desktopTable>
     <ng-container tuiTableFilters>
         <cdk-virtual-scroll-viewport #viewport *ngIf="localization.keys" tuiScrollable
-            class="viewport tui-zero-scrollbar" [itemSize]="105" [maxBufferPx]="500" [minBufferPx]="400">
+            class="viewport tui-zero-scrollbar" [itemSize]="105" [maxBufferPx]="500" [minBufferPx]="400"
+            (scrolledIndexChange)="loseFocus()">
 
             <table class="tui-table" style="table-layout: fixed;" tuiTable
                 [columns]="['Language', 'Translation', 'Translated']" [@popIn]>
@@ -179,7 +180,8 @@
 <ng-template #mobileTable>
     <ng-container tuiTableFilters>
         <cdk-virtual-scroll-viewport #viewport *ngIf="localization.keys" tuiScrollable
-            class="viewport tui-zero-scrollbar" [itemSize]="213" [maxBufferPx]="500" [minBufferPx]="400">
+            class="viewport tui-zero-scrollbar" [itemSize]="213" [maxBufferPx]="500" [minBufferPx]="400"
+            (scrolledIndexChange)="loseFocus()">
 
             <table class="tui-table" style="table-layout: fixed;" tuiTable [columns]="['Language']" [@popIn]>
                 <thead>

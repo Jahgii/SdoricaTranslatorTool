@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, QueryList, TrackByFunction, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from '@taiga-ui/cdk';
 import {
   TuiDriver,
@@ -147,6 +147,10 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
           }, 250);
         }
       });
+  }
+
+  public loseFocus() {
+    (document.activeElement as any)?.click();
   }
 
   //#region BuffInfo Autocomplete
