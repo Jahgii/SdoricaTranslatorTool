@@ -9,7 +9,7 @@ import {
   TuiTextfieldControllerModule,
   TuiDataListModule
 } from '@taiga-ui/core';
-import { BehaviorSubject, Observable, Subscription, pairwise, timeout } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, pairwise } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IGamedataValue } from 'src/app/core/interfaces/i-gamedata';

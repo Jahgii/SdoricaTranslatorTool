@@ -81,7 +81,12 @@
                                 <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell" [tuiHint]="otherLanguages"
                                     tuiHintAppearance="onDark"
                                     (mouseenter)="onGetOtherOriginalText(dialogAsset.Number, item.ID)">
-                                    {{item.OriginalText}}
+                                    <ng-container *ngIf="focusRow === item.ID; else showNormalText">
+                                        <span appCommonDictionary [text]="item.OriginalText"></span>
+                                    </ng-container>
+                                    <ng-template #showNormalText>
+                                        <span>{{item.OriginalText}}</span>
+                                    </ng-template>
                                 </td>
                                 <td *tuiCell="'Translation'" tuiTd>
                                     <div
@@ -110,7 +115,7 @@
                                                     class="dialog-speaker-name" />
                                             </div>
                                             <div class="dialog-translation-input">
-                                                <textarea [(ngModel)]="item.Text"
+                                                <textarea [(ngModel)]="item.Text" (focus)="focusRow = item.ID"
                                                     (ngModelChange)="onTextChange(dialogAsset)"
                                                     [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
                                                     class="dialog-translation"></textarea>
@@ -120,6 +125,7 @@
                                             <div class="dialog-translation-full">
                                                 <textarea [(ngModel)]="item.Text"
                                                     (ngModelChange)="onTextChange(dialogAsset)"
+                                                    (focus)="focusRow = item.ID"
                                                     [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
                                                     class="dialog-translation"></textarea>
                                             </div>
@@ -195,7 +201,12 @@
                         *cdkVirtualFor="let item of data[dAS.activeItemIndex].Model['$content']; let last = last">
                         <p class="tui-text_body-s original-text" [tuiHint]="otherLanguages" tuiHintAppearance="onDark"
                             (mouseenter)="onGetOtherOriginalText(data[dAS.activeItemIndex].Number, item.ID)">
-                            {{item.OriginalText}}
+                            <ng-container *ngIf="focusRow === item.ID; else showNormalText">
+                                <span appCommonDictionary [text]="item.OriginalText"></span>
+                            </ng-container>
+                            <ng-template #showNormalText>
+                                <span>{{item.OriginalText}}</span>
+                            </ng-template>
                         </p>
                         <div class="mobile-dialog" [ngStyle]="{'zoom': container.offsetWidth * 1.12 / 767}">
                             <div class="dialog-translation-container">
@@ -222,7 +233,7 @@
                                         class="dialog-speaker-name" />
                                 </div>
                                 <div class="mobile-dialog-input">
-                                    <textarea [(ngModel)]="item.Text"
+                                    <textarea [(ngModel)]="item.Text" (focus)="focusRow = item.ID"
                                         (ngModelChange)="onTextChange(data[dAS.activeItemIndex])"
                                         [disabled]="(dAS.libreTranslate.translating$ | async) ?? true" cols="4"
                                         class="dialog-translation"></textarea>
@@ -230,7 +241,7 @@
                             </ng-container>
                             <ng-template #fullDialog>
                                 <div class="mobile-dialog-full">
-                                    <textarea [(ngModel)]="item.Text"
+                                    <textarea [(ngModel)]="item.Text" (focus)="focusRow = item.ID"
                                         (ngModelChange)="onTextChange(data[dAS.activeItemIndex])"
                                         [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
                                         class="dialog-translation"></textarea>

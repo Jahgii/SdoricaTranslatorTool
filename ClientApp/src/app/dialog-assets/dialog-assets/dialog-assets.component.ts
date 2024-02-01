@@ -20,16 +20,17 @@ import { ElementBreakpointService } from 'src/app/core/services/element-breakpoi
 import { DialogAssetService } from './dialog-asset.service';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { BehaviorSubject } from 'rxjs';
+import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictionary.directive';
 
 @Component({
   selector: 'app-dialog-assets',
+  standalone: true,
   templateUrl: './dialog-assets.component.html',
   styleUrls: ['./dialog-assets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     popinAnimation
   ],
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -38,6 +39,8 @@ import { BehaviorSubject } from 'rxjs';
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
+
+    CommonDictionaryDirective,
 
     TuiTabsModule,
     TuiItemModule,
@@ -60,6 +63,7 @@ import { BehaviorSubject } from 'rxjs';
 export class DialogAssetsComponent implements OnInit, OnDestroy {
   public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public openOption: boolean = false;
+  public focusRow: string = "";
 
   constructor(
     private ref: ChangeDetectorRef,
