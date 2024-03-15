@@ -20,23 +20,45 @@ export class ResizerDirective {
   };
 
   private mouseMove$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mousemove");
+  private touchMove$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchmove");
   private mouseUp$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mouseup");
+  private touchUp$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchend");
   private px_minResizer = 64;
 
   constructor() { }
 
-  @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent) {
+  @HostListener('touchstart', ['$event']) onTouchStart(e: TouchEvent) {
+    let pageX = e.changedTouches[0].pageX;
+    let pageY = e.changedTouches[0].pageY;
+
     if (this.views.length <= 1) return;
     this.resizerState.isResizing = true;
-    this.resizerState.xDiff = e.pageX;
-    this.resizerState.yDiff = e.pageY;
+    this.resizerState.xDiff = pageX;
+    this.resizerState.yDiff = pageY;
 
     this.resizerState.previousLeftWidth = Number(this.views[0].widthPercentage.substring(0, this.views[0].widthPercentage.length - 1));
     this.resizerState.previousRightWidth = Number(this.views[1].widthPercentage.substring(0, this.views[1].widthPercentage.length - 1));
     this.resizerState.combinePercentage = this.resizerState.previousLeftWidth + this.resizerState.previousRightWidth;
 
     e.preventDefault();
+    this.onTouchMoveSubs();
+    this.onTouchUpSubs();
+  }
 
+  @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent) {
+    let pageX = e.pageX;
+    let pageY = e.pageY;
+
+    if (this.views.length <= 1) return;
+    this.resizerState.isResizing = true;
+    this.resizerState.xDiff = pageX;
+    this.resizerState.yDiff = pageY;
+
+    this.resizerState.previousLeftWidth = Number(this.views[0].widthPercentage.substring(0, this.views[0].widthPercentage.length - 1));
+    this.resizerState.previousRightWidth = Number(this.views[1].widthPercentage.substring(0, this.views[1].widthPercentage.length - 1));
+    this.resizerState.combinePercentage = this.resizerState.previousLeftWidth + this.resizerState.previousRightWidth;
+
+    e.preventDefault();
     this.onMouseMoveSubs();
     this.onMouseUpSubs();
   }
@@ -46,6 +68,14 @@ export class ResizerDirective {
       .pipe(takeWhile(() => this.resizerState.isResizing))
       .subscribe(event => {
         this.moveAxis(event.pageX, event.pageY);
+      });
+  }
+
+  private onTouchMoveSubs() {
+    this.touchMove$
+      .pipe(takeWhile(() => this.resizerState.isResizing))
+      .subscribe(event => {
+        this.moveAxis(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
       });
   }
 
@@ -79,6 +109,15 @@ export class ResizerDirective {
 
   private onMouseUpSubs() {
     this.mouseUp$
+      .pipe(take(1))
+      .subscribe(e => {
+        this.resizerState.isResizing = false;
+      });
+
+  }
+
+  private onTouchUpSubs() {
+    this.touchUp$
       .pipe(take(1))
       .subscribe(e => {
         this.resizerState.isResizing = false;
