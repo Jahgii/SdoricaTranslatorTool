@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, fromEvent, take, takeWhile } from 'rxjs';
 import { ViewerComponent } from 'src/app/mainlayout/viewer/viewer.component';
 
@@ -6,7 +6,7 @@ import { ViewerComponent } from 'src/app/mainlayout/viewer/viewer.component';
   selector: '[appResizer]',
   standalone: true
 })
-export class ResizerDirective {
+export class ResizerDirective implements OnChanges {
   @Input() elementRef!: HTMLElement;
   @Input() views: ViewerComponent[] = [];
 
@@ -19,33 +19,28 @@ export class ResizerDirective {
     previousRightWidth: 0
   };
 
-  private mouseMove$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mousemove");
-  private touchMove$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchmove");
-  private mouseUp$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mouseup");
-  private touchUp$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchend");
+  private mouseDown$!: Observable<MouseEvent>;
+  private touchStart$!: Observable<TouchEvent>;
+  private mouseMove$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mousemove", { passive: true });
+  private touchMove$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchmove", { passive: true });
+  private mouseUp$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mouseup", { passive: true });
+  private touchUp$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchend", { passive: true });
   private px_minResizer = 64;
 
   constructor() { }
 
-  @HostListener('touchstart', ['$event']) onTouchStart(e: TouchEvent) {
-    let pageX = e.changedTouches[0].pageX;
-    let pageY = e.changedTouches[0].pageY;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.elementRef) {
+      this.mouseDown$ = fromEvent<MouseEvent>(this.elementRef, "mousedown", { passive: true });
+      this.onMouseDownSubs();
 
-    if (this.views.length <= 1) return;
-    this.resizerState.isResizing = true;
-    this.resizerState.xDiff = pageX;
-    this.resizerState.yDiff = pageY;
-
-    this.resizerState.previousLeftWidth = Number(this.views[0].widthPercentage.substring(0, this.views[0].widthPercentage.length - 1));
-    this.resizerState.previousRightWidth = Number(this.views[1].widthPercentage.substring(0, this.views[1].widthPercentage.length - 1));
-    this.resizerState.combinePercentage = this.resizerState.previousLeftWidth + this.resizerState.previousRightWidth;
-
-    e.preventDefault();
-    this.onTouchMoveSubs();
-    this.onTouchUpSubs();
+      this.touchStart$ = fromEvent<TouchEvent>(this.elementRef, "touchstart", { passive: true });
+      this.onTouchStartSubs();
+    }
   }
 
-  @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent) {
+  //#region Mouse Events
+  private onMouseDown(e: MouseEvent) {
     let pageX = e.pageX;
     let pageY = e.pageY;
 
@@ -63,12 +58,51 @@ export class ResizerDirective {
     this.onMouseUpSubs();
   }
 
+  private onMouseDownSubs() {
+    this.mouseDown$
+      .subscribe(event => this.onMouseDown(event));
+  }
+
   private onMouseMoveSubs() {
     this.mouseMove$
       .pipe(takeWhile(() => this.resizerState.isResizing))
       .subscribe(event => {
         this.moveAxis(event.pageX, event.pageY);
       });
+  }
+
+  private onMouseUpSubs() {
+    this.mouseUp$
+      .pipe(take(1))
+      .subscribe(e => {
+        this.resizerState.isResizing = false;
+      });
+
+  }
+  //#endregion
+
+  //#region Touch Events
+  private onTouchStart(e: TouchEvent) {
+    let pageX = e.changedTouches[0].pageX;
+    let pageY = e.changedTouches[0].pageY;
+
+    if (this.views.length <= 1) return;
+    this.resizerState.isResizing = true;
+    this.resizerState.xDiff = pageX;
+    this.resizerState.yDiff = pageY;
+
+    this.resizerState.previousLeftWidth = Number(this.views[0].widthPercentage.substring(0, this.views[0].widthPercentage.length - 1));
+    this.resizerState.previousRightWidth = Number(this.views[1].widthPercentage.substring(0, this.views[1].widthPercentage.length - 1));
+    this.resizerState.combinePercentage = this.resizerState.previousLeftWidth + this.resizerState.previousRightWidth;
+
+    e.preventDefault();
+    this.onTouchMoveSubs();
+    this.onTouchUpSubs();
+  }
+
+  private onTouchStartSubs() {
+    this.touchStart$
+      .subscribe(event => this.onTouchStart(event));
   }
 
   private onTouchMoveSubs() {
@@ -78,6 +112,16 @@ export class ResizerDirective {
         this.moveAxis(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
       });
   }
+
+  private onTouchUpSubs() {
+    this.touchUp$
+      .pipe(take(1))
+      .subscribe(e => {
+        this.resizerState.isResizing = false;
+      });
+
+  }
+  //#endregion
 
   private moveAxis(axisX: number, axisY: number) {
     this.moveOnAxisX(axisX - this.resizerState.xDiff);
@@ -105,24 +149,6 @@ export class ResizerDirective {
 
     this.views[0].changeWidth(percentage_newLeftWidth);
     this.views[1].changeWidth(percentage_newRightWidth);
-  }
-
-  private onMouseUpSubs() {
-    this.mouseUp$
-      .pipe(take(1))
-      .subscribe(e => {
-        this.resizerState.isResizing = false;
-      });
-
-  }
-
-  private onTouchUpSubs() {
-    this.touchUp$
-      .pipe(take(1))
-      .subscribe(e => {
-        this.resizerState.isResizing = false;
-      });
-
   }
 
 }
