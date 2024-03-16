@@ -53,7 +53,6 @@ export class ResizerDirective implements OnChanges {
     this.resizerState.previousRightWidth = Number(this.views[1].widthPercentage.substring(0, this.views[1].widthPercentage.length - 1));
     this.resizerState.combinePercentage = this.resizerState.previousLeftWidth + this.resizerState.previousRightWidth;
 
-    e.preventDefault();
     this.addActiveClass();
     this.onMouseMoveSubs();
     this.onMouseUpSubs();
@@ -97,7 +96,6 @@ export class ResizerDirective implements OnChanges {
     this.resizerState.previousRightWidth = Number(this.views[1].widthPercentage.substring(0, this.views[1].widthPercentage.length - 1));
     this.resizerState.combinePercentage = this.resizerState.previousLeftWidth + this.resizerState.previousRightWidth;
 
-    e.preventDefault();
     this.addActiveClass();
     this.onTouchMoveSubs();
     this.onTouchUpSubs();
@@ -157,10 +155,12 @@ export class ResizerDirective implements OnChanges {
 
   private addActiveClass() {
     this.elementRef.classList.add("resizer-line-active");
+    document.documentElement?.classList.add("resizer-cursor");
   }
 
   private removeActiveClass() {
     this.elementRef.classList.remove("resizer-line-active");
+    document.documentElement?.classList.remove("resizer-cursor");
   }
 
 }
