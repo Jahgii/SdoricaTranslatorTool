@@ -62,3 +62,24 @@ code {
   overflow: hidden;
   height: 100%;
 }
+
+.resizer-line {
+  height: 100%;
+  position: relative;
+  width: 3px;
+  margin: 0 1px;
+  left: 0px;
+  background-color: var(--tui-base-04);
+
+  &:hover {
+    width: 3px;
+    background-color: var(--tui-base-09);
+    cursor: col-resize;
+  }
+}
+
+.resizer-line-active {
+  width: 3px;
+  background-color: var(--tui-base-09);
+  cursor: col-resize;
+}
