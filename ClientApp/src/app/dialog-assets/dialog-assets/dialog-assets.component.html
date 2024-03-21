@@ -20,15 +20,13 @@
         <div class="top-main-options tui-space_bottom-2">
             <div class="option-child">
                 <span class="tui-text_body-s tui-space_right-4 text-bold">{{'file-number' | translate}}:</span>
-                <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="dAS.activeItemIndex" class="tabs">
+                <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="dAS.activeItemIndex" class="tabs"
+                    [moreContent]="moreContentIcon">
                     <ng-container *ngFor="let item of data">
                         <button *tuiItem tuiTab>
                             {{item.Number}}
                         </button>
                     </ng-container>
-                    <ng-template #more>
-                        <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
-                    </ng-template>
                 </tui-tabs-with-more>
             </div>
             <div class="option-child">
@@ -146,16 +144,13 @@
         <div class="top-main-options tui-space_bottom-2">
             <div class="option-child">
                 <span class="tui-text_h6 tui-space_right-2">{{'file-number' | translate}}: </span>
-                <tui-tabs-with-more [itemsLimit]="1" [(activeItemIndex)]="dAS.activeItemIndex" [moreContent]="more"
-                    class="tabs">
+                <tui-tabs-with-more [itemsLimit]="1" [(activeItemIndex)]="dAS.activeItemIndex"
+                    [moreContent]="moreContentIcon" class="tabs">
                     <ng-container *ngFor="let item of data">
                         <button *tuiItem tuiTab>
                             {{item.Number}}
                         </button>
                     </ng-container>
-                    <ng-template #more>
-                        <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
-                    </ng-template>
                 </tui-tabs-with-more>
             </div>
             <div class="option-child">
@@ -254,6 +249,10 @@
             </tui-scrollbar>
         </div>
     </div>
+</ng-template>
+
+<ng-template #moreContentIcon>
+    <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
 </ng-template>
 
 <ng-template #loading>
