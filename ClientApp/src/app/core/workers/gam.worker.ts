@@ -5,12 +5,12 @@ import { IOnMessage, ProgressStatus } from '../interfaces/i-export-progress';
 import { IGamedata, IGamedataValue } from '../interfaces/i-gamedata';
 
 addEventListener('message', async ({ data }) => {
-  var values: IGamedataValue[] = [];
-  var decodeResult = data.decodeResult as IGamedata;
+  let values: IGamedataValue[] = [];
+  let decodeResult = data.decodeResult as IGamedata;
   const message: IOnMessage = { maxPg: 100, pg: 0, blob: undefined, pgState: ProgressStatus.retrivingServerData };
   postMessage(message);
 
-  var promise = fetch('api/gamedatavalues/export', {
+  let promise = fetch('api/gamedatavalues/export', {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -30,7 +30,7 @@ addEventListener('message', async ({ data }) => {
     }
   );
 
-  if (!(values.length > 0)) {
+  if (values.length <= 0) {
     message.pgState = ProgressStatus.retrivingServerDataEmpty;
     postMessage(message);
     return;
@@ -43,8 +43,8 @@ addEventListener('message', async ({ data }) => {
 
   values.forEach(v => {
     let finalExportValue: any[] = [];
-    for (let keyIndex = 0; keyIndex < decodeResult.C[category].K.length; keyIndex++) {
-      let keyName = decodeResult.C[category].K[keyIndex];
+    for (const element of decodeResult.C[category].K) {
+      let keyName = element;
       finalExportValue.push(v.Content[keyName]);
     }
     decodeResult.C[category].D.push(finalExportValue);
@@ -56,7 +56,7 @@ addEventListener('message', async ({ data }) => {
 
   postMessage(message);
 
-  var encodeResult = encode(decodeResult);
+  let encodeResult = encode(decodeResult);
 
   const blob = new Blob([encodeResult], {
     type: ''

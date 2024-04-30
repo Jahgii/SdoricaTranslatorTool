@@ -39,9 +39,13 @@ namespace SdoricaTranslatorTool.Controllers
 
                 try
                 {
+                    var GoogleCliendId = _config["GoogleCliendId"];
+
+                    if (GoogleCliendId == null) return StatusCode(500);
+
                     var validationSettings = new GoogleJsonWebSignature.ValidationSettings()
                     {
-                        Audience = new List<string>() { _config["GoogleCliendId"] }
+                        Audience = [GoogleCliendId]
                     };
                     var payload = await GoogleJsonWebSignature.ValidateAsync(authValidation.IdToken, validationSettings);
 
@@ -90,7 +94,6 @@ namespace SdoricaTranslatorTool.Controllers
 
         }
 
-
         private string GenerateToken(double hours)
         {
             var sSK = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["IssuerSigningKey"] ?? ""));
@@ -98,7 +101,7 @@ namespace SdoricaTranslatorTool.Controllers
             var jwtST = new JwtSecurityToken(
                 issuer: _config["Issuer"],
                 audience: _config["Audience"],
-                claims: new List<Claim>(),
+                claims: [],
                 expires: DateTime.Now.AddHours(hours),
                 signingCredentials: sC
             );

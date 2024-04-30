@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   TuiTextfieldControllerModule,
   TuiPrimitiveTextfieldModule,
@@ -60,7 +60,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
     LocalizationTableComponent
   ],
 })
-export class LocalizationComponent implements OnInit, OnDestroy {
+export class LocalizationComponent implements OnInit {
   viewIndex: number = -1;
 
   constructor(
@@ -74,9 +74,6 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.localization.viewIndex = this.viewIndex;
     this.localization.loadStore();
-  }
-
-  ngOnDestroy(): void {
   }
 
   public onResetCategories() {
