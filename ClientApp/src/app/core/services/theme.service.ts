@@ -28,7 +28,9 @@ export class ThemeService {
     }
   }
 
-  public switchTheme(): void {
+  public switchTheme(event: MouseEvent): void {
+    if (event.isTrusted === false) return;
+
     this.changeMode$.next(false);
     this.localStorage.setTheme(this.nightMode$.value ? 'light' : 'dark');
     this.nightMode$.next(!this.nightMode$.value);

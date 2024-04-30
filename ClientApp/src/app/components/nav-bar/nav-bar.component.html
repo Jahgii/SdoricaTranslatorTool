@@ -27,7 +27,7 @@
     </ng-template>
 
     <button tuiIconButton appearance="icon" [icon]="(theme.nightMode$ | async)? 'tuiIconSun' : 'tuiIconMoon'"
-        (click)="theme.switchTheme()" tuiSlot="right"
+        (click)="theme.switchTheme($event)" tuiSlot="right"
         [tuiHint]="((theme.nightMode$ | async)? 'toogle-lightmode' : 'toogle-nightmode') | translate"
         tuiHintAppearance="onDark">
     </button>
