@@ -57,7 +57,6 @@ export class SidebarComponent {
   ) { }
 
   public loadComponent(viewerKey: AppViews) {
-    viewers[viewerKey];
     this.viewersService.loadComponent(viewerKey, viewers[viewerKey], {});
     this.open = false;
   }

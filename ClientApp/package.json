@@ -1,6 +1,9 @@
 {
   "name": "sdoricatranslatortool",
   "version": "0.0.0",
+  "main": "main.js",
+  "author": "Jahg",
+  "description": "Sdorica Translator Tool",
   "scripts": {
     "ng": "ng",
     "prestart": "node aspnetcore-https",
@@ -10,7 +13,9 @@
     "build": "ng build",
     "build:ssr": "ng run SdoricaTranslatorTool:server:dev",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "electron": "ng build --base-href ./ && electron .",
+    "dist": "ng build --base-href ./ && electron-builder"
   },
   "private": true,
   "dependencies": {
@@ -62,6 +67,8 @@
     "@types/jasmine": "~4.3.1",
     "@types/jasminewd2": "~2.0.10",
     "@types/node": "^18.19.22",
+    "electron": "^30.0.1",
+    "electron-builder": "^24.13.3",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.2",
     "karma-chrome-launcher": "~3.2.0",
@@ -73,5 +80,24 @@
   "overrides": {
     "autoprefixer": "10.4.5",
     "webpack": "5.81.0"
+  },
+  "build": {
+    "appId": "Jahg.STT",
+    "productName": "Sdorica Translator Tool",
+    "asar": true,
+    "directories": {
+      "output": "dist/release/"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "Stt.exe"
+    },
+    "files": [
+      "**/*"
+    ]
   }
 }

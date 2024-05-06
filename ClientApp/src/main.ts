@@ -12,7 +12,7 @@ import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { TuiLanguageName } from '@taiga-ui/i18n/interfaces';
 import { tuiLanguageSwitcher } from '@taiga-ui/i18n/switch';
 import { of } from 'rxjs';
-import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE } from '@taiga-ui/i18n';
+import { TUI_LANGUAGE, TUI_SPANISH_LANGUAGE } from '@taiga-ui/i18n';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 import { TUI_SANITIZER, TuiAlertModule, TuiDialogModule, TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
@@ -86,14 +86,14 @@ bootstrapApplication(AppComponent, {
         },
         {
             provide: TUI_LANGUAGE,
-            useValue: of(TUI_ENGLISH_LANGUAGE)
+            useValue: of(TUI_SPANISH_LANGUAGE)
         },
         tuiLanguageSwitcher(async (language: TuiLanguageName): Promise<unknown> => {
             switch (language) {
                 case `es`:
-                    return import(`@taiga-ui/i18n/languages/spanish`);
-                default:
                     return import(`@taiga-ui/i18n/languages/english`);
+                default:
+                    return import(`@taiga-ui/i18n/languages/spanish`);
             }
         }),
         provideAnimations(),
