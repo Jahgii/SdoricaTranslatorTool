@@ -534,7 +534,13 @@ export class ImportService {
           , () => this.dialogAssetsUploading[language].Uploading.next(false)
         );
 
-        flows.obsError$.subscribe(_ => {
+        flows.obsError$.subscribe(res => {
+          let op: OperationLog = {
+            file: 'obb',
+            message: res.request.error?.message,
+            data: res.data
+          };
+          this.operations$.next([...this.operations$.value, op]);
         }, _ => undefined
           , () => undefined
         );
@@ -587,7 +593,13 @@ export class ImportService {
       }, _ => undefined
         , () => undefined
       );
-      flowsL.obsError$.subscribe(_ => {
+      flowsL.obsError$.subscribe(res => {
+        let op: OperationLog = {
+          file: 'obb-lang',
+          message: res.request.error?.message,
+          data: res.data
+        };
+        this.operations$.next([...this.operations$.value, op]);
       }, _ => undefined
         , () => undefined
       );
@@ -597,7 +609,13 @@ export class ImportService {
       }, _ => undefined
         , () => undefined
       );
-      flowsMG.obsError$.subscribe(_ => {
+      flowsMG.obsError$.subscribe(res => {
+        let op: OperationLog = {
+          file: 'obb-main',
+          message: res.request.error?.message,
+          data: res.data
+        };
+        this.operations$.next([...this.operations$.value, op]);
       }, _ => undefined
         , () => undefined
       );
@@ -607,7 +625,13 @@ export class ImportService {
       }, _ => undefined
         , () => undefined
       );
-      flowsG.obsError$.subscribe(_ => {
+      flowsG.obsError$.subscribe(res => {
+        let op: OperationLog = {
+          file: 'obb-group',
+          message: res.request.error?.message,
+          data: res.data
+        };
+        this.operations$.next([...this.operations$.value, op]);
       }, _ => undefined
         , () => undefined
       );
