@@ -115,7 +115,7 @@ export class LocalizationService implements OnDestroy {
           this.initLastCategorySelected();
         });
     else {
-      
+
     }
   }
 
@@ -156,7 +156,7 @@ export class LocalizationService implements OnDestroy {
       return;
     }
 
-    this.local.setCategory(this.viewIndex, category.Id);
+    this.local.setCategory(this.viewIndex, category.Id ?? "");
     this.selectedCategory$.next(true);
     this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
 

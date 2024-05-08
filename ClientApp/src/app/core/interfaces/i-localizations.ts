@@ -1,5 +1,5 @@
 export interface ILocalizationCategory {
-    Id: string;
+    Id?: string;
     Name: string;
     Keys: { [language: string]: number };
     KeysTranslated: { [language: string]: number };

@@ -212,5 +212,6 @@
     "begin-import": "Start Import Process",
     "missing-files-import": "Please provide all files to begin the import process",
     "toogle-nightmode": "Switch to Dark mode",
-    "toogle-lightmode": "Switch to Light mode"
+    "toogle-lightmode": "Switch to Light mode",
+    "select-mode-description": "Its seem its your first time here, select a mode to continue"
 }

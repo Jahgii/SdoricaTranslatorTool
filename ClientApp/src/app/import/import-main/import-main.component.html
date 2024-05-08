@@ -1,5 +1,5 @@
 <main class="main-container">
-    <h3>Importar</h3>
+    <p class="tui-text_body-xs text_subtitle"> {{'import' | translate}}</p>
     <p>
         Antes de comenzar a traducir preparemos lo siguiente.
         Proporciona todos los archivos necesarios en sus
@@ -15,70 +15,56 @@
         <tui-svg src="tuiIconXCircle"></tui-svg> justo al lado del archivo.
     </p>
 
-    <!-- <p>{{'obb-description' | translate}}</p> -->
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+        <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
+            $implicit: importS.obb,
+            filesize:(1024*1024*1024*2),
+            accept: '.obb',
+            filename: 'OBB'
+        }"></ng-container>
+        <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
+            $implicit: importS.localization,
+            filesize:(1024*1024*100),
+            accept: undefined,
+            filename: 'Localization'
+        }">
+        </ng-container>
+        <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
+            $implicit: importS.gamedata,
+            filesize:(1024*1024*100),
+            accept: undefined,
+            filename: 'Gamedata',
+        }">
+        </ng-container>
+    </div>
 
-    <tui-accordion [closeOthers]="false" [rounded]="true">
-        <tui-accordion-item borders="top-bottom" [showArrow]="false" [disabled]="false" [disableHover]="true">
-            <ng-container [ngTemplateOutlet]="accordionHeader" [ngTemplateOutletContext]="{
-                $implicit: importS.obb,
-                filesize:(1024*1024*1024*2),
-                accept: '.obb',
-                filename: 'OBB'
-            }">
-            </ng-container>
-            <ng-template tuiAccordionItemContent>
-                <ng-container [ngTemplateOutlet]="configurationObb">
-                </ng-container>
-            </ng-template>
-        </tui-accordion-item>
+    @if ((importS.filesVerified$ | async) ?? false) {
+    <ng-container [ngTemplateOutlet]="configurationObb"></ng-container>
+    <ng-container [ngTemplateOutlet]="progressLog"></ng-container>
 
-        <tui-accordion-item borders="top-bottom" [showArrow]="false">
-            <ng-container [ngTemplateOutlet]="accordionHeader" [ngTemplateOutletContext]="{
-                $implicit: importS.localization,
-                filesize:(1024*1024*100),
-                accept: undefined,
-                filename: 'Localization'
-            }">
-            </ng-container>
-            <ng-template tuiAccordionItemContent>
-
-            </ng-template>
-        </tui-accordion-item>
-
-        <tui-accordion-item borders="top-bottom" [showArrow]="false">
-            <ng-container [ngTemplateOutlet]="accordionHeader" [ngTemplateOutletContext]="{
-                $implicit: importS.gamedata,
-                filesize:(1024*1024*100),
-                accept: undefined,
-                filename: 'Gamedata',
-            }">
-            </ng-container>
-            <ng-template tuiAccordionItemContent>
-
-            </ng-template>
-        </tui-accordion-item>
-    </tui-accordion>
-
-    <div class="translate-button tui-space_vertical-6">
+    <div class="import-button tui-space_vertical-6">
         @if (!(importS.importsCompleted$ | async)) {
-        <button tuiButton appearance="outline" [showLoader]="(importS.isImporting$ | async) ?? false"
-            (click)="importS.onImportBegins()" [disabled]="!(importS.filesVerified$ | async)"
+        <button tuiButton appearance="outline" class="import-button"
+            [showLoader]="(importS.isImporting$ | async) ?? false" (click)="importS.onImportBegins()"
+            [disabled]="!(importS.filesVerified$ | async)"
             [tuiHint]="!(importS.filesVerified$ | async) ? ('missing-files-import' | translate) : undefined"
             [tuiHintAppearance]="!(importS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
             {{'begin-import' | translate}}
         </button>
         }
         @else {
-        <button tuiButton appearance="outline">
-            {{'after-translation-apply-3' | translate}}
+        <button style="width: 100%;" appearance="flat" tuiIconButton type="button" class="tui-space_top-6"
+            icon="tuiIconArrowRightCircleLarge" shape="square" size="m" (click)="onNext()">
         </button>
         }
     </div>
+    }
+
 
 </main>
 
-<ng-template #accordionHeader let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
-    <div class="accordion-header">
+<ng-template #fileInput let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
+    <div class="file-input-empty">
         <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
             $implicit: filecontrol,
             filesize:filesize,
@@ -88,18 +74,10 @@
         }">
         </ng-container>
 
-        @if (!filecontrol.control.value) {
-        <button class="skip-button" tuiIconButton icon="tuiIconXCircleLarge" size="xs" appearance="icon"
+        @if (!filecontrol.control.value && !(filecontrol.skip | async)) {
+        <button class="right-top-button" tuiIconButton icon="tuiIconXCircleLarge" size="xs" appearance="icon"
             (click)="importS.onSkipFile(filecontrol)">
         </button>
-        }
-        @else {
-        <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false">
-            <tui-svg [src]="'tuiIconCheckCircleLarge'"
-                [ngStyle]="{'color': (filecontrol.verifiedFile$ | async) ? 'var(--tui-positive)': 'inherited'}"
-                tuiHint="{{'file-verified' | translate}}" tuiHintAppearance="onDark">
-            </tui-svg>
-        </tui-loader>
         }
     </div>
 </ng-template>
@@ -144,9 +122,22 @@
         </ng-template>
     </tui-input-files>
     <ng-container *ngIf="filecontrol.loadedFile$ | async as file">
-        <div>
-            <p>{{filename}}</p>
-        </div>
+        <tui-island size="s" class="not-support">
+            <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false"
+                style="position: absolute; right: 0.5em; top: 0.5em;">
+                <tui-svg [src]="'tuiIconCheckCircle'" style="position: relative; top: 0.25em;">
+                </tui-svg>
+            </tui-loader>
+            <p class="tui-island__category">{{'archive' | translate}}</p>
+            <h3 class="tui-island__title">{{filename}}</h3>
+            <p class="text-blend tui-island__paragraph">
+                {{
+                (filecontrol.verifyingFile$ | async) ?? false ?
+                ('file-import-verifying' | translate) :
+                ('file-import-verified' | translate)
+                }}
+            </p>
+        </tui-island>
     </ng-container>
     }
 </ng-template>
@@ -159,7 +150,7 @@
     </p>
     @if (importS.multiLanguage$ | async) {
     <tui-select tuiTextfieldSize="s" [formControl]="importS.defaultLanguage" class="tui-space_bottom-3"
-        [valueContent]="originLang">
+        [valueContent]="originLang" size="s">
         {{'default-language' | translate}}
         <input tuiTextfield placeholder="..." />
         <tui-data-list-wrapper *tuiDataList [items]="importS.languagesSelected" [itemContent]="originLang">
@@ -172,7 +163,7 @@
     <div class="wizard-choose-lang">
         <tui-checkbox-block *ngFor="let language of importS.dialogAssets | keyvalue" size="l"
             [(ngModel)]="importS.dialogAssetsInclude[language.key]"
-            (ngModelChange)="importS.onSelectLanguage(language.key, $event)">
+            (ngModelChange)="importS.onSelectLanguage(language.key, $event)" class="lang-checkbox">
             <div class="content">
                 <div>
                     <div class="label">{{language.key | translate}}</div>
@@ -181,4 +172,40 @@
             </div>
         </tui-checkbox-block>
     </div>
+</ng-template>
+
+<ng-template #progressLog>
+    <tui-scrollbar class="tui-space_vertical-6">
+        <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable style="display: block;
+            width: calc(100% - 4px);
+            height: 200px;
+            border: 2px solid var(--tui-base-02);" class="tui-zero-scrollbar">
+            <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
+                <thead>
+                    <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
+                        <th class="tui-table__th tui-table_layout_fixed" style="width: 150px;">{{'file' | translate}}
+                        </th>
+                        <th class="tui-table__th tui-table_layout_fixed">{{'message' | translate}}</th>
+                        <th class="tui-table__th" style="width: 64px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *cdkVirtualFor="let log of (importS.operations$ | async)"
+                        class="tui-table__tr tui-table__tr_border_none">
+                        <td class="tui-table__td tui-table__td_text_overflow">
+                            {{log.file}}
+                        </td>
+                        <td class="tui-table__td tui-table__td_text_overflow">
+                            <span [title]="log.message">{{ log.message}}</span>
+                        </td>
+                        <td class="tui-table__td">
+                            <button appearance="icon" icon="tuiIconChevronRightLarge" tuiIconButton type="button"
+                                size="xs">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
 </ng-template>

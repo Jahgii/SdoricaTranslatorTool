@@ -5,19 +5,50 @@
     margin: 0 auto;
 }
 
-.accordion-header {
+.file-input-empty {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
 }
 
 .file-input {
-    min-width: 200px;
+    min-width: 220px;
+    min-height: 108px;
 }
 
 .wizard-choose-lang {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, auto));
-    grid-gap: 0.5em;
-    grid-auto-rows: minmax(100px, auto);
+    grid-gap: 1rem 0;
+    grid-auto-rows: minmax(108px, auto);
+    justify-content: space-evenly;
+
+}
+
+.right-top-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+}
+
+.not-support {
+    min-width: calc(220px - 2rem);
+    min-height: calc(108px - 2rem);
+}
+
+.import-button {
+    width: 100%;
+}
+
+.operation-item {
+    height: 3.125rem;
+}
+
+.lang-checkbox {
+    width: 220px;
+}
+
+.text_subtitle {
+    color: var(--tui-text-02)
 }

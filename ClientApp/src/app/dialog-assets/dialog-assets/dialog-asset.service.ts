@@ -1,4 +1,4 @@
-import { Inject, Injectable, signal } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';

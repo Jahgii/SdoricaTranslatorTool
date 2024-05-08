@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ILocalizationCategory } from '../interfaces/i-localizations';
+import { AppModes } from 'src/app/components/wizard-initial/mode-selector/mode-selector.component';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +7,14 @@ import { ILocalizationCategory } from '../interfaces/i-localizations';
 export class LocalStorageService {
 
   constructor() { }
+
+  getAppMode() {
+    return localStorage.getItem('appMode') ?? undefined;
+  }
+
+  setAppMode(mode: AppModes) {
+    localStorage.setItem('appMode', mode);
+  }
 
   getLibreTranslateUrl() {
     return localStorage.getItem('lTUrl') ?? undefined;

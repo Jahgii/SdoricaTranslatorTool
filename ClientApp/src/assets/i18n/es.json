@@ -212,5 +212,18 @@
     "begin-import": "Comenzar Proceso de Importación",
     "missing-files-import": "Por favor proporciona todos los archivos para comenzar el proceso de importación",
     "toogle-nightmode": "Cambiar a modo Oscuro",
-    "toogle-lightmode": "Cambiar a modo Claro"
+    "toogle-lightmode": "Cambiar a modo Claro",
+    "select-mode-description": "Parece que es tu primera vez por aquí, selecciona un modo para continuar",
+    "offline": "Offline",
+    "offline-mode-description": "Guarda la traducción localmente",
+    "online": "Online",
+    "online-mode-description": "Guarda la traducción en una Base de Datos",
+    "api-url": "API Url",
+    "api-key": "API Key",
+    "file-import-verified": "Archivo Verificado",
+    "file-import-verifying": "Verificando Archivo...",
+    "file": "Archivo",
+    "message": "Mensaje",
+    "import": "Importar",
+    "mode-selection": "Selección de Modo"
 }

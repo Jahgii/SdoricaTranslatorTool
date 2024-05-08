@@ -10,12 +10,26 @@ import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { NgIf, AsyncPipe, DecimalPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-load-file-input',
-    templateUrl: './load-file-input.component.html',
-    styleUrls: ['./load-file-input.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [NgIf, TuiBlockStatusModule, TuiButtonModule, TuiInputFilesModule, FormsModule, ReactiveFormsModule, TuiMarkerIconModule, TuiLinkModule, TuiProgressModule, AsyncPipe, DecimalPipe, TranslateModule]
+  selector: 'app-load-file-input',
+  templateUrl: './load-file-input.component.html',
+  styleUrls: ['./load-file-input.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    AsyncPipe,
+    DecimalPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+
+    TuiBlockStatusModule,
+    TuiButtonModule,
+    TuiInputFilesModule,
+    TuiMarkerIconModule,
+    TuiLinkModule,
+    TuiProgressModule
+  ]
 })
 export class LoadFileInputComponent {
 

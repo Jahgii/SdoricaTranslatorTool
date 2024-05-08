@@ -46,16 +46,16 @@ export class FileReaderLocalizationService {
 
   public async onReadFile(file: File) {
     this.fileProgressState$.next('reading');
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = (ev: ProgressEvent<FileReader>) => this.onDecodeFile(reader, file.name, ev);
     reader.readAsArrayBuffer(file);
   }
 
   private async onDecodeFile(reader: FileReader, fileName: string, ev: ProgressEvent<FileReader>) {
-    var decodeResult = decode(reader.result as ArrayBuffer) as ILocalization;
+    let decodeResult = decode(reader.result as ArrayBuffer) as ILocalization;
     this.fileProgressState$.next('reading content');
     for (let categoryName in decodeResult.C) {
-      var new_category: ILocalizationCategory = {
+      let new_category: ILocalizationCategory = {
         Name: categoryName,
         Keys: {},
         KeysTranslated: {}
@@ -72,15 +72,15 @@ export class FileReaderLocalizationService {
       let keyIndex = decodeResult.C[categoryName].K.findIndex(e => e === 'Key');
       let versionIndex = decodeResult.C[categoryName].K.findIndex(e => e === '_version');
 
-      for (let dataIndex = 0; dataIndex < decodeResult.C[categoryName].D.length; dataIndex++) {
+      for (const dC of decodeResult.C[categoryName].D) {
         let new_key: ILocalizationKey | undefined = undefined;
         for (let langIndex = 0; langIndex < decodeResult.C[categoryName].K.length; langIndex++) {
           if (keyIndex === langIndex) continue;
           if (versionIndex === langIndex) continue;
-          let keyName = decodeResult.C[categoryName].D[dataIndex][keyIndex]
-          let _version = decodeResult.C[categoryName].D[dataIndex][versionIndex]
+          let keyName = dC[keyIndex]
+          let _version = dC[versionIndex]
           langName = decodeResult.C[categoryName].K[langIndex];
-          let text = decodeResult.C[categoryName].D[dataIndex][langIndex];
+          let text = dC[langIndex];
 
           if (!new_key) {
             new_key = {

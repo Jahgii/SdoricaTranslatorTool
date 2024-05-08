@@ -1,10 +1,11 @@
 import { AsyncPipe, NgIf, DecimalPipe, NgTemplateOutlet, NgStyle, KeyValuePipe, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { TuiButtonModule, TuiHintModule, TuiLoaderModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiHintModule, TuiLoaderModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
 import { TuiAccordionModule, TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiInputFilesModule, TuiIslandModule, TuiMarkerIconModule, TuiSelectModule } from '@taiga-ui/kit';
 import { ImportService } from '../import.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-import-main',
@@ -17,6 +18,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     KeyValuePipe,
     NgStyle,
     NgTemplateOutlet,
+    ScrollingModule,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
@@ -31,7 +33,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TuiHintModule,
     TuiSelectModule,
     TuiDataListWrapperModule,
-    TuiCheckboxBlockModule
+    TuiCheckboxBlockModule,
+    TuiScrollbarModule
   ],
   providers: [ImportService],
   templateUrl: './import-main.component.html',
@@ -41,5 +44,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class ImportMainComponent {
 
   constructor(@Inject(ImportService) public importS: ImportService) { }
+
+  public onNext() {
+
+  }
 
 }

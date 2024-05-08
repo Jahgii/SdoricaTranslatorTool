@@ -7,7 +7,7 @@ import { ILocalization } from '../core/interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
 import { IGamedata } from '../core/interfaces/i-gamedata';
 import { IExportPercentages, IFileControl } from '../core/interfaces/i-export';
-import { ProgressStatus as ProgressStatus, IOnMessage } from '../core/interfaces/i-export-progress';
+import { ProgressStatus, IOnMessage } from '../core/interfaces/i-export-progress';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ApiService } from '../core/services/api.service';
 import * as JSZip from 'jszip';

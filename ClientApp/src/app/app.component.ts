@@ -9,6 +9,7 @@ import { ThemeDarkComponent } from './components/theme-dark/theme-dark.component
 import { NgIf, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
 import { SidebarComponent } from './mainlayout/sidebar/sidebar.component';
+import { WizardInitialComponent } from './components/wizard-initial/wizard-initial.component';
 
 @Component({
   selector: 'app-root',
@@ -30,11 +31,12 @@ import { SidebarComponent } from './mainlayout/sidebar/sidebar.component';
     SidebarComponent,
     NavMenuComponent,
     NavBarComponent,
+    WizardInitialComponent
   ]
 })
 export class AppComponent {
 
-  title = 'Translator Tool';
+  public title = 'Translator Tool';
 
   constructor(
     public languageOrigin: LanguageOriginService,

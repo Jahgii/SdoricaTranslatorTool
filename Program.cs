@@ -14,7 +14,7 @@ builder.Services
     });
 
 //JWT
-builder.Services.ConfigureJwt(builder.Configuration);
+// builder.Services.ConfigureJwt(builder.Configuration);
 
 // CORS
 builder.Services
@@ -50,9 +50,11 @@ app.UseCors(cors);
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller}/{action=Index}/{id?}"
-    ).RequireAuthorization();
+    );
+// .RequireAuthorization();
 
-app.MapControllers().RequireAuthorization();
+app.MapControllers();
+// .RequireAuthorization();
 
 app.MapFallbackToFile("index.html");
 
