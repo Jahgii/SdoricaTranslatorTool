@@ -225,5 +225,10 @@
     "file": "Archivo",
     "message": "Mensaje",
     "import": "Importar",
-    "mode-selection": "Selección de Modo"
+    "mode-selection": "Selección de Modo",
+    "constraint-error": "Omitido, ya existe la inf. en la BD",
+    "abort-error": "Operación cancelada",
+    "quota-exceeded-error": "Sin espacio en memoria",
+    "unknown-error": "Error Desconocido",
+    "version-error": "La versión de la BD cambio"
 }

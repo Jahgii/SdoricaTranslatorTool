@@ -113,8 +113,27 @@ export class IndexDBService {
       operationCompleted += 1;
       let error: IndexedDBbCustomRequestError<T> = {
         request: event.target as IDBRequest,
+        translateKey: IndexDBErrors.UnknownError,
         data: data
       };
+
+      if (error.request.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+        event.preventDefault();
+      }
+      else if (error.request.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+
       obsError$.next(error);
     };
 
@@ -155,8 +174,27 @@ export class IndexDBService {
         operationCompleted += 1;
         let error: IndexedDBbCustomRequestError<T> = {
           request: event.target as IDBRequest,
+          translateKey: IndexDBErrors.UnknownError,
           data: d
         };
+
+        if (error.request.error?.name === 'ConstraintError') {
+          error.translateKey = IndexDBErrors[error.request.error?.name];
+          event.preventDefault();
+        }
+        else if (error.request.error?.name === 'AbortError') {
+          error.translateKey = IndexDBErrors[error.request.error?.name];
+        }
+        else if (error.request.error?.name === 'QuotaExceededError') {
+          error.translateKey = IndexDBErrors[error.request.error?.name];
+        }
+        else if (error.request.error?.name === 'UnknownError') {
+          error.translateKey = IndexDBErrors[error.request.error?.name];
+        }
+        else if (error.request.error?.name === 'VersionError') {
+          error.translateKey = IndexDBErrors[error.request.error?.name];
+        }
+
         obsError$.next(error);
       };
     });
@@ -167,7 +205,16 @@ export class IndexDBService {
 
 export interface IndexedDBbCustomRequestError<T> {
   request: IDBRequest;
+  translateKey: IndexDBErrors;
   data: T;
+}
+
+enum IndexDBErrors {
+  ConstraintError = "constraint-error",
+  AbortError = "abort-error",
+  QuotaExceededError = "quota-exceeded-error",
+  UnknownError = "unknown-error",
+  VersionError = "version-error"
 }
 
 export enum ObjectStoreNames {

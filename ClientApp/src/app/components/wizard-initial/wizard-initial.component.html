@@ -2,9 +2,7 @@
     <tui-stepper [activeItemIndex]="(index$ | async) ?? -1" orientation="vertical" class="stepper">
         <button tuiStep (click)="index$.next(0)" disabled></button>
         <button tuiStep (click)="index$.next(1)" disabled></button>
-        <button tuiStep (click)="index$.next(2)" ></button>
-        <button tuiStep (click)="index$.next(3)" disabled></button>
-        <button tuiStep (click)="index$.next(4)" disabled></button>
+        <button tuiStep (click)="index$.next(2)" disabled></button>
     </tui-stepper>
 
     <div class="step-container">
@@ -14,9 +12,6 @@
         }
         @case (1) {
         <app-import-main></app-import-main>
-        }
-        @case (2) {
-        <app-load-file-wizard></app-load-file-wizard>
         }
         }
     </div>

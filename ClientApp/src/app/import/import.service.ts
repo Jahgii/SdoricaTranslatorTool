@@ -538,6 +538,7 @@ export class ImportService {
           let op: OperationLog = {
             file: 'obb',
             message: res.request.error?.message,
+            translateKey: res.translateKey,
             data: res.data
           };
           this.operations$.next([...this.operations$.value, op]);
@@ -597,6 +598,7 @@ export class ImportService {
         let op: OperationLog = {
           file: 'obb-lang',
           message: res.request.error?.message,
+          translateKey: res.translateKey,
           data: res.data
         };
         this.operations$.next([...this.operations$.value, op]);
@@ -613,6 +615,7 @@ export class ImportService {
         let op: OperationLog = {
           file: 'obb-main',
           message: res.request.error?.message,
+          translateKey: res.translateKey,
           data: res.data
         };
         this.operations$.next([...this.operations$.value, op]);
@@ -629,6 +632,7 @@ export class ImportService {
         let op: OperationLog = {
           file: 'obb-group',
           message: res.request.error?.message,
+          translateKey: res.translateKey,
           data: res.data
         };
         this.operations$.next([...this.operations$.value, op]);
@@ -799,6 +803,7 @@ export class ImportService {
         let op: OperationLog = {
           file: 'gamedata-categories',
           message: res.request.error?.message,
+          translateKey: res.translateKey,
           data: res.data
         };
         this.operations$.next([...this.operations$.value, op]);
@@ -817,6 +822,7 @@ export class ImportService {
           let op: OperationLog = {
             file: 'gamedata-values',
             message: res.request.error?.message,
+            translateKey: res.translateKey,
             data: res.data
           };
           this.operations$.next([...this.operations$.value, op]);
@@ -931,5 +937,6 @@ export class ImportService {
 interface OperationLog {
   file: string;
   message?: string;
+  translateKey: string;
   data: any;
 }

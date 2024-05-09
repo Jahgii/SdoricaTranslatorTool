@@ -196,7 +196,7 @@
                             {{log.file}}
                         </td>
                         <td class="tui-table__td tui-table__td_text_overflow">
-                            <span [title]="log.message">{{ log.message}}</span>
+                            <span [title]="log.translateKey | translate">{{ log.translateKey | translate}}</span>
                         </td>
                         <td class="tui-table__td">
                             <button appearance="icon" icon="tuiIconChevronRightLarge" tuiIconButton type="button"
