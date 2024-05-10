@@ -2,11 +2,15 @@
 
 import * as JSZip from 'jszip';
 import { onReadFileDialogFromObb } from 'src/app/import/import-logic';
+import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessage } from '../interfaces/i-import';
 
 addEventListener('message', async ({ data }) => {
-  let message = data;
-  let file = message.file;
+  let message: ImportOBBVerificationPostMessage = data;
+  let response: ImportOBBVerificationWorkerPostMessage = {
+    message: 'file-verified'
+  };
 
+  let file = message.file;
   let dialogAssets = {};
   let dialogAssetsInclude = {};
   let dialogAssetsMainGroups = {};
@@ -29,19 +33,22 @@ addEventListener('message', async ({ data }) => {
       );
     }
   } catch (error) {
-    postMessage({ message: 'file-error' });
+    response.message = 'file-error';
+    postMessage(response);
     return;
   }
 
   let dialogFolder = zipObb.files['assets/DialogAssets/'];
 
-  postMessage({ message: 'file-verifying-complete' });
+  response.message = 'file-verifying-complete';
+  postMessage(response);
   if (!dialogFolder) {
-    postMessage({ message: 'file-error' });
+    response.message = 'file-error';
+    postMessage(response);
     return;
   }
 
-  let response = {
+  response = {
     message: 'file-verified',
     dialogAssets: dialogAssets,
     dialogAssetsInclude: dialogAssetsInclude,
@@ -50,5 +57,4 @@ addEventListener('message', async ({ data }) => {
   };
 
   postMessage(response);
-
 });

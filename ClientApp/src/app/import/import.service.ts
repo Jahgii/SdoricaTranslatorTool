@@ -278,7 +278,7 @@ export class ImportService {
     fileControl.verifiedFile$.next(true);
   }
 
-  public onVerificationObbWorkerMessage(data: any, alert: Observable<void>, fileControl: IFileControl) {
+  private onVerificationObbWorkerMessage(data: any, alert: Observable<void>, fileControl: IFileControl) {
     let dType: ImportOBBVerificationWorkerPostMessage = data;
     if (dType.message === 'file-error') {
       this.openAlert(alert);
@@ -287,10 +287,10 @@ export class ImportService {
     }
     else if (dType.message === 'file-verifying-complete') fileControl.verifyingFile$.next(false);
     else if (dType.message === 'file-verified') {
-      this.dialogAssets = dType.dialogAssets;
-      this.dialogAssetsInclude = dType.dialogAssetsInclude;
-      this.dialogAssetsMainGroups = dType.dialogAssetsMainGroups;
-      this.dialogAssetsGroups = dType.dialogAssetsGroups;
+      this.dialogAssets = dType.dialogAssets ?? {};
+      this.dialogAssetsInclude = dType.dialogAssetsInclude ?? {};
+      this.dialogAssetsMainGroups = dType.dialogAssetsMainGroups ?? {};
+      this.dialogAssetsGroups = dType.dialogAssetsGroups ?? {};
       fileControl.verifiedFile$.next(true);
     }
   }
