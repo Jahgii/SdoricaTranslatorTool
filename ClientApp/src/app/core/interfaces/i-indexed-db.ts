@@ -6,8 +6,12 @@ export interface IndexedDBbCustomRequestError<T> {
 
 export interface IndexedDBbCustomRequestErrorWorker<T> {
     message?: string;
-    translateKey: IndexDBErrors;
+    translateKey: IndexDBErrors | IndexDBSucess;
     data: T;
+}
+
+export enum IndexDBSucess {
+    KeyUpdated = "data-updated",
 }
 
 export enum IndexDBErrors {

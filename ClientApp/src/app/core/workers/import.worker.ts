@@ -1,13 +1,13 @@
 /// <reference lib="webworker" />
 
 import { ImportPostMessage } from "../interfaces/i-import";
-import { IndexDBErrors, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from "../interfaces/i-indexed-db";
+import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from "../interfaces/i-indexed-db";
 import { ILanguage } from "../interfaces/i-dialog-group";
 import { AppModes } from "../enums/app-modes";
+import { LanguageType } from "../interfaces/i-dialog-asset";
 
 addEventListener('message', async ({ data }) => {
   let message: ImportPostMessage = data;
-  const response = `worker response to ${data}`;
 
   if (message.appMode === AppModes.Offline) {
     let request = indexedDB.open(message.dbName, message.dbVersion);
@@ -17,8 +17,6 @@ addEventListener('message', async ({ data }) => {
   else if (message.appMode === AppModes.Online) {
     await onUploadDialogAssetsServer();
   }
-
-  postMessage(response);
 });
 
 function onErrorOpenDB(event: Event) {
@@ -33,12 +31,16 @@ function onSuccessOpenDB(event: Event, message: ImportPostMessage) {
     onUploadGroupsOffline(db, message);
   };
 
+  if (!message.localizationSkip) {
+    onUploadLocalization(db, message);
+  }
+
 
   db.onerror = (event: Event) => onError(event);
 }
 
 function onError(event: Event) {
-  console.log(`Database error: ${(event.target as IDBRequest).error?.message}`);
+  // console.log(`Database error: ${(event.target as IDBRequest).error?.message}`);
 }
 
 function onUploadDialogAssetSelectedLanguages(db: IDBDatabase, message: ImportPostMessage) {
@@ -301,4 +303,162 @@ async function onUploadGroupsServer() {
   //     (error) => {
   //     }
   //   );
+}
+
+function onUploadLocalization(db: IDBDatabase, message: ImportPostMessage) {
+  const transactionLC = db.transaction([ObjectStoreNames.LocalizationCategory], "readwrite");
+  const transactionLK = db.transaction([ObjectStoreNames.LocalizationKey], "readwrite");
+
+  transactionLC.oncomplete = (event) => {
+    //Do nothing
+  };
+  transactionLC.onerror = (event) => {
+    //Do nothing
+  };
+
+  transactionLK.oncomplete = (event) => {
+    //Do nothing
+  };
+  transactionLK.onerror = (event) => {
+    //Do nothing
+  };
+
+  const oSLC = transactionLC.objectStore(ObjectStoreNames.LocalizationCategory);
+  const oSLK = transactionLK.objectStore(ObjectStoreNames.LocalizationKey);
+
+  message.localizationCategories.forEach((c) => {
+    const request = oSLC.add(c);
+    request.onsuccess = (event) => {
+      // SEND SUCCESS MESSAGE
+    };
+
+    request.onerror = (event) => {
+      let req = event.target as IDBRequest;
+      let error: IndexedDBbCustomRequestErrorWorker<typeof c> = {
+        translateKey: IndexDBErrors.UnknownError,
+        message: req.error?.message,
+        data: c
+      };
+
+      if (req.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+        event.preventDefault();
+      }
+      else if (req.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+
+      postMessage(error);
+    };
+  });
+
+  message.localizationKeys.forEach((k) => {
+    const request = oSLK.add(k);
+    request.onsuccess = (event) => {
+      // SEND SUCCESS MESSAGE
+    };
+
+    request.onerror = (event) => {
+      let req = event.target as IDBRequest;
+      let resMessage: IndexedDBbCustomRequestErrorWorker<typeof k> = {
+        translateKey: IndexDBErrors.UnknownError,
+        message: req.error?.message,
+        data: k
+      };
+
+      if (req.error?.name === 'ConstraintError') {
+        resMessage.translateKey = IndexDBErrors[req.error?.name];
+
+        let getRequest = oSLK
+          .index("Name")
+          .get([k.Category, k.Name]);
+
+        getRequest
+          .onsuccess = (event) => {
+            let keyOnDB = (event.target as IDBRequest).result;
+            if (k.Original[LanguageType.english] != keyOnDB.Original[LanguageType.english]) {
+              keyOnDB.Original = k.Original;
+              keyOnDB.Translated = k.Translated;
+
+              let putRequest = oSLK.put(keyOnDB);
+
+              putRequest
+                .onsuccess = (event) => {
+                  resMessage.translateKey = IndexDBSucess.KeyUpdated;
+                  postMessage(resMessage);
+                };
+            }
+          };
+
+        event.preventDefault();
+      }
+      else if (req.error?.name === 'AbortError') {
+        resMessage.translateKey = IndexDBErrors[req.error?.name];
+        postMessage(resMessage);
+      }
+      else if (req.error?.name === 'QuotaExceededError') {
+        resMessage.translateKey = IndexDBErrors[req.error?.name];
+        postMessage(resMessage);
+      }
+      else if (req.error?.name === 'UnknownError') {
+        resMessage.translateKey = IndexDBErrors[req.error?.name];
+        postMessage(resMessage);
+      }
+      else if (req.error?.name === 'VersionError') {
+        resMessage.translateKey = IndexDBErrors[req.error?.name];
+        postMessage(resMessage);
+      }
+    };
+  });
+}
+
+async function onUploadLocatlizationServer() {
+  // await firstValueFrom(this.api.post('localizationcategories', this.localizationCategories))
+  //   .then(
+  //     (result) => {
+
+  //     },
+  //     (error) => {
+
+  //     }
+  //   );
+
+  // if (typeof Worker !== 'undefined') {
+  //   let spliceCount = Math.ceil(this.localizationKeys.length / this.maxThreads);
+  //   let workers: Worker[] = [];
+  //   for (let threadIndex = 0; threadIndex < this.maxThreads; threadIndex++) {
+  //     workers.push(new Worker(new URL('../keys.worker', import.meta.url)));
+  //     workers[threadIndex].onmessage = ({ data }) => {
+  //       if (data.finish)
+  //         workers[data.i].terminate();
+  //     };
+
+  //     let keys = this.localizationKeys.splice(0, spliceCount);
+  //     let uploadStackSize = this.uploadStackSize;
+  //     let url = this.uploadKeysUrl;
+  //     workers[threadIndex].postMessage({ keys, uploadStackSize, url, threadIndex, token: this.lStorage.getToken() });
+  //   }
+  // }
+  // else
+  //   while (this.localizationKeys.length > 0) {
+  //     let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
+  //     await firstValueFrom(this.api.post<string[]>(this.uploadKeysUrl, keysSet))
+  //       .then(
+  //         (result) => {
+  //           // this.fileProgressBar$.next(this.fileProgressBar$.value + this.uploadStackSize);
+  //           // if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
+  //         },
+  //         (error) => {
+  //         }
+  //       );
+  //   }
 }

@@ -339,6 +339,7 @@ export class ImportService {
         return;
       }
 
+      this.onDecodeLocalization();
       fileControl.verifiedFile$.next(true);
     };
     reader.readAsArrayBuffer(file);
@@ -453,7 +454,9 @@ export class ImportService {
       dialogAssets: this.dialogAssets,
       dialogAssetsInclude: this.dialogAssetsInclude,
       dialogAssetsMainGroups: this.dialogAssetsMainGroups,
-      dialogAssetsGroups: this.dialogAssetsGroups
+      dialogAssetsGroups: this.dialogAssetsGroups,
+      localizationCategories: this.localizationCategories,
+      localizationKeys: this.localizationKeys
     };
 
     importWorker.postMessage(message);
@@ -629,8 +632,6 @@ export class ImportService {
   }
 
   private async onUploadLocalization() {
-    this.onDecodeLocalization();
-
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let flowsLC = this.iDB.postMany(ObjectStoreNames.LocalizationCategory, this.localizationCategories)
       flowsLC.obsSuccess$.subscribe(_ => {

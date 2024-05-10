@@ -1,6 +1,7 @@
 import { AppModes } from "../enums/app-modes";
 import { IDialogAsset } from "./i-dialog-asset";
 import { IGroup, IMainGroup } from "./i-dialog-group";
+import { ILocalizationCategory, ILocalizationKey } from "./i-localizations";
 
 export interface ImportPostMessage {
     dbName: string;
@@ -14,6 +15,8 @@ export interface ImportPostMessage {
     dialogAssetsInclude: { [language: string]: boolean };
     dialogAssetsMainGroups: { [language: string]: { [mainGroup: string]: IMainGroup } };
     dialogAssetsGroups: { [language: string]: { [mainGroup: string]: { [group: string]: IGroup } } };
+    localizationCategories: ILocalizationCategory[];
+    localizationKeys: ILocalizationKey[];
 }
 
 export interface ImportWorkerPostMessage {
