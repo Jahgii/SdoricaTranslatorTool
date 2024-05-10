@@ -12,6 +12,12 @@
     position: relative;
 }
 
+.file-input-grid {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
 .file-input {
     min-width: 220px;
     min-height: 108px;
@@ -22,7 +28,7 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, auto));
     grid-gap: 1rem 0;
     grid-auto-rows: minmax(108px, auto);
-    justify-content: space-evenly;
+    justify-content: space-between;
 
 }
 

@@ -15,7 +15,7 @@
         <tui-svg src="tuiIconXCircle"></tui-svg> justo al lado del archivo.
     </p>
 
-    <div style="display: flex; gap: 1rem; justify-content: center;">
+    <div class="file-input-grid">
         <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importS.obb,
             filesize:(1024*1024*1024*2),
