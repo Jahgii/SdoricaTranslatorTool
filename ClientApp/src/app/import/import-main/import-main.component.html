@@ -38,29 +38,29 @@
         </ng-container>
     </div>
 
-    @if ((importS.filesVerified$ | async) ?? false) {
-    <ng-container [ngTemplateOutlet]="configurationObb"></ng-container>
-    <ng-container [ngTemplateOutlet]="progressLog"></ng-container>
+    <tui-elastic-container>
+        @if ((importS.filesVerified$ | async) ?? false) {
+        <ng-container [ngTemplateOutlet]="configurationObb"></ng-container>
+        <ng-container [ngTemplateOutlet]="progressLog"></ng-container>
 
-    <div class="import-button tui-space_vertical-6">
-        @if (!(importS.importsCompleted$ | async)) {
-        <button tuiButton appearance="outline" class="import-button"
-            [showLoader]="(importS.isImporting$ | async) ?? false" (click)="importS.onImportBegins()"
-            [disabled]="!(importS.filesVerified$ | async)"
-            [tuiHint]="!(importS.filesVerified$ | async) ? ('missing-files-import' | translate) : undefined"
-            [tuiHintAppearance]="!(importS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
-            {{'begin-import' | translate}}
-        </button>
+        <div class="import-button tui-space_vertical-6">
+            @if (!(importS.importsCompleted$ | async)) {
+            <button tuiButton appearance="outline" class="import-button"
+                [showLoader]="(importS.isImporting$ | async) ?? false" (click)="importS.onImportBegins()"
+                [disabled]="!(importS.filesVerified$ | async)"
+                [tuiHint]="!(importS.filesVerified$ | async) ? ('missing-files-import' | translate) : undefined"
+                [tuiHintAppearance]="!(importS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
+                {{'begin-import' | translate}}
+            </button>
+            }
+            @else {
+            <button style="width: 100%;" appearance="flat" tuiIconButton type="button" class="tui-space_top-6"
+                icon="tuiIconArrowRightCircleLarge" shape="square" size="m" (click)="onNext()">
+            </button>
+            }
+        </div>
         }
-        @else {
-        <button style="width: 100%;" appearance="flat" tuiIconButton type="button" class="tui-space_top-6"
-            icon="tuiIconArrowRightCircleLarge" shape="square" size="m" (click)="onNext()">
-        </button>
-        }
-    </div>
-    }
-
-
+    </tui-elastic-container>
 </main>
 
 <ng-template #fileInput let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
