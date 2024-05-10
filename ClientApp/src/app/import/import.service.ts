@@ -19,6 +19,8 @@ import { IndexDBService, ObjectStoreNames } from '../core/services/index-db.serv
 import { error } from 'console';
 import { LocalStorageService } from '../core/services/local-storage.service';
 import { AppModes } from '../components/wizard-initial/mode-selector/mode-selector.component';
+import { onReadFileDialogFromObb } from './import-logic';
+import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessage } from '../core/interfaces/i-import';
 
 @Injectable()
 export class ImportService {
@@ -230,6 +232,17 @@ export class ImportService {
       return;
     }
 
+    if (typeof Worker !== 'undefined') {
+      const obbWorker = new Worker(new URL('../core/workers/obb-verification.worker', import.meta.url));
+      obbWorker.onmessage = ({ data }) => this.onVerificationObbWorkerMessage(data, alert, fileControl);
+
+      let message: ImportOBBVerificationPostMessage = {
+        file: this.obb.control.value
+      };
+      if (!this.obb.skip?.value) obbWorker.postMessage(message);
+      return;
+    }
+
     this.zipObb = new JSZip();
     try {
       await this.zipObb.loadAsync(file, {});
@@ -237,7 +250,14 @@ export class ImportService {
       for (const dF of files) {
         let dialogFile = dF;
         const content = await dialogFile.async("string");
-        this.onReadFileDialogFromObb(content, dialogFile.name);
+        onReadFileDialogFromObb(
+          this.dialogAssets,
+          this.dialogAssetsInclude,
+          this.dialogAssetsMainGroups,
+          this.dialogAssetsGroups,
+          content,
+          dialogFile.name
+        );
       }
     } catch (error) {
       fileControl.verifyingFile$.next(false);
@@ -256,6 +276,23 @@ export class ImportService {
     }
 
     fileControl.verifiedFile$.next(true);
+  }
+
+  public onVerificationObbWorkerMessage(data: any, alert: Observable<void>, fileControl: IFileControl) {
+    let dType: ImportOBBVerificationWorkerPostMessage = data;
+    if (dType.message === 'file-error') {
+      this.openAlert(alert);
+      fileControl.verifyingFile$.next(false);
+      fileControl.control.setValue(null);
+    }
+    else if (dType.message === 'file-verifying-complete') fileControl.verifyingFile$.next(false);
+    else if (dType.message === 'file-verified') {
+      this.dialogAssets = dType.dialogAssets;
+      this.dialogAssetsInclude = dType.dialogAssetsInclude;
+      this.dialogAssetsMainGroups = dType.dialogAssetsMainGroups;
+      this.dialogAssetsGroups = dType.dialogAssetsGroups;
+      fileControl.verifiedFile$.next(true);
+    }
   }
 
   /**
@@ -375,116 +412,6 @@ export class ImportService {
     fileControl.skip?.next(true);
     fileControl.verifiedFile$.next(true);
     fileControl.progressStatus$.next(ProgressStatus.finish);
-  }
-  //#endregion
-
-  //#region Obb Logic
-  private onReadFileDialogFromObb(fileContent: string, fileName: string) {
-    let dialogAsset: IDialogAsset | undefined;
-    let fileNameSplit: string[] = fileName.replace("assets/DialogAssets/", "").split("_");
-
-    dialogAsset = this.onSetDialogAsset(fileNameSplit, fileName.replace("assets/DialogAssets/", ""), fileContent);
-
-    if (!dialogAsset) {
-      return;
-    }
-
-    this.addDialogAsset(dialogAsset);
-    this.addDialogAssetGroup(dialogAsset);
-  }
-
-  private addDialogAsset(dialogAsset: IDialogAsset) {
-    if (this.dialogAssets[dialogAsset.Language] == null) {
-      this.dialogAssets[dialogAsset.Language] = [];
-      this.dialogAssetsInclude[dialogAsset.Language] = false;
-    }
-
-    if (!dialogAsset.Number) return;
-
-    this.dialogAssets[dialogAsset.Language].push(dialogAsset);
-  }
-
-  private addDialogAssetGroup(dialogAsset: IDialogAsset) {
-    if (this.dialogAssetsMainGroups[dialogAsset.Language] == null) {
-      this.dialogAssetsMainGroups[dialogAsset.Language] = {};
-    }
-
-    if (this.dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup] == null) {
-      this.dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup] = {
-        Language: dialogAsset.Language,
-        OriginalName: dialogAsset.MainGroup,
-        Name: dialogAsset.MainGroup,
-        ImageLink: '',
-        Files: 1,
-        TranslatedFiles: 0,
-        Order: 0
-      }
-    }
-    else {
-      this.dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup].Files += 1;
-    }
-
-    if (this.dialogAssetsGroups[dialogAsset.Language] == null) {
-      this.dialogAssetsGroups[dialogAsset.Language] = {};
-    }
-
-    if (this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup] == null) {
-      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup] = {};
-    }
-
-
-    if (this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup][dialogAsset.Group] == null) {
-      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup][dialogAsset.Group] = {
-        Language: dialogAsset.Language,
-        MainGroup: dialogAsset.MainGroup,
-        OriginalName: dialogAsset.Group,
-        Name: dialogAsset.Group,
-        ImageLink: '',
-        Files: 1,
-        TranslatedFiles: 0,
-        Order: 0
-      }
-    }
-    else {
-      this.dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup][dialogAsset.Group].Files += 1;
-    }
-  }
-
-  private onSetDialogAsset(fileNameSplit: string[], fileName: string, fileContent: string) {
-    let dialogAsset: IDialogAsset = JSON.parse(this.onFixDialogAssetJsonParse(fileContent));
-
-    dialogAsset.Model.$content.forEach(dialog => {
-      dialog.OriginalText = dialog.Text;
-    });
-
-    if (fileNameSplit.length == 5) {
-      dialogAsset.OriginalFilename = fileName;
-      dialogAsset.Filename = fileName.split(".dialog")[0];
-      dialogAsset.MainGroup = fileNameSplit[0];
-      dialogAsset.Group = fileNameSplit[1];
-      dialogAsset.Number = Number(fileNameSplit[2]);
-      dialogAsset.Language = fileNameSplit[4].split(".")[0];
-      dialogAsset.Translated = false;
-    }
-    else if (fileNameSplit.length == 6) {
-      dialogAsset.OriginalFilename = fileName;
-      dialogAsset.Filename = fileName.split(".dialog")[0];
-      dialogAsset.MainGroup = fileNameSplit[0];
-      dialogAsset.Group = fileNameSplit[1] + fileNameSplit[2];
-      dialogAsset.Number = Number(fileNameSplit[3]);
-      dialogAsset.Language = fileNameSplit[5].split(".")[0];
-      dialogAsset.Translated = false;
-    }
-    else {
-      console.warn("FILE WITH MORE THAN 6 length -> ", fileName);
-      return;
-    }
-
-    return dialogAsset;
-  }
-
-  private onFixDialogAssetJsonParse(fileContent: string): string {
-    return fileContent.replace(/"sfxVolume":[.]/g, `"sfxVolume":0.`);
   }
   //#endregion
 
