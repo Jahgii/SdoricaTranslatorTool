@@ -28,13 +28,13 @@ export class FileReaderGamedataService {
 
   public async onReadFile(file: File) {
     this.fileProgressState$.next('reading');
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = (ev: ProgressEvent<FileReader>) => this.onDecodeFile(reader, file.name, ev);
     reader.readAsArrayBuffer(file);
   }
 
   private async onDecodeFile(reader: FileReader, fileName: string, ev: ProgressEvent<FileReader>) {
-    var decodeResult = decode(reader.result as ArrayBuffer) as IGamedata;
+    let decodeResult = decode(reader.result as ArrayBuffer) as IGamedata;
     this.fileProgressState$.next('reading content');
 
     this.addKnowCategory(decodeResult, 'BuffInfo');

@@ -5,11 +5,11 @@ import { IDialogAssetExport } from '../interfaces/i-dialog-asset';
 import { IOnMessage, ProgressStatus } from '../interfaces/i-export-progress';
 
 addEventListener('message', async ({ data }) => {
-  var dialogs: IDialogAssetExport[] = [];
+  let dialogs: IDialogAssetExport[] = [];
   const message: IOnMessage = { maxPg: 100, pg: 0, pgState: ProgressStatus.retrivingServerData };
   postMessage(message);
 
-  var promise = fetch('api/dialogassets/export', {
+  let promise = fetch('api/dialogassets/export', {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -29,7 +29,7 @@ addEventListener('message', async ({ data }) => {
     }
   );
 
-  if (!(dialogs.length > 0)) {
+  if (dialogs.length <= 0) {
     message.pgState = ProgressStatus.retrivingServerDataEmpty;
     postMessage(message);
     return;
@@ -40,9 +40,9 @@ addEventListener('message', async ({ data }) => {
   postMessage(message);
 
   zip.loadAsync(data.file).then(() => {
-    for (var index = 0; index < dialogs.length; index++) {
-      var dialog = dialogs[index];
-      var dialogFileName = dialog.OriginalFilename;
+    for (let index = 0; index < dialogs.length; index++) {
+      let dialog = dialogs[index];
+      let dialogFileName = dialog.OriginalFilename;
 
       delete (dialog.Id);
       delete (dialog.OriginalFilename);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppModes } from 'src/app/components/wizard-initial/mode-selector/mode-selector.component';
+import { AppModes } from '../enums/app-modes';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +8,8 @@ export class LocalStorageService {
 
   constructor() { }
 
-  getAppMode() {
-    return localStorage.getItem('appMode') ?? undefined;
+  getAppMode(): AppModes | undefined {
+    return localStorage.getItem('appMode') as AppModes ?? undefined;
   }
 
   setAppMode(mode: AppModes) {

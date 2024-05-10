@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { error } from 'console';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors } from '../interfaces/i-indexed-db';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IndexDBService {
-  private dbName = "Translations";
-  private dbVersion = 1;
+  public dbName = "Translations";
+  public dbVersion = 1;
   private db!: IDBDatabase;
 
   constructor() {
@@ -201,31 +202,4 @@ export class IndexDBService {
 
     return { obsSuccess$, obsError$ };
   }
-}
-
-export interface IndexedDBbCustomRequestError<T> {
-  request: IDBRequest;
-  translateKey: IndexDBErrors;
-  data: T;
-}
-
-enum IndexDBErrors {
-  ConstraintError = "constraint-error",
-  AbortError = "abort-error",
-  QuotaExceededError = "quota-exceeded-error",
-  UnknownError = "unknown-error",
-  VersionError = "version-error"
-}
-
-export enum ObjectStoreNames {
-  CommonWord = "CommonWord",
-  DialogAsset = "DialogAsset",
-  GamedataCategory = "GamedataCategory",
-  GamedataValue = "GamedataValue",
-  Group = "Group",
-  Languages = "Languages",
-  LocalizationCategory = "LocalizationCategory",
-  LocalizationKey = "LocalizationKey",
-  MainGroup = "MainGroup",
-  User = "User"
 }

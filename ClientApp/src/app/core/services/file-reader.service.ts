@@ -201,7 +201,7 @@ export class FileReaderService {
   }
 
   async onUploadGroups() {
-    var languages = [];
+    let languages = [];
     for (let language in this.dialogAssetsInclude) {
       if (this.dialogAssetsInclude[language] === true) {
         let mainGroups = [];
@@ -231,7 +231,7 @@ export class FileReaderService {
             (error) => {
             }
           );
-        var languageO: ILanguage = { Name: language };
+        let languageO: ILanguage = { Name: language };
         languages.push(languageO);
       }
     }

@@ -7,6 +7,7 @@ import { TuiButtonModule, TuiTextfieldControllerModule } from '@taiga-ui/core';
 import { Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { AppModes } from 'src/app/core/enums/app-modes';
 
 @Component({
   selector: 'app-mode-selector',
@@ -76,10 +77,4 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
     let currentIndex = this.wizardService.stepIndex$.value;
     this.wizardService.stepIndex$.next(currentIndex + 1);
   }
-}
-
-export enum AppModes {
-  Pending = "Pending",
-  Offline = "Offline",
-  Online = "Online"
 }

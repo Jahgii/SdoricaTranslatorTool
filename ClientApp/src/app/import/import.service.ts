@@ -15,12 +15,12 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { IWizardUpload } from '../core/interfaces/i-wizard-upload';
 import { IDialogAsset } from '../core/interfaces/i-dialog-asset';
 import { IGroup, ILanguage, IMainGroup } from '../core/interfaces/i-dialog-group';
-import { IndexDBService, ObjectStoreNames } from '../core/services/index-db.service';
-import { error } from 'console';
+import { IndexDBService } from '../core/services/index-db.service';
 import { LocalStorageService } from '../core/services/local-storage.service';
-import { AppModes } from '../components/wizard-initial/mode-selector/mode-selector.component';
 import { onReadFileDialogFromObb } from './import-logic';
-import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessage } from '../core/interfaces/i-import';
+import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessage, ImportPostMessage } from '../core/interfaces/i-import';
+import { IndexedDBbCustomRequestError, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
+import { AppModes } from '../core/enums/app-modes';
 
 @Injectable()
 export class ImportService {
@@ -418,13 +418,46 @@ export class ImportService {
   //#region Import Logic
   public onImportBegins() {
     this.isImporting$.next(true);
-    // if (typeof Worker !== 'undefined') this.onImportWorkers();
-    // else this.onImportNormal();
-
-    this.onImportNormal();
+    if (typeof Worker !== 'undefined') this.onImportWorkers();
+    else this.onImportNormal();
   }
 
-  private onImportWorkers() { }
+  private onImportWorkers() {
+    const importWorker = new Worker(new URL('../core/workers/import.worker', import.meta.url));
+    importWorker.onmessage = ({ data }) => {
+      let message: IndexedDBbCustomRequestErrorWorker<IDialogAsset | ILanguage | IMainGroup | IGroup> = data;
+
+      let op: OperationLog = {
+        file: 'obb',
+        message: message.message,
+        translateKey: message.translateKey,
+        data: message.data
+      };
+      this.operations$.next([...this.operations$.value, op]);
+    };
+
+    let dialogAU: string[] = [];
+
+    for (let key in this.dialogAssetsUploading) {
+      dialogAU.push(key);
+    }
+
+    let message: ImportPostMessage = {
+      obbSkip: this.obb.skip.value,
+      localizationSkip: this.localization.skip.value,
+      gamedataSkip: this.gamedata.skip.value,
+      dbName: this.iDB.dbName,
+      dbVersion: this.iDB.dbVersion,
+      appMode: this.lStorage.getAppMode() ?? AppModes.Pending,
+      dialogAssetsUploading: dialogAU,
+      dialogAssets: this.dialogAssets,
+      dialogAssetsInclude: this.dialogAssetsInclude,
+      dialogAssetsMainGroups: this.dialogAssetsMainGroups,
+      dialogAssetsGroups: this.dialogAssetsGroups
+    };
+
+    importWorker.postMessage(message);
+  }
 
   private onImportNormal() {
     if (!this.obb.skip.value) {
@@ -502,14 +535,14 @@ export class ImportService {
           mainGroups.push(this.dialogAssetsMainGroups[language][key]);
         }
 
-        //Populate Main Groups
+        //Populate Groups
         for (let keyMainGroup in this.dialogAssetsGroups[language]) {
           for (let keyGroup in this.dialogAssetsGroups[language][keyMainGroup]) {
             groups.push(this.dialogAssetsGroups[language][keyMainGroup][keyGroup]);
           }
         }
 
-        //Populate Main Groups
+        //Populate Languages
         let languageO: ILanguage = { Name: language };
         languages.push(languageO);
       }
