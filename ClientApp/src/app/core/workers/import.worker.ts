@@ -4,7 +4,7 @@ import { ImportPostMessage } from "../interfaces/i-import";
 import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from "../interfaces/i-indexed-db";
 import { ILanguage } from "../interfaces/i-dialog-group";
 import { AppModes } from "../enums/app-modes";
-import { LanguageType } from "../interfaces/i-dialog-asset";
+import { IDialogAsset, LanguageType } from "../interfaces/i-dialog-asset";
 
 addEventListener('message', async ({ data }) => {
   let message: ImportPostMessage = data;
@@ -27,7 +27,7 @@ function onSuccessOpenDB(event: Event, message: ImportPostMessage) {
   let db = (event.target as any).result;
 
   if (!message.obbSkip) {
-    onUploadDialogAssetSelectedLanguages(db, message);
+    onUploadDialogAssetsOffline(db, message);
     onUploadGroupsOffline(db, message);
   };
 
@@ -44,14 +44,13 @@ function onError(event: Event) {
   // console.log(`Database error: ${(event.target as IDBRequest).error?.message}`);
 }
 
-function onUploadDialogAssetSelectedLanguages(db: IDBDatabase, message: ImportPostMessage) {
+function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage) {
+  let dialogAssetsLang: IDialogAsset[] = [];
   for (let lang of message.dialogAssetsUploading) {
-    onUploadDialogAssetsOffline(db, message, lang);
+    dialogAssetsLang = [...dialogAssetsLang, ...message.dialogAssets[lang]];
   }
-}
 
-function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage, language: string) {
-  let dialogAssetsLang = message.dialogAssets[language];
+  // let dialogAssetsLang = 
   let storeName = ObjectStoreNames.DialogAsset;
   const transaction = db.transaction([storeName], "readwrite");
 

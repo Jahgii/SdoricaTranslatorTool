@@ -40,7 +40,9 @@
 
     <tui-elastic-container>
         @if ((importS.filesVerified$ | async) ?? false) {
+        @if (!(importS.obb.skip | async)) {
         <ng-container [ngTemplateOutlet]="configurationObb"></ng-container>
+        }
         <ng-container [ngTemplateOutlet]="progressLog"></ng-container>
 
         <div class="import-button tui-space_vertical-6">
@@ -175,14 +177,16 @@
 </ng-template>
 
 <ng-template #progressLog>
-
     <tui-scrollbar class="tui-space_vertical-6">
-        <div style="display: flex; gap: 0.5rem;">
+        <div class="progress-badget-container tui-space_bottom-1">
             <tui-badge status="warning" [value]="importS.operationsSkip$ | async"
-                [tuiHintContent]="'skip-file-hint' |translate">
+                [tuiHint]="'skip-file-hint' | translate">
+            </tui-badge>
+            <tui-badge status="info" [value]="importS.operationsCompleted$ | async"
+                [tuiHint]="'replaced-file-hint' | translate">
             </tui-badge>
             <tui-badge status="success" [value]="importS.operationsCompleted$ | async"
-                [tuiHintContent]="'skip-file-hint' |translate">
+                [tuiHint]="'completed-file-hint' | translate">
             </tui-badge>
         </div>
         <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable style="display: block;

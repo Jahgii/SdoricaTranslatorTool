@@ -58,3 +58,9 @@
 .text_subtitle {
     color: var(--tui-text-02)
 }
+
+.progress-badget-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}

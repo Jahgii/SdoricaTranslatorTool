@@ -232,5 +232,8 @@
     "unknown-error": "Error Desconocido",
     "version-error": "La versión de la BD cambio",
     "data-updated": "Registro actualizado",
-    "file-completed": "Proceso Completado"
+    "file-completed": "Proceso Completado",
+    "skip-file-hint": "Archivos Omitidos",
+    "replaced-file-hint": "Archivos Remplazados",
+    "completed-file-hint": "Operaciones Completadas"
 }
