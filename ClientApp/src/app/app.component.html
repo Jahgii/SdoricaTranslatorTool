@@ -4,7 +4,12 @@
 
 
   <main class="main-grid">
-    <app-wizard-initial style="grid-area: content;"></app-wizard-initial>
+    <app-sidebar *ngIf="app.initialized$ | async" style="grid-area: sidebar;"></app-sidebar>
+    <app-nav-menu *ngIf="app.initialized$ | async" style="grid-area: header;"></app-nav-menu>
+    <div style="grid-area: content;">
+      <router-outlet></router-outlet>
+    </div>
+    <!-- <app-wizard-initial style="grid-area: content;"></app-wizard-initial> -->
 
 
     <!-- <ng-container [ngTemplateOutlet]="admin"></ng-container> -->
@@ -20,7 +25,7 @@
     <ng-container [ngTemplateOutlet]="default"></ng-container>
     }
     }
-    <router-outlet style="position: absolute;"></router-outlet> -->
+     -->
   </main>
 </tui-root>
 

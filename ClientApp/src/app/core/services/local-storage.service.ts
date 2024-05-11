@@ -16,6 +16,14 @@ export class LocalStorageService {
     localStorage.setItem('appMode', mode);
   }
 
+  getAppWizardDone(): number | undefined {
+    return Number(localStorage.getItem('wizardDone')) ?? undefined;
+  }
+
+  setAppWizardDone() {
+    localStorage.setItem('wizardDone', "1");
+  }
+
   getLibreTranslateUrl() {
     return localStorage.getItem('lTUrl') ?? undefined;
   }

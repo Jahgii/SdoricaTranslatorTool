@@ -19,7 +19,7 @@ export class ViewersService {
   public componentOpens: { [componentName: string]: BehaviorSubject<number> } = {};
 
   constructor(
-    private localStorage: LocalStorageService,
+    private lStorage: LocalStorageService,
     private auth: AuthService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) { }
@@ -33,26 +33,46 @@ export class ViewersService {
         this.splitMode();
     });
 
-    this.auth.authenticated$.subscribe(async auth => {
-      if (!auth) this.loadComponent(AppViews.login, viewers.login, {});
-      else {
-        this.activeView.instance.onClearComponent();
+    // this.auth.authenticated$.subscribe(async auth => {
+    //   if (!auth) this.loadComponent(AppViews.login, viewers.login, {});
+    //   else {
+    //     this.activeView.instance.onClearComponent();
 
-        if (this.auth.rol == 'guest')
-          this.loadComponent(AppViews.export, viewers.export, {});
+    //     if (this.auth.rol == 'guest')
+    //       this.loadComponent(AppViews.export, viewers.export, {});
 
-        else if (this.auth.rol == 'admin') {
-          let c1 = this.localStorage.getC1();
-          let c2 = this.localStorage.getC2();
-          if (c1) this.loadComponent(c1 as AppViews, viewers[c1], {});
-          if (c2 && await firstValueFrom(this.breakpointService$) !== 'mobile') {
-            this.splitMode();
-            this.loadComponent(c2 as AppViews, viewers[c2], {});
-          }
-        }
+    //     else if (this.auth.rol == 'admin') {
+    //       let c1 = this.lStorage.getC1();
+    //       let c2 = this.lStorage.getC2();
+    //       if (c1) this.loadComponent(c1 as AppViews, viewers[c1], {});
+    //       if (c2 && await firstValueFrom(this.breakpointService$) !== 'mobile') {
+    //         this.splitMode();
+    //         this.loadComponent(c2 as AppViews, viewers[c2], {});
+    //       }
+    //     }
 
-      }
-    });
+    //   }
+    // });
+  }
+
+  public async initViewer() {
+    this.activeView?.instance?.onClearComponent();
+
+    let c1 = this.lStorage.getC1();
+    let c2 = this.lStorage.getC2();
+
+    if (c1 === AppViews.wizard) c1 = undefined;
+    if (c2 === AppViews.wizard) c2 = undefined;
+
+    if (c1) this.loadComponent(c1 as AppViews, viewers[c1], {});
+    if (c2 && await firstValueFrom(this.breakpointService$) !== 'mobile') {
+      this.splitMode();
+      this.loadComponent(c2 as AppViews, viewers[c2], {});
+    }
+
+    var element = document.querySelector(':root') as any;
+    element.style.setProperty('--header-height', '3.9375rem');
+    element.style.setProperty('--menu-width', '3rem');
   }
 
   private AddViewer() {
@@ -106,7 +126,7 @@ export class ViewersService {
       )
         this.componentOpens[view.instance.componentLoadedName].next(this.componentOpens[view.instance.componentLoadedName].value - 1);
 
-      this.localStorage.setC2('');
+      this.lStorage.setC2('');
 
       this.resizeViewers();
       this.onChangeActiveView(this.views[0]);
@@ -133,9 +153,9 @@ export class ViewersService {
       if (k === 'login') return;
       if (viewers[k] === component) {
         if (this.activeView == this.views[0])
-          this.localStorage.setC1(k);
+          this.lStorage.setC1(k);
         else if (this.views[1] && this.activeView == this.views[1])
-          this.localStorage.setC2(k);
+          this.lStorage.setC2(k);
       }
     });
   }

@@ -5,8 +5,8 @@ import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
 import { WizardService } from './wizard.service';
 import { AsyncPipe } from '@angular/common';
 import { ImportMainComponent } from 'src/app/import/import-main/import-main.component';
-import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { LoadFileWizardComponent } from '../load-file-wizard/load-file-wizard.component';
+import { AppStateService } from 'src/app/core/services/app-state.service';
 
 @Component({
   selector: 'app-wizard-initial',
@@ -32,7 +32,11 @@ export class WizardInitialComponent {
   public index$ = this.wizardService.stepIndex$;
 
   constructor(
+    private app: AppStateService,
     @Inject(WizardService) private wizardService: WizardService
-    , private indexDB: IndexDBService
   ) { }
+
+  public wizardEnd() {
+    this.app.initializeApp();
+  }
 }

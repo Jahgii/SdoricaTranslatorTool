@@ -10,6 +10,7 @@ import { NgIf, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
 import { SidebarComponent } from './mainlayout/sidebar/sidebar.component';
 import { WizardInitialComponent } from './components/wizard-initial/wizard-initial.component';
+import { AppStateService } from './core/services/app-state.service';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +41,7 @@ export class AppComponent {
 
   constructor(
     public languageOrigin: LanguageOriginService,
+    public app: AppStateService,
     public authService: AuthService,
     public theme: ThemeService
   ) { }

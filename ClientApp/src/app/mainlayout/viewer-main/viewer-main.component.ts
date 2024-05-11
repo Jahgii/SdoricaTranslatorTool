@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Ho
 import { CommonModule } from '@angular/common';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { ViewersService } from 'src/app/core/services/viewers.service';
+import { AppStateService } from 'src/app/core/services/app-state.service';
 
 @Component({
   selector: 'app-viewer-main',
@@ -22,12 +23,14 @@ export class ViewerMainComponent implements OnInit {
 
   constructor(
     private viewers: ViewersService,
+    private app: AppStateService,
     private cd: ChangeDetectorRef
   ) {
   }
 
   ngOnInit() {
     this.viewers.init(this.adHost);
+    this.app.init();
 
     this.viewers.notifier.subscribe(e => {
       this.cd.markForCheck();
