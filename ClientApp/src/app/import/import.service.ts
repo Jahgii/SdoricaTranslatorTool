@@ -450,6 +450,10 @@ export class ImportService {
     importWorker.onmessage = ({ data }) => {
       let message: IndexedDBbCustomRequestErrorWorker<IDialogAsset | ILanguage | IMainGroup | IGroup> = data;
 
+      if (message.file === 'obb') this.obb.progressStatus$.next(ProgressStatus.finish);
+      if (message.file === 'gamedata') this.gamedata.progressStatus$.next(ProgressStatus.finish);
+      if (message.file === 'localization') this.localization.progressStatus$.next(ProgressStatus.finish);
+
       let op: OperationLog = {
         file: message.file,
         message: message.message,
