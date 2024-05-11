@@ -1,5 +1,5 @@
 import { AsyncPipe, NgIf, DecimalPipe, NgTemplateOutlet, NgStyle, KeyValuePipe, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Output } from '@angular/core';
 import { TuiButtonModule, TuiHintModule, TuiLoaderModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
 import { TuiAccordionModule, TuiBadgeModule, TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiElasticContainerModule, TuiInputFilesModule, TuiIslandModule, TuiMarkerIconModule, TuiSelectModule } from '@taiga-ui/kit';
 import { ImportService } from '../import.service';
@@ -44,11 +44,12 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportMainComponent {
+  @Output() next = new EventEmitter();
 
   constructor(@Inject(ImportService) public importS: ImportService) { }
 
   public onNext() {
-
+    this.next.emit();
   }
 
 }

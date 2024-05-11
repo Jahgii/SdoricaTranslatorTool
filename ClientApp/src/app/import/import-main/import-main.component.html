@@ -56,8 +56,8 @@
             </button>
             }
             @else {
-            <button style="width: 100%;" appearance="flat" tuiIconButton type="button" class="tui-space_top-6"
-                icon="tuiIconArrowRightCircleLarge" shape="square" size="m" (click)="onNext()">
+            <button tuiIconButton appearance="outline" type="button" style="width: 100%; padding-bottom: 1rem;"
+                icon="tuiIconArrowRightCircleLarge" (click)="onNext()">
             </button>
             }
         </div>
@@ -177,18 +177,14 @@
 </ng-template>
 
 <ng-template #progressLog>
-    <tui-scrollbar class="tui-space_vertical-6">
-        <div class="progress-badget-container tui-space_bottom-1">
-            <tui-badge status="warning" [value]="importS.operationsSkip$ | async"
-                [tuiHint]="'skip-file-hint' | translate">
-            </tui-badge>
-            <tui-badge status="info" [value]="importS.operationsCompleted$ | async"
-                [tuiHint]="'replaced-file-hint' | translate">
-            </tui-badge>
-            <tui-badge status="success" [value]="importS.operationsCompleted$ | async"
-                [tuiHint]="'completed-file-hint' | translate">
-            </tui-badge>
-        </div>
+    <div class="progress-badget-container tui-space_top-6 tui-space_bottom-1">
+        <tui-badge status="warning" [value]="importS.operationsSkip$ | async" [tuiHint]="'skip-file-hint' | translate">
+        </tui-badge>
+        <tui-badge status="info" [value]="importS.operationsUpdated$ | async"
+            [tuiHint]="'replaced-file-hint' | translate">
+        </tui-badge>
+    </div>
+    <tui-scrollbar>
         <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable style="display: block;
             width: calc(100% - 4px);
             height: 200px;
