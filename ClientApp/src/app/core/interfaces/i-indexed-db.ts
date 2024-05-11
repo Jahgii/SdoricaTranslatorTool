@@ -5,6 +5,7 @@ export interface IndexedDBbCustomRequestError<T> {
 }
 
 export interface IndexedDBbCustomRequestErrorWorker<T> {
+    file: 'obb' | 'obb-lang' | 'obb-main' | 'obb-group' | 'gamedata-categories' | 'gamedata-values' | 'localization-keys' | 'localization-categories'
     message?: string;
     translateKey: IndexDBErrors | IndexDBSucess;
     data: T;
@@ -12,6 +13,7 @@ export interface IndexedDBbCustomRequestErrorWorker<T> {
 
 export enum IndexDBSucess {
     KeyUpdated = "data-updated",
+    FileCompleted = "file-completed",
 }
 
 export enum IndexDBErrors {

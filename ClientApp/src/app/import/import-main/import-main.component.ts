@@ -1,7 +1,7 @@
 import { AsyncPipe, NgIf, DecimalPipe, NgTemplateOutlet, NgStyle, KeyValuePipe, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { TuiButtonModule, TuiHintModule, TuiLoaderModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
-import { TuiAccordionModule, TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiElasticContainerModule, TuiInputFilesModule, TuiIslandModule, TuiMarkerIconModule, TuiSelectModule } from '@taiga-ui/kit';
+import { TuiAccordionModule, TuiBadgeModule, TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiElasticContainerModule, TuiInputFilesModule, TuiIslandModule, TuiMarkerIconModule, TuiSelectModule } from '@taiga-ui/kit';
 import { ImportService } from '../import.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,7 +35,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     TuiDataListWrapperModule,
     TuiCheckboxBlockModule,
     TuiScrollbarModule,
-      TuiElasticContainerModule
+    TuiElasticContainerModule,
+    TuiBadgeModule
   ],
   providers: [ImportService],
   templateUrl: './import-main.component.html',

@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiService } from '../core/services/api.service';
-import * as JSZip from 'jszip';
 import { ILocalization, ILocalizationCategory, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { IGamedata, IGamedataCategory, IGamedataValue } from '../core/interfaces/i-gamedata';
 import { IFileControl } from '../core/interfaces/i-export';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, combineLatest, firstValueFrom, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, firstValueFrom, map, of, switchMap } from 'rxjs';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
 import { decode } from '@msgpack/msgpack';
@@ -18,9 +17,10 @@ import { IGroup, ILanguage, IMainGroup } from '../core/interfaces/i-dialog-group
 import { IndexDBService } from '../core/services/index-db.service';
 import { LocalStorageService } from '../core/services/local-storage.service';
 import { onReadFileDialogFromObb } from './import-logic';
-import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessage, ImportPostMessage } from '../core/interfaces/i-import';
-import { IndexedDBbCustomRequestError, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
+import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessage, ImportPostMessage, OperationLog } from '../core/interfaces/i-import';
+import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { AppModes } from '../core/enums/app-modes';
+import * as JSZip from 'jszip';
 
 @Injectable()
 export class ImportService {
@@ -114,6 +114,24 @@ export class ImportService {
   private localizationKeys: ILocalizationKey[] = [];
 
   public operations$: BehaviorSubject<OperationLog[]> = new BehaviorSubject(new Array());
+  public operationsSkip$ = this.operations$
+    .asObservable()
+    .pipe(map(ops => ops.reduce((acc, cv) => {
+      if (cv.translateKey === IndexDBErrors.ConstraintError) acc += 1;
+      return acc;
+    }, 0).toString()));
+  public operationsUpdated$ = this.operations$
+    .asObservable()
+    .pipe(map(ops => ops.reduce((acc, cv) => {
+      if (cv.translateKey === IndexDBSucess.KeyUpdated) acc += 1;
+      return acc;
+    }, 0).toString()));
+  public operationsCompleted$ = this.operations$
+    .asObservable()
+    .pipe(map(ops => ops.reduce((acc, cv) => {
+      if (cv.translateKey === IndexDBSucess.FileCompleted) acc += 1;
+      return acc;
+    }, 0).toString()));
 
   constructor(
     private api: ApiService,
@@ -278,6 +296,9 @@ export class ImportService {
     fileControl.verifiedFile$.next(true);
   }
 
+  /**
+   * onmessage callback of Verified Obb Worker
+   */
   private onVerificationObbWorkerMessage(data: any, alert: Observable<void>, fileControl: IFileControl) {
     let dType: ImportOBBVerificationWorkerPostMessage = data;
     if (dType.message === 'file-error') {
@@ -389,6 +410,7 @@ export class ImportService {
         return;
       }
 
+      this.onDecodeGamedata(this.dataGam, 'BuffInfo');
       fileControl.verifiedFile$.next(true);
     };
     reader.readAsArrayBuffer(file);
@@ -429,11 +451,12 @@ export class ImportService {
       let message: IndexedDBbCustomRequestErrorWorker<IDialogAsset | ILanguage | IMainGroup | IGroup> = data;
 
       let op: OperationLog = {
-        file: 'obb',
+        file: message.file,
         message: message.message,
         translateKey: message.translateKey,
         data: message.data
       };
+
       this.operations$.next([...this.operations$.value, op]);
     };
 
@@ -456,7 +479,9 @@ export class ImportService {
       dialogAssetsMainGroups: this.dialogAssetsMainGroups,
       dialogAssetsGroups: this.dialogAssetsGroups,
       localizationCategories: this.localizationCategories,
-      localizationKeys: this.localizationKeys
+      localizationKeys: this.localizationKeys,
+      gamedataCategories: this.gamedataCategories,
+      gamedataValues: this.gamedataValues
     };
 
     importWorker.postMessage(message);
@@ -752,8 +777,6 @@ export class ImportService {
   }
 
   private async onUploadGamedata() {
-    this.onDecodeGamedata(this.dataGam, 'BuffInfo');
-
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let flowsGC = this.iDB.postMany(ObjectStoreNames.GamedataCategory, this.gamedataCategories)
       flowsGC.obsSuccess$.subscribe(_ => {
@@ -893,11 +916,4 @@ export class ImportService {
     this.languageSelected = false;
   }
   //#endregion
-}
-
-interface OperationLog {
-  file: string;
-  message?: string;
-  translateKey: string;
-  data: any;
 }

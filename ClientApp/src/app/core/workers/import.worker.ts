@@ -31,10 +31,11 @@ function onSuccessOpenDB(event: Event, message: ImportPostMessage) {
     onUploadGroupsOffline(db, message);
   };
 
-  if (!message.localizationSkip) {
-    onUploadLocalization(db, message);
-  }
+  if (!message.localizationSkip)
+    onUploadLocalizationOffline(db, message);
 
+  if (!message.gamedataSkip)
+    onUploadGamedataOffline(db, message);
 
   db.onerror = (event: Event) => onError(event);
 }
@@ -50,14 +51,18 @@ function onUploadDialogAssetSelectedLanguages(db: IDBDatabase, message: ImportPo
 }
 
 function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage, language: string) {
-  // this.dialogAssetsUploading[language].Uploading.next(true);
-
   let dialogAssetsLang = message.dialogAssets[language];
   let storeName = ObjectStoreNames.DialogAsset;
   const transaction = db.transaction([storeName], "readwrite");
 
   transaction.oncomplete = (event) => {
-    //Do nothing
+    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+      file: 'obb',
+      translateKey: IndexDBSucess.FileCompleted,
+      message: undefined,
+      data: undefined
+    };
+    postMessage(completeMessage);
   };
 
   transaction.onerror = (event) => {
@@ -75,6 +80,7 @@ function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
       let error: IndexedDBbCustomRequestErrorWorker<typeof d> = {
+        file: 'obb',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
         data: d
@@ -100,9 +106,6 @@ function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage
       postMessage(error);
     };
   });
-
-
-  // this.dialogAssetsUploading[language].Uploading.next(false);
 }
 
 async function onUploadDialogAssetsServer() {
@@ -148,21 +151,39 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage) {
   const transactionG = db.transaction([ObjectStoreNames.Group], "readwrite");
 
   transactionL.oncomplete = (event) => {
-    //Do nothing
+    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+      file: 'obb-lang',
+      translateKey: IndexDBSucess.FileCompleted,
+      message: undefined,
+      data: undefined
+    };
+    postMessage(completeMessage);
   };
   transactionL.onerror = (event) => {
     //Do nothing
   };
 
   transactionMG.oncomplete = (event) => {
-    //Do nothing
+    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+      file: 'obb-main',
+      translateKey: IndexDBSucess.FileCompleted,
+      message: undefined,
+      data: undefined
+    };
+    postMessage(completeMessage);
   };
   transactionMG.onerror = (event) => {
     //Do nothing
   };
 
   transactionG.oncomplete = (event) => {
-    //Do nothing
+    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+      file: 'obb-group',
+      translateKey: IndexDBSucess.FileCompleted,
+      message: undefined,
+      data: undefined
+    };
+    postMessage(completeMessage);
   };
   transactionG.onerror = (event) => {
     //Do nothing
@@ -181,6 +202,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage) {
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
       let error: IndexedDBbCustomRequestErrorWorker<typeof l> = {
+        file: 'obb-lang',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
         data: l
@@ -216,6 +238,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage) {
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
       let error: IndexedDBbCustomRequestErrorWorker<typeof mG> = {
+        file: 'obb-main',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
         data: mG
@@ -251,6 +274,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage) {
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
       let error: IndexedDBbCustomRequestErrorWorker<typeof g> = {
+        file: 'obb-group',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
         data: g
@@ -305,19 +329,31 @@ async function onUploadGroupsServer() {
   //   );
 }
 
-function onUploadLocalization(db: IDBDatabase, message: ImportPostMessage) {
+function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage) {
   const transactionLC = db.transaction([ObjectStoreNames.LocalizationCategory], "readwrite");
   const transactionLK = db.transaction([ObjectStoreNames.LocalizationKey], "readwrite");
 
   transactionLC.oncomplete = (event) => {
-    //Do nothing
+    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+      file: 'localization-categories',
+      translateKey: IndexDBSucess.FileCompleted,
+      message: undefined,
+      data: undefined
+    };
+    postMessage(completeMessage);
   };
   transactionLC.onerror = (event) => {
     //Do nothing
   };
 
   transactionLK.oncomplete = (event) => {
-    //Do nothing
+    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+      file: 'localization-keys',
+      translateKey: IndexDBSucess.FileCompleted,
+      message: undefined,
+      data: undefined
+    };
+    postMessage(completeMessage);
   };
   transactionLK.onerror = (event) => {
     //Do nothing
@@ -335,6 +371,7 @@ function onUploadLocalization(db: IDBDatabase, message: ImportPostMessage) {
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
       let error: IndexedDBbCustomRequestErrorWorker<typeof c> = {
+        file: 'localization-categories',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
         data: c
@@ -370,6 +407,7 @@ function onUploadLocalization(db: IDBDatabase, message: ImportPostMessage) {
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
       let resMessage: IndexedDBbCustomRequestErrorWorker<typeof k> = {
+        file: 'localization-keys',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
         data: k
@@ -461,4 +499,135 @@ async function onUploadLocatlizationServer() {
   //         }
   //       );
   //   }
+}
+
+function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
+  const transactionGC = db.transaction([ObjectStoreNames.GamedataCategory], "readwrite");
+  const transactionGV = db.transaction([ObjectStoreNames.GamedataValue], "readwrite");
+
+  transactionGC.oncomplete = (event) => {
+    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+      file: 'gamedata-categories',
+      translateKey: IndexDBSucess.FileCompleted,
+      message: undefined,
+      data: undefined
+    };
+    postMessage(completeMessage);
+  };
+  transactionGC.onerror = (event) => {
+    //Do nothing
+  };
+
+  transactionGV.oncomplete = (event) => {
+    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+      file: 'gamedata-values',
+      translateKey: IndexDBSucess.FileCompleted,
+      message: undefined,
+      data: undefined
+    };
+    postMessage(completeMessage);
+  };
+  transactionGV.onerror = (event) => {
+    //Do nothing
+  };
+
+  const oSGC = transactionGC.objectStore(ObjectStoreNames.GamedataCategory);
+  const oSGV = transactionGV.objectStore(ObjectStoreNames.GamedataValue);
+
+  message.gamedataCategories.forEach((gC) => {
+    const request = oSGC.add(gC);
+    request.onsuccess = (event) => {
+      // SEND SUCCESS MESSAGE
+    };
+
+    request.onerror = (event) => {
+      let req = event.target as IDBRequest;
+      let error: IndexedDBbCustomRequestErrorWorker<typeof gC> = {
+        file: 'gamedata-categories',
+        translateKey: IndexDBErrors.UnknownError,
+        message: req.error?.message,
+        data: gC
+      };
+
+      if (req.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+        event.preventDefault();
+      }
+      else if (req.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+
+      postMessage(error);
+    };
+  });
+
+  message.gamedataValues.forEach((gV) => {
+    const request = oSGV.add(gV);
+    request.onsuccess = (event) => {
+      // SEND SUCCESS MESSAGE
+    };
+
+    request.onerror = (event) => {
+      let req = event.target as IDBRequest;
+      let error: IndexedDBbCustomRequestErrorWorker<typeof gV> = {
+        file: 'gamedata-values',
+        translateKey: IndexDBErrors.UnknownError,
+        message: req.error?.message,
+        data: gV
+      };
+
+      if (req.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+        event.preventDefault();
+      }
+      else if (req.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+      else if (req.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[req.error?.name];
+      }
+
+      postMessage(error);
+    };
+  });
+}
+
+async function onUploadGamedataServer() {
+  // await firstValueFrom(this.api.post('gamedatacategories', this.gamedataCategories))
+  //   .then(
+  //     (result) => {
+
+  //     },
+  //     (error) => {
+
+  //     }
+  //   );
+
+  // while (this.gamedataValues.length > 0) {
+  //   let keysSet = this.gamedataValues.splice(0, this.uploadStackSize);
+  //   await firstValueFrom(this.api.post<string[]>('gamedatavalues/import', keysSet))
+  //     .then(
+  //       (result) => {
+  //         // this.fileProgressBar$.next(this.fileProgressBar$.value + this.uploadStackSize);
+  //         // if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
+  //       },
+  //       (error) => {
+  //       }
+  //     );
+  // }
 }

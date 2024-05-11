@@ -175,7 +175,16 @@
 </ng-template>
 
 <ng-template #progressLog>
+
     <tui-scrollbar class="tui-space_vertical-6">
+        <div style="display: flex; gap: 0.5rem;">
+            <tui-badge status="warning" [value]="importS.operationsSkip$ | async"
+                [tuiHintContent]="'skip-file-hint' |translate">
+            </tui-badge>
+            <tui-badge status="success" [value]="importS.operationsCompleted$ | async"
+                [tuiHintContent]="'skip-file-hint' |translate">
+            </tui-badge>
+        </div>
         <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable style="display: block;
             width: calc(100% - 4px);
             height: 200px;
