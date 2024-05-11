@@ -26,16 +26,9 @@ function onErrorOpenDB(event: Event) {
 function onSuccessOpenDB(event: Event, message: ImportPostMessage) {
   let db = (event.target as any).result;
 
-  if (!message.obbSkip) {
-    onUploadDialogAssetsOffline(db, message);
-    onUploadGroupsOffline(db, message);
-  };
-
-  if (!message.localizationSkip)
-    onUploadLocalizationOffline(db, message);
-
-  if (!message.gamedataSkip)
-    onUploadGamedataOffline(db, message);
+  if (!message.obbSkip) onUploadObbOffline(db, message);
+  if (!message.localizationSkip) onUploadLocalizationOffline(db, message);
+  if (!message.gamedataSkip) onUploadGamedataOffline(db, message);
 
   db.onerror = (event: Event) => onError(event);
 }
@@ -44,15 +37,8 @@ function onError(event: Event) {
   // console.log(`Database error: ${(event.target as IDBRequest).error?.message}`);
 }
 
-function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage) {
-  let dialogAssetsLang: IDialogAsset[] = [];
-  for (let lang of message.dialogAssetsUploading) {
-    dialogAssetsLang = [...dialogAssetsLang, ...message.dialogAssets[lang]];
-  }
-
-  // let dialogAssetsLang = 
-  let storeName = ObjectStoreNames.DialogAsset;
-  const transaction = db.transaction([storeName], "readwrite");
+function onUploadObbOffline(db: IDBDatabase, message: ImportPostMessage) {
+  const transaction = db.transaction([ObjectStoreNames.DialogAsset, ObjectStoreNames.Languages, ObjectStoreNames.MainGroup, ObjectStoreNames.Group], "readwrite");
 
   transaction.oncomplete = (event) => {
     let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
@@ -68,7 +54,17 @@ function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage
     //Do nothing
   };
 
-  const objectStore = transaction.objectStore(storeName);
+  onUploadDialogAssetsOffline(db, message, transaction);
+  onUploadGroupsOffline(db, message, transaction);
+}
+
+function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage, transaction: IDBTransaction) {
+  let dialogAssetsLang: IDialogAsset[] = [];
+  for (let lang of message.dialogAssetsUploading) {
+    dialogAssetsLang = [...dialogAssetsLang, ...message.dialogAssets[lang]];
+  }
+
+  const objectStore = transaction.objectStore(ObjectStoreNames.DialogAsset);
 
   dialogAssetsLang.forEach((d) => {
     const request = objectStore.add(d);
@@ -120,7 +116,7 @@ async function onUploadDialogAssetsServer() {
   // );
 }
 
-function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage) {
+function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, transaction: IDBTransaction) {
   let languages = [];
   let mainGroups = [];
   let groups = [];
@@ -145,52 +141,9 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage) {
     }
   }
 
-  const transactionL = db.transaction([ObjectStoreNames.Languages], "readwrite");
-  const transactionMG = db.transaction([ObjectStoreNames.MainGroup], "readwrite");
-  const transactionG = db.transaction([ObjectStoreNames.Group], "readwrite");
-
-  transactionL.oncomplete = (event) => {
-    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
-      file: 'obb-lang',
-      translateKey: IndexDBSucess.FileCompleted,
-      message: undefined,
-      data: undefined
-    };
-    postMessage(completeMessage);
-  };
-  transactionL.onerror = (event) => {
-    //Do nothing
-  };
-
-  transactionMG.oncomplete = (event) => {
-    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
-      file: 'obb-main',
-      translateKey: IndexDBSucess.FileCompleted,
-      message: undefined,
-      data: undefined
-    };
-    postMessage(completeMessage);
-  };
-  transactionMG.onerror = (event) => {
-    //Do nothing
-  };
-
-  transactionG.oncomplete = (event) => {
-    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
-      file: 'obb-group',
-      translateKey: IndexDBSucess.FileCompleted,
-      message: undefined,
-      data: undefined
-    };
-    postMessage(completeMessage);
-  };
-  transactionG.onerror = (event) => {
-    //Do nothing
-  };
-
-  const oSLang = transactionL.objectStore(ObjectStoreNames.Languages);
-  const oSMainGroup = transactionMG.objectStore(ObjectStoreNames.MainGroup);
-  const oSGroup = transactionG.objectStore(ObjectStoreNames.Group);
+  const oSLang = transaction.objectStore(ObjectStoreNames.Languages);
+  const oSMainGroup = transaction.objectStore(ObjectStoreNames.MainGroup);
+  const oSGroup = transaction.objectStore(ObjectStoreNames.Group);
 
   languages.forEach((l) => {
     const request = oSLang.add(l);
@@ -329,37 +282,23 @@ async function onUploadGroupsServer() {
 }
 
 function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage) {
-  const transactionLC = db.transaction([ObjectStoreNames.LocalizationCategory], "readwrite");
-  const transactionLK = db.transaction([ObjectStoreNames.LocalizationKey], "readwrite");
+  const transaction = db.transaction([ObjectStoreNames.LocalizationCategory, ObjectStoreNames.LocalizationKey], "readwrite");
 
-  transactionLC.oncomplete = (event) => {
+  transaction.oncomplete = (event) => {
     let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
-      file: 'localization-categories',
+      file: 'localization',
       translateKey: IndexDBSucess.FileCompleted,
       message: undefined,
       data: undefined
     };
     postMessage(completeMessage);
   };
-  transactionLC.onerror = (event) => {
+  transaction.onerror = (event) => {
     //Do nothing
   };
 
-  transactionLK.oncomplete = (event) => {
-    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
-      file: 'localization-keys',
-      translateKey: IndexDBSucess.FileCompleted,
-      message: undefined,
-      data: undefined
-    };
-    postMessage(completeMessage);
-  };
-  transactionLK.onerror = (event) => {
-    //Do nothing
-  };
-
-  const oSLC = transactionLC.objectStore(ObjectStoreNames.LocalizationCategory);
-  const oSLK = transactionLK.objectStore(ObjectStoreNames.LocalizationKey);
+  const oSLC = transaction.objectStore(ObjectStoreNames.LocalizationCategory);
+  const oSLK = transaction.objectStore(ObjectStoreNames.LocalizationKey);
 
   message.localizationCategories.forEach((c) => {
     const request = oSLC.add(c);
@@ -501,37 +440,23 @@ async function onUploadLocatlizationServer() {
 }
 
 function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
-  const transactionGC = db.transaction([ObjectStoreNames.GamedataCategory], "readwrite");
-  const transactionGV = db.transaction([ObjectStoreNames.GamedataValue], "readwrite");
+  const transaction = db.transaction([ObjectStoreNames.GamedataCategory, ObjectStoreNames.GamedataValue], "readwrite");
 
-  transactionGC.oncomplete = (event) => {
+  transaction.oncomplete = (event) => {
     let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
-      file: 'gamedata-categories',
+      file: 'gamedata',
       translateKey: IndexDBSucess.FileCompleted,
       message: undefined,
       data: undefined
     };
     postMessage(completeMessage);
   };
-  transactionGC.onerror = (event) => {
+  transaction.onerror = (event) => {
     //Do nothing
   };
 
-  transactionGV.oncomplete = (event) => {
-    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
-      file: 'gamedata-values',
-      translateKey: IndexDBSucess.FileCompleted,
-      message: undefined,
-      data: undefined
-    };
-    postMessage(completeMessage);
-  };
-  transactionGV.onerror = (event) => {
-    //Do nothing
-  };
-
-  const oSGC = transactionGC.objectStore(ObjectStoreNames.GamedataCategory);
-  const oSGV = transactionGV.objectStore(ObjectStoreNames.GamedataValue);
+  const oSGC = transaction.objectStore(ObjectStoreNames.GamedataCategory);
+  const oSGV = transaction.objectStore(ObjectStoreNames.GamedataValue);
 
   message.gamedataCategories.forEach((gC) => {
     const request = oSGC.add(gC);
