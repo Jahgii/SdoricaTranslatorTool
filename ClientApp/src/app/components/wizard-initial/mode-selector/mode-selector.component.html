@@ -1,42 +1,44 @@
-<p class="tui-text_body-xs text_subtitle"> {{'mode-selection' | translate}}</p>
-<p>{{'select-mode-description' | translate}}</p>
+<div class="mode-container">
+    <p class="tui-text_body-xs text_subtitle"> {{'mode-selection' | translate}}</p>
+    <p>{{'select-mode-description' | translate}}</p>
 
-<div class="option-container" [formGroup]="modeForm">
-    <tui-radio-block class="mode-option" [item]="modes.Offline" size="s" formControlName="mode">
-        <div class="inner">
-            <h3 class="tui-island__title">{{'offline' | translate}}</h3>
-            <div>
-                {{'offline-mode-description' | translate}}
+    <div class="option-container" [formGroup]="modeForm">
+        <tui-radio-block class="mode-option" [item]="modes.Offline" size="s" formControlName="mode">
+            <div class="inner">
+                <h3 class="tui-island__title">{{'offline' | translate}}</h3>
+                <div>
+                    {{'offline-mode-description' | translate}}
+                </div>
             </div>
-        </div>
-    </tui-radio-block>
-    <tui-radio-block class="mode-option" [item]="modes.Online" size="s" formControlName="mode">
-        <div class="inner">
-            <h3 class="tui-island__title">{{'online' | translate}}</h3>
-            <div>
-                {{'online-mode-description' | translate}}
+        </tui-radio-block>
+        <tui-radio-block class="mode-option" [item]="modes.Online" size="s" formControlName="mode">
+            <div class="inner">
+                <h3 class="tui-island__title">{{'online' | translate}}</h3>
+                <div>
+                    {{'online-mode-description' | translate}}
+                </div>
             </div>
-        </div>
-    </tui-radio-block>
+        </tui-radio-block>
+    </div>
+
+    @if (modeControl?.value === modes.Online) {
+    <form class="url-container" [formGroup]="modeForm">
+        <p> {{'api-url' | translate}}</p>
+        <tui-input class="tui-space_bottom-6" formControlName="apiUrl" [tuiTextfieldLabelOutside]="true"
+            tuiTextfieldSize="s">
+            {{'api-url' | translate}}
+            <input tuiTextfield />
+        </tui-input>
+
+        <p> {{'api-key' | translate}}</p>
+        <tui-input formControlName="apiKey" [tuiTextfieldLabelOutside]="true" tuiTextfieldSize="s">
+            {{'api-key' | translate}}
+            <input tuiTextfield />
+        </tui-input>
+    </form>
+    }
+
+    <button style="width: 100%;" appearance="outline" tuiIconButton type="button" class="tui-space_top-6"
+        icon="tuiIconArrowRightCircleLarge" shape="square" size="m" (click)="onNext()" [disabled]="modeForm.invalid">
+    </button>
 </div>
-
-@if (modeControl?.value === modes.Online) {
-<form class="url-container" [formGroup]="modeForm">
-    <p> {{'api-url' | translate}}</p>
-    <tui-input class="tui-space_bottom-6" formControlName="apiUrl" [tuiTextfieldLabelOutside]="true"
-        tuiTextfieldSize="s">
-        {{'api-url' | translate}}
-        <input tuiTextfield />
-    </tui-input>
-
-    <p> {{'api-key' | translate}}</p>
-    <tui-input formControlName="apiKey" [tuiTextfieldLabelOutside]="true" tuiTextfieldSize="s">
-        {{'api-key' | translate}}
-        <input tuiTextfield />
-    </tui-input>
-</form>
-}
-
-<button style="width: 100%;" appearance="outline" tuiIconButton type="button" class="tui-space_top-6"
-    icon="tuiIconArrowRightCircleLarge" shape="square" size="m" (click)="onNext()" [disabled]="modeForm.invalid">
-</button>

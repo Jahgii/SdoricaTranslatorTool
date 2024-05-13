@@ -225,6 +225,7 @@
     "file": "Archivo",
     "message": "Mensaje",
     "import": "Importar",
+    "import-description": "Proporciona todos los archivos necesarios en sus respectivos espacios y espera el proceso de importación a la app.",
     "mode-selection": "Selección de Modo",
     "constraint-error": "Omitido, ya existe la inf. en la BD",
     "abort-error": "Operación cancelada",
@@ -234,6 +235,7 @@
     "data-updated": "Registro actualizado",
     "file-completed": "Proceso Completado",
     "skip-file-hint": "Archivos Omitidos",
+    "skip-file": "Omitir Archivo",
     "replaced-file-hint": "Archivos Remplazados",
     "completed-file-hint": "Operaciones Completadas"
 }

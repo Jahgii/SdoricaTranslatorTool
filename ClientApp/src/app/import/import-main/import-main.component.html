@@ -1,27 +1,17 @@
 <main class="main-container">
     <p class="tui-text_body-xs text_subtitle"> {{'import' | translate}}</p>
     <p>
-        Antes de comenzar a traducir preparemos lo siguiente.
-        Proporciona todos los archivos necesarios en sus
-        respectivos espacios y espera el proceso de importación a la app.
-        Si ocurre algun error se notificara en el respectivo espacio
-        del archivo, si el error no es critico puedes ignorarlo o
-        reintentarlo.
-    </p>
-    <p>
-        Sí es tu primera vez por aqui recomendamos no omitir ningun archivo,
-        sí no es el caso puedes solo especificar los archivos que desees actualizar,
-        para ello solo omite los archivos que no necesites, dando click en el boton
-        <tui-svg src="tuiIconXCircle"></tui-svg> justo al lado del archivo.
+        {{'import-description' | translate}}
     </p>
 
-    <div class="file-input-grid">
+    <div class="file-input-grid tui-space_top-6">
         <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importS.obb,
             filesize:(1024*1024*1024*2),
             accept: '.obb',
             filename: 'OBB'
-        }"></ng-container>
+        }">
+        </ng-container>
         <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importS.localization,
             filesize:(1024*1024*100),
@@ -76,9 +66,9 @@
         }">
         </ng-container>
 
-        @if (!filecontrol.control.value && !(filecontrol.skip | async)) {
+        @if (!filecontrol.control.value && !(filecontrol.skip | async) && (showSkipButton$ | async)) {
         <button class="right-top-button" tuiIconButton icon="tuiIconXCircleLarge" size="xs" appearance="icon"
-            (click)="importS.onSkipFile(filecontrol)">
+            (click)="importS.onSkipFile(filecontrol)" [tuiHint]="'skip-file' | translate" tuiHintAppearance="onDark">
         </button>
         }
     </div>
@@ -178,10 +168,11 @@
 
 <ng-template #progressLog>
     <div class="progress-badget-container tui-space_top-6 tui-space_bottom-1">
-        <tui-badge status="warning" [value]="importS.operationsSkip$ | async" [tuiHint]="'skip-file-hint' | translate">
+        <tui-badge status="warning" [value]="importS.operationsSkip$ | async" [tuiHint]="'skip-file-hint' | translate"
+            tuiHintAppearance="onDark">
         </tui-badge>
         <tui-badge status="info" [value]="importS.operationsUpdated$ | async"
-            [tuiHint]="'replaced-file-hint' | translate">
+            [tuiHint]="'replaced-file-hint' | translate" tuiHintAppearance="onDark">
         </tui-badge>
     </div>
     <tui-scrollbar>

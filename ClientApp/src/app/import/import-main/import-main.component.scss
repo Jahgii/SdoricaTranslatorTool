@@ -1,21 +1,23 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+
 .main-container {
-    max-width: 1024px;
-    min-width: 320px;
-    padding: 0 3em;
+    max-width: 60rem;
+    min-width: 20rem;
+    padding: 0 clamp(1em, 2.5%, 5em);
     margin: 0 auto;
+    top: 2em;
+    left: 0;
+    right: 0;
 }
 
 .file-input-empty {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     position: relative;
 }
 
 .file-input-grid {
-    display: flex;
-    gap: 1rem;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, auto));
+    gap: 1em;
 }
 
 .file-input {

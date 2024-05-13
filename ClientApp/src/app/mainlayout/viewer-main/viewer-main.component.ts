@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { ViewersService } from 'src/app/core/services/viewers.service';
