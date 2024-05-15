@@ -1,13 +1,13 @@
 <tui-app-bar class="app-bar">
     <div tuiSlot="left" style="display: flex; align-items: center;">
         <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
-            <tui-avatar size="s" [rounded]="true" [text]="auth.user?.name ? auth.user?.name ?? '' : '?'"
+            <!-- <tui-avatar size="s" [rounded]="true" [text]="auth.user?.name ? auth.user?.name ?? '' : '?'"
                 [avatarUrl]="auth.user?.photoUrl ? auth.user?.photoUrl ?? '' : null">
-            </tui-avatar>
+            </tui-avatar> -->
         </tui-loader>
-        <span class="tui-space_left-2">
+        <!-- <span class="tui-space_left-2">
             {{auth.user?.name ? ('hi-user' | translate) + auth.user?.name : ('unknown-user' | translate)}}
-        </span>
+        </span> -->
     </div>
 
     <tui-hosted-dropdown #dropdown [content]="content" [tuiDropdownMaxHeight]="300" tuiSlot="right">

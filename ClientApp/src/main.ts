@@ -15,7 +15,7 @@ import { of } from 'rxjs';
 import { TUI_LANGUAGE, TUI_SPANISH_LANGUAGE } from '@taiga-ui/i18n';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 import { TUI_SANITIZER, TuiAlertModule, TuiDialogModule, TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
-import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+// import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export function getBaseUrl() {
@@ -39,8 +39,8 @@ bootstrapApplication(AppComponent, {
             ReactiveFormsModule,
 
             //Login
-            SocialLoginModule,
-            GoogleSigninButtonModule,
+            // SocialLoginModule,
+            // GoogleSigninButtonModule,
 
             //Taiga
             TuiRootModule,
@@ -65,21 +65,21 @@ bootstrapApplication(AppComponent, {
         {
             provide: 'BASE_URL', useFactory: getBaseUrl, deps: []
         },
-        {
-            provide: 'SocialAuthServiceConfig',
-            useValue: {
-                autoLogin: false,
-                providers: [
-                    {
-                        id: GoogleLoginProvider.PROVIDER_ID,
-                        provider: new GoogleLoginProvider(environment.googleClientId)
-                    }
-                ],
-                onError: (err) => {
-                    console.error(err);
-                }
-            } as SocialAuthServiceConfig,
-        },
+        // {
+        //     provide: 'SocialAuthServiceConfig',
+        //     useValue: {
+        //         autoLogin: false,
+        //         providers: [
+        //             {
+        //                 id: GoogleLoginProvider.PROVIDER_ID,
+        //                 provider: new GoogleLoginProvider(environment.googleClientId)
+        //             }
+        //         ],
+        //         onError: (err) => {
+        //             console.error(err);
+        //         }
+        //     } as SocialAuthServiceConfig,
+        // },
         {
             provide: TUI_SANITIZER,
             useClass: NgDompurifySanitizer

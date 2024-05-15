@@ -2,10 +2,10 @@
     <div class="sidebar">
         <div class="profile-avatar-container">
             <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
-                <tui-avatar class="avatar" size="s" [rounded]="false"
+                <!-- <tui-avatar class="avatar" size="s" [rounded]="false"
                     [text]="auth.user?.name ? auth.user?.name ?? '' : '?'" fallback="tuiIconUserLarge"
                     [avatarUrl]="auth.user?.photoUrl ? auth.user?.photoUrl ?? '' : null">
-                </tui-avatar>
+                </tui-avatar> -->
             </tui-loader>
 
             @if ((breakpointService$ | async) === 'mobile') {
