@@ -248,25 +248,48 @@ export class LocalizationService implements OnDestroy {
   }
 
   public async onKeyTranslated(key: ILocalizationKey) {
-    await firstValueFrom(this.api.putWithHeaders('localizationkeys', { language: this.language }, key))
-      .then(
-        r => {
+    let request$: Observable<any> | undefined = undefined;
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.put<ILocalizationKey>(ObjectStoreNames.LocalizationKey, key);
+      request$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online)
+      request$ = this.api.putWithHeaders('localizationkeys', { language: this.language }, key);
 
-        },
-        error => {
-          this.alerts.open(this.translate.instant('alert-error-label'),
-            {
-              label: this.translate.instant('alert-error'),
-              autoClose: true,
-              hasCloseButton: false,
-              status: 'success'
-            }
-          ).subscribe({
-            complete: () => {
-            },
-          });
+    if (request$ === undefined) return;
+
+    await firstValueFrom(request$)
+      .then(_ => {
+        if (this.lStorage.getAppMode() === AppModes.Offline) {
+          this.onCategoryUpdateOffline(key, this.language);
         }
+      }, _ => {
+        this.alerts.open(this.translate.instant('alert-error-label'),
+          {
+            label: this.translate.instant('alert-error'),
+            autoClose: true,
+            hasCloseButton: false,
+            status: 'error'
+          }
+        ).subscribe({
+          complete: () => {
+          },
+        });
+      }
       );
+  }
+
+  private async onCategoryUpdateOffline(key: ILocalizationKey, lang: string) {
+    let r = this.indexedDB.getIndex<ILocalizationCategory[]>(ObjectStoreNames.LocalizationCategory, "Name", key.Category);
+    let categories = await firstValueFrom(r.success$);
+    let category = categories[0];
+
+    if (key.Translated) {
+      category.KeysTranslated[lang] += key.Translated[lang] ? 1 : -1;
+    }
+
+    let update = this.indexedDB.put<ILocalizationCategory>(ObjectStoreNames.LocalizationCategory, category);
+    firstValueFrom(update.success$);
   }
 
   public onMachineTranslate() {
