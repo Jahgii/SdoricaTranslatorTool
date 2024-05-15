@@ -163,7 +163,7 @@ export class LocalizationService implements OnDestroy {
     this.selectedCategory$.next(true);
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
-      let r = this.indexedDB.getIndex<ILocalizationCategory[]>(ObjectStoreNames.LocalizationKey, "Category", category.Name);
+      let r = this.indexedDB.getIndex<ILocalizationKey[]>(ObjectStoreNames.LocalizationKey, "Category", category.Name);
       this.keys$ = r.success$;
     }
     else if (this.lStorage.getAppMode() === AppModes.Online)

@@ -1,9 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { ICommonWord } from '../interfaces/i-common-word';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, firstValueFrom, of } from 'rxjs';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from './local-storage.service';
+import { AppModes } from '../enums/app-modes';
+import { IndexDBService } from './index-db.service';
+import { ObjectStoreNames } from '../interfaces/i-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +21,8 @@ export class CommonWordsService {
 
   constructor(
     private api: ApiService,
+    private indexedDB: IndexDBService,
+    private lStorage: LocalStorageService,
     private translate: TranslateService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
@@ -24,21 +30,34 @@ export class CommonWordsService {
   }
 
   private init() {
-    firstValueFrom(this.api.get<ICommonWord[]>('commonwords'))
+    let words$: Observable<ICommonWord[]> | Subject<ICommonWord[]> | undefined;
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getAll<ICommonWord[]>(ObjectStoreNames.CommonWord);
+      words$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      words$ = this.api.get<ICommonWord[]>('commonwords');
+    }
+
+    if (words$ === undefined) words$ = of([]);
+
+    firstValueFrom(words$)
       .then(
         words => { this.words = words },
         error => {
-          this.alerts.open(this.translate.instant('alert-error-label'),
-            {
-              label: this.translate.instant('alert-error'),
-              autoClose: true,
-              hasCloseButton: false,
-              status: 'success'
-            }
-          ).subscribe({
-            complete: () => {
-            },
-          });
+          this.alerts
+            .open(this.translate.instant('alert-error-label'),
+              {
+                label: this.translate.instant('alert-error'),
+                autoClose: true,
+                hasCloseButton: false,
+                status: 'error'
+              }
+            ).subscribe({
+              complete: () => {
+              },
+            });
         }
       );
   }

@@ -206,7 +206,7 @@ export class IndexDBService {
   }
 
   public getIndex<T>(storeName: ObjectStoreNames, index: string, searchValue: any) {
-    let success$ = new Subject<any>();
+    let success$ = new Subject<T>();
     let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
 
     const transaction = this.db.transaction([storeName]);
@@ -259,7 +259,7 @@ export class IndexDBService {
   }
 
   public getAll<T>(storeName: ObjectStoreNames) {
-    let success$ = new Subject<any>();
+    let success$ = new Subject<T>();
     let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
 
     const transaction = this.db.transaction([storeName]);
