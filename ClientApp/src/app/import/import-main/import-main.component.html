@@ -4,6 +4,13 @@
         {{'import-description' | translate}}
     </p>
 
+    <ul class="tui-list tui-list_ordered tui-list_nested tui-text_body-s">
+        <li class="tui-list__item"><b>OBB</b>: {{'obb-description' | translate}}
+        </li>
+        <li class="tui-list__item"><b>Localization</b>: {{'localization-description' | translate}} </li>
+        <li class="tui-list__item"><b>Gamedata</b>: {{'gamedata-description' | translate}}</li>
+    </ul>
+
     <div class="file-input-grid tui-space_top-6">
         <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importS.obb,
@@ -52,7 +59,7 @@
             }
         </div>
         }
-    </tui-elastic-container>
+    </tui-elastic-container>    
 </main>
 
 <ng-template #fileInput let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">

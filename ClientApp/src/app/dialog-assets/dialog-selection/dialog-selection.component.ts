@@ -51,7 +51,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   constructor(
     private ref: ChangeDetectorRef,
     private groupService: DGroupsService,
-    private local: LocalStorageService,
+    private lStorage: LocalStorageService,
     private viewers: ViewersService,
   ) {
 
@@ -85,7 +85,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
 
   private initLastGroupSelected() {
     if (this.autoLoadGroupId === undefined) {
-      this.autoLoadGroupId = this.local
+      this.autoLoadGroupId = this.lStorage
         .getGroup(this.viewIndex);
     };
 
@@ -119,7 +119,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
     this.nodeSelected?.selected?.next(false);
     this.nodeSelected = node;
     this.nodeSelected.selected?.next(true);
-    this.local.setGroup(this.viewIndex, node.Id ?? '');
+    this.lStorage.setGroup(this.viewIndex, node.Id ?? '');
   }
 
   public onMouseEnter() {

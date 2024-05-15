@@ -27,8 +27,8 @@
 
 .wizard-choose-lang {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
-    grid-gap: 1rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-gap: 1rem;
     grid-auto-rows: minmax(108px, auto);
     justify-content: space-between;
 
@@ -54,7 +54,7 @@
 }
 
 .lang-checkbox {
-    width: 220px;
+    width: 100%;
 }
 
 .text_subtitle {

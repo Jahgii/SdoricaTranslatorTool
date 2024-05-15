@@ -64,7 +64,7 @@ export class NavMenuComponent implements OnInit {
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
     readonly translate: TranslateService,
-    private localStorage: LocalStorageService,
+    private lStorage: LocalStorageService,
     public authService: AuthService,
     private viewers: ViewersService,
     public theme: ThemeService,
@@ -78,18 +78,18 @@ export class NavMenuComponent implements OnInit {
     this.langControl.valueChanges
       .subscribe(lang => {
         this.translate.use(lang);
-        this.localStorage.setAppLang(lang);
+        this.lStorage.setAppLang(lang);
         this.switcher.setLanguage(lang);
       });
 
-    let lang = this.localStorage.getAppLang();
+    let lang = this.lStorage.getAppLang();
 
     if (lang) {
-      this.localStorage.setAppLang(lang);
+      this.lStorage.setAppLang(lang);
       this.langControl.patchValue(lang);
     }
     else {
-      this.localStorage.setAppLang('en');
+      this.lStorage.setAppLang('en');
       this.langControl.patchValue('en');
     }
   }

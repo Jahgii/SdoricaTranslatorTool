@@ -44,5 +44,7 @@ export class AppComponent {
     public app: AppStateService,
     public authService: AuthService,
     public theme: ThemeService
-  ) { }
+  ) {
+    this.languageOrigin.onRetriveLanguages();
+  }
 }

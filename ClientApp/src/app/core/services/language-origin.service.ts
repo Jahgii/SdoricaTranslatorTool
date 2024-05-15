@@ -5,6 +5,9 @@ import { LocalStorageService } from './local-storage.service';
 import { ApiService } from './api.service';
 import { ILanguage } from '../interfaces/i-dialog-group';
 import { LanguageType } from '../interfaces/i-dialog-asset';
+import { AppModes } from '../enums/app-modes';
+import { IndexDBService } from './index-db.service';
+import { ObjectStoreNames } from '../interfaces/i-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -18,38 +21,48 @@ export class LanguageOriginService {
 
   constructor(
     private api: ApiService,
+    private indexedDB: IndexDBService,
     private local: LocalStorageService
   ) { }
 
   public async onRetriveLanguages() {
-    return await firstValueFrom(this.api.get<ILanguage[]>('languages'))
-      .then(r => {
-        if (r.length == 0) {
-          this.ready$.next(true);
-          return false;
-        }
+    let langs: ILanguage[] = [];
 
-        this.languages = r.map(e => e.Name);
+    if (this.local.getAppMode() === AppModes.Offline) {
+      let r = await this.indexedDB.getAll<ILanguage[]>(ObjectStoreNames.Languages);
+      langs = await firstValueFrom(r.success$);
+    }
+    else if (this.local.getAppMode() === AppModes.Online)
+      langs = await firstValueFrom(this.api.get<ILanguage[]>('languages'));
 
-        let defaultLang = this.local.getDefaultLang();
-        let lang = r.find(e => e.Name == defaultLang);
 
-        if (!lang) {
-          lang = r[0];
-          this.local.setDefaultLang(lang.Name);
-        }
+    if (langs.length == 0) {
+      this.ready$.next(true);
+      return false;
+    }
 
-        this.language.valueChanges.subscribe(lang => {
-          this.local.setDefaultLang(lang);
-          const languageIndex = Object.keys(LanguageType).indexOf(this.language.value);
-          this.localizationLang = Object.values(LanguageType)[languageIndex];
-          this.language$.next(lang);
-        });
+    console.log(langs);
 
-        this.language.patchValue(lang.Name);
-        this.ready$.next(true);
+    this.languages = langs.map(e => e.Name);
 
-        return true;
-      });
+    let defaultLang = this.local.getDefaultLang();
+    let lang = langs.find(e => e.Name == defaultLang);
+
+    if (!lang) {
+      lang = langs[0];
+      this.local.setDefaultLang(lang.Name);
+    }
+
+    this.language.valueChanges.subscribe(lang => {
+      this.local.setDefaultLang(lang);
+      const languageIndex = Object.keys(LanguageType).indexOf(this.language.value);
+      this.localizationLang = Object.values(LanguageType)[languageIndex];
+      this.language$.next(lang);
+    });
+
+    this.language.patchValue(lang.Name);
+    this.ready$.next(true);
+
+    return true;
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { error } from 'console';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors } from '../interfaces/i-indexed-db';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IndexDBService {
+  private dbInitialized$: Subject<boolean> = new Subject();
   public dbName = "Translations";
   public dbVersion = 1;
   private db!: IDBDatabase;
@@ -30,6 +30,7 @@ export class IndexDBService {
   private onSuccessOpenDB(event: Event) {
     this.db = (event.target as any).result;
     this.db.onerror = (event) => this.onError(event);
+    this.dbInitialized$.next(true);
   }
 
   private onUpgradeNeededOpenDB(event: Event) {
@@ -201,5 +202,60 @@ export class IndexDBService {
     });
 
     return { obsSuccess$, obsError$ };
+  }
+
+  public async getAll<T>(storeName: ObjectStoreNames) {
+    await firstValueFrom(this.dbInitialized$);
+
+    let success$ = new Subject<any>();
+    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+
+    const transaction = this.db.transaction([storeName]);
+
+    transaction.oncomplete = (event) => {
+      success$.complete();
+      error$.complete();
+    };
+
+    transaction.onerror = (event) => {
+      success$.complete();
+      error$.complete();
+    };
+
+    const objectStore = transaction.objectStore(storeName);
+    const request = objectStore.getAll();
+
+    request.onsuccess = (event) => {
+      success$.next((event.target as IDBRequest).result);
+    };
+
+    request.onerror = (event) => {
+      let error: IndexedDBbCustomRequestError<T> = {
+        request: event.target as IDBRequest,
+        translateKey: IndexDBErrors.UnknownError,
+        data: [] as any
+      };
+
+      if (error.request.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+        event.preventDefault();
+      }
+      else if (error.request.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+
+      error$.next(error);
+    };
+
+    return { success$: success$, error$: error$ };
   }
 }
