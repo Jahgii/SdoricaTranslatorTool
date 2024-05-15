@@ -128,14 +128,15 @@ export class DGroupsService extends StoreService<TreeNode> {
       });
   }
 
-  public async onCheckTranslated(node: TreeNode, translated: boolean) {
+  public onCheckTranslated(node: TreeNode, translated: boolean) {
     if ((node as IGroup).MainGroup) {
       let mainGroup = (node as IGroup).MainGroup;
       let addOrSubs = translated === true ? 1 : -1;
       node.TranslatedFiles += addOrSubs;
 
-      let parentIndex = this.getData().findIndex(e => e.OriginalName === mainGroup);
-      let parentNode = this.getData()[parentIndex];
+      let nodes = this.getData();
+      let parentIndex = nodes.findIndex(e => e.OriginalName === mainGroup);
+      let parentNode = nodes[parentIndex];
 
       if (parentNode) {
         parentNode.TranslatedFiles += addOrSubs;

@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, takeWhile } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, of, takeWhile } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localizations';
 import { LanguageOriginService } from './language-origin.service';
 import { LibreTranslateService } from './libre-translate.service';
@@ -10,6 +10,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { LocalizationCategoriesService } from 'src/app/localization/localization-categories.service';
 import { LocalStorageService } from './local-storage.service';
 import { ViewersService } from './viewers.service';
+import { AppModes } from '../enums/app-modes';
+import { IndexDBService } from './index-db.service';
+import { ObjectStoreNames } from '../interfaces/i-indexed-db';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
@@ -68,7 +71,8 @@ export class LocalizationService implements OnDestroy {
 
   constructor(
     private api: ApiService,
-    private local: LocalStorageService,
+    private indexedDB: IndexDBService,
+    private lStorage: LocalStorageService,
     private lCS: LocalizationCategoriesService,
     private languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
@@ -77,29 +81,34 @@ export class LocalizationService implements OnDestroy {
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
     this.language = this.languageOrigin.localizationLang;
+    this.languageOrigin
+      .language
+      .valueChanges
+      .subscribe(_ => {
+        this.language = this.languageOrigin.localizationLang;
 
-    this.languageOrigin.language.valueChanges.subscribe(_ => {
-      this.language = this.languageOrigin.localizationLang;
+        let r = this.lCS.getData();
+        let searchCategory = r[0];
 
-      let r = this.lCS.getData();
-      let seachCategory = this.lCS.getData()[0];
+        if (r.length === 0) return;
 
-      seachCategory.Keys[this.language] =
-        r.reduce((ac, v, i) => {
-          if (i === 0) return 0;
-          return ac + v.Keys[this.language] ?? 0;
-        }, 0);
+        searchCategory.Keys[this.language] =
+          r.reduce((ac, v, i) => {
+            if (i === 0) return 0;
+            return ac + (v.Keys[this.language] ?? 0);
+          }, 0);
 
-      seachCategory.KeysTranslated[this.language] =
-        r.reduce((ac, v, i) => {
-          if (i === 0) return 0;
-          return ac + v.KeysTranslated[this.language] ?? 0;
-        }, 0);
+        searchCategory.KeysTranslated[this.language] =
+          r.reduce((ac, v, i) => {
+            if (i === 0) return 0;
+            return ac + (v.KeysTranslated[this.language] ?? 0);
+          }, 0);
 
-      this.selectedCategoryIndex = r.findIndex(c => c.Name === this.selectedCategory.Name);
-      this.selectedCategory = r[this.selectedCategoryIndex];
-      if (this.alreadySearch$.value && this.lastSearch != null) this.lastSearch();
-    });
+        if (!this.selectedCategory) return;
+        this.selectedCategoryIndex = r.findIndex(c => c.Name === this.selectedCategory.Name);
+        this.selectedCategory = r[this.selectedCategoryIndex];
+        if (this.alreadySearch$.value && this.lastSearch != null) this.lastSearch();
+      });
 
     this.autoSearch();
     this.onTranslatedColumnCheckboxChange();
@@ -111,25 +120,21 @@ export class LocalizationService implements OnDestroy {
         .loadingStore$
         .pipe(takeWhile(_ => !this.categories$))
         .subscribe(_ => {
-          this.categories$ = this.lCS.store$
+          this.categories$ = this.lCS.store$;
           this.initLastCategorySelected();
         });
-    else {
-
-    }
   }
 
   private initLastCategorySelected() {
     if (this.viewIndex === -1) return;
 
     if (this.autoLoadCategoryId === undefined) {
-      this.autoLoadCategoryId = this.local
+      this.autoLoadCategoryId = this.lStorage
         .getCategory(this.viewIndex);
     };
 
-    let category = this.lCS
-      .getData()
-      .find(e => e.Id === this.autoLoadCategoryId);
+    let categories = this.lCS.getData();
+    let category = categories.find(e => String(e.Id) === this.autoLoadCategoryId);
     if (category) {
       this.selectedCategory = category;
       this.onSelectCategory(category);
@@ -145,20 +150,25 @@ export class LocalizationService implements OnDestroy {
   }
 
   public async onSelectCategory(category: ILocalizationCategory) {
-    // if (this.selectedCategory.Name === category.Name) return;
-
     this.keys = undefined;
     this.restartFilters();
 
     if (!category) {
-      this.local.setCategory(this.viewIndex, '');
+      this.lStorage.setCategory(this.viewIndex, '');
       this.selectedCategory$.next(false);
       return;
     }
 
-    this.local.setCategory(this.viewIndex, category.Id ?? "");
+    this.lStorage.setCategory(this.viewIndex, category.Id ?? "");
     this.selectedCategory$.next(true);
-    this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getIndex<ILocalizationCategory[]>(ObjectStoreNames.LocalizationKey, "Category", category.Name);
+      this.keys$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online)
+      this.keys$ = this.api.getWithHeaders('localizationkeys', { category: category.Name });
+    else this.keys$ = of([]);
 
     if (category.Name == 'SEARCH') {
       this.selectedCategoryIndex = 0;
@@ -168,7 +178,8 @@ export class LocalizationService implements OnDestroy {
       this.searchTotalTranslated = 0;
     }
     else {
-      this.selectedCategoryIndex = this.lCS.getData().findIndex(c => c.Name === this.selectedCategory.Name);
+      let categories = this.lCS.getData();
+      this.selectedCategoryIndex = categories.findIndex(c => c.Name === this.selectedCategory.Name);
       this.searchCategory$.next(false);
       this.alreadySearch$.next(true);
       this.loading$.next(true)
@@ -229,8 +240,8 @@ export class LocalizationService implements OnDestroy {
   }
 
   private getPropagateKeys(keys: ILocalizationKey[], key: ILocalizationKey) {
-    var keysToPropagate = keys.filter(e => e.Original[this.languageOrigin.localizationLang] === key.Original[this.languageOrigin.localizationLang]);
-    var keyIndex = keysToPropagate.findIndex(e => e === key);
+    let keysToPropagate = keys.filter(e => e.Original[this.languageOrigin.localizationLang] === key.Original[this.languageOrigin.localizationLang]);
+    let keyIndex = keysToPropagate.findIndex(e => e === key);
     keysToPropagate.splice(keyIndex, 1);
 
     return keysToPropagate;

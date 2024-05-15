@@ -40,11 +40,8 @@ export class AppComponent {
   public title = 'Translator Tool';
 
   constructor(
-    public languageOrigin: LanguageOriginService,
     public app: AppStateService,
-    public authService: AuthService,
     public theme: ThemeService
   ) {
-    this.languageOrigin.onRetriveLanguages();
   }
 }

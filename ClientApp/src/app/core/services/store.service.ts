@@ -13,14 +13,14 @@ export class StoreService<T> {
 
   public async initData(data: Observable<T[]>) {
     this.loadingStore$.next(true);
-    
+
     await firstValueFrom(data)
       .then(r => {
         this.store.next(r);
         this.store$ = this.store.asObservable();
       }, error => {
       });
-    
+
     this.loadingStore$.next(false);
   }
 

@@ -22,17 +22,17 @@ export class LanguageOriginService {
   constructor(
     private api: ApiService,
     private indexedDB: IndexDBService,
-    private local: LocalStorageService
+    private lStorage: LocalStorageService
   ) { }
 
   public async onRetriveLanguages() {
     let langs: ILanguage[] = [];
 
-    if (this.local.getAppMode() === AppModes.Offline) {
-      let r = await this.indexedDB.getAll<ILanguage[]>(ObjectStoreNames.Languages);
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getAll<ILanguage[]>(ObjectStoreNames.Languages);
       langs = await firstValueFrom(r.success$);
     }
-    else if (this.local.getAppMode() === AppModes.Online)
+    else if (this.lStorage.getAppMode() === AppModes.Online)
       langs = await firstValueFrom(this.api.get<ILanguage[]>('languages'));
 
 
@@ -41,20 +41,18 @@ export class LanguageOriginService {
       return false;
     }
 
-    console.log(langs);
-
     this.languages = langs.map(e => e.Name);
 
-    let defaultLang = this.local.getDefaultLang();
+    let defaultLang = this.lStorage.getDefaultLang();
     let lang = langs.find(e => e.Name == defaultLang);
 
     if (!lang) {
       lang = langs[0];
-      this.local.setDefaultLang(lang.Name);
+      this.lStorage.setDefaultLang(lang.Name);
     }
 
     this.language.valueChanges.subscribe(lang => {
-      this.local.setDefaultLang(lang);
+      this.lStorage.setDefaultLang(lang);
       const languageIndex = Object.keys(LanguageType).indexOf(this.language.value);
       this.localizationLang = Object.values(LanguageType)[languageIndex];
       this.language$.next(lang);
