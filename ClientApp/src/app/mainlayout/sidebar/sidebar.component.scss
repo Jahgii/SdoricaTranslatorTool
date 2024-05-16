@@ -67,3 +67,11 @@
     align-items: center;
     justify-content: center;
 }
+
+[tuiWrapper][data-appearance='selected'][data-mode='onLight'] {
+    color: black;
+}
+
+[tuiWrapper][data-appearance='selected'][data-mode='onLight']:after {
+    color: black;
+}

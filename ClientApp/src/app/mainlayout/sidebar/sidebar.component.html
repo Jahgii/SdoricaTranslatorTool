@@ -86,24 +86,29 @@
 </div>
 
 <ng-template #sidebarLoadComponentButtons>
-    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconType'" tuiMode="onLight"
-        (click)="loadComponent(appViews.localization)" tuiHint="{{'main-localization' | translate}}"
-        tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
-        [ngStyle]="{'background': (componentOpens[appViews.localization] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+    <button tuiIconButton
+        appearance="{{((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
+        type="button" size="s" [icon]="'tuiIconType'" tuiMode="onLight" (click)="loadComponent(appViews.localization)"
+        tuiHint="{{'main-localization' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+        [ngStyle]="{'background': ((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'white': undefined}">
     </button>
-    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconMessageCircle'" tuiMode="onLight"
+    <button tuiIconButton
+        appearance="{{((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
+        type="button" size="s" [icon]="'tuiIconMessageCircle'" tuiMode="onLight"
         (click)="loadComponent(appViews.dialogs)" tuiHint="{{'chapter-dialog-localization' | translate}}"
         tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
-        [ngStyle]="{'background': (componentOpens[appViews.dialogs] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+        [ngStyle]="{'background': (componentOpens[appViews.dialogs] | async) ?? 0 > 0 ? 'white': undefined}">
     </button>
-    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconUpload'" tuiMode="onLight"
-        (click)="loadComponent(appViews.import)" tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark"
-        [tuiHintShowDelay]="100"
-        [ngStyle]="{'background': (componentOpens[appViews.import] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+    <button tuiIconButton
+        appearance="{{((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
+        type="button" size="s" [icon]="'tuiIconUpload'" tuiMode="onLight" (click)="loadComponent(appViews.import)"
+        tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+        [ngStyle]="{'background': (componentOpens[appViews.import] | async) ?? 0 > 0 ? 'white': undefined}">
     </button>
-    <button tuiIconButton appearance="outline" type="button" size="s" [icon]="'tuiIconDownload'" tuiMode="onLight"
-        (click)="loadComponent(appViews.export)" tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark"
-        [tuiHintShowDelay]="100"
-        [ngStyle]="{'background': (componentOpens[appViews.export] | async) ?? 0 > 0 ? 'var(--tui-clear-hover)': undefined}">
+    <button tuiIconButton
+        appearance="{{((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
+        type="button" size="s" [icon]="'tuiIconDownload'" tuiMode="onLight" (click)="loadComponent(appViews.export)"
+        tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+        [ngStyle]="{'background': (componentOpens[appViews.export] | async) ?? 0 > 0 ? 'white': undefined}">
     </button>
 </ng-template>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, Type, ViewChild, ViewRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Type, ViewChild, ViewEncapsulation, ViewRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
@@ -34,6 +34,7 @@ import { AppViews, viewers } from 'src/app/core/viewers';
     GamedataValuesComponent,
     CommonWordsComponent
   ],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent {
