@@ -26,7 +26,8 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpGet("search")]
         public async Task<ActionResult> Search([FromHeader] string language, [FromHeader] string text)
         {
-            var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Original[language].ToLower().Contains(text.ToLower()));
+            var cursor = await _cMongoClient.GetCollection<LocalizationKey>()
+                .FindAsync(e => e.Original[language].ToLower().Contains(text.ToLower()));
             var data = await cursor.ToListAsync();
             return Ok(data);
         }

@@ -63,7 +63,7 @@ export class LocalizationService implements OnDestroy {
   public search: FormControl = new FormControl('');
   public searchKey: FormControl = new FormControl('');
   public searchTranslation: FormControl = new FormControl('');
-  private lastSearch!: () => void;
+  private lastSearch!: () => Promise<void>;
   private subsSearch!: Subscription;
   private subsSearchKey!: Subscription;
   private subsSearchTranslation!: Subscription;
@@ -354,12 +354,21 @@ export class LocalizationService implements OnDestroy {
   public async onSearch() {
     this.lastSearch = this.onSearch;
     this.alreadySearch$.next(true);
-    this.keys$ = this.api
-      .getWithHeaders('localizationkeys/search',
-        {
-          language: this.languageOrigin.localizationLang,
-          text: this.search.value
-        });
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getCursor<ILocalizationKey>(
+        ObjectStoreNames.LocalizationKey,
+        e => e.Original[this.language].includes(this.search.value));
+      this.keys$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online)
+      this.keys$ = this.api
+        .getWithHeaders('localizationkeys/search',
+          {
+            language: this.languageOrigin.localizationLang,
+            text: this.search.value
+          });
+
     this.loading$.next(true);
 
     this.restartFilters();
@@ -382,11 +391,17 @@ export class LocalizationService implements OnDestroy {
   public async onSearchKey() {
     this.lastSearch = this.onSearchKey;
     this.alreadySearch$.next(true);
-    this.keys$ = this.api
-      .getWithHeaders('localizationkeys/searchkey',
-        {
-          key: this.searchKey.value
-        });
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getCursor<ILocalizationKey>(ObjectStoreNames.LocalizationKey, e => e.Name.includes(this.searchKey.value));
+      this.keys$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online)
+      this.keys$ = this.api
+        .getWithHeaders('localizationkeys/searchkey',
+          {
+            key: this.searchKey.value
+          });
 
     this.loading$.next(true);
 
@@ -409,12 +424,20 @@ export class LocalizationService implements OnDestroy {
   public async onSearchTranslation() {
     this.lastSearch = this.onSearchTranslation;
     this.alreadySearch$.next(true);
-    this.keys$ = this.api
-      .getWithHeaders('localizationkeys/searchtranslation',
-        {
-          language: this.languageOrigin.localizationLang,
-          text: this.searchTranslation.value
-        });
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getCursor<ILocalizationKey>(
+        ObjectStoreNames.LocalizationKey,
+        e => e.Translations[this.language].includes(this.searchTranslation.value));
+      this.keys$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online)
+      this.keys$ = this.api
+        .getWithHeaders('localizationkeys/searchtranslation',
+          {
+            language: this.languageOrigin.localizationLang,
+            text: this.searchTranslation.value
+          });
 
     this.loading$.next(true);
 
