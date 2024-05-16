@@ -117,31 +117,32 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsBreakpoint = this.breakpointService$.subscribe(v => {
-      if (v == 'mobile') {
-        if (this.dialogState.isHidden === false) {
-          this.dialogState.isHidden = true;
-          if (this.dialogState.zIndex$.value === 2)
-            this.onShowCreateNew(this.createTemplateView, 'm');
-          this.cd.detectChanges();
+    this.subsBreakpoint = this.breakpointService$
+      .subscribe(v => {
+        if (v == 'mobile') {
+          if (this.dialogState.isHidden === false) {
+            this.dialogState.isHidden = true;
+            if (this.dialogState.zIndex$.value === 2)
+              this.onShowCreateNew(this.createTemplateView, 'm');
+            this.cd.detectChanges();
+          }
+          if (this.listDialogState.isHidden === false) {
+            this.listDialogState.isHidden = true;
+            if (this.listDialogState.zIndex$.value === 2)
+              this.onShowList(this.listTemplateView, 'm');
+            this.cd.detectChanges();
+          }
         }
-        if (this.listDialogState.isHidden === false) {
-          this.listDialogState.isHidden = true;
-          if (this.listDialogState.zIndex$.value === 2)
-            this.onShowList(this.listTemplateView, 'm');
-          this.cd.detectChanges();
+        else {
+          if (this.subsDialog) {
+            this.subsDialog.unsubscribe();
+            this.subsDialog = undefined;
+            if (this.dialog == 'create') this.dialogState.isHidden = false;
+            else if (this.dialog == 'list') this.listDialogState.isHidden = false;
+            this.cd.detectChanges();
+          }
         }
-      }
-      else {
-        if (this.subsDialog) {
-          this.subsDialog.unsubscribe();
-          this.subsDialog = undefined;
-          if (this.dialog == 'create') this.dialogState.isHidden = false;
-          else if (this.dialog == 'list') this.listDialogState.isHidden = false;
-          this.cd.detectChanges();
-        }
-      }
-    });
+      });
   }
 
   ngOnDestroy(): void {

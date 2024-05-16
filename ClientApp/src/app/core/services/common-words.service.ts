@@ -63,8 +63,19 @@ export class CommonWordsService {
   }
 
   public async create(word: ICommonWord) {
+    let request$: Subject<ICommonWord> | Observable<ICommonWord> | undefined = undefined;
     this.creating$.next(true);
-    await firstValueFrom(this.api.post<ICommonWord>('commonwords', word))
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.post<ICommonWord>(ObjectStoreNames.CommonWord, word, 'Id');
+      request$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      request$ = this.api.post<ICommonWord>('commonwords', word);
+    }
+
+    if (request$ === undefined) return;
+
+    await firstValueFrom(request$)
       .then(
         createdWord => {
           this.words.push(createdWord);
@@ -77,7 +88,7 @@ export class CommonWordsService {
               label: this.translate.instant('alert-error'),
               autoClose: true,
               hasCloseButton: false,
-              status: 'success'
+              status: 'error'
             }
           ).subscribe({
             complete: () => {
@@ -99,24 +110,34 @@ export class CommonWordsService {
       Translation: word.Translation
     };
 
-    await firstValueFrom(this.api.put<ICommonWord[]>('commonwords', tempWord))
-      .then(
-        updatedWord => {
-          this.change$.next(true);
-        },
-        error => {
-          this.alerts.open(this.translate.instant('alert-error-label'),
-            {
-              label: this.translate.instant('alert-error'),
-              autoClose: true,
-              hasCloseButton: false,
-              status: 'success'
-            }
-          ).subscribe({
-            complete: () => {
-            },
-          });
-        }
+    let request$: Subject<ICommonWord> | Observable<ICommonWord> | undefined = undefined;
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.put<ICommonWord>(ObjectStoreNames.CommonWord, tempWord);
+      request$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      request$ = this.api.put<ICommonWord>('commonwords', tempWord);
+    }
+
+    if (request$ === undefined) return;
+
+    await firstValueFrom(request$)
+      .then(_ => {
+        this.change$.next(true);
+      }, _ => {
+        this.alerts.open(this.translate.instant('alert-error-label'),
+          {
+            label: this.translate.instant('alert-error'),
+            autoClose: true,
+            hasCloseButton: false,
+            status: 'error'
+          }
+        ).subscribe({
+          complete: () => {
+          },
+        });
+      }
       );
 
     (word as any)['loader'].next(false);
@@ -131,26 +152,36 @@ export class CommonWordsService {
       Translation: word.Translation
     };
 
-    await firstValueFrom(this.api.delete<ICommonWord>('commonwords', tempWord))
-      .then(
-        deletedWord => {
-          this.words.splice(index, 1);
-          this.words = [...this.words];
-          this.change$.next(true);
-        },
-        error => {
-          this.alerts.open(this.translate.instant('alert-error-label'),
-            {
-              label: this.translate.instant('alert-error'),
-              autoClose: true,
-              hasCloseButton: false,
-              status: 'success'
-            }
-          ).subscribe({
-            complete: () => {
-            },
-          });
-        }
+    let request$: Subject<ICommonWord> | Observable<ICommonWord> | undefined = undefined;
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.delete<ICommonWord>(ObjectStoreNames.CommonWord, tempWord, 'Id');
+      request$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      request$ = this.api.delete<ICommonWord>('commonwords', tempWord)
+    }
+
+    if (request$ === undefined) return;
+
+    await firstValueFrom(request$)
+      .then(_ => {
+        this.words.splice(index, 1);
+        this.words = [...this.words];
+        this.change$.next(true);
+      }, error => {
+        this.alerts.open(this.translate.instant('alert-error-label'),
+          {
+            label: this.translate.instant('alert-error'),
+            autoClose: true,
+            hasCloseButton: false,
+            status: 'error'
+          }
+        ).subscribe({
+          complete: () => {
+          },
+        });
+      }
       );
 
     this.deleting$.next(false);

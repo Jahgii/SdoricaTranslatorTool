@@ -85,23 +85,23 @@ export class IndexDBService {
     console.log(`Database error: ${(event.target as IDBRequest).error?.message}`);
   }
 
-  public post<T>(storeName: ObjectStoreNames, data: T) {
-    let obsSuccess$ = new Subject<any>();
-    let obsError$ = new Subject<IndexedDBbCustomRequestError<T>>();
+  public post<T>(storeName: ObjectStoreNames, data: T, propIdToSet?: keyof T) {
+    let success$ = new Subject<T>();
+    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
     let dataLength = 1;
     let operationCompleted = 0;
 
     const transaction = this.db.transaction([storeName], "readwrite");
 
     transaction.oncomplete = (event) => {
-      obsSuccess$.complete();
-      obsError$.complete();
+      success$.complete();
+      error$.complete();
     };
 
     transaction.onerror = (event) => {
       if (dataLength === operationCompleted) {
-        obsSuccess$.complete();
-        obsError$.complete();
+        success$.complete();
+        error$.complete();
       }
     };
 
@@ -110,7 +110,11 @@ export class IndexDBService {
     const request = objectStore.add(data);
     request.onsuccess = (event) => {
       operationCompleted += 1;
-      obsSuccess$.next(data);
+      if (propIdToSet) {
+        let id = (event.target as IDBRequest).result;
+        data[propIdToSet] = id;
+      }
+      success$.next(data);
     };
 
     request.onerror = (event) => {
@@ -138,10 +142,10 @@ export class IndexDBService {
         error.translateKey = IndexDBErrors[error.request.error?.name];
       }
 
-      obsError$.next(error);
+      error$.next(error);
     };
 
-    return { obsSuccess$, obsError$ };
+    return { success$, error$ };
   }
 
   public postMany<T>(storeName: ObjectStoreNames, data: T[]) {
@@ -520,5 +524,63 @@ export class IndexDBService {
     };
 
     return { success$, error$, transaction };
+  }
+
+  public delete<T>(storeName: ObjectStoreNames, data: T, id: keyof T) {
+    let success$ = new Subject<T>();
+    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let dataLength = 1;
+    let operationCompleted = 0;
+
+    const transaction = this.db.transaction([storeName], "readwrite");
+
+    transaction.oncomplete = (event) => {
+      success$.complete();
+      error$.complete();
+    };
+
+    transaction.onerror = (event) => {
+      if (dataLength === operationCompleted) {
+        success$.complete();
+        error$.complete();
+      }
+    };
+
+    const objectStore = transaction.objectStore(storeName);
+    const request = objectStore.delete(data[id] as any);
+    request.onsuccess = (event) => {
+      operationCompleted += 1;
+      success$.next(data);
+    };
+
+    request.onerror = (event) => {
+      operationCompleted += 1;
+      let error: IndexedDBbCustomRequestError<T> = {
+        request: event.target as IDBRequest,
+        translateKey: IndexDBErrors.UnknownError,
+        data: data
+      };
+
+      if (error.request.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+        event.preventDefault();
+      }
+      else if (error.request.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+
+      error$.next(error);
+    };
+
+    return { success$, error$ };
   }
 }
