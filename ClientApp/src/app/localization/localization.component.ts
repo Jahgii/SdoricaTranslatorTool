@@ -4,7 +4,8 @@ import {
   TuiPrimitiveTextfieldModule,
   TuiDataListModule,
   TuiHostedDropdownModule,
-  TuiModeModule
+  TuiModeModule,
+  TuiScrollbarModule
 } from '@taiga-ui/core';
 import { firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
@@ -55,6 +56,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
     TuiHintModule,
     TuiBlockStatusModule,
     TuiFilterByInputPipeModule,
+    TuiScrollbarModule,
 
     LocalizationKeyComponent,
     LocalizationTableComponent

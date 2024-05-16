@@ -3,12 +3,13 @@
 .localization-container {
     display: flex;
     flex-direction: column;
-    padding: 0 1em;
+    // padding: 0 1em;
     // height: calc(100% - var(--header-height) - 3em);
     min-width: 320px;
 
     .localization-data-actions {
         @include inset-border(bottom, light);
+        padding: 0 1em;
         height: 56px;
         display: flex;
         align-items: center;
