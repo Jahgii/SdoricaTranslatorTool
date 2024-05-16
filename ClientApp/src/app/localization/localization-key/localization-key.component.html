@@ -1,6 +1,7 @@
 <button tuiButton type="button" appearance="icon" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
     (click)="onShowCreate(createTemplate, 'm')">
 </button>
+
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden"
     [ngStyle]="{'z-index': dialogState.zIndex$ | async}" (click)="changeIndex(dialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement" [elementAnchorRef]="anchor"
@@ -10,6 +11,7 @@
             (click)="dialogState.isHidden = !dialogState.isHidden">
         </button>
     </div>
+
     <tui-scrollbar class="main-form-content">
         <form [formGroup]="keyForm" style="padding: 0 1rem;">
             <div>

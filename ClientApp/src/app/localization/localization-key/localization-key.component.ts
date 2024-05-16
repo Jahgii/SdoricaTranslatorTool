@@ -21,12 +21,16 @@ import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { TuiHintModule } from '@taiga-ui/core/directives/hint';
 import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe, KeyValuePipe, NgStyle } from '@angular/common';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe, KeyValuePipe, NgStyle, JsonPipe } from '@angular/common';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { LocalizationCategoriesService } from '../localization-categories.service';
 import { DraggableElementDirective } from 'src/app/core/directives/draggable-element.directive';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { IndexDBService } from 'src/app/core/services/index-db.service';
+import { ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
+import { AppModes } from 'src/app/core/enums/app-modes';
 
 const STRINGIFY_CATEGORIES: TuiStringHandler<ILocalizationCategory> = (c: ILocalizationCategory) =>
   c ? `${c.Name}` : '***';
@@ -48,6 +52,7 @@ type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
     NgStyle,
     AsyncPipe,
     KeyValuePipe,
+    JsonPipe,
     ReactiveFormsModule,
     FormsModule,
     TranslateModule,
@@ -109,9 +114,11 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: ApiService,
+    private indexedDB: IndexDBService,
     private fB: FormBuilder,
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
+    private lStorage: LocalStorageService,
     private lCS: LocalizationCategoriesService,
     private dStateService: DialogstateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
@@ -121,6 +128,14 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getAll<ILocalizationCategory[]>(ObjectStoreNames.LocalizationCategory);
+      this.categories$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories');
+    }
+
     this.subsCategory = this.keyForm
       .controls['Category']?.valueChanges
       .subscribe(this.onCategoryChange.bind(this));

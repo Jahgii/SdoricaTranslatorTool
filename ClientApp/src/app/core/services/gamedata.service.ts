@@ -1,17 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
 import { ApiService } from './api.service';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize } from '@taiga-ui/core';
-import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
+import { TuiBreakpointService, TuiDialogService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IGamedataValue } from '../interfaces/i-gamedata';
 import { StoreService } from './store.service';
+import { AppModes } from '../enums/app-modes';
+import { IndexDBService } from './index-db.service';
+import { LocalStorageService } from './local-storage.service';
+import { ObjectStoreNames } from '../interfaces/i-indexed-db';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GamedataService extends StoreService<IGamedataValue> {
+export class GamedataService {
 
   public buffInfoForm: FormGroup = this.fB.group({
     Category: ['BuffInfo', [Validators.required]],
@@ -37,14 +40,38 @@ export class GamedataService extends StoreService<IGamedataValue> {
 
   public subsKeyName!: Subscription | undefined;
 
+  public store!: StoreService<IGamedataValue>;
+
+  get store$() { return this.store.store$ }
+  get getData() { return this.store.getData() }
+
   constructor(
     private fB: FormBuilder,
     private api: ApiService,
+    private indexedDB: IndexDBService,
+    private lStorage: LocalStorageService,
     private translate: TranslateService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) {
-    super(api.getWithHeaders('gamedatavalues', { category: 'BuffInfo' }));
+    this.init();
+  }
+
+  private init() {
+    let gamedata$: Observable<IGamedataValue[]> | Subject<IGamedataValue[]> | undefined;
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getAll<IGamedataValue[]>(ObjectStoreNames.GamedataValue);
+      gamedata$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      gamedata$ = this.api.get<IGamedataValue[]>('commonwords');
+    }
+
+    if (gamedata$ === undefined) gamedata$ = of([]);
+
+    this.store = new StoreService<IGamedataValue>(gamedata$);
+
     this.subsKeyName = this.contentForm
       .controls['id']?.valueChanges
       .pipe(
@@ -60,11 +87,25 @@ export class GamedataService extends StoreService<IGamedataValue> {
 
   public onKeyNameChange(key: string) {
     let category = this.buffInfoForm.controls['Category'].value as string;
-    let search$ = this.api
-      .getWithHeaders<IGamedataValue[]>(
-        'gamedatavalues/searchkeyequal',
-        { category: category, key: key }
-      );
+    let search$: Subject<IGamedataValue> | Observable<IGamedataValue[]> | undefined = undefined;
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB
+        .getCursor<IGamedataValue>(
+          ObjectStoreNames.GamedataValue,
+          e => e.Category === category && e.Name === key
+        );
+      search$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      search$ = this.api
+        .getWithHeaders<IGamedataValue[]>(
+          'gamedatavalues/searchkeyequal',
+          { category: category, key: key }
+        );
+    }
+
+    if (search$ === undefined) return;
 
     firstValueFrom(search$)
       .then(r => {
@@ -76,9 +117,19 @@ export class GamedataService extends StoreService<IGamedataValue> {
   public async onCreateKey() {
     this.creating$.next(true);
     let value: IGamedataValue = this.buffInfoForm.getRawValue();
-    let add$ = this.api.post<IGamedataValue>('gamedatavalues', value);
+    let add$: Subject<IGamedataValue> | Observable<IGamedataValue> | undefined = undefined;
 
-    await this.addFromHttp(add$)
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.post<IGamedataValue>(ObjectStoreNames.GamedataValue, value, 'Id');
+      add$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      add$ = this.api.post<IGamedataValue>('gamedatavalues', value);
+    }
+
+    if (add$ === undefined) return;
+
+    await this.store.addFromHttp(add$)
       .then(e => {
         this.createOther$.next(true);
       });
@@ -109,9 +160,19 @@ export class GamedataService extends StoreService<IGamedataValue> {
       Custom: value.Custom
     }
 
-    let update$ = this.api.put<IGamedataValue>('gamedatavalues', tempValue);
+    let update$: Subject<IGamedataValue> | Observable<IGamedataValue> | undefined = undefined;
 
-    await this.updateFromHttp(update$, index)
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.put<IGamedataValue>(ObjectStoreNames.GamedataValue, tempValue);
+      update$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      update$ = this.api.put<IGamedataValue>('gamedatavalues', tempValue);
+    }
+
+    if (update$ === undefined) return;
+
+    await this.store.updateFromHttp(update$, index)
       .then(e => {
         this.createOther$.next(true);
       });
@@ -130,9 +191,19 @@ export class GamedataService extends StoreService<IGamedataValue> {
       Custom: value.Custom
     }
 
-    let delete$ = this.api.delete<IGamedataValue>('gamedatavalues', tempValue)
+    let delete$: Subject<IGamedataValue> | Observable<IGamedataValue> | undefined = undefined;
 
-    await this.removeFromHttp(delete$, index)
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.delete<IGamedataValue>(ObjectStoreNames.GamedataValue, tempValue, 'Id');
+      delete$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      delete$ = this.api.delete<IGamedataValue>('gamedatavalues', tempValue);
+    }
+
+    if (delete$ === undefined) return;
+
+    await this.store.removeFromHttp(delete$, index)
       .then(e => { });
 
     this.deleting$.next(false);

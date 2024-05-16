@@ -18,9 +18,12 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            var cursor = _cMongoClient.GetCollection<LocalizationCategory>().Find(_ => true)
+            var cursor = _cMongoClient.GetCollection<LocalizationCategory>()
+                .Find(_ => true)
                 .SortBy(e => e.Name);
+            
             var data = await cursor.ToListAsync();
+            
             return Ok(data);
         }
 

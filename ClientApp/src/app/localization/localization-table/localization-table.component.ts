@@ -168,7 +168,7 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
   public filterItems(textarea: HTMLTextAreaElement): readonly IGamedataValue[] {
     const search = this.getCurrentSearch(textarea).replace(ESPECIAL_CHARACTER, '');
 
-    return this.getFilteredItems(this.buffInfService.getData(), search);
+    return this.getFilteredItems(this.buffInfService.getData, search);
   }
 
   public onClick(key: ILocalizationKey, name: string, textarea: HTMLTextAreaElement): void {
