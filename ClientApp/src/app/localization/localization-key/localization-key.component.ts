@@ -14,7 +14,7 @@ import {
   TuiPrimitiveTextfieldModule
 } from '@taiga-ui/core';
 import { tuiItemsHandlersProvider, TuiSelectModule, TuiInputModule } from '@taiga-ui/kit';
-import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of, tap } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
@@ -98,8 +98,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     _version: 1
   });
 
-  public categories$: Observable<ILocalizationCategory[]> = this.api
-    .get<ILocalizationCategory[]>('localizationcategories');
+  public categories$!: Observable<ILocalizationCategory[]>;
 
   public categorySelected$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public availableKeyName$: BehaviorSubject<KeyNameVerification> = new
@@ -119,7 +118,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
     private lStorage: LocalStorageService,
-    private lCS: LocalizationCategoriesService,
+    public lCS: LocalizationCategoriesService,
     private dStateService: DialogstateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
@@ -131,6 +130,8 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let r = this.indexedDB.getAll<ILocalizationCategory[]>(ObjectStoreNames.LocalizationCategory);
       this.categories$ = r.success$;
+
+      this.categories$.subscribe(e => this.categories$ = of(e));
     }
     else if (this.lStorage.getAppMode() === AppModes.Online) {
       this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories');
@@ -220,11 +221,26 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
 
   public onKeyNameChange(key: string) {
     let category = this.keyForm.controls['Category'].value as ILocalizationCategory;
-    let search$ = this.api
-      .getWithHeaders<ILocalizationKey[]>(
-        'localizationkeys/searchkeyequal',
-        { category: category.Name, key: key }
-      );
+    let search$: Subject<ILocalizationKey[]> | Observable<ILocalizationKey[]> | undefined = undefined;
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB
+        .getIndex<ILocalizationKey[]>(
+          ObjectStoreNames.LocalizationKey,
+          "Name",
+          [category.Name, key]
+        );
+      search$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      search$ = this.api
+        .getWithHeaders<ILocalizationKey[]>(
+          'localizationkeys/searchkeyequal',
+          { category: category.Name, key: key }
+        );
+    }
+
+    if (search$ === undefined) return;
 
     firstValueFrom(search$)
       .then(r => {
@@ -244,7 +260,19 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
       key.Translated[langKey] = false;
     }
 
-    await firstValueFrom(this.api.post<ILocalizationKey>('localizationkeys', key))
+    let request$: Subject<ILocalizationKey> | Observable<ILocalizationKey> | undefined = undefined;
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.post<ILocalizationKey>(ObjectStoreNames.LocalizationKey, key, 'Id');
+      request$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      request$ = this.api.post<ILocalizationKey>('localizationkeys', key);
+    }
+
+    if (request$ === undefined) return;
+
+    await firstValueFrom(request$)
       .then(
         r => {
           this.createOther$.next(true);
