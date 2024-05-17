@@ -242,5 +242,6 @@
     "retriving-server-data-sucess": "Traducciones Recuperadas",
     "retriving-server-data-error": "Servidor Inaccesible",
     "retriving-server-data-empty": "Sin Traducciones",
-    "replacing-content": "Remplazando Contenido"
+    "replacing-content": "Remplazando Contenido",
+    "choose-languages-description": "Selecciona el lenguaje o lenguajes que desees importar, si selecciona más de uno debe establecer uno por defecto."
 }

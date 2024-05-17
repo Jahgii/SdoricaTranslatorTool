@@ -242,5 +242,6 @@
     "retriving-server-data-sucess": "Translations Retrived",
     "retriving-server-data-error": "Unreachable Server",
     "retriving-server-data-empty": "Empty Translations",
-    "replacing-content": "Replacing Content"
+    "replacing-content": "Replacing Content",
+    "choose-languages-description": "Select the language or languages you want to import, if you select more than one you must set one as default."
 }
