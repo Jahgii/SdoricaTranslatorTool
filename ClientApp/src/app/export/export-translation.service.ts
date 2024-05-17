@@ -117,7 +117,7 @@ export class ExportTranslationService {
         countKeysTranslated.success$,
         countDialogs.success$,
         countDialogsTranslated.success$
-      ).pipe(map(r => { return { Dialogs: r[1] * 100 / r[0], Keys: r[3] * 100 / r[2] } }));
+      ).pipe(map(r => { return { Dialogs: r[3] * 100 / r[2], Keys: r[1] * 100 / r[0] } }));
 
       this.progressPerc$ = result;
     }
@@ -324,24 +324,39 @@ export class ExportTranslationService {
         dbVersion: this.indexedDB.dbVersion,
         appMode: this.lStorage.getAppMode() ?? AppModes.Pending,
         file: this.obb.control.value,
+        decodeResult: undefined,
         lang: 'English',
         token: this.lStorage.getToken()
       };
 
       obbWorker.postMessage(message);
     }
-    if (!this.localization.skip?.value) locWorker
-      .postMessage({
+    if (!this.localization.skip?.value) {
+      let message: ExportPostMessage = {
+        dbName: this.indexedDB.dbName,
+        dbVersion: this.indexedDB.dbVersion,
+        appMode: this.lStorage.getAppMode() ?? AppModes.Pending,
+        file: undefined,
         decodeResult: this.dataLoc,
         lang: 'English',
         token: this.lStorage.getToken()
-      });
-    if (!this.gamedata.skip?.value) gamWorker
-      .postMessage({
+      };
+
+      locWorker.postMessage(message);
+    }
+    if (!this.gamedata.skip?.value) {
+      let message: ExportPostMessage = {
+        dbName: this.indexedDB.dbName,
+        dbVersion: this.indexedDB.dbVersion,
+        appMode: this.lStorage.getAppMode() ?? AppModes.Pending,
+        file: undefined,
         decodeResult: this.dataGam,
         lang: 'English',
         token: this.lStorage.getToken()
-      });
+      };
+
+      gamWorker.postMessage(message);
+    }
   }
 
   private onMessage(message: IOnMessage, fileControl: IFileControl) {

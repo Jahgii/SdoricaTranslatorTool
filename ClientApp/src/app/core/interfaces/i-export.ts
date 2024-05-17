@@ -10,6 +10,7 @@ export interface ExportPostMessage {
     dbVersion: number;
     appMode: AppModes;
     file: any;
+    decodeResult: any;
     lang: string;
     token?: string;
 }
