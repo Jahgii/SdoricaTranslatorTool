@@ -5,6 +5,7 @@ $border-active-color: var(--tui-base-09);
 .viewer-container {
     height: 100%;
     min-width: var(--min-width-viewer);
+    background-color: var(--tui-base-01);
     padding-top: 1px;
     border-top: $border-size solid $border-color;
     position: relative;
