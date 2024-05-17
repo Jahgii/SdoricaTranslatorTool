@@ -20,8 +20,8 @@ import { TuiButtonModule } from '@taiga-ui/core/components/button';
 
 @Component({
   selector: 'app-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.scss'],
+  templateUrl: './header-menu.component.html',
+  styleUrls: ['./header-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -49,7 +49,7 @@ import { TuiButtonModule } from '@taiga-ui/core/components/button';
     TuiHintModule
   ]
 })
-export class NavMenuComponent implements OnInit {
+export class HeaderMenuComponent implements OnInit {
   public openMenu: boolean = false;
   public openSetting: boolean = false;
 

@@ -3,7 +3,7 @@ import { LanguageOriginService } from './core/services/language-origin.service';
 import { AuthService } from './core/services/auth.service';
 import { ThemeService } from './core/services/theme.service';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { HeaderMenuComponent } from './components/header-menu/header-menu.component';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { ThemeDarkComponent } from './components/theme-dark/theme-dark.component';
 import { NgIf, NgTemplateOutlet, AsyncPipe } from '@angular/common';
@@ -30,7 +30,7 @@ import { AppStateService } from './core/services/app-state.service';
     //App Components
     ThemeDarkComponent,
     SidebarComponent,
-    NavMenuComponent,
+    HeaderMenuComponent,
     NavBarComponent,
     WizardInitialComponent
   ]
