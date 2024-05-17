@@ -10,3 +10,15 @@
 .sidebar-link-icon {
     filter: brightness(0) invert(1);
 }
+
+[tuiWrapper][data-appearance='selected'][data-mode='onLight'] {
+    color: black !important;
+}
+
+[tuiWrapper][data-appearance='selected'][data-mode='onLight']:after {
+    color: black !important;
+}
+
+.button-side {
+    background: white !important;
+}
