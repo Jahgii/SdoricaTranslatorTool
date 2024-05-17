@@ -59,7 +59,7 @@
             }
         </div>
         }
-    </tui-elastic-container>    
+    </tui-elastic-container>
 </main>
 
 <ng-template #fileInput let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
@@ -144,8 +144,7 @@
 <ng-template #configurationObb>
     <p>{{'choose-languages' | translate}}</p>
     <p>
-        Selecciona el lenguaje o lenguajes que desees importar,
-        si selecciona más de uno debe establecer uno por defecto.
+        {{'choose-languages-description' | translate}}
     </p>
     @if (importS.multiLanguage$ | async) {
     <tui-select tuiTextfieldSize="s" [formControl]="importS.defaultLanguage" class="tui-space_bottom-3"
