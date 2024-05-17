@@ -91,20 +91,20 @@
                                         [ngStyle]="{'zoom': (breakpointService.mode$ | async) === 'desktopSmall' ? '0.8' : 1}">
                                         <div class="dialog-translation-container">
                                             <img class="dialog-translation-background"
-                                                src="/assets/images/dialog_paper.png" alt="dialot_paper">
+                                                src="assets/images/dialog_paper.png" alt="dialot_paper">
                                             <img class="dialog-translation-background" style="transform: scaleX(-1);"
-                                                src="/assets/images/dialog_paper.png" alt="dialot_paper">
+                                                src="assets/images/dialog_paper.png" alt="dialot_paper">
                                         </div>
                                         <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
                                             <div class="dialog-translation-portrait-container" *ngIf="item.IconName">
                                                 <img class="dialog-translation-portrait"
-                                                    src="/assets/images/figure_base2.png" alt="base" loading="lazy">
+                                                    src="assets/images/figure_base2.png" alt="base" loading="lazy">
                                                 <img class="dialog-translation-portrait"
-                                                    src="/assets/images/portraits/{{item.IconName}}.png"
-                                                    onerror="this.src='/assets/images/portrait-miss.svg'"
+                                                    src="assets/images/portraits/{{item.IconName}}.png"
+                                                    onerror="this.src='assets/images/portrait-miss.svg'"
                                                     alt="portrait not found" width="100" height="120" loading="lazy">
                                                 <img class="dialog-translation-frame"
-                                                    src="/assets/images/figure_frame.png" alt="base" loading="lazy">
+                                                    src="assets/images/figure_frame.png" alt="base" loading="lazy">
                                             </div>
                                             <div class="dialog-translation-speaker">
                                                 <input [(ngModel)]="item.SpeakerName"
@@ -205,20 +205,20 @@
                         </p>
                         <div class="mobile-dialog" [ngStyle]="{'zoom': container.offsetWidth * 1.12 / 767}">
                             <div class="dialog-translation-container">
-                                <img class="dialog-translation-background" src="/assets/images/dialog_paper.png"
+                                <img class="dialog-translation-background" src="assets/images/dialog_paper.png"
                                     alt="dialot_paper">
                                 <img class="dialog-translation-background" style="transform: scaleX(-1);"
-                                    src="/assets/images/dialog_paper.png" alt="dialot_paper">
+                                    src="assets/images/dialog_paper.png" alt="dialot_paper">
                             </div>
                             <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
                                 <div class="mobile-dialog-portrait-container">
-                                    <img class="mobile-dialog-portrait" src="/assets/images/figure_base2.png" alt="base"
+                                    <img class="mobile-dialog-portrait" src="assets/images/figure_base2.png" alt="base"
                                         loading="lazy">
                                     <img class="mobile-dialog-portrait"
-                                        src="/assets/images/portraits/{{item.IconName}}.png"
-                                        onerror="this.src='/assets/images/portrait-miss.svg';" alt="portrait not found"
+                                        src="assets/images/portraits/{{item.IconName}}.png"
+                                        onerror="this.src='assets/images/portrait-miss.svg';" alt="portrait not found"
                                         width="100" height="120" loading="lazy">
-                                    <img class="mobile-dialog-frame" src="/assets/images/figure_frame.png" alt="base"
+                                    <img class="mobile-dialog-frame" src="assets/images/figure_frame.png" alt="base"
                                         loading="lazy">
                                 </div>
                                 <div class="mobile-dialog-speaker">
