@@ -237,5 +237,10 @@
     "skip-file-hint": "Archivos Omitidos",
     "skip-file": "Omitir Archivo",
     "replaced-file-hint": "Archivos Remplazados",
-    "completed-file-hint": "Operaciones Completadas"
+    "completed-file-hint": "Operaciones Completadas",
+    "retriving-server-data": "Solicitando Traducciones",
+    "retriving-server-data-sucess": "Traducciones Recuperadas",
+    "retriving-server-data-error": "Servidor Inaccesible",
+    "retriving-server-data-empty": "Sin Traducciones",
+    "replacing-content": "Remplazando Contenido"
 }
