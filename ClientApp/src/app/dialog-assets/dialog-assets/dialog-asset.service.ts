@@ -1,11 +1,15 @@
 import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of, tap } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { IDialogAsset, IDialogAssetExport } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
+import { IndexDBService } from 'src/app/core/services/index-db.service';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { AppModes } from 'src/app/core/enums/app-modes';
+import { ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 
 @Injectable()
 export class DialogAssetService {
@@ -34,6 +38,8 @@ export class DialogAssetService {
 
   constructor(
     private api: ApiService,
+    private indexedDB: IndexDBService,
+    private lStorage: LocalStorageService,
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
@@ -57,12 +63,24 @@ export class DialogAssetService {
 
     this.subsLanguage = this.languageOrigin.language$
       .subscribe((lang: string) => {
-        this.dialogAssets$ = this.api
-          .getWithHeaders('dialogassets', {
-            language: lang,
-            mainGroup: this.mainGroup,
-            group: this.group
-          });
+        let dialogs$: Observable<IDialogAsset[]> | Subject<IDialogAsset[]> | undefined;
+
+        if (this.lStorage.getAppMode() === AppModes.Offline) {
+          let r = this.indexedDB.getIndex<IDialogAsset[]>(ObjectStoreNames.DialogAsset, "Group", [lang, this.mainGroup, this.group]);
+          dialogs$ = r.success$;
+        }
+        else if (this.lStorage.getAppMode() === AppModes.Online) {
+          dialogs$ = this.api
+            .getWithHeaders('dialogassets', {
+              language: lang,
+              mainGroup: this.mainGroup,
+              group: this.group
+            });
+        }
+
+        if (dialogs$ === undefined) dialogs$ = of([]);
+
+        this.dialogAssets$ = dialogs$;
 
         this.dialogAssetsChange$.next(true);
       });
@@ -71,17 +89,28 @@ export class DialogAssetService {
       .pipe(debounceTime(1000))
       .subscribe(async dialogAsset => {
         if (!dialogAsset) return;
-        await firstValueFrom(this.api.put('dialogassets', dialogAsset))
-          .then(
-            r => {
 
-            },
-            error => { console.log("CANT SAVE DATA"); }
+        let dialog$: Observable<IDialogAsset> | Subject<IDialogAsset> | undefined;
+
+        if (this.lStorage.getAppMode() === AppModes.Offline) {
+          let r = this.indexedDB.put<IDialogAsset>(ObjectStoreNames.DialogAsset, dialogAsset);
+          dialog$ = r.success$;
+        }
+        else if (this.lStorage.getAppMode() === AppModes.Online) {
+          dialog$ = this.api.put('dialogassets', dialogAsset);
+        }
+
+        if (dialog$ === undefined) return;
+
+        await firstValueFrom(dialog$)
+          .then(r => {
+
+          }, error => {
+
+          }
           );
         this.pendingChanges$.next(false);
       });
-
-    // this.ref.markForCheck();
   }
 
   public onGetOtherOriginalText(number: number, id: string) {
@@ -90,13 +119,39 @@ export class DialogAssetService {
     this.tempNumber = number;
     this.tempId = id;
 
-    this.otherText$ = this.api.getWithHeaders('dialogassets/searchothers', {
-      language: this.languageOrigin.language.value,
-      mainGroup: this.mainGroup,
-      group: this.group,
-      number: number,
-      id: id
-    });
+    let langs$: Observable<any> | undefined;
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getIndex<IDialogAsset[]>(ObjectStoreNames.DialogAsset, "Content", [this.mainGroup, this.group, number]);
+      langs$ = r.success$
+        .pipe(
+          map(dialogs => {
+            let languageText: any = {};
+            let index = dialogs.find(e => e.Language == this.languageOrigin.language.value)?.Model.$content.findIndex(e => e.ID == id) ?? -1;
+            if (index === -1) return languageText;
+
+            dialogs.forEach(r => {
+              let originalText = r.Model.$content[index].OriginalText ?? "";
+              languageText[r.Language] = originalText;
+            });
+
+            return languageText;
+          })
+        );
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      langs$ = this.api.getWithHeaders('dialogassets/searchothers', {
+        language: this.languageOrigin.language.value,
+        mainGroup: this.mainGroup,
+        group: this.group,
+        number: number,
+        id: id
+      });
+    }
+
+    if (langs$ === undefined) langs$ = of([]);
+
+    this.otherText$ = langs$;
   }
 
   public onTextChange(dialogAsset: IDialogAsset) {
@@ -128,8 +183,8 @@ export class DialogAssetService {
   }
 
   public onDownload(dialogAsset: IDialogAsset) {
-    var dialog = JSON.parse(JSON.stringify(dialogAsset)) as IDialogAssetExport;
-    var dialogFileName = dialog.OriginalFilename;
+    let dialog = JSON.parse(JSON.stringify(dialogAsset)) as IDialogAssetExport;
+    let dialogFileName = dialog.OriginalFilename;
 
     delete (dialog.Id);
     delete (dialog.OriginalFilename);
@@ -142,7 +197,7 @@ export class DialogAssetService {
 
     (dialog.Model.$content as any[]).forEach(e => delete (e.OriginalText));
 
-    var exportDialog = JSON.stringify(dialog);
+    let exportDialog = JSON.stringify(dialog);
 
     const blob = new Blob([exportDialog], {
       type: 'dialog'

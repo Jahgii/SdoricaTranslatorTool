@@ -85,14 +85,16 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
 
   private initLastGroupSelected() {
     if (this.autoLoadGroupId === undefined) {
-      this.autoLoadGroupId = this.lStorage
-        .getGroup(this.viewIndex);
+      this.autoLoadGroupId = this.lStorage.getGroup(this.viewIndex);
     };
 
     let groups = this.groupService.getData();
+
     let group = groups
-      .find(e => e.children?.find(c => c.Id === this.autoLoadGroupId))
-      ?.children?.find(e => e.Id === this.autoLoadGroupId);
+      .find(e => e.children?.find(c => c.Id?.toString() === this.autoLoadGroupId))
+      ?.children
+      ?.find(e => e.Id?.toString() === this.autoLoadGroupId);
+
     if (group) {
       this.onSelectGroup(group);
       this.ref.markForCheck();

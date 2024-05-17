@@ -206,7 +206,9 @@ export class ImportService {
           this.uploadKeysUrl = r.Bulk ? 'localizationkeys/bulk' : 'localizationkeys/import';
           this.uploadStackSize = r.Bulk ? 500 : 25;
         },
-        error => { console.error("CANT CONNECT TO SERVER"); }
+        error => {
+          
+        }
       );
   }
 

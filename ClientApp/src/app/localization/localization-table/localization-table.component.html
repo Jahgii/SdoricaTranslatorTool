@@ -120,7 +120,8 @@
                                         </tui-scrollbar>
                                         <tui-svg *ngIf="showTooltipArrow$ | async"
                                             style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);"
-                                            src="tuiIconArrowDown" [@popIn]></tui-svg>
+                                            src="tuiIconArrowDown" [@popIn]>
+                                        </tui-svg>
                                     </ng-template>
                                     <ng-container *ngIf="localization.focusRow === item.Id; else showNormalText">
                                         <tui-scrollbar class="translation-content-cell">

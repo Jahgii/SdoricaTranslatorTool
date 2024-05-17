@@ -41,7 +41,9 @@ export class IndexDBService {
     const storeDA: IDBObjectStore = this.db
       .createObjectStore(ObjectStoreNames.DialogAsset, { keyPath: "Id", autoIncrement: true });
 
-    storeDA.createIndex("Filename", "Filename", { unique: true })
+    storeDA.createIndex("Filename", "Filename", { unique: true });
+    storeDA.createIndex("Group", ["Language", "MainGroup", "Group"], { unique: false });
+    storeDA.createIndex("Content", ["MainGroup", "Group", "Number"], { unique: false });
 
     const storeGC = this.db
       .createObjectStore(ObjectStoreNames.GamedataCategory, { keyPath: "Id", autoIncrement: true });
@@ -57,6 +59,7 @@ export class IndexDBService {
       .createObjectStore(ObjectStoreNames.Group, { keyPath: "Id", autoIncrement: true });
 
     storeG.createIndex("Name", ["Language", "MainGroup", "OriginalName"], { unique: true });
+    storeG.createIndex("MainGroup", ["Language", "MainGroup"], { unique: false });
 
     const storeL = this.db
       .createObjectStore(ObjectStoreNames.Languages, { keyPath: "Id", autoIncrement: true });
@@ -79,6 +82,7 @@ export class IndexDBService {
       .createObjectStore(ObjectStoreNames.MainGroup, { keyPath: "Id", autoIncrement: true });
 
     storeMG.createIndex("Name", ["Language", "OriginalName"], { unique: true });
+    storeMG.createIndex("Language", "Language", { unique: false });
   }
 
   private onError(event: Event) {

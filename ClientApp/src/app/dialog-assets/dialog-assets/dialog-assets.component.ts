@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiScrollbarComponent, TuiScrollbarModule } from '@taiga-ui/core';
 import { popinAnimation } from 'src/app/core/animations/popin';
@@ -60,7 +60,7 @@ import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictio
     ElementBreakpointService
   ]
 })
-export class DialogAssetsComponent implements OnInit, OnDestroy {
+export class DialogAssetsComponent implements OnDestroy {
   public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public openOption: boolean = false;
   public focusRow: string = "";
@@ -70,9 +70,6 @@ export class DialogAssetsComponent implements OnInit, OnDestroy {
     @Inject(DialogAssetService) readonly dAS: DialogAssetService,
     @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   ngOnDestroy(): void {
     this.dAS.onDestroy();
