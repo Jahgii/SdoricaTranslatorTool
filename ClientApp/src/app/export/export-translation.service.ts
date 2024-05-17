@@ -303,17 +303,32 @@ export class ExportTranslationService {
   }
 
   private onApplyTranslationWorkers() {
-    const obbWorker = new Worker(new URL('../core/workers/obb.worker', import.meta.url));
-    const locWorker = new Worker(new URL('../core/workers/loc.worker', import.meta.url));
-    const gamWorker = new Worker(new URL('../core/workers/gam.worker', import.meta.url));
+    const obbWorker = new Worker(new URL('../core/workers/export-obb.worker', import.meta.url));
+    const locWorker = new Worker(new URL('../core/workers/export-loc.worker', import.meta.url));
+    const gamWorker = new Worker(new URL('../core/workers/export-gam.worker', import.meta.url));
 
     obbWorker.onmessage = ({ data }) => this.onMessage(data, this.obb);
     locWorker.onmessage = ({ data }) => this.onMessage(data, this.localization);
     gamWorker.onmessage = ({ data }) => this.onMessage(data, this.gamedata);
 
-    if (!this.obb.skip?.value) obbWorker.postMessage({ file: this.obb.control.value, lang: 'English', token: this.lStorage.getToken() });
-    if (!this.localization.skip?.value) locWorker.postMessage({ decodeResult: this.dataLoc, lang: 'English', token: this.lStorage.getToken() });
-    if (!this.gamedata.skip?.value) gamWorker.postMessage({ decodeResult: this.dataGam, lang: 'English', token: this.lStorage.getToken() });
+    if (!this.obb.skip?.value) obbWorker
+      .postMessage({
+        file: this.obb.control.value,
+        lang: 'English',
+        token: this.lStorage.getToken()
+      });
+    if (!this.localization.skip?.value) locWorker
+      .postMessage({
+        decodeResult: this.dataLoc,
+        lang: 'English',
+        token: this.lStorage.getToken()
+      });
+    if (!this.gamedata.skip?.value) gamWorker
+      .postMessage({
+        decodeResult: this.dataGam,
+        lang: 'English',
+        token: this.lStorage.getToken()
+      });
   }
 
   private onMessage(message: IOnMessage, fileControl: IFileControl) {
