@@ -23,10 +23,6 @@ export interface ImportPostMessage {
     gamedataValues: IGamedataValue[];
 }
 
-export interface ImportWorkerPostMessage {
-
-}
-
 export interface ImportOBBVerificationPostMessage {
     file: File;
 }

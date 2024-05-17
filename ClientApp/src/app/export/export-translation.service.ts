@@ -6,7 +6,7 @@ import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLate
 import { ILocalization, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
 import { IGamedata } from '../core/interfaces/i-gamedata';
-import { IExportPercentages, IFileControl } from '../core/interfaces/i-export';
+import { ExportPostMessage, IExportPercentages } from '../core/interfaces/i-export';
 import { ProgressStatus, IOnMessage } from '../core/interfaces/i-export-progress';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ApiService } from '../core/services/api.service';
@@ -17,6 +17,7 @@ import { IDialogAsset, LanguageType } from '../core/interfaces/i-dialog-asset';
 import { AppModes } from '../core/enums/app-modes';
 import { IndexDBService } from '../core/services/index-db.service';
 import { ObjectStoreNames } from '../core/interfaces/i-indexed-db';
+import { IFileControl } from '../core/interfaces/i-file-control';
 
 @Injectable()
 export class ExportTranslationService {
@@ -74,11 +75,17 @@ export class ExportTranslationService {
     }
   );
   public filesCompleted$: Observable<boolean> = combineLatest(
-    [this.obb.progressStatus$,
-    this.localization.progressStatus$,
-    this.gamedata.progressStatus$],
-    (one, two, three) => {
-      return (one == ProgressStatus.finish && two == ProgressStatus.finish && three == ProgressStatus.finish);
+    [
+      this.obb.progressStatus$,
+      this.localization.progressStatus$,
+      this.gamedata.progressStatus$
+    ],
+    (obb, two, three) => {
+      return (
+        (obb == ProgressStatus.finish || obb == ProgressStatus.retrivingServerDataEmpty)
+        && two == ProgressStatus.finish
+        && three == ProgressStatus.finish
+      );
     }
   );
 
@@ -311,12 +318,18 @@ export class ExportTranslationService {
     locWorker.onmessage = ({ data }) => this.onMessage(data, this.localization);
     gamWorker.onmessage = ({ data }) => this.onMessage(data, this.gamedata);
 
-    if (!this.obb.skip?.value) obbWorker
-      .postMessage({
+    if (!this.obb.skip?.value) {
+      let message: ExportPostMessage = {
+        dbName: this.indexedDB.dbName,
+        dbVersion: this.indexedDB.dbVersion,
+        appMode: this.lStorage.getAppMode() ?? AppModes.Pending,
         file: this.obb.control.value,
         lang: 'English',
         token: this.lStorage.getToken()
-      });
+      };
+
+      obbWorker.postMessage(message);
+    }
     if (!this.localization.skip?.value) locWorker
       .postMessage({
         decodeResult: this.dataLoc,

@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiService } from '../core/services/api.service';
 import { ILocalization, ILocalizationCategory, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { IGamedata, IGamedataCategory, IGamedataValue } from '../core/interfaces/i-gamedata';
-import { IFileControl } from '../core/interfaces/i-export';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest, firstValueFrom, map, of, switchMap } from 'rxjs';
 import { TuiAlertService } from '@taiga-ui/core';
@@ -21,6 +20,7 @@ import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessag
 import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { AppModes } from '../core/enums/app-modes';
 import * as JSZip from 'jszip';
+import { IFileControl } from '../core/interfaces/i-file-control';
 
 @Injectable()
 export class ImportService {
@@ -207,7 +207,7 @@ export class ImportService {
           this.uploadStackSize = r.Bulk ? 500 : 25;
         },
         error => {
-          
+
         }
       );
   }

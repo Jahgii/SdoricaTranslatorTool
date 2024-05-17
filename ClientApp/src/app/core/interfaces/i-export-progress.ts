@@ -3,6 +3,7 @@ export interface IOnMessage {
     pg: number;
     blob?: Blob;
     pgState: ProgressStatus;
+
 }
 
 export enum ProgressStatus {

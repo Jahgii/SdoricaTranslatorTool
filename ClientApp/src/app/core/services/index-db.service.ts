@@ -44,6 +44,7 @@ export class IndexDBService {
     storeDA.createIndex("Filename", "Filename", { unique: true });
     storeDA.createIndex("Group", ["Language", "MainGroup", "Group"], { unique: false });
     storeDA.createIndex("Content", ["MainGroup", "Group", "Number"], { unique: false });
+    storeDA.createIndex("Language", "Language", { unique: false });
 
     const storeGC = this.db
       .createObjectStore(ObjectStoreNames.GamedataCategory, { keyPath: "Id", autoIncrement: true });
