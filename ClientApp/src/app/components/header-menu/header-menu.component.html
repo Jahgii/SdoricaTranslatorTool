@@ -1,5 +1,6 @@
 <header class="header">
-    <button class="split-button" tuiIconButton appearance="icon" icon="tuiIconColumns" (click)="onSplitModeToggle()">
+    <button class="split-button" tuiIconButton appearance="icon" icon="tuiIconColumns"
+        (click)="onSplitModeToggle($event)">
     </button>
     <ng-container *ngIf="breakpointService$ | async as breakpoint">
         <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
@@ -49,7 +50,7 @@
                     </ng-template>
                 </tui-select>
             </div>
-            
+
             <h3 class="tui-space_top-6" style="text-align: center;">
                 {{'libretranslate-configuration' | translate}}
             </h3>

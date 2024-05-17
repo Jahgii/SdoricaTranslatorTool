@@ -102,8 +102,9 @@ export class HeaderMenuComponent implements OnInit {
     this.openSetting = !this.openSetting;
   }
 
-  public onSplitModeToggle() {
-    this.viewers.splitMode();
+  public onSplitModeToggle(event: MouseEvent) {
+    if (event.isTrusted)
+      this.viewers.splitMode();
   }
 
   @tuiPure
