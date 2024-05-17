@@ -167,7 +167,7 @@ export class ExportTranslationService {
   public onReject(file: TuiFileLike | readonly TuiFileLike[]): void {
     let alert = this.alerts
       .open(
-        'El archivo proporcionado no es valido, verifique que sea el archivo correcto e intente de nuevo.',
+        this.translate.instant('alert-wrong-file-label'),
         {
           label: 'Error',
           status: 'error',
@@ -230,7 +230,7 @@ export class ExportTranslationService {
   public async onVerificationLocalization(file: File, fileControl: IFileControl) {
     let alert = this.alerts
       .open(
-        'El archivo LOCALIZATION proporcionado no es valido, verifique que sea el archivo correcto e intente de nuevo.',
+        this.translate.instant('error-file-localization'),
         {
           label: 'Error',
           status: 'error',
@@ -238,7 +238,7 @@ export class ExportTranslationService {
         }
       );
 
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = (ev: ProgressEvent<FileReader>) => {
       try {
         this.dataLoc = decode(reader.result as ArrayBuffer) as ILocalization;
@@ -269,7 +269,7 @@ export class ExportTranslationService {
   public async onVerificationGamedata(file: File, fileControl: IFileControl) {
     let alert = this.alerts
       .open(
-        'El archivo GAMEDATA proporcionado no es valido, verifique que sea el archivo correcto e intente de nuevo.',
+        this.translate.instant('error-file-gamedata'),
         {
           label: 'Error',
           status: 'error',
@@ -277,7 +277,7 @@ export class ExportTranslationService {
         }
       );
 
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = (ev: ProgressEvent<FileReader>) => {
       try {
         this.dataGam = decode(reader.result as ArrayBuffer) as ILocalization;
