@@ -278,6 +278,70 @@ export class IndexDBService {
     return { success$: success$, error$: error$ };
   }
 
+  public getCursorCount<T>(storeName: ObjectStoreNames, filter: (d: T) => boolean) {
+    let success$ = new Subject<number>();
+    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+
+    const transaction = this.db.transaction([storeName]);
+
+    transaction.oncomplete = (event) => {
+      success$.complete();
+      error$.complete();
+    };
+
+    transaction.onerror = (event) => {
+      success$.complete();
+      error$.complete();
+    };
+
+    const objectStore = transaction.objectStore(storeName);
+    const request = objectStore.openCursor();
+
+    let result: number = 0;
+
+    request.onsuccess = (event) => {
+      let cursor = (event.target as IDBRequest).result as IDBCursorWithValue;
+      if (cursor) {
+        if (filter(cursor.value)) {
+          result += 1;
+        }
+        cursor.continue();
+      }
+      else {
+        success$.next(result);
+      }
+    };
+
+    request.onerror = (event) => {
+      let error: IndexedDBbCustomRequestError<T> = {
+        request: event.target as IDBRequest,
+        translateKey: IndexDBErrors.UnknownError,
+        data: [] as any
+      };
+
+      if (error.request.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+        event.preventDefault();
+      }
+      else if (error.request.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+
+      error$.next(error);
+    };
+
+    return { success$: success$, error$: error$ };
+  }
+
   public getIndex<T>(storeName: ObjectStoreNames, index: string, searchValue: any) {
     let success$ = new Subject<T>();
     let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
@@ -413,6 +477,59 @@ export class IndexDBService {
 
     const objectStore = transaction.objectStore(storeName);
     const request = objectStore.getAll();
+
+    request.onsuccess = (event) => {
+      success$.next((event.target as IDBRequest).result);
+    };
+
+    request.onerror = (event) => {
+      let error: IndexedDBbCustomRequestError<T> = {
+        request: event.target as IDBRequest,
+        translateKey: IndexDBErrors.UnknownError,
+        data: [] as any
+      };
+
+      if (error.request.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+        event.preventDefault();
+      }
+      else if (error.request.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+
+      error$.next(error);
+    };
+
+    return { success$: success$, error$: error$ };
+  }
+
+  public getCount<T>(storeName: ObjectStoreNames) {
+    let success$ = new Subject<T>();
+    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+
+    const transaction = this.db.transaction([storeName]);
+
+    transaction.oncomplete = (event) => {
+      success$.complete();
+      error$.complete();
+    };
+
+    transaction.onerror = (event) => {
+      success$.complete();
+      error$.complete();
+    };
+
+    const objectStore = transaction.objectStore(storeName);
+    const request = objectStore.count();
 
     request.onsuccess = (event) => {
       success$.next((event.target as IDBRequest).result);

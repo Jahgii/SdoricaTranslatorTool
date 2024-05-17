@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TuiFileLike } from '@taiga-ui/kit';
-import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLatest } from 'rxjs';
-import { ILocalization } from '../core/interfaces/i-localizations';
+import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLatest, zip, map } from 'rxjs';
+import { ILocalization, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
 import { IGamedata } from '../core/interfaces/i-gamedata';
 import { IExportPercentages, IFileControl } from '../core/interfaces/i-export';
@@ -13,6 +13,10 @@ import { ApiService } from '../core/services/api.service';
 import * as JSZip from 'jszip';
 import { LocalStorageService } from '../core/services/local-storage.service';
 import { TranslateService } from '@ngx-translate/core';
+import { IDialogAsset, LanguageType } from '../core/interfaces/i-dialog-asset';
+import { AppModes } from '../core/enums/app-modes';
+import { IndexDBService } from '../core/services/index-db.service';
+import { ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 
 @Injectable()
 export class ExportTranslationService {
@@ -78,13 +82,13 @@ export class ExportTranslationService {
     }
   );
 
-  public progressPerc$: Observable<IExportPercentages> = this.api
-    .getWithHeaders('exportpercentages', { lang: 'English' });
+  public progressPerc$!: Observable<IExportPercentages>;
 
   constructor(
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
     private ddS: DeviceDetectorService,
-    private local: LocalStorageService,
+    private lStorage: LocalStorageService,
+    private indexedDB: IndexDBService,
     private api: ApiService,
     private translate: TranslateService
   ) {
@@ -92,6 +96,29 @@ export class ExportTranslationService {
   }
 
   private init() {
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let countKeys = this.indexedDB.getCount<number>(ObjectStoreNames.LocalizationKey);
+      let countKeysTranslated = this.indexedDB
+        .getCursorCount<ILocalizationKey>(ObjectStoreNames.LocalizationKey, e => e.Translated[LanguageType.english]);
+      let countDialogs = this.indexedDB
+        .getCursorCount<IDialogAsset>(ObjectStoreNames.DialogAsset, e => e.Language === 'english');
+      let countDialogsTranslated = this.indexedDB
+        .getCursorCount<IDialogAsset>(ObjectStoreNames.DialogAsset, e => e.Language === 'english' && e.Translated === true);
+
+      let result = zip(
+        countKeys.success$,
+        countKeysTranslated.success$,
+        countDialogs.success$,
+        countDialogsTranslated.success$
+      ).pipe(map(r => { return { Dialogs: r[1] * 100 / r[0], Keys: r[3] * 100 / r[2] } }));
+
+      this.progressPerc$ = result;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      this.progressPerc$ = this.api.getWithHeaders('exportpercentages', { lang: LanguageType.english });
+    }
+
+
     this.obb.loadedFile$ = this.obb.control
       .valueChanges
       .pipe(
@@ -284,9 +311,9 @@ export class ExportTranslationService {
     locWorker.onmessage = ({ data }) => this.onMessage(data, this.localization);
     gamWorker.onmessage = ({ data }) => this.onMessage(data, this.gamedata);
 
-    if (!this.obb.skip?.value) obbWorker.postMessage({ file: this.obb.control.value, lang: 'English', token: this.local.getToken() });
-    if (!this.localization.skip?.value) locWorker.postMessage({ decodeResult: this.dataLoc, lang: 'English', token: this.local.getToken() });
-    if (!this.gamedata.skip?.value) gamWorker.postMessage({ decodeResult: this.dataGam, lang: 'English', token: this.local.getToken() });
+    if (!this.obb.skip?.value) obbWorker.postMessage({ file: this.obb.control.value, lang: 'English', token: this.lStorage.getToken() });
+    if (!this.localization.skip?.value) locWorker.postMessage({ decodeResult: this.dataLoc, lang: 'English', token: this.lStorage.getToken() });
+    if (!this.gamedata.skip?.value) gamWorker.postMessage({ decodeResult: this.dataGam, lang: 'English', token: this.lStorage.getToken() });
   }
 
   private onMessage(message: IOnMessage, fileControl: IFileControl) {
