@@ -26,15 +26,14 @@ export class AppStateService {
       await firstValueFrom(this.indexedDB.dbLoaded$);
     }
 
-    await this.langService.onRetriveLanguages();
-
     if (this.lStorage.getAppWizardDone() === 1)
-      this.initializeApp();
+      await this.initializeApp();
     else
       this.vS.loadComponent(AppViews.wizard, viewers.wizard, {});
   }
 
   public async initializeApp() {
+    await this.langService.onRetriveLanguages();
     this.lStorage.setAppWizardDone();
     await this.vS.initViewer();
     this.initialized$.next(true);
