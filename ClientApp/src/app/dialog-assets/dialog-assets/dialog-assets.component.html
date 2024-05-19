@@ -77,7 +77,7 @@
                         <tbody tuiTbody>
                             <tr *cdkVirtualFor="let item of dialogAsset.Model['$content']" tuiTr>
                                 <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell" [tuiHint]="otherLanguages"
-                                    tuiHintAppearance="onDark"
+                                    tuiHintAppearance="onDark" [tuiHintShowDelay]="200"
                                     (mouseenter)="onGetOtherOriginalText(dialogAsset.Number, item.ID)">
                                     <ng-container *ngIf="focusRow === item.ID; else showNormalText">
                                         <span appCommonDictionary [text]="item.OriginalText"></span>

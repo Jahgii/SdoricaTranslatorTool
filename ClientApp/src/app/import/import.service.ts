@@ -200,16 +200,16 @@ export class ImportService {
   }
 
   private async switchUploadKeysUrl() {
-    await firstValueFrom(this.api.get<{ Bulk: boolean }>('localizationkeys/verified'))
-      .then(
-        r => {
-          this.uploadKeysUrl = r.Bulk ? 'localizationkeys/bulk' : 'localizationkeys/import';
-          this.uploadStackSize = r.Bulk ? 500 : 25;
-        },
-        error => {
-
-        }
-      );
+    if (this.lStorage.getAppMode() === AppModes.Online)
+      await firstValueFrom(this.api.get<{ Bulk: boolean }>('localizationkeys/verified'))
+        .then(
+          r => {
+            this.uploadKeysUrl = r.Bulk ? 'localizationkeys/bulk' : 'localizationkeys/import';
+            this.uploadStackSize = r.Bulk ? 500 : 25;
+          },
+          error => {
+          }
+        );
   }
 
   //#region UI
