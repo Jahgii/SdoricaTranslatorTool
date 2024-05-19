@@ -5,7 +5,6 @@ import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
 import { WizardService } from './wizard.service';
 import { AsyncPipe } from '@angular/common';
 import { ImportMainComponent } from 'src/app/import/import-main/import-main.component';
-import { LoadFileWizardComponent } from '../load-file-wizard/load-file-wizard.component';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 
 @Component({
@@ -20,7 +19,6 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
 
     ModeSelectorComponent,
     ImportMainComponent,
-    LoadFileWizardComponent
   ],
   providers: [
     WizardService
