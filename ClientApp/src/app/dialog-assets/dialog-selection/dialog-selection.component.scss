@@ -7,7 +7,7 @@
     height: var(--tui-height-s);
     display: flex;
     align-items: center;
-    padding: 0 0.5rem;
+    padding: 0 0.75rem 0 0;
     border-radius: var(--tui-radius-xs);
     cursor: pointer;
 
@@ -46,12 +46,12 @@
             flex: 1;
         }
     }
+}
 
-    .active-tree {
-        background: var(--tui-primary);
-        border-radius: var(--tui-radius-xs);
-    }
-
+.active-tree {
+    background: var(--tui-primary);
+    border-radius: var(--tui-radius-xs);
+    color: white;
 }
 
 .tree-progress-bar {
@@ -72,7 +72,7 @@
 }
 
 .group-tree-hide {
-    width: 2rem;
+    width: 1.5rem;
     height: 100%;
     backdrop-filter: blur(0px);
 

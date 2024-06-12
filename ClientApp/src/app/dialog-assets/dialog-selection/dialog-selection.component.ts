@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiElasticContainerModule, TuiInputInlineComponent, TuiInputInlineModule, TuiProgressModule } from '@taiga-ui/kit';
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
@@ -33,6 +33,7 @@ import { ViewersService } from 'src/app/core/services/viewers.service';
   ],
   templateUrl: './dialog-selection.component.html',
   styleUrl: './dialog-selection.component.scss',
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogSelectionComponent implements OnInit, OnDestroy {
