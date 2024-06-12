@@ -356,9 +356,13 @@ export class LocalizationService implements OnDestroy {
     this.alreadySearch$.next(true);
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
-      let r = this.indexedDB.getCursor<ILocalizationKey>(
-        ObjectStoreNames.LocalizationKey,
-        e => e.Original[this.language].includes(this.search.value));
+      let r = this.indexedDB
+        .getCursor<ILocalizationKey>(
+          ObjectStoreNames.LocalizationKey,
+          e => e.Original[this.language]
+            .toLocaleLowerCase()
+            .includes(this.search.value.toLowerCase()));
+
       this.keys$ = r.success$;
     }
     else if (this.lStorage.getAppMode() === AppModes.Online)
@@ -393,7 +397,12 @@ export class LocalizationService implements OnDestroy {
     this.alreadySearch$.next(true);
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
-      let r = this.indexedDB.getCursor<ILocalizationKey>(ObjectStoreNames.LocalizationKey, e => e.Name.includes(this.searchKey.value));
+      let r = this.indexedDB
+        .getCursor<ILocalizationKey>(
+          ObjectStoreNames.LocalizationKey,
+          e => e.Name
+            .toLocaleLowerCase()
+            .includes(this.searchKey.value.toLowerCase()));
       this.keys$ = r.success$;
     }
     else if (this.lStorage.getAppMode() === AppModes.Online)
@@ -428,7 +437,9 @@ export class LocalizationService implements OnDestroy {
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let r = this.indexedDB.getCursor<ILocalizationKey>(
         ObjectStoreNames.LocalizationKey,
-        e => e.Translations[this.language].includes(this.searchTranslation.value));
+        e => e.Translations[this.language]
+          .toLocaleLowerCase()
+          .includes(this.searchTranslation.value.toLowerCase()));
       this.keys$ = r.success$;
     }
     else if (this.lStorage.getAppMode() === AppModes.Online)
