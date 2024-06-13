@@ -243,5 +243,12 @@
     "retriving-server-data-error": "Servidor Inaccesible",
     "retriving-server-data-empty": "Sin Traducciones",
     "replacing-content": "Remplazando Contenido",
-    "choose-languages-description": "Selecciona el lenguaje o lenguajes que desees importar, si selecciona más de uno debe establecer uno por defecto."
+    "choose-languages-description": "Selecciona el lenguaje o lenguajes que desees importar, si selecciona más de uno debe establecer uno por defecto.",
+    "portraits-dir": "Directorio de Retratos",
+    "portraits-directory": "Clic para seleccionar directorio",
+    "portrait-directory-miss-label": "Error en Directorio",
+    "portrait-directory-miss-description": "No se pudo encontrar el directorio especificado en la configuración, por favor vuelva a especificar el directorio",
+    "portrait-directory-permission-label": "Error de Permisos",
+    "portrait-directory-miss-permission-description": "No se tiene permisos para acceder al directorio de retratos",
+    "portrait-directory-request-access": "Solicitar Permisos"
 }

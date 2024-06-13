@@ -1,0 +1,36 @@
+@if ((mode$ | async); as mode) {
+<ng-container [ngTemplateOutlet]="{
+        Default: default,
+        MissFolder: missFolderTemplate,
+        MissPermissions: missPermissionTemplate
+    }[mode]">
+</ng-container>
+}
+
+<ng-template #default>
+    <p>ERROR</p>
+</ng-template>
+
+<ng-template #missFolderTemplate>
+    <p>{{'portrait-directory-miss-description' | translate}}</p>
+    <div tuiMode="onLight">
+        <button tuiButton size="s" style="width: 100%;" appearance="outline"
+            (click)="onFolderChange()">
+            @if (portraitsService.dirName$ | async; as dirName) {
+            {{dirName}}
+            }
+            @else {
+            {{'portraits-directory' | translate}}
+            }
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #missPermissionTemplate>
+    <p>{{'portrait-directory-miss-permission-description' | translate}}</p>
+    <div tuiMode=" onLight">
+        <button tuiButton size="s" style="width: 100%;" appearance="outline" (click)="onRequestPermissions()">
+            {{'portrait-directory-request-access' | translate}}
+        </button>
+    </div>
+</ng-template>

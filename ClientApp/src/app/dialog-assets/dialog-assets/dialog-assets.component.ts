@@ -21,6 +21,7 @@ import { DialogAssetService } from './dialog-asset.service';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { BehaviorSubject } from 'rxjs';
 import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictionary.directive';
+import { PortraitsService } from 'src/app/core/services/portraits.service';
 
 @Component({
   selector: 'app-dialog-assets',
@@ -66,6 +67,7 @@ export class DialogAssetsComponent implements OnDestroy {
   public focusRow: string = "";
 
   constructor(
+    private portraitsService: PortraitsService,
     private ref: ChangeDetectorRef,
     @Inject(DialogAssetService) readonly dAS: DialogAssetService,
     @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService
@@ -110,6 +112,10 @@ export class DialogAssetsComponent implements OnDestroy {
       show = scrollTooltip['el']['nativeElement']['offsetHeight'] < scrollTooltip['el']['nativeElement']['scrollHeight'];
 
     this.showTooltipArrow$.next(show);
+  }
+
+  public onGetPortrait(name: string, ext: string = '.png') {
+    return this.portraitsService.imageDir[name + ext];
   }
 
 }

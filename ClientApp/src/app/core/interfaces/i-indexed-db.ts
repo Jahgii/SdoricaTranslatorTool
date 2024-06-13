@@ -34,5 +34,6 @@ export enum ObjectStoreNames {
     LocalizationCategory = "LocalizationCategory",
     LocalizationKey = "LocalizationKey",
     MainGroup = "MainGroup",
-    User = "User"
+    User = "User",
+    UserDirectories = "UserDirectories"
 }

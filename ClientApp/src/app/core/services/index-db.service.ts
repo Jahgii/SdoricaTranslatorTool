@@ -84,6 +84,11 @@ export class IndexDBService {
 
     storeMG.createIndex("Name", ["Language", "OriginalName"], { unique: true });
     storeMG.createIndex("Language", "Language", { unique: false });
+
+    const storeP = this.db
+      .createObjectStore(ObjectStoreNames.UserDirectories, { keyPath: "Id", autoIncrement: true });
+
+    storeP.createIndex("Name", "Name", { unique: true });
   }
 
   private onError(event: Event) {
@@ -343,7 +348,7 @@ export class IndexDBService {
     return { success$: success$, error$: error$ };
   }
 
-  public getIndex<T>(storeName: ObjectStoreNames, index: string, searchValue: any) {
+  public getIndex<T>(storeName: ObjectStoreNames, index: string, searchValue: any, onlyOne: boolean = false) {
     let success$ = new Subject<T>();
     let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
 
@@ -360,7 +365,10 @@ export class IndexDBService {
     };
 
     const objectStore = transaction.objectStore(storeName);
-    const request = objectStore.index(index).getAll(searchValue);
+    let request = objectStore.index(index).getAll(searchValue);
+
+    if (onlyOne) request = objectStore.index(index).get(searchValue);
+
 
     request.onsuccess = (event) => {
       success$.next((event.target as IDBRequest).result);
@@ -681,6 +689,63 @@ export class IndexDBService {
         request: event.target as IDBRequest,
         translateKey: IndexDBErrors.UnknownError,
         data: data
+      };
+
+      if (error.request.error?.name === 'ConstraintError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+        event.preventDefault();
+      }
+      else if (error.request.error?.name === 'AbortError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'QuotaExceededError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'UnknownError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+      else if (error.request.error?.name === 'VersionError') {
+        error.translateKey = IndexDBErrors[error.request.error?.name];
+      }
+
+      error$.next(error);
+    };
+
+    return { success$, error$ };
+  }
+
+  public clear<T>(storeName: ObjectStoreNames) {
+    let success$ = new Subject<T>();
+    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let dataLength = 1;
+    let operationCompleted = 0;
+
+    const transaction = this.db.transaction([storeName], "readwrite");
+
+    transaction.oncomplete = (event) => {
+      success$.complete();
+      error$.complete();
+    };
+
+    transaction.onerror = (event) => {
+      if (dataLength === operationCompleted) {
+        success$.complete();
+        error$.complete();
+      }
+    };
+
+    const objectStore = transaction.objectStore(storeName);
+    const request = objectStore.clear();
+    request.onsuccess = (event) => {
+      operationCompleted += 1;
+    };
+
+    request.onerror = (event) => {
+      operationCompleted += 1;
+      let error: IndexedDBbCustomRequestError<T> = {
+        request: event.target as IDBRequest,
+        translateKey: IndexDBErrors.UnknownError,
+        data: undefined as any
       };
 
       if (error.request.error?.name === 'ConstraintError') {

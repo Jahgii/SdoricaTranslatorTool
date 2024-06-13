@@ -52,6 +52,21 @@
             </div>
 
             <h3 class="tui-space_top-6" style="text-align: center;">
+                {{'portraits-dir' | translate}}
+            </h3>
+            <hr>
+            <div style="padding: 1em;">
+                <button tuiButton size="s" style="width: 100%;" appearance="outline" (click)="portraitsService.onFolderChange()">
+                    @if (portraitsService.dirName$ | async; as dirName) {
+                    {{dirName}}
+                    }
+                    @else {
+                    {{'portraits-directory' | translate}}
+                    }
+                </button>
+            </div>
+
+            <h3 class="tui-space_top-6" style="text-align: center;">
                 {{'libretranslate-configuration' | translate}}
             </h3>
             <hr>

@@ -17,6 +17,8 @@ import { TuiRadioBlockModule, TuiSelectModule, TuiInputModule } from '@taiga-ui/
 import { TuiSidebarModule } from '@taiga-ui/addon-mobile';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { BehaviorSubject } from 'rxjs';
+import { PortraitsService } from 'src/app/core/services/portraits.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -60,6 +62,9 @@ export class HeaderMenuComponent implements OnInit {
     { lang: 'es', value: 'es' }
   ];
 
+  public img$ = new BehaviorSubject<string>("");
+  public count = 0;
+
   constructor(
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
@@ -69,7 +74,8 @@ export class HeaderMenuComponent implements OnInit {
     private viewers: ViewersService,
     public theme: ThemeService,
     @Inject(TuiLanguageSwitcher) readonly switcher: TuiLanguageSwitcher,
-    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
+    public portraitsService: PortraitsService
   ) {
     this.translate.currentLang = this.translate.defaultLang;
   }

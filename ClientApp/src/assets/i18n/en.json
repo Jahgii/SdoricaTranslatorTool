@@ -243,5 +243,12 @@
     "retriving-server-data-error": "Unreachable Server",
     "retriving-server-data-empty": "Empty Translations",
     "replacing-content": "Replacing Content",
-    "choose-languages-description": "Select the language or languages you want to import, if you select more than one you must set one as default."
+    "choose-languages-description": "Select the language or languages you want to import, if you select more than one you must set one as default.",
+    "portraits-dir": "Portraits Directory",
+    "portraits-directory": "Click to select directory",
+    "portrait-directory-miss-label": "Directory Error",
+    "portrait-directory-miss-description": "The directory specified in the configuration could not be found, please re-specify the directory",
+    "portrait-directory-permission-label": "Permissions Error",
+    "portrait-directory-miss-permission-description": "Missing permissions to access the portrait directory",
+    "portrait-directory-request-access": "Request Permissions"
 }
