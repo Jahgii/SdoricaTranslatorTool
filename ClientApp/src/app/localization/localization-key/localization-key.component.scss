@@ -15,8 +15,8 @@
         align-items: center;
         justify-content: space-between;
         background-color: var(--tui-base-01);
+        backdrop-filter: blur(1rem);
         border-radius: var(--tui-radius-s) var(--tui-radius-s) 0 0;
-        border: 1px #fff solid;
         cursor: move;
         height: 2rem;
 
