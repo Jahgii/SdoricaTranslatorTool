@@ -93,12 +93,6 @@
     display: flex;
 }
 
-.dialog-translation-background {
-    width: 320px;
-    opacity: 0.5;
-    filter: contrast(0) brightness(0);
-}
-
 .desktop-main {
     height: 100%;
 
@@ -168,7 +162,7 @@
                 width: 128px;
                 height: 128px;
                 position: absolute;
-                bottom: 32px;
+                bottom: 24px;
                 left: 24px;
             }
 
@@ -176,7 +170,7 @@
                 width: 148px;
                 height: 148px;
                 position: absolute;
-                bottom: 20px;
+                bottom: 12px;
                 left: 18px;
                 opacity: 0.50;
             }
