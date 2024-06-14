@@ -3,12 +3,8 @@
 .main-container {
     max-width: 60rem;
     min-width: 20rem;
-    position: absolute;
     padding: 0 clamp(1em, 2.5%, 5em);
-    margin: 0 auto;
-    top: 2em;
-    left: 0;
-    right: 0;
+    margin: 2rem auto 0 auto;
 }
 
 .files-input {
