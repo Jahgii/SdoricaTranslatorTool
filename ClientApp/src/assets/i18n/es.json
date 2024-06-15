@@ -254,7 +254,15 @@
     "lang-error": "No se pudo registrar el nuevo lenguage correctamente, acción omitida",
     "main-groups-error": "No se pudo registrar el nuevo grupo principal correctamente, acción omitida",
     "groups-error": "No se pudo registrar el nuevo grupo correctamente, acción omitida",
+    "categories-error": "No se pudo registrar el nuevo grupo principal correctamente, acción omitida",
+    "keys-error": "No se pudo actualizar/registrar la nueva llave correctamente, acción omitida",
+    "gd-categories-Error": "No se pudo actualizar/registrar la nueva categoría correctamente, acción omitida",
+    "gd-values-error": "No se pudo actualizar/registrar el nuevo valor(GD) correctamente, acción omitida",
     "lang-updated": "Lenguage actualizado",
     "main-groups-updated": "Grupo Principal actualizado",
-    "groups-updated": "Grupo Actualizado"
+    "groups-updated": "Grupo Actualizado",
+    "categories-updated": "Categoría Actualizada",
+    "keys-updated": "Llave Actualizada",
+    "gd-categories-success": "Categoría(GD) Actualizada",
+    "gd-values-success": "Valor(GD) Actualizado"
 }

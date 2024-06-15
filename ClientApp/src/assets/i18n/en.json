@@ -254,7 +254,15 @@
     "lang-error": "The new language could not be registered correctly, action omitted",
     "main-groups-error": "The new main group could not be registered correctly, action omitted",
     "groups-error": "The new group could not be registered correctly, action omitted",
+    "categories-error": "The new main group could not be registered correctly, action omitted",
+    "keys-error": "The new key could not be updated/registered correctly, action omitted",
+    "gd-categories-Error": "The new category (GD) could not be updated/registered correctly, action omitted",
+    "gd-values-error": "The new value (GD) could not be updated/registered correctly, action omitted",
     "lang-updated": "Language updated",
     "main-groups-updated": "Main group updated",
-    "groups-updated": "Group updated"
+    "groups-updated": "Group updated",
+    "categories-updated": "Category Updated",
+    "keys-updated": "Key Updated",
+    "gd-categories-success": "Category (GD) Updated",
+    "gd-values-success": "Value (GD) Updated"
 }

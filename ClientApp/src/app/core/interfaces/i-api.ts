@@ -2,10 +2,10 @@ export enum ApiErrors {
     LanguagesError = "lang-error",
     MainGroupsError = "main-groups-error",
     GroupsError = "groups-error",
-    CategoriesError = "CategoriesError",
-    KeysError = "KeysError",
-    GDCategoriesError = "GDCategoriesError",
-    GDValuesError = "GDValuesError",
+    CategoriesError = "categories-error",
+    KeysError = "keys-error",
+    GDCategoriesError = "gd-categories-Error",
+    GDValuesError = "gd-values-error",
 }
 
 export enum ApiSucess {
@@ -15,8 +15,8 @@ export enum ApiSucess {
     GroupsUpdated = "groups-updated",
     SkipFiles = "skip-files",
     DataUpdated = "data-updated",
-    CategoriesUpdated = "CategoriesUpdated",
-    KeysUpdated = "KeysUpdated",
-    GDCategoriesSuccess = "GDCategoriesSuccess",
-    GDValuesSuccess = "GDValuesSuccess"
+    CategoriesUpdated = "categories-updated",
+    KeysUpdated = "keys-updated",
+    GDCategoriesSuccess = "gd-categories-success",
+    GDValuesSuccess = "gd-values-success"
 }
