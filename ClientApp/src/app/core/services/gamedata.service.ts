@@ -65,7 +65,7 @@ export class GamedataService {
       gamedata$ = r.success$;
     }
     else if (this.lStorage.getAppMode() === AppModes.Online) {
-      gamedata$ = this.api.get<IGamedataValue[]>('commonwords');
+      gamedata$ = this.api.getWithHeaders<IGamedataValue[]>('gamedatavalues', { category: 'BuffInfo' });
     }
 
     if (gamedata$ === undefined) gamedata$ = of([]);
