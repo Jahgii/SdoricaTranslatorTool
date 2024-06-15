@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { AppModes } from 'src/app/core/enums/app-modes';
+import { ApiService } from 'src/app/core/services/api.service';
 
 @Component({
   selector: 'app-mode-selector',
@@ -38,6 +39,7 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
   constructor(
     private wizardService: WizardService
     , private lStorage: LocalStorageService
+    , private api: ApiService
   ) { }
 
   ngOnDestroy(): void {
@@ -46,10 +48,14 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     let appMode = this.lStorage.getAppMode();
+    let appApiUrl = this.lStorage.getAppApiUrl();
 
     this.modeForm.patchValue({
-      mode: appMode
+      mode: appMode,
+      apiUrl: appApiUrl
     });
+
+    this.api.setBaseUrl(appApiUrl ?? "");
 
     this.modeSubs = this.modeForm
       .get('mode')
@@ -71,6 +77,18 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
         this.modeForm.get('apiUrl')?.updateValueAndValidity();
         this.modeForm.get('apiKey')?.updateValueAndValidity();
       });
+
+    this.modeSubs = this.modeForm
+      .get('apiUrl')
+      ?.valueChanges
+      .subscribe(url => {
+        this.lStorage.setAppApiUrl(url);
+      });
+  }
+
+  public onTestServer() {
+    let url = this.modeForm.get('apiUrl')?.value;
+    this.api.setBaseUrl(url);
   }
 
   public onNext() {

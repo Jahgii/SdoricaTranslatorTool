@@ -1,10 +1,11 @@
 /// <reference lib="webworker" />
 
-import { ImportPostMessage } from "../interfaces/i-import";
-import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from "../interfaces/i-indexed-db";
+import { IndexDBErrors, IndexDBSucess, ObjectStoreNames } from "../interfaces/i-indexed-db";
 import { ILanguage } from "../interfaces/i-dialog-group";
 import { AppModes } from "../enums/app-modes";
 import { IDialogAsset, LanguageType } from "../interfaces/i-dialog-asset";
+import { ImportPostMessage, WorkerImportPostMessage } from "../interfaces/i-worker";
+import { ApiErrors, ApiSucess as ApiSuccess } from "../interfaces/i-api";
 
 addEventListener('message', async ({ data }) => {
   let message: ImportPostMessage = data;
@@ -15,10 +16,11 @@ addEventListener('message', async ({ data }) => {
     request.onsuccess = (event) => onSuccessOpenDB(event, message);
   }
   else if (message.appMode === AppModes.Online) {
-    await onUploadDialogAssetsServer();
+    onUploadDataServer(message);
   }
 });
 
+//#region Offline
 function onErrorOpenDB(event: Event) {
   postMessage("CANT OPEN DB ON WEB WORKER");
 }
@@ -41,7 +43,7 @@ function onUploadObbOffline(db: IDBDatabase, message: ImportPostMessage) {
   const transaction = db.transaction([ObjectStoreNames.DialogAsset, ObjectStoreNames.Languages, ObjectStoreNames.MainGroup, ObjectStoreNames.Group], "readwrite");
 
   transaction.oncomplete = (event) => {
-    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+    let completeMessage: WorkerImportPostMessage<undefined> = {
       file: 'obb',
       translateKey: IndexDBSucess.FileCompleted,
       message: undefined,
@@ -74,7 +76,7 @@ function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage
 
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
-      let error: IndexedDBbCustomRequestErrorWorker<typeof d> = {
+      let error: WorkerImportPostMessage<typeof d> = {
         file: 'obb',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
@@ -103,49 +105,14 @@ function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage
   });
 }
 
-async function onUploadDialogAssetsServer() {
-  // this.api.post<{ FileSkip: number }>('dialogassets', dialogsSet))
-  //   .then(
-  //   (result) => {
-  //     this.dialogAssetsUploading[language].FileSkip
-  //       .next(this.dialogAssetsUploading[language].FileSkip.value + result.FileSkip);
-  //   },
-  //   (error) => {
-
-  //   }
-  // );
-}
-
 function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, transaction: IDBTransaction) {
-  let languages = [];
-  let mainGroups = [];
-  let groups = [];
-
-  for (let language in message.dialogAssetsInclude) {
-    if (message.dialogAssetsInclude[language] === true) {
-      //Populate Main Groups
-      for (let key in message.dialogAssetsMainGroups[language]) {
-        mainGroups.push(message.dialogAssetsMainGroups[language][key]);
-      }
-
-      //Populate Groups
-      for (let keyMainGroup in message.dialogAssetsGroups[language]) {
-        for (let keyGroup in message.dialogAssetsGroups[language][keyMainGroup]) {
-          groups.push(message.dialogAssetsGroups[language][keyMainGroup][keyGroup]);
-        }
-      }
-
-      //Populate Languages
-      let languageO: ILanguage = { Name: language };
-      languages.push(languageO);
-    }
-  }
+  let parse = parseLanguagesAndMainGroups(message);
 
   const oSLang = transaction.objectStore(ObjectStoreNames.Languages);
   const oSMainGroup = transaction.objectStore(ObjectStoreNames.MainGroup);
   const oSGroup = transaction.objectStore(ObjectStoreNames.Group);
 
-  languages.forEach((l) => {
+  parse.languages.forEach((l) => {
     const request = oSLang.add(l);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -153,7 +120,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
 
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
-      let error: IndexedDBbCustomRequestErrorWorker<typeof l> = {
+      let error: WorkerImportPostMessage<typeof l> = {
         file: 'obb-lang',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
@@ -181,7 +148,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
     };
   });
 
-  mainGroups.forEach((mG) => {
+  parse.mainGroups.forEach((mG) => {
     const request = oSMainGroup.add(mG);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -189,7 +156,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
 
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
-      let error: IndexedDBbCustomRequestErrorWorker<typeof mG> = {
+      let error: WorkerImportPostMessage<typeof mG> = {
         file: 'obb-main',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
@@ -217,7 +184,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
     };
   });
 
-  groups.forEach((g) => {
+  parse.groups.forEach((g) => {
     const request = oSGroup.add(g);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -225,7 +192,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
 
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
-      let error: IndexedDBbCustomRequestErrorWorker<typeof g> = {
+      let error: WorkerImportPostMessage<typeof g> = {
         file: 'obb-group',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
@@ -255,37 +222,11 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
 
 }
 
-async function onUploadGroupsServer() {
-  // await firstValueFrom(this.api.post('languages', languages))
-  //   .then(
-  //     (result) => {
-  //     },
-  //     (error) => {
-  //     }
-  //   );
-
-  // await firstValueFrom(this.api.post('maingroups', mainGroups))
-  //   .then(
-  //     (result) => {
-  //     },
-  //     (error) => {
-  //     }
-  //   );
-
-  // await firstValueFrom(this.api.post('groups', groups))
-  //   .then(
-  //     (result) => {
-  //     },
-  //     (error) => {
-  //     }
-  //   );
-}
-
 function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage) {
   const transaction = db.transaction([ObjectStoreNames.LocalizationCategory, ObjectStoreNames.LocalizationKey], "readwrite");
 
   transaction.oncomplete = (event) => {
-    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+    let completeMessage: WorkerImportPostMessage<undefined> = {
       file: 'localization',
       translateKey: IndexDBSucess.FileCompleted,
       message: undefined,
@@ -308,7 +249,7 @@ function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage
 
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
-      let error: IndexedDBbCustomRequestErrorWorker<typeof c> = {
+      let error: WorkerImportPostMessage<typeof c> = {
         file: 'localization-categories',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
@@ -344,7 +285,7 @@ function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage
 
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
-      let resMessage: IndexedDBbCustomRequestErrorWorker<typeof k> = {
+      let resMessage: WorkerImportPostMessage<typeof k> = {
         file: 'localization-keys',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
@@ -397,53 +338,11 @@ function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage
   });
 }
 
-async function onUploadLocatlizationServer() {
-  // await firstValueFrom(this.api.post('localizationcategories', this.localizationCategories))
-  //   .then(
-  //     (result) => {
-
-  //     },
-  //     (error) => {
-
-  //     }
-  //   );
-
-  // if (typeof Worker !== 'undefined') {
-  //   let spliceCount = Math.ceil(this.localizationKeys.length / this.maxThreads);
-  //   let workers: Worker[] = [];
-  //   for (let threadIndex = 0; threadIndex < this.maxThreads; threadIndex++) {
-  //     workers.push(new Worker(new URL('../keys.worker', import.meta.url)));
-  //     workers[threadIndex].onmessage = ({ data }) => {
-  //       if (data.finish)
-  //         workers[data.i].terminate();
-  //     };
-
-  //     let keys = this.localizationKeys.splice(0, spliceCount);
-  //     let uploadStackSize = this.uploadStackSize;
-  //     let url = this.uploadKeysUrl;
-  //     workers[threadIndex].postMessage({ keys, uploadStackSize, url, threadIndex, token: this.lStorage.getToken() });
-  //   }
-  // }
-  // else
-  //   while (this.localizationKeys.length > 0) {
-  //     let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
-  //     await firstValueFrom(this.api.post<string[]>(this.uploadKeysUrl, keysSet))
-  //       .then(
-  //         (result) => {
-  //           // this.fileProgressBar$.next(this.fileProgressBar$.value + this.uploadStackSize);
-  //           // if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
-  //         },
-  //         (error) => {
-  //         }
-  //       );
-  //   }
-}
-
 function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
   const transaction = db.transaction([ObjectStoreNames.GamedataCategory, ObjectStoreNames.GamedataValue], "readwrite");
 
   transaction.oncomplete = (event) => {
-    let completeMessage: IndexedDBbCustomRequestErrorWorker<undefined> = {
+    let completeMessage: WorkerImportPostMessage<undefined> = {
       file: 'gamedata',
       translateKey: IndexDBSucess.FileCompleted,
       message: undefined,
@@ -466,7 +365,7 @@ function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
 
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
-      let error: IndexedDBbCustomRequestErrorWorker<typeof gC> = {
+      let error: WorkerImportPostMessage<typeof gC> = {
         file: 'gamedata-categories',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
@@ -502,7 +401,7 @@ function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
 
     request.onerror = (event) => {
       let req = event.target as IDBRequest;
-      let error: IndexedDBbCustomRequestErrorWorker<typeof gV> = {
+      let error: WorkerImportPostMessage<typeof gV> = {
         file: 'gamedata-values',
         translateKey: IndexDBErrors.UnknownError,
         message: req.error?.message,
@@ -531,27 +430,315 @@ function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
   });
 }
 
-async function onUploadGamedataServer() {
-  // await firstValueFrom(this.api.post('gamedatacategories', this.gamedataCategories))
-  //   .then(
-  //     (result) => {
+//#endregion
 
-  //     },
-  //     (error) => {
+//#region Online
+function onUploadDataServer(message: ImportPostMessage) {
+  if (!message.obbSkip) onUploadObbServer(message);
+  if (!message.localizationSkip) onUploadLocalizationServer(message);
+  if (!message.gamedataSkip) onUploadGamedataServer(message);
+}
 
-  //     }
-  //   );
+async function onUploadObbServer(message: ImportPostMessage) {
+  for (let lang of message.dialogAssetsUploading) await onUploadDialogAssetsServer(message, lang);
+  await onUploadGroupsServer(message);
 
-  // while (this.gamedataValues.length > 0) {
-  //   let keysSet = this.gamedataValues.splice(0, this.uploadStackSize);
-  //   await firstValueFrom(this.api.post<string[]>('gamedatavalues/import', keysSet))
-  //     .then(
-  //       (result) => {
-  //         // this.fileProgressBar$.next(this.fileProgressBar$.value + this.uploadStackSize);
-  //         // if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
-  //       },
-  //       (error) => {
-  //       }
-  //     );
-  // }
+  let completeMessage: WorkerImportPostMessage<any> = {
+    file: 'obb',
+    message: undefined,
+    translateKey: ApiSuccess.DataUpdated,
+    data: undefined
+  };
+
+  postMessage(completeMessage);
+}
+
+async function onUploadDialogAssetsServer(message: ImportPostMessage, lang: string) {
+  let dialogAssets = message.dialogAssets[lang];
+
+  while (dialogAssets.length > 0) {
+    let dialogsSet = dialogAssets.splice(0, 100);
+
+    let promise = fetch(message.apiUrl + "api/dialogassets", {
+      method: 'POST',
+      body: JSON.stringify(dialogsSet),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    });
+
+    await promise.then(
+      async res => {
+        let r: { FileSkip: number } = await res.json();
+
+        let completeMessage: WorkerImportPostMessage<any> = {
+          file: 'obb-main',
+          message: lang,
+          translateKey: r.FileSkip > 0 ? ApiSuccess.SkipFiles : ApiSuccess.DialogUpdated,
+          data: r.FileSkip
+        }
+
+        postMessage(completeMessage);
+      },
+      error => {
+        console.log("ERRROR -> ", error);
+      }
+    );
+  }
+}
+
+async function onUploadGroupsServer(message: ImportPostMessage) {
+  let parse = parseLanguagesAndMainGroups(message);
+
+  let promise = fetch(message.apiUrl + "api/languages", {
+    method: 'POST',
+    body: JSON.stringify(parse.languages),
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    }
+  });
+
+  await promise.then(_ => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'obb-lang',
+      message: undefined,
+      translateKey: ApiSuccess.LanguagesUpdated,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  }, error => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'obb-lang',
+      message: undefined,
+      translateKey: ApiErrors.LanguagesError,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  });
+
+  promise = fetch(message.apiUrl + "api/maingroups", {
+    method: 'POST',
+    body: JSON.stringify(parse.mainGroups),
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    }
+  });
+
+  await promise.then(_ => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'obb-lang',
+      message: undefined,
+      translateKey: ApiSuccess.MainGroupsUpdated,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  }, error => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'obb-lang',
+      message: undefined,
+      translateKey: ApiErrors.MainGroupsError,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  });
+
+  promise = fetch(message.apiUrl + "api/groups", {
+    method: 'POST',
+    body: JSON.stringify(parse.groups),
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    }
+  });
+
+  await promise.then(_ => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'obb-lang',
+      message: undefined,
+      translateKey: ApiSuccess.GroupsUpdated,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  }, error => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'obb-lang',
+      message: undefined,
+      translateKey: ApiErrors.GroupsError,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  });
+}
+
+async function onUploadLocalizationServer(message: ImportPostMessage) {
+  let promise = fetch(message.apiUrl + "api/languages", {
+    method: 'POST',
+    body: JSON.stringify(message.localizationCategories),
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    }
+  });
+
+  await promise.then(_ => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'localization-categories',
+      message: undefined,
+      translateKey: ApiSuccess.CategoriesUpdated,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  }, error => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'localization-categories',
+      message: undefined,
+      translateKey: ApiErrors.CategoriesError,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  });
+
+  while (message.localizationKeys.length > 0) {
+    let keysSet = message.localizationKeys.splice(0, 1000);
+    promise = fetch(message.apiUrl + "api/" + message.uploadKeysUrl, {
+      method: 'POST',
+      body: JSON.stringify(keysSet),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    });
+
+    await promise.then(_ => {
+      let completeMessage: WorkerImportPostMessage<any> = {
+        file: 'localization-keys',
+        message: undefined,
+        translateKey: ApiSuccess.KeysUpdated,
+        data: undefined
+      };
+
+      postMessage(completeMessage);
+    }, error => {
+      let completeMessage: WorkerImportPostMessage<any> = {
+        file: 'localization-keys',
+        message: undefined,
+        translateKey: ApiErrors.KeysError,
+        data: undefined
+      };
+
+      postMessage(completeMessage);
+    });
+  }
+
+  let completeMessage: WorkerImportPostMessage<any> = {
+    file: 'localization',
+    message: undefined,
+    translateKey: ApiSuccess.DataUpdated,
+    data: undefined
+  };
+
+  postMessage(completeMessage);
+}
+
+async function onUploadGamedataServer(message: ImportPostMessage) {
+  let promise = fetch(message.apiUrl + "api/gamedatacategories", {
+    method: 'POST',
+    body: JSON.stringify(message.gamedataCategories),
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    }
+  });
+
+  await promise.then(_ => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'gamedata-categories',
+      message: undefined,
+      translateKey: ApiSuccess.GDCategoriesSuccess,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  }, error => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'gamedata-categories',
+      message: undefined,
+      translateKey: ApiErrors.GDCategoriesError,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  });
+
+  // let gDValuesSet = message.gamedataValues.splice(0, 100);
+  promise = fetch(message.apiUrl + "api/gamedatavalues/import", {
+    method: 'POST',
+    body: JSON.stringify(message.gamedataValues),
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    }
+  });
+
+  await promise.then(_ => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'gamedata-values',
+      message: undefined,
+      translateKey: ApiSuccess.GDValuesSuccess,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  }, error => {
+    let completeMessage: WorkerImportPostMessage<any> = {
+      file: 'gamedata-values',
+      message: undefined,
+      translateKey: ApiErrors.GDValuesError,
+      data: undefined
+    };
+
+    postMessage(completeMessage);
+  });
+
+  let completeMessage: WorkerImportPostMessage<any> = {
+    file: 'gamedata',
+    message: undefined,
+    translateKey: ApiSuccess.DataUpdated,
+    data: undefined
+  };
+
+  postMessage(completeMessage);
+}
+
+//#endregion
+
+function parseLanguagesAndMainGroups(message: ImportPostMessage) {
+  let languages = [];
+  let mainGroups = [];
+  let groups = [];
+
+  for (let language in message.dialogAssetsInclude) {
+    if (message.dialogAssetsInclude[language] === true) {
+      //Populate Main Groups
+      for (let key in message.dialogAssetsMainGroups[language]) {
+        mainGroups.push(message.dialogAssetsMainGroups[language][key]);
+      }
+
+      //Populate Groups
+      for (let keyMainGroup in message.dialogAssetsGroups[language]) {
+        for (let keyGroup in message.dialogAssetsGroups[language][keyMainGroup]) {
+          groups.push(message.dialogAssetsGroups[language][keyMainGroup][keyGroup]);
+        }
+      }
+
+      //Populate Languages
+      let languageO: ILanguage = { Name: language };
+      languages.push(languageO);
+    }
+  }
+
+  return { languages, mainGroups, groups };
 }

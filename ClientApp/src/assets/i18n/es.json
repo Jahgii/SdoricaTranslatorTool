@@ -250,5 +250,11 @@
     "portrait-directory-miss-description": "No se pudo encontrar el directorio especificado en la configuración, por favor vuelva a especificar el directorio",
     "portrait-directory-permission-label": "Error de Permisos",
     "portrait-directory-miss-permission-description": "No se tiene permisos para acceder al directorio de retratos",
-    "portrait-directory-request-access": "Solicitar Permisos"
+    "portrait-directory-request-access": "Solicitar Permisos",
+    "lang-error": "No se pudo registrar el nuevo lenguage correctamente, acción omitida",
+    "main-groups-error": "No se pudo registrar el nuevo grupo principal correctamente, acción omitida",
+    "groups-error": "No se pudo registrar el nuevo grupo correctamente, acción omitida",
+    "lang-updated": "Lenguage actualizado",
+    "main-groups-updated": "Grupo Principal actualizado",
+    "groups-updated": "Grupo Actualizado"
 }

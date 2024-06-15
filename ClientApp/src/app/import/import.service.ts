@@ -16,11 +16,13 @@ import { IGroup, ILanguage, IMainGroup } from '../core/interfaces/i-dialog-group
 import { IndexDBService } from '../core/services/index-db.service';
 import { LocalStorageService } from '../core/services/local-storage.service';
 import { onReadFileDialogFromObb } from './import-logic';
-import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessage, ImportPostMessage, OperationLog } from '../core/interfaces/i-import';
-import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestErrorWorker, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
+import { OperationLog } from '../core/interfaces/i-import';
+import { ImportOBBVerificationPostMessage, WorkerImportOBBVerificationPostMessage, ImportPostMessage } from '../core/interfaces/i-worker';
+import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestWorker, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { AppModes } from '../core/enums/app-modes';
-import * as JSZip from 'jszip';
 import { IFileControl } from '../core/interfaces/i-file-control';
+import * as JSZip from 'jszip';
+import { ApiSucess } from '../core/interfaces/i-api';
 
 @Injectable()
 export class ImportService {
@@ -118,6 +120,7 @@ export class ImportService {
     .asObservable()
     .pipe(map(ops => ops.reduce((acc, cv) => {
       if (cv.translateKey === IndexDBErrors.ConstraintError) acc += 1;
+      if (cv.translateKey === ApiSucess.SkipFiles) acc += cv.data;
       return acc;
     }, 0).toString()));
   public operationsUpdated$ = this.operations$
@@ -302,7 +305,7 @@ export class ImportService {
    * onmessage callback of Verified Obb Worker
    */
   private onVerificationObbWorkerMessage(data: any, alert: Observable<void>, fileControl: IFileControl) {
-    let dType: ImportOBBVerificationWorkerPostMessage = data;
+    let dType: WorkerImportOBBVerificationPostMessage = data;
     if (dType.message === 'file-error') {
       this.openAlert(alert);
       fileControl.verifyingFile$.next(false);
@@ -450,7 +453,7 @@ export class ImportService {
   private onImportWorkers() {
     const importWorker = new Worker(new URL('../core/workers/import.worker', import.meta.url));
     importWorker.onmessage = ({ data }) => {
-      let message: IndexedDBbCustomRequestErrorWorker<IDialogAsset | ILanguage | IMainGroup | IGroup> = data;
+      let message: IndexedDBbCustomRequestWorker<IDialogAsset | ILanguage | IMainGroup | IGroup> = data;
 
       if (message.file === 'obb') this.obb.progressStatus$.next(ProgressStatus.finish);
       if (message.file === 'gamedata') this.gamedata.progressStatus$.next(ProgressStatus.finish);
@@ -478,6 +481,8 @@ export class ImportService {
       gamedataSkip: this.gamedata.skip.value,
       dbName: this.iDB.dbName,
       dbVersion: this.iDB.dbVersion,
+      apiUrl: this.lStorage.getAppApiUrl() ?? "",
+      uploadKeysUrl: this.uploadKeysUrl,
       appMode: this.lStorage.getAppMode() ?? AppModes.Pending,
       dialogAssetsUploading: dialogAU,
       dialogAssets: this.dialogAssets,

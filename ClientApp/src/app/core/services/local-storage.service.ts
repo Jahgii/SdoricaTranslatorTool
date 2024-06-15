@@ -8,6 +8,15 @@ export class LocalStorageService {
 
   constructor() { }
 
+  getAppApiUrl() {
+    return localStorage.getItem('apiUrl');
+  }
+
+  setAppApiUrl(url: string) {
+    localStorage.setItem('apiUrl', url);
+  }
+
+
   getAppMode(): AppModes | undefined {
     return localStorage.getItem('appMode') as AppModes ?? undefined;
   }

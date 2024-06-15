@@ -2,11 +2,11 @@
 
 import * as JSZip from 'jszip';
 import { onReadFileDialogFromObb } from 'src/app/import/import-logic';
-import { ImportOBBVerificationPostMessage, ImportOBBVerificationWorkerPostMessage } from '../interfaces/i-import';
+import { ImportOBBVerificationPostMessage, WorkerImportOBBVerificationPostMessage } from '../interfaces/i-worker';
 
 addEventListener('message', async ({ data }) => {
   let message: ImportOBBVerificationPostMessage = data;
-  let response: ImportOBBVerificationWorkerPostMessage = {
+  let response: WorkerImportOBBVerificationPostMessage = {
     message: 'file-verified'
   };
 

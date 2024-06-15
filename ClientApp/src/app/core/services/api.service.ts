@@ -1,42 +1,46 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  private baseUrl = new BehaviorSubject('');
 
   constructor(
-    private http: HttpClient,
-    @Inject('BASE_URL') private baseUrl: string
+    private http: HttpClient
   ) { }
 
+  public setBaseUrl(url: string){
+    this.baseUrl.next(url);
+  }
+
   public get<T>(endpoint: string): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}api/${endpoint}`);
+    return this.http.get<T>(`${this.baseUrl.value}api/${endpoint}`);
   }
 
   public getWithHeaders<T>(endpoint: string, headers: { [key: string]: any }) {
     const HEADERS = new HttpHeaders(headers);
 
-    return this.http.get<T>(`${this.baseUrl}api/${endpoint}`, { headers: HEADERS });
+    return this.http.get<T>(`${this.baseUrl.value}api/${endpoint}`, { headers: HEADERS });
   }
 
   public post<T>(endpoint: string, body: Object): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}api/${endpoint}`, body);
+    return this.http.post<T>(`${this.baseUrl.value}api/${endpoint}`, body);
   }
 
   public put<T>(endpoint: string, body: Object): Observable<T> {
-    return this.http.put<T>(`${this.baseUrl}api/${endpoint}`, body);
+    return this.http.put<T>(`${this.baseUrl.value}api/${endpoint}`, body);
   }
 
   public putWithHeaders<T>(endpoint: string, headers: { [key: string]: any }, body: Object): Observable<T> {
     const HEADERS = new HttpHeaders(headers);
 
-    return this.http.put<T>(`${this.baseUrl}api/${endpoint}`, body, { headers: HEADERS });
+    return this.http.put<T>(`${this.baseUrl.value}api/${endpoint}`, body, { headers: HEADERS });
   }
 
   public delete<T>(endpoint: string, body: Object): Observable<T> {
-    return this.http.delete<T>(`${this.baseUrl}api/${endpoint}`, { body: body });
+    return this.http.delete<T>(`${this.baseUrl.value}api/${endpoint}`, { body: body });
   }
 }

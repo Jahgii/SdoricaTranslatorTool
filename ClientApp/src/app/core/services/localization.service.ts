@@ -298,7 +298,8 @@ export class LocalizationService implements OnDestroy {
   }
 
   private onTranslatedColumnCheckboxChange() {
-    this.subsTranslatedColumn$ = this.filterForm.controls['translated']
+    this.subsTranslatedColumn$ = this.filterForm
+      .controls['translated']
       .valueChanges
       .subscribe(v => {
         if (this.controlCheckbox >= 2) this.controlCheckbox = -1;

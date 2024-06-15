@@ -4,7 +4,7 @@ export interface IndexedDBbCustomRequestError<T> {
     data: T;
 }
 
-export interface IndexedDBbCustomRequestErrorWorker<T> {
+export interface IndexedDBbCustomRequestWorker<T> {
     file: 'obb' | 'obb-lang' | 'obb-main' | 'obb-group' | 'gamedata' | 'gamedata-categories' | 'gamedata-values' | 'localization' | 'localization-keys' | 'localization-categories'
     message?: string;
     translateKey: IndexDBErrors | IndexDBSucess;
