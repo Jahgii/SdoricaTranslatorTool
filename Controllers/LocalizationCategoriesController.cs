@@ -21,9 +21,9 @@ namespace SdoricaTranslatorTool.Controllers
             var cursor = _cMongoClient.GetCollection<LocalizationCategory>()
                 .Find(_ => true)
                 .SortBy(e => e.Name);
-            
+
             var data = await cursor.ToListAsync();
-            
+
             return Ok(data);
         }
 
@@ -86,6 +86,8 @@ namespace SdoricaTranslatorTool.Controllers
 
                 try
                 {
+                    await _cMongoClient.Delete<LocalizationKey>(session, e => e.Name == "");
+
                     foreach (var c in categories)
                     {
                         await _cMongoClient.Replace<LocalizationCategory>(session, e => e.Id == c.Id, c);

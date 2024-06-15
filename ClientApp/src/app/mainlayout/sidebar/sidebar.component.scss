@@ -39,14 +39,21 @@
         .avatar {
             background: transparent;
             left: 0;
-            border: 1px solid var(--tui-base-04);
             border-radius: var(--tui-radius-m) !important;
+
+            img{
+                width: 12px;
+                height: 14px;
+                position: absolute;
+                left: 9px;
+            }
         }
 
         @media #{$tui-mobile} {
             left: 44px;
 
             .avatar {
+                border: 1px solid var(--tui-base-04);
                 left: -5px;
             }
         }
@@ -57,6 +64,14 @@
     filter: brightness(0) invert(0);
     width: 28px;
     height: 28px;
+}
+
+.app-icon{
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: -16px;
+    left: -4px;
 }
 
 .mobile-menu {

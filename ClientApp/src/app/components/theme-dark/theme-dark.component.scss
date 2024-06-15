@@ -34,3 +34,10 @@
 .dialog-translation-background {
     opacity: 0.5;
 }
+
+.avatar {
+
+    img{
+        filter: invert(1);
+    }
+}
