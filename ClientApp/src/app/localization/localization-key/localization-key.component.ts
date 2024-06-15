@@ -285,6 +285,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
 
   public onCreateOther() {
     this.keyForm.reset(undefined, { emitEvent: false });
+    this.keyForm.patchValue({ _version: 1 });
     let originalForm = this.keyForm.controls['Original'] as FormGroup;
     for (let key in originalForm.controls) {
       originalForm.removeControl(key, { emitEvent: false });
