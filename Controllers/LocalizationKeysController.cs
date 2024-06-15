@@ -124,30 +124,45 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost("import")]
         public async Task<ActionResult> Post(List<LocalizationKey> keys)
         {
-            List<string> KeysToReplaced = new();
+            List<string> KeysToReplaced = [];
+
             using (var session = await _cMongoClient.StartSessionAsync())
             {
                 session.StartTransaction();
 
                 try
                 {
+                    var keysOnDB = await _cMongoClient
+                    .GetCollection<LocalizationKey>()
+                    .FindAsync(e => keys.Any(k => k.Category == e.Category) && keys.Any(k => k.Name == e.Name))
+                    .Result
+                    .ToListAsync();
+
+                    var newKeys = keys.FindAll(e => keysOnDB.Any(kDB => kDB.Category == e.Category) && !keysOnDB.Any(kDB => kDB.Name == e.Name));
+
+                    var updates = new List<WriteModel<LocalizationKey>>();
+
                     foreach (var k in keys)
                     {
-                        if (await VerifiedIfKeyExist(k.Category, k.Name))
-                        {
-                            var kToReplace = await UpdateKey(k);
-                            if (kToReplace == null) continue;
-                            KeysToReplaced.Add($"Category: {kToReplace.Category} | Key: {kToReplace.Name}");
-                            await _cMongoClient.Replace<LocalizationKey>(session, e => e.Id == kToReplace.Id, kToReplace);
-                            continue;
-                        };
-
-                        await _cMongoClient.Create<LocalizationKey>(session, k);
+                        var kToUpdate = UpdateKey(k, keysOnDB);
+                        if (kToUpdate == null) continue;
+                        KeysToReplaced.Add($"Category: {kToUpdate.Category} | Key: {kToUpdate.Name}");
+                        
+                        var filterBuilder = Builders<LocalizationKey>.Filter.Where(e => e.Id == kToUpdate.Id);
+                        updates.Add(new ReplaceOneModel<LocalizationKey>(filterBuilder, kToUpdate));
                     }
+
+                    if (newKeys.Count > 0)
+                        await _cMongoClient.Create<LocalizationKey>(session, newKeys);
+
+                    if (updates.Count > 0)
+                        await _cMongoClient
+                            .GetCollection<LocalizationKey>()
+                            .BulkWriteAsync(updates, new BulkWriteOptions() { IsOrdered = false });
 
                     await session.CommitTransactionAsync();
                 }
-                catch
+                catch (Exception error)
                 {
                     await session.AbortTransactionAsync();
                     return StatusCode(500);
@@ -219,18 +234,18 @@ namespace SdoricaTranslatorTool.Controllers
 
         private async Task<bool> VerifiedIfKeyExist(string category, string name)
         {
-            var query = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync<LocalizationKey>(e => e.Category == category && e.Name == name);
+            var query = await _cMongoClient
+                .GetCollection<LocalizationKey>()
+                .FindAsync<LocalizationKey>(e => e.Category == category && e.Name == name);
+
             var skip = await query.FirstOrDefaultAsync();
 
             return skip != null;
         }
 
-        private async Task<LocalizationKey?> UpdateKey(LocalizationKey key)
+        private static LocalizationKey? UpdateKey(LocalizationKey key, List<LocalizationKey> oldKeys)
         {
-            LocalizationKey OldKey = await _cMongoClient
-                .GetCollection<LocalizationKey>()
-                .Find(e => e.Category == key.Category && e.Name == key.Name)
-                .FirstOrDefaultAsync();
+            LocalizationKey? OldKey = oldKeys.FirstOrDefault(e => e.Category == key.Category && e.Name == key.Name);
 
             if (OldKey == null) return null;
 
@@ -245,8 +260,6 @@ namespace SdoricaTranslatorTool.Controllers
                     updated = true;
                 }
             }
-
-            if (OldKey._version != key._version) updated = true;
 
             return updated ? OldKey : null;
         }
