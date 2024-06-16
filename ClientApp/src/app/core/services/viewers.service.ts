@@ -150,7 +150,7 @@ export class ViewersService {
     this.activeView.instance.componentLoadedName = viewerKey;
 
     Object.keys(viewers).forEach(k => {
-      if (k === 'login') return;
+      if (k === AppViews.login || k === AppViews.loading) return;
       if (viewers[k] === component) {
         if (this.activeView == this.views[0])
           this.lStorage.setC1(k);
