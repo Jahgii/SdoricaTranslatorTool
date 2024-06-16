@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,17 @@ export class ApiService {
   private baseUrl = new BehaviorSubject('');
 
   constructor(
-    private http: HttpClient
-  ) { }
+    private http: HttpClient,
+    private lStorage: LocalStorageService
+  ) { this.initApi(); }
 
-  public setBaseUrl(url: string){
+  private initApi() {
+    let baseUrl = this.lStorage.getAppApiUrl();
+
+    if (baseUrl) this.baseUrl.next(baseUrl);
+  }
+
+  public setBaseUrl(url: string) {
     this.baseUrl.next(url);
   }
 

@@ -33,7 +33,8 @@ export class LanguageOriginService {
       langs = await firstValueFrom(r.success$);
     }
     else if (this.lStorage.getAppMode() === AppModes.Online)
-      langs = await firstValueFrom(this.api.get<ILanguage[]>('languages'));
+      langs = await firstValueFrom(this.api.get<ILanguage[]>('languages'))
+        .then(r => r, error => []);
 
 
     if (langs.length == 0) {

@@ -3,7 +3,6 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ViewersService } from './viewers.service';
 import { LocalStorageService } from './local-storage.service';
 import { AppViews, viewers } from '../viewers';
-import { AppModes } from '../enums/app-modes';
 import { IndexDBService } from './index-db.service';
 import { LanguageOriginService } from './language-origin.service';
 
@@ -22,9 +21,9 @@ export class AppStateService {
   ) { }
 
   public async init() {
-    if (this.lStorage.getAppMode() === AppModes.Offline) {
-      await firstValueFrom(this.indexedDB.dbLoaded$);
-    }
+    this.vS.loadComponent(AppViews.loading, viewers.loading, {});
+
+    await firstValueFrom(this.indexedDB.dbLoaded$);
 
     if (this.lStorage.getAppWizardDone() === 1)
       await this.initializeApp();
@@ -34,6 +33,9 @@ export class AppStateService {
 
   public async initializeApp() {
     await this.langService.onRetriveLanguages();
+
+    // this.langService.lan
+
     this.lStorage.setAppWizardDone();
     await this.vS.initViewer();
     this.initialized$.next(true);

@@ -27,6 +27,7 @@ export class PortraitsService {
   }
 
   private async folderInit() {
+    console.log(this.indexDB);
     let request = this.indexDB
       .getAll<FileSystemDirectoryHandle[]>(ObjectStoreNames.UserDirectories)
       .success$;
