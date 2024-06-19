@@ -576,7 +576,7 @@ async function onUploadGroupsServer(message: ImportPostMessage) {
 }
 
 async function onUploadLocalizationServer(message: ImportPostMessage) {
-  let promise = fetch(message.apiUrl + "api/languages", {
+  let promise = fetch(message.apiUrl + "api/localizationcategories", {
     method: 'POST',
     body: JSON.stringify(message.localizationCategories),
     headers: {
