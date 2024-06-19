@@ -212,3 +212,11 @@
 .text-bold {
     font-weight: bold;
 }
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100svh - var(--header-height) - 4.5rem);
+}

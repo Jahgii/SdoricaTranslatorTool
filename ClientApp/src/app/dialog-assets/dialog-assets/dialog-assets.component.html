@@ -47,6 +47,14 @@
                     tuiHint="{{'download-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
                     (click)="onDownload(data[dAS.activeItemIndex])" icon="tuiIconDownload">
                 </button>
+                <button tuiIconButton type="button" appearance="icon" shape="square"
+                    tuiHint="{{'copy-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
+                    (click)="onCopyToClipboard(data[dAS.activeItemIndex])" icon="tuiIconCopy">
+                </button>
+                <button tuiIconButton type="button" appearance="icon" shape="square"
+                    tuiHint="{{'paste-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
+                    (click)="onPasteClipboard(data[dAS.activeItemIndex])" icon="tuiIconClipboard">
+                </button>
                 <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
                     [overlay]="true">
                     <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox" [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ? 
@@ -255,11 +263,13 @@
 </ng-template>
 
 <ng-template #loading>
-    <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">
-        <tui-block-status>
-            <h4>{{'loading-3-dots' | translate}}</h4>
-        </tui-block-status>
-    </tui-loader>
+    <div class="loading-container">
+        <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">
+            <tui-block-status>
+                <h4>{{'loading-3-dots' | translate}}</h4>
+            </tui-block-status>
+        </tui-loader>
+    </div>
 </ng-template>
 
 <ng-template #otherLanguages>
