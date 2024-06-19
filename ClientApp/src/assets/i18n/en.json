@@ -12,7 +12,7 @@
     "go": "Lets Go!",
     "original-word": "Original Word",
     "translation": "Translation",
-    "dictionary-description": "Words added to the dictionary will be highlighted in the Original text column with their corresponding translations",
+    "dictionary-description": "Words added to the dictionary will be highlighted in the Original text column with their corresponding translation",
     "confirm-text-delete-word": "I you sure you want to delete this word?",
     "confirm-text-delete-word-short": "I you sure?",
     "confirm-frienly": "Yes, delete it!",
@@ -264,5 +264,12 @@
     "categories-updated": "Category Updated",
     "keys-updated": "Key Updated",
     "gd-categories-success": "Category (GD) Updated",
-    "gd-values-success": "Value (GD) Updated"
+    "gd-values-success": "Value (GD) Updated",
+    "copy-to-clipboard": "Copied to clipboard",
+    "copy-to-clipboard-error": "Can't copy to clipboard",
+    "copy-dialog-file": "Copy Simple Json",
+    "paste-dialog-file": "Paste Simple Json",
+    "invalid-json": "Invalid Json",
+    "paste-correctly": "Pasted Clipboard",
+    "nothing-to-paste": "Nothing to Paste"
 }

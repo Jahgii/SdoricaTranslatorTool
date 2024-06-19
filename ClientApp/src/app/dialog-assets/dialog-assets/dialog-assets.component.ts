@@ -102,6 +102,16 @@ export class DialogAssetsComponent implements OnDestroy {
     this.dAS.onMachineTranslate(data);
   }
 
+  public onCopyToClipboard(dialogAsset: IDialogAsset) {
+    this.dAS.onCopySimpleConversation(dialogAsset);
+  }
+
+  public async onPasteClipboard(dialogAsset: IDialogAsset) {
+    let updated = await this.dAS.onPasteSimpleConversation(dialogAsset)
+
+    if (updated) this.onTextChange(dialogAsset);
+  }
+
   public onDownload(dialogAsset: IDialogAsset) {
     this.dAS.onDownload(dialogAsset);
   }

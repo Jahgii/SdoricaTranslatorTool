@@ -28,7 +28,6 @@ export class AlertPortraitsComponent {
     private readonly context: TuiDialog<TuiAlertOptions<AlertPortraitMode>, boolean>,
     public portraitsService: PortraitsService
   ) {
-    console.log(this.context.data);
     this.mode$.next(this.context.data);
   }
 

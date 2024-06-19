@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of, tap } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
-import { IDialogAsset, IDialogAssetExport } from 'src/app/core/interfaces/i-dialog-asset';
+import { IDialogAsset, IDialogAssetExport, PlainDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
@@ -10,6 +10,7 @@ import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class DialogAssetService {
@@ -40,6 +41,7 @@ export class DialogAssetService {
     private api: ApiService,
     private indexedDB: IndexDBService,
     private lStorage: LocalStorageService,
+    private translate: TranslateService,
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
@@ -180,6 +182,97 @@ export class DialogAssetService {
     await this.libreTranslate.onTranslateDialogs(data[this.activeItemIndex].Model.$content);
     this.pendingChanges$.next(true);
     this.changes$.next(data[this.activeItemIndex]);
+  }
+
+  public onCopySimpleConversation(dialogAsset: IDialogAsset) {
+    let dialog = JSON.parse(JSON.stringify(dialogAsset)) as IDialogAssetExport;
+    let conversation: PlainDialogAsset[] = [];
+
+    dialog.Model.$content.forEach(d => {
+      let message: PlainDialogAsset = {
+        ID: d.ID,
+        Text: d.OriginalText
+      };
+
+      conversation.push(message);
+    });
+
+    let exportConversation = JSON.stringify(conversation);
+
+    navigator
+      .clipboard
+      .writeText(exportConversation)
+      .then(_ => {
+        this.alerts
+          .open(undefined, { label: this.translate.instant('copy-to-clipboard'), status: 'success', autoClose: true })
+          .subscribe();
+      }, err => {
+        this.alerts
+          .open(undefined, { label: this.translate.instant('copy-to-clipboard-error'), status: 'error', autoClose: true })
+          .subscribe();
+      });
+  }
+
+  public async onPasteSimpleConversation(dialogAsset: IDialogAsset) {
+    return await navigator
+      .clipboard
+      .readText()
+      .then(text => {
+        let conversation: PlainDialogAsset[] = this.tryParseJson(text);
+
+        if (!conversation) {
+          this.alerts
+            .open(undefined, {
+              label: this.translate.instant('invalid-json')
+              , status: 'warning'
+              , autoClose: true
+            })
+            .subscribe();
+
+          return;
+        }
+
+        if (!Array.isArray(conversation) || conversation.length == 0) {
+          this.alerts
+            .open(undefined, {
+              label: this.translate.instant('nothing-to-paste')
+              , status: 'warning'
+              , autoClose: true
+            })
+            .subscribe();
+
+          return;
+        };
+
+        for (let i = 0; i < dialogAsset.Model.$content.length; i++) {
+          let d = dialogAsset.Model.$content[i];
+          let message = conversation.find(e => e.ID == d.ID);
+          if (!message) continue;
+
+          d.Text = message.Text;
+        }
+
+        this.alerts
+          .open(undefined, { label: this.translate.instant('paste-correctly'), status: 'success', autoClose: true })
+          .subscribe();
+
+        return true;
+      }, _ => {
+        this.alerts
+          .open(undefined, { label: this.translate.instant('copy-to-clipboard-error'), status: 'error', autoClose: true })
+          .subscribe();
+
+        return false;
+      });
+  }
+
+  private tryParseJson(text: string) {
+    try {
+      return JSON.parse(text)
+    }
+    catch {
+      return undefined;
+    }
   }
 
   public onDownload(dialogAsset: IDialogAsset) {

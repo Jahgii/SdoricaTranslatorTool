@@ -33,9 +33,6 @@ export class AppStateService {
 
   public async initializeApp() {
     await this.langService.onRetriveLanguages();
-
-    // this.langService.lan
-
     this.lStorage.setAppWizardDone();
     await this.vS.initViewer();
     this.initialized$.next(true);

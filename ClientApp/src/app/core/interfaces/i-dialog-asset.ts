@@ -56,6 +56,11 @@ export interface IDialogAssetExport {
     }
 }
 
+export interface PlainDialogAsset {
+    ID: string;
+    Text: string;
+}
+
 export interface IDialog {
     ID: string;
     SpeakerName: string;
