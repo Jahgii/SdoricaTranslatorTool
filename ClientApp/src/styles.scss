@@ -9,6 +9,7 @@
   --min-width-viewer: 4rem;
 
   --tui-primary: black;
+  --tui-text-01-invert: white;
   --tui-primary-hover: black;
   --tui-primary-active: black;
 }
@@ -100,4 +101,62 @@ code {
   width: 320px;
   opacity: 0.1;
   filter: contrast(0) brightness(0);
+}
+
+.stt-custom-shapherd {
+  background: var(--tui-base-01);
+  border-radius: var(--tui-radius-s);
+
+  .shepherd-arrow {
+    &:before {
+      background: var(--tui-base-02);
+    }
+  }
+
+  .shepherd-content {
+    background: var(--tui-base-02);
+    border-radius: var(--tui-radius-s);
+
+    .shepherd-header {
+      background: var(--tui-base-01);
+      border-radius: var(--tui-radius-s) var(--tui-radius-s) 0 0;
+
+      h3 {
+        color: var(--tui-text-01);
+      }
+
+      button {
+        color: var(--tui-text-03);
+
+        &:hover {
+          color: var(--tui-text-01);
+        }
+      }
+    }
+
+    .shepherd-text {
+      background: var(--tui-base-02);
+      color: var(--tui-text-01);
+      border-radius: var(--tui-radius-s);
+    }
+
+    .shepherd-footer {
+      background: var(--tui-base-02);
+      border-radius: var(--tui-radius-s);
+
+      .shepherd-button {
+        background-color: var(--tui-primary);
+        color: var(--tui-text-01-invert);
+        border-radius: var(--tui-radius-s);
+      }
+    }
+  }
+}
+
+.stt-custom-shapherd-header-arrow {
+  .shepherd-arrow {
+    &:before {
+      background: var(--tui-base-01);
+    }
+  }
 }

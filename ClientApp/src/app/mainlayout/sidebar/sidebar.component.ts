@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, Type, ViewChild, ViewEncapsulation, ViewRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Type, ViewChild, ViewEncapsulation, ViewRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
@@ -37,7 +37,7 @@ import { AppViews, viewers } from 'src/app/core/viewers';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarComponent {
+export class SidebarComponent implements AfterViewInit {
   @ViewChild(LocalizationKeyComponent) localizationKeyDialog!: LocalizationKeyComponent;
   @ViewChild(GamedataValuesComponent) gamedataDialog!: GamedataValuesComponent;
   @ViewChild(CommonWordsComponent) dictionaryDialog!: CommonWordsComponent;
@@ -56,6 +56,9 @@ export class SidebarComponent {
     private viewersService: ViewersService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
+
+  ngAfterViewInit(): void {
+  }
 
   public loadComponent(viewerKey: AppViews) {
     this.viewersService.loadComponent(viewerKey, viewers[viewerKey], {});

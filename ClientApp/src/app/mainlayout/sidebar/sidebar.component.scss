@@ -2,12 +2,14 @@
 
 .sidebar-container {
     position: relative;
+    height: 100%;
 }
 
 .sidebar {
     display: grid;
+    height: 100%;
     grid-template-columns: 1fr;
-    grid-auto-rows: 3.9375rem;
+    grid-auto-rows: 3.9375rem 1fr;
     align-items: center;
     justify-items: center;
     overflow: hidden;
@@ -41,7 +43,7 @@
             left: 0;
             border-radius: var(--tui-radius-m) !important;
 
-            img{
+            img {
                 width: 12px;
                 height: 14px;
                 position: absolute;
@@ -58,6 +60,16 @@
             }
         }
     }
+
+    .sidebar-actions {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        grid-template-columns: 1fr;
+        grid-auto-rows: 3.9375rem;
+        align-items: center;
+        justify-items: center;
+    }
 }
 
 .sidebar-link-icon {
@@ -66,7 +78,7 @@
     height: 28px;
 }
 
-.app-icon{
+.app-icon {
     width: 32px;
     height: 32px;
     position: absolute;

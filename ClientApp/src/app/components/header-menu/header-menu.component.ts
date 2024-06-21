@@ -105,6 +105,10 @@ export class HeaderMenuComponent implements OnInit {
   }
 
   public onToogleSettings() {
+    let button = document.getElementById('settingsButton');
+    button?.click();
+    button?.click();
+
     this.openSetting = !this.openSetting;
   }
 

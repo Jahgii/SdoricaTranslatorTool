@@ -16,7 +16,6 @@ export class LocalStorageService {
     localStorage.setItem('apiUrl', url);
   }
 
-
   getAppMode(): AppModes | undefined {
     return localStorage.getItem('appMode') as AppModes ?? undefined;
   }
@@ -113,6 +112,14 @@ export class LocalStorageService {
 
   setCategory(view: number, categoryId: string) {
     localStorage.setItem('Category' + view, categoryId);
+  }
+
+  getCategorySearch(search: string) {
+
+  }
+
+  setCategorySearch(search: string) {
+    
   }
 
   getGroup(view: number) {

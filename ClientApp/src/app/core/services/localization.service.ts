@@ -9,7 +9,6 @@ import { TuiAlertService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalizationCategoriesService } from 'src/app/localization/localization-categories.service';
 import { LocalStorageService } from './local-storage.service';
-import { ViewersService } from './viewers.service';
 import { AppModes } from '../enums/app-modes';
 import { IndexDBService } from './index-db.service';
 import { ObjectStoreNames } from '../interfaces/i-indexed-db';
@@ -77,7 +76,6 @@ export class LocalizationService implements OnDestroy {
     private languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
     private translate: TranslateService,
-    private viewers: ViewersService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
     this.language = this.languageOrigin.localizationLang;
@@ -112,6 +110,7 @@ export class LocalizationService implements OnDestroy {
 
     this.autoSearch();
     this.onTranslatedColumnCheckboxChange();
+    // this.onLoadLastSearch();
   }
 
   public loadStore() {

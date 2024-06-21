@@ -1,4 +1,9 @@
 {
+    "tour-next": "Siguiente",
+    "tour-welcome-title": "Bienvenido",
+    "tour-welcome": "Hey, parece que es tu primera vez por aqui, si gustas puedo darte una pequeña introducción, te lo recomiendo, pero si lo deseas, puedes omitirla dando clic en el boton x en la parte superior derecha de este modal.",
+    "tour-sidebar-actions-title": "Menu Lateral",
+    "tour-sidebar-actions": "Estas son las opciones de la app, los iconos con borde blanco se habren en la vista activa y los sin borde se habren en un modal.",
     "sdorica-translator-tool": "Sdorica Herramienta de Traductor",
     "sdorica-translator-tool-small": "SHT",
     "empty_db": "Parece que es tu primera vez aquí, preparemos todo para comenzar.",

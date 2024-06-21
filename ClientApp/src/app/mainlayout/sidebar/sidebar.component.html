@@ -76,22 +76,24 @@
 
         <div class="blank-space"></div>
 
-        <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
+        <div class="sidebar-actions">
+            <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
 
-        <app-localization-key></app-localization-key>
-        <app-gamedata-values></app-gamedata-values>
-        <app-common-words></app-common-words>
+            <app-localization-key></app-localization-key>
+            <app-gamedata-values></app-gamedata-values>
+            <app-common-words></app-common-words>
+        </div>
     </div>
 </div>
 
 <ng-template #sidebarLoadComponentButtons>
-    <button tuiIconButton
+    <button id='localizationButton' tuiIconButton
         appearance="{{((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
         type="button" size="s" [icon]="'tuiIconType'" tuiMode="onLight" (click)="loadComponent(appViews.localization)"
         tuiHint="{{'main-localization' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
         [ngClass]="((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'button-side': undefined">
     </button>
-    <button tuiIconButton
+    <button id='dialogsButton' tuiIconButton
         appearance="{{((componentOpens[appViews.dialogs] | async) ?? 0) > 0 ? 'selected': 'outline' }}" type="button"
         size="s" [icon]="'tuiIconMessageCircle'" tuiMode="onLight" (click)="loadComponent(appViews.dialogs)"
         tuiHint="{{'chapter-dialog-localization' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"

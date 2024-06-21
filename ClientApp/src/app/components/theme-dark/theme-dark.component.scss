@@ -2,6 +2,7 @@
     --important-text: #ffc700;
     --blend-mode: difference;
     --tui-primary: white;
+    --tui-text-01-invert: black;
     --tui-primary-hover: white;
     --tui-primary-active: white;
     --tui-primary-text: black;
@@ -37,7 +38,7 @@
 
 .avatar {
 
-    img{
+    img {
         filter: invert(1);
     }
 }

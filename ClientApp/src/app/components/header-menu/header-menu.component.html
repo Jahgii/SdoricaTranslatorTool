@@ -18,14 +18,14 @@
         [tuiHint]="((theme.nightMode$ | async)? 'toogle-lightmode' : 'toogle-nightmode') | translate"
         tuiHintAppearance="onDark">
     </button>
-    <button tuiIconButton appearance="icon" [icon]="'tuiIconSettings'" (click)="onToogleSettings()"
-        (tuiActiveZoneChange)="onToogleSettings()">
+    <button id="settingsButton" tuiIconButton appearance="icon" [icon]="'tuiIconSettings'" (click)="onToogleSettings()"
+        >
         <tui-scrollbar *tuiSidebar="openSetting; direction: 'right'">
             <div style="height: var(--header-height); display: flex; align-items: center; justify-content: center;">
                 <h3>{{'language-configuration' | translate}}</h3>
             </div>
             <hr>
-            <div style="padding: 1em;">
+            <div id="appLanguageSetting" style="padding: 1em;">
                 <h4>{{'app-language' | translate}}</h4>
                 <div orientation="vertical" tuiGroup class="w-100" [collapsed]="true">
                     <ng-container *ngFor="let lang of langs">
@@ -56,7 +56,8 @@
             </h3>
             <hr>
             <div style="padding: 1em;">
-                <button tuiButton size="s" style="width: 100%;" appearance="outline" (click)="portraitsService.onFolderChange()">
+                <button tuiButton size="s" style="width: 100%;" appearance="outline"
+                    (click)="portraitsService.onFolderChange()">
                     @if (portraitsService.dirName$ | async; as dirName) {
                     {{dirName}}
                     }

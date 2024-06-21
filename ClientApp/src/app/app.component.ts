@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { LanguageOriginService } from './core/services/language-origin.service';
-import { AuthService } from './core/services/auth.service';
 import { ThemeService } from './core/services/theme.service';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { HeaderMenuComponent } from './components/header-menu/header-menu.component';

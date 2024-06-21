@@ -5,6 +5,8 @@ import { LocalStorageService } from './local-storage.service';
 import { AppViews, viewers } from '../viewers';
 import { IndexDBService } from './index-db.service';
 import { LanguageOriginService } from './language-origin.service';
+import { TranslateService } from '@ngx-translate/core';
+import { TourService } from './tour.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,8 @@ export class AppStateService {
     private vS: ViewersService,
     private indexedDB: IndexDBService,
     private langService: LanguageOriginService,
-    private lStorage: LocalStorageService
+    private lStorage: LocalStorageService,
+    private tour: TourService
   ) { }
 
   public async init() {
@@ -36,5 +39,6 @@ export class AppStateService {
     this.lStorage.setAppWizardDone();
     await this.vS.initViewer();
     this.initialized$.next(true);
+    this.tour.start();
   }
 }
