@@ -10,9 +10,12 @@
             <h2 style="margin-right: auto;"></h2>
         </ng-container>
     </ng-container>
-    <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
+    <!-- <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
         appearance="icon" [icon]="'tuiIconGithub'">
-    </a>
+    </a> -->
+    <button id="tourButton" tuiIconButton appearance="icon" icon="tuiIconHelpCircle" (click)="onMainTour()"
+        [tuiHint]="'tour-mode' | translate" tuiHintAppearance="onDark">
+    </button>
     <button id="themeButton" tuiIconButton appearance="icon"
         [icon]="(theme.nightMode$ | async)? 'tuiIconSun' : 'tuiIconMoon'" (click)="theme.switchTheme($event)"
         [tuiHint]="((theme.nightMode$ | async)? 'toogle-lightmode' : 'toogle-nightmode') | translate"

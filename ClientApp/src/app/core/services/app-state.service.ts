@@ -20,7 +20,7 @@ export class AppStateService {
     private indexedDB: IndexDBService,
     private langService: LanguageOriginService,
     private lStorage: LocalStorageService,
-    private tour: TourService,
+    public tour: TourService,
   ) { }
 
   public async init() {
@@ -39,7 +39,12 @@ export class AppStateService {
     this.lStorage.setAppWizardDone();
     await this.vS.initViewer();
     this.initialized$.next(true);
-    this.tour.start();
+    this.initializeTour();
+  }
+
+  private initializeTour() {
+    if (!this.lStorage.getAppMainTourDone())
+      this.tour.start();
   }
 }
 

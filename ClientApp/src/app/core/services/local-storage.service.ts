@@ -32,6 +32,14 @@ export class LocalStorageService {
     localStorage.setItem('wizardDone', "1");
   }
 
+  getAppMainTourDone(): number | undefined {
+    return Number(localStorage.getItem('mainTourDone')) ?? undefined;
+  }
+
+  setAppMainTourDone() {
+    localStorage.setItem('mainTourDone', "1");
+  }
+
   getLibreTranslateUrl() {
     return localStorage.getItem('lTUrl') ?? undefined;
   }
@@ -119,7 +127,7 @@ export class LocalStorageService {
   }
 
   setCategorySearch(search: string) {
-    
+
   }
 
   getGroup(view: number) {

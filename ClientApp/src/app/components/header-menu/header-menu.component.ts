@@ -117,6 +117,10 @@ export class HeaderMenuComponent implements OnInit {
       this.viewers.splitMode();
   }
 
+  public onMainTour() {
+    this.appState.tour.start();
+  }
+
   private onTourOnGoing() {
     if (!this.appState.isOnTour$()) return;
 

@@ -5,6 +5,7 @@ import { TuiBreakpointService } from '@taiga-ui/core';
 import { ShepherdService } from 'angular-shepherd';
 import { firstValueFrom, pairwise, takeWhile } from 'rxjs';
 import { StepOptions } from 'shepherd.js/dist/cjs/step';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class TourService {
 
   constructor(
     private translate: TranslateService,
+    private lStorage: LocalStorageService,
     private shepherdService: ShepherdService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
@@ -47,6 +49,7 @@ export class TourService {
   }
 
   private onTourFinish() {
+    this.lStorage.setAppMainTourDone();
     this.isOnTour$.update(_ => false);
   }
 
