@@ -19,6 +19,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { BehaviorSubject } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
+import { AppStateService } from 'src/app/core/services/app-state.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -66,16 +67,17 @@ export class HeaderMenuComponent implements OnInit {
   public count = 0;
 
   constructor(
-    public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
-    readonly translate: TranslateService,
+    public libreTranslate: LibreTranslateService,
+    public portraitsService: PortraitsService,
     private lStorage: LocalStorageService,
+    readonly translate: TranslateService,
     public authService: AuthService,
     private viewers: ViewersService,
     public theme: ThemeService,
+    public appState: AppStateService,
     @Inject(TuiLanguageSwitcher) readonly switcher: TuiLanguageSwitcher,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
-    public portraitsService: PortraitsService
   ) {
     this.translate.currentLang = this.translate.defaultLang;
   }

@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, WritableSignal, signal } from '@angular/core';
 import { offset } from '@floating-ui/dom';
 import { TranslateService } from '@ngx-translate/core';
+import { TuiBreakpointService } from '@taiga-ui/core';
 import { ShepherdService } from 'angular-shepherd';
 import { firstValueFrom } from 'rxjs';
 import { StepOptions } from 'shepherd.js/dist/cjs/step';
@@ -9,10 +10,12 @@ import { StepOptions } from 'shepherd.js/dist/cjs/step';
   providedIn: 'root'
 })
 export class TourService {
+  public isOnTour$: WritableSignal<boolean> = signal(false);
 
   constructor(
     private translate: TranslateService,
-    private shepherdService: ShepherdService
+    private shepherdService: ShepherdService,
+    @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 
   private async init() {
@@ -31,6 +34,9 @@ export class TourService {
     };
 
     let nextTranslateText = this.translate.instant('tour-next');
+    let endTranslateText = this.translate.instant('tour-end');
+    let mobile = await firstValueFrom(this.breakpointService$)
+      .then(r => r === 'mobile' ? true : false);
 
     let defaultSteps: StepOptions[] = [
       {
@@ -68,10 +74,12 @@ export class TourService {
         title: this.translate.instant('tour-split-button-title'),
         text: this.translate.instant('tour-split-button'),
         modalOverlayOpeningRadius: 8,
+        classes: 'stt-custom-shapherd-header-arrow',
         canClickTarget: true,
+        showOn: () => !mobile,
         attachTo: {
           element: '.split-button',
-          on: 'right'
+          on: 'bottom'
         },
         advanceOn: {
           selector: '.split-button',
@@ -83,6 +91,7 @@ export class TourService {
         title: this.translate.instant('tour-viewer-active-title'),
         text: this.translate.instant('tour-viewer-active'),
         canClickTarget: false,
+        showOn: () => !mobile,
         attachTo: {
           element: '.active',
           on: 'left'
@@ -101,9 +110,48 @@ export class TourService {
         title: this.translate.instant('tour-resizer-container-title'),
         text: this.translate.instant('tour-resizer-container'),
         canClickTarget: false,
+        showOn: () => !mobile,
         attachTo: {
           element: '.resizer-container',
           on: 'left'
+        },
+        buttons: [
+          {
+            action() {
+              return this.next();
+            },
+            text: nextTranslateText
+          }
+        ]
+      },
+      {
+        id: 'main-menu-button',
+        title: this.translate.instant('tour-main-menu-button-title'),
+        text: this.translate.instant('tour-main-menu-button'),
+        modalOverlayOpeningRadius: 8,
+        classes: 'stt-custom-shapherd-header-arrow',
+        canClickTarget: true,
+        showOn: () => mobile,
+        attachTo: {
+          element: '#mainMenuButton',
+          on: 'bottom'
+        },
+        advanceOn: {
+          selector: '#mainMenuButton',
+          event: 'click'
+        }
+      },
+      {
+        id: 'sidebar-actions-mobile',
+        title: this.translate.instant('tour-sidebar-actions-title'),
+        text: this.translate.instant('tour-sidebar-actions'),
+        modalOverlayOpeningRadius: 8,
+        classes: 'stt-custom-shapherd-header-arrow',
+        canClickTarget: false,
+        showOn: () => mobile,
+        attachTo: {
+          element: '.mobile-menu',
+          on: 'bottom'
         },
         buttons: [
           {
@@ -119,6 +167,7 @@ export class TourService {
         title: this.translate.instant('tour-sidebar-actions-title'),
         text: this.translate.instant('tour-sidebar-actions'),
         canClickTarget: false,
+        showOn: () => !mobile,
         attachTo: {
           element: '.sidebar-actions',
           on: 'right'
@@ -136,15 +185,23 @@ export class TourService {
         id: 'sidebar-buttons-localization',
         title: this.translate.instant('tour-sidebar-localization-title'),
         text: this.translate.instant('tour-sidebar-localization'),
-        attachTo: {
-          element: '#localizationButton',
-          on: 'right-start'
-        },
         classes: 'stt-custom-shapherd-header-arrow',
         modalOverlayOpeningRadius: 8,
+        attachTo: {
+          element: '#localizationButton',
+          on: mobile ? 'bottom' : 'right-start'
+        },
         advanceOn: {
           selector: '#localizationButton',
           event: 'click'
+        },
+        when: {
+          hide: () => {
+            let menuButton = document.getElementById('mainMenuButton');
+            console.log("ENTER HIDE", menuButton);
+            menuButton?.click();
+            menuButton?.click();
+          }
         }
       },
       {
@@ -154,7 +211,7 @@ export class TourService {
         canClickTarget: false,
         attachTo: {
           element: '.active',
-          on: 'left'
+          on: mobile ? undefined : 'left'
         },
         buttons: [
           {
@@ -170,6 +227,7 @@ export class TourService {
         title: this.translate.instant('tour-viewer-container-select-title'),
         text: this.translate.instant('tour-viewer-container-select'),
         canClickTarget: true,
+        showOn: () => !mobile,
         attachTo: {
           element: '.viewer-container',
           on: 'right'
@@ -186,6 +244,7 @@ export class TourService {
         canClickTarget: true,
         classes: 'stt-custom-shapherd-header-arrow',
         modalOverlayOpeningRadius: 8,
+        showOn: () => !mobile,
         attachTo: {
           element: '#dialogsButton',
           on: 'right-start'
@@ -196,6 +255,26 @@ export class TourService {
         }
       },
       {
+        id: 'theme-button',
+        title: this.translate.instant('tour-theme-button-title'),
+        text: this.translate.instant('tour-theme-button'),
+        canClickTarget: true,
+        classes: 'stt-custom-shapherd-header-arrow',
+        modalOverlayOpeningRadius: 8,
+        attachTo: {
+          element: '#themeButton',
+          on: 'bottom'
+        },
+        buttons: [
+          {
+            action() {
+              return this.next();
+            },
+            text: nextTranslateText
+          }
+        ]
+      },
+      {
         id: 'settings-button',
         title: this.translate.instant('tour-settings-button-title'),
         text: this.translate.instant('tour-settings-button'),
@@ -204,7 +283,7 @@ export class TourService {
         modalOverlayOpeningRadius: 8,
         attachTo: {
           element: '#settingsButton',
-          on: 'left-start'
+          on: 'bottom'
         },
         advanceOn: {
           selector: '#settingsButton',
@@ -212,9 +291,9 @@ export class TourService {
         }
       },
       {
-        id: 'beginning-2',
-        title: this.translate.instant('tour-welcome-title'),
-        text: this.translate.instant('tour-welcome'),
+        id: 'sidebar',
+        title: this.translate.instant('tour-sidebar-title'),
+        text: this.translate.instant('tour-sidebar'),
         buttons: [
           {
             action() {
@@ -225,13 +304,14 @@ export class TourService {
         ]
       },
       {
-        id: 'settings-side-bar',
-        title: this.translate.instant('tour-settings-button-title'),
-        text: this.translate.instant('tour-settings-button'),
-        classes: 'stt-custom-shapherd-header',
+        id: 'settings-sidebar-language',
+        title: this.translate.instant('tour-settings-language-title'),
+        text: this.translate.instant('tour-settings-language'),
+        canClickTarget: false,
+        classes: 'stt-custom-shapherd-header-arrow',
         attachTo: {
           element: '#appLanguageSetting',
-          on: 'left-start'
+          on: mobile ? 'bottom' : 'left'
         },
         buttons: [
           {
@@ -239,6 +319,58 @@ export class TourService {
               return this.next();
             },
             text: nextTranslateText
+          }
+        ]
+      },
+      {
+        id: 'settings-sidebar-portraits',
+        title: this.translate.instant('tour-settings-portraits-title'),
+        text: this.translate.instant('tour-settings-portraits'),
+        canClickTarget: false,
+        attachTo: {
+          element: '#appPortraitSetting',
+          on: mobile ? 'top' : 'left'
+        },
+        buttons: [
+          {
+            action() {
+              return this.next();
+            },
+            text: nextTranslateText
+          }
+        ]
+      },
+      {
+        id: 'settings-sidebar-libretranslate',
+        title: this.translate.instant('tour-settings-libretranslate-title'),
+        text: this.translate.instant('tour-settings-libretranslate'),
+        canClickTarget: false,
+        attachTo: {
+          element: '#appLibreTranslateSetting',
+          on: mobile ? 'top' : 'left'
+        },
+        buttons: [
+          {
+            action() {
+              return this.next();
+            },
+            text: nextTranslateText
+          }
+        ]
+      },
+      {
+        id: 'end',
+        title: this.translate.instant('tour-end-title'),
+        text: this.translate.instant('tour-end'),
+        canClickTarget: false,
+        buttons: [
+          {
+            action() {
+              let button = document.getElementById('settingsButton');
+              button?.click();
+              return this.next();
+            },
+            text: endTranslateText
           }
         ]
       },
@@ -247,12 +379,18 @@ export class TourService {
     this.shepherdService.defaultStepOptions = defaultStepOptions as any;
     this.shepherdService.modal = true;
     this.shepherdService.confirmCancel = false;
+    this.shepherdService.onTourFinish = this.onTourFinish.bind(this);
     this.shepherdService.addSteps(defaultSteps as any);
   }
 
-  public start() {
-    this.init();
+  public async start() {
+    await this.init();
+    this.isOnTour$.update(_ => true);
     this.shepherdService.start();
+  }
+
+  private onTourFinish() {
+    this.isOnTour$.update(_ => false);
   }
 
 }

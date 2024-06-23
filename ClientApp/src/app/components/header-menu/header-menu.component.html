@@ -13,13 +13,13 @@
     <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
         appearance="icon" [icon]="'tuiIconGithub'">
     </a>
-    <button tuiIconButton appearance="icon" [icon]="(theme.nightMode$ | async)? 'tuiIconSun' : 'tuiIconMoon'"
-        (click)="theme.switchTheme($event)"
+    <button id="themeButton" tuiIconButton appearance="icon"
+        [icon]="(theme.nightMode$ | async)? 'tuiIconSun' : 'tuiIconMoon'" (click)="theme.switchTheme($event)"
         [tuiHint]="((theme.nightMode$ | async)? 'toogle-lightmode' : 'toogle-nightmode') | translate"
         tuiHintAppearance="onDark">
     </button>
     <button id="settingsButton" tuiIconButton appearance="icon" [icon]="'tuiIconSettings'" (click)="onToogleSettings()"
-        >
+        (tuiActiveZoneChange)="!appState.isOnTour$() ? onToogleSettings(): undefined">
         <tui-scrollbar *tuiSidebar="openSetting; direction: 'right'">
             <div style="height: var(--header-height); display: flex; align-items: center; justify-content: center;">
                 <h3>{{'language-configuration' | translate}}</h3>
@@ -55,7 +55,7 @@
                 {{'portraits-dir' | translate}}
             </h3>
             <hr>
-            <div style="padding: 1em;">
+            <div id="appPortraitSetting" style="padding: 1em;">
                 <button tuiButton size="s" style="width: 100%;" appearance="outline"
                     (click)="portraitsService.onFolderChange()">
                     @if (portraitsService.dirName$ | async; as dirName) {
@@ -71,7 +71,7 @@
                 {{'libretranslate-configuration' | translate}}
             </h3>
             <hr>
-            <div style="padding: 1em;">
+            <div id="appLibreTranslateSetting" style="padding: 1em;">
                 <h4>{{'libretranslate-url' | translate}}</h4>
                 <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.url" tuiTextfieldSize="s"
                     (ngModelChange)="libreTranslate.onUrlChange($event)">

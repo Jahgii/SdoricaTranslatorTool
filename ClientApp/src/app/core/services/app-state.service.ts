@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ViewersService } from './viewers.service';
 import { LocalStorageService } from './local-storage.service';
 import { AppViews, viewers } from '../viewers';
 import { IndexDBService } from './index-db.service';
 import { LanguageOriginService } from './language-origin.service';
-import { TranslateService } from '@ngx-translate/core';
 import { TourService } from './tour.service';
 
 @Injectable({
@@ -14,13 +13,14 @@ import { TourService } from './tour.service';
 export class AppStateService {
 
   public initialized$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public isOnTour$: Signal<boolean> = computed(() => this.tour.isOnTour$());
 
   constructor(
     private vS: ViewersService,
     private indexedDB: IndexDBService,
     private langService: LanguageOriginService,
     private lStorage: LocalStorageService,
-    private tour: TourService
+    private tour: TourService,
   ) { }
 
   public async init() {
@@ -42,3 +42,4 @@ export class AppStateService {
     this.tour.start();
   }
 }
+

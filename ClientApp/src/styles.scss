@@ -156,7 +156,7 @@ code {
 .stt-custom-shapherd-header-arrow {
   .shepherd-arrow {
     &:before {
-      background: var(--tui-base-01);
+      background: var(--tui-base-01) !important;
     }
   }
 }

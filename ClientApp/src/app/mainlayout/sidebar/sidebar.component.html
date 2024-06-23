@@ -8,15 +8,22 @@
             </tui-loader>
 
             @if ((breakpointService$ | async) === 'mobile') {
-            <div class="menu-indicator">
-                <tui-svg src="tuiIconArrowDownCircle"></tui-svg>
-            </div>
+            @if (appState.isOnTour$()) {
+            <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
+                [pseudoActive]="open || null" tuiMode="onDark" [tuiDropdownDirection]="'bottom'"
+                [tuiDropdown]="dropdownMenu" [tuiDropdownManual]="open" (click)="open = !open"
+                [tuiDropdownSided]="false" style="position: absolute;">
+            </button>
+            }
+            @else{
             <tui-hosted-dropdown [tuiDropdownDirection]="'bottom'" style="position: absolute;" [content]="dropdownMenu"
                 [(open)]="open">
-                <button tuiIconButton appearance="flat" size="l" type="button" [pseudoActive]="open || null"
-                    tuiMode="onDark">
+                <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
+                    [pseudoActive]="open || null" tuiMode="onDark">
                 </button>
             </tui-hosted-dropdown>
+            }
+
             <ng-template #dropdownMenu let-close="close" let-activeZone>
                 <div class="mobile-menu">
                     <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
@@ -76,6 +83,7 @@
 
         <div class="blank-space"></div>
 
+        @if ((breakpointService$ | async) !== 'mobile') {
         <div class="sidebar-actions">
             <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
 
@@ -83,6 +91,7 @@
             <app-gamedata-values></app-gamedata-values>
             <app-common-words></app-common-words>
         </div>
+        }
     </div>
 </div>
 

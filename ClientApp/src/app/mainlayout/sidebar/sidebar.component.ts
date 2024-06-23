@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
 import { CommonWordsComponent } from 'src/app/components/common-words/common-words.component';
-import { TuiBreakpointService, TuiButtonModule, TuiDataListModule, TuiHintModule, TuiHostedDropdownModule, TuiLoaderModule, TuiModeModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiButtonModule, TuiDataListModule, TuiDropdownModule, TuiHintModule, TuiHostedDropdownModule, TuiLoaderModule, TuiModeModule, TuiSvgModule } from '@taiga-ui/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiAvatarModule } from '@taiga-ui/kit';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LocalizationKeyComponent } from 'src/app/localization/localization-key/localization-key.component';
 import { TuiActiveZoneModule } from '@taiga-ui/cdk';
 import { AppViews, viewers } from 'src/app/core/viewers';
+import { AppStateService } from 'src/app/core/services/app-state.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -29,6 +30,7 @@ import { AppViews, viewers } from 'src/app/core/viewers';
     TuiSvgModule,
     TuiActiveZoneModule,
     TuiModeModule,
+    TuiDropdownModule,
 
     LocalizationKeyComponent,
     GamedataValuesComponent,
@@ -54,6 +56,7 @@ export class SidebarComponent implements AfterViewInit {
   constructor(
     public auth: AuthService,
     private viewersService: ViewersService,
+    public appState: AppStateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 
