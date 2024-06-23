@@ -29,7 +29,7 @@ export class ViewerComponent implements OnInit {
   @HostBinding('style.width')
   widthPercentage = "100%";
 
-  public componentLoadedName!: string;
+  public componentLoadedName?: string;
   public componentLoaded: ComponentRef<any> | undefined;
   public active: boolean = false;
   public viewIndex = -1;
@@ -67,6 +67,7 @@ export class ViewerComponent implements OnInit {
 
   public onClearComponent() {
     this.adHost.viewContainerRef.clear();
+    this.componentLoadedName = undefined;
     this.componentLoaded = undefined;
     this.ref.markForCheck();
   }

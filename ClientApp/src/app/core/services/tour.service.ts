@@ -6,6 +6,7 @@ import { ShepherdService } from 'angular-shepherd';
 import { firstValueFrom, pairwise, takeWhile } from 'rxjs';
 import { StepOptions } from 'shepherd.js/dist/cjs/step';
 import { LocalStorageService } from './local-storage.service';
+import { ViewersService } from './viewers.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class TourService {
   public isOnTour$: WritableSignal<boolean> = signal(false);
 
   constructor(
+    private viewers: ViewersService,
     private translate: TranslateService,
     private lStorage: LocalStorageService,
     private shepherdService: ShepherdService,
@@ -23,6 +25,7 @@ export class TourService {
   private async init() {
     let tour = await this.createMainAppSteps();
     this.createTour(tour);
+    this.viewers.restartView();
   }
 
   public async start() {
