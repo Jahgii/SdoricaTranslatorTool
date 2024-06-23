@@ -138,7 +138,8 @@ export class ViewersService {
   public loadComponent(viewerKey: AppViews, component: Type<any>, args: { [arg: string]: any }) {
     if (this.activeView.instance.componentLoadedName === viewerKey) return;
 
-    this.updateComponentsOpen(viewerKey, 'open');
+    this.removeActiveViewComponentOpen();
+    this.addComponentOpen(viewerKey);
 
     this.activeView.instance.loadComponent(component, args);
     this.activeView.instance.componentLoadedName = viewerKey;
@@ -154,12 +155,12 @@ export class ViewersService {
     });
   }
 
-  private updateComponentsOpen(viewerKey: AppViews, action: 'open' | 'close') {
+  private removeActiveViewComponentOpen() {
     if (this.activeView.instance.componentLoaded && this.activeView.instance.componentLoadedName)
       this.componentOpens[this.activeView.instance.componentLoadedName].next(this.componentOpens[this.activeView.instance.componentLoadedName].value - 1);
+  }
 
-    if (action === 'close') return;
-
+  private addComponentOpen(viewerKey: AppViews) {
     if (!this.componentOpens[viewerKey])
       this.componentOpens[viewerKey] = new BehaviorSubject(1);
     else
@@ -167,7 +168,7 @@ export class ViewersService {
   }
 
   public clearActiveComponent() {
-    this.updateComponentsOpen(this.activeView.instance.componentLoadedName as AppViews, 'close');
+    this.removeActiveViewComponentOpen();
     this.activeView.instance.onClearComponent();
   }
 
