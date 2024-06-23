@@ -11,7 +11,7 @@
             @if (appState.isOnTour$()) {
             <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
                 [pseudoActive]="open || null" tuiMode="onDark" [tuiDropdownDirection]="'bottom'"
-                [tuiDropdown]="dropdownMenu" [tuiDropdownManual]="open" (click)="open = !open"
+                [tuiDropdown]="dropdownMenu" [tuiDropdownManual]="open" (click)="onOpenMenu()"
                 [tuiDropdownSided]="false" style="position: absolute;">
             </button>
             }
@@ -91,11 +91,9 @@
             <app-localization-key
                 [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
             </app-localization-key>
-            <app-gamedata-values
-                [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
+            <app-gamedata-values [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
             </app-gamedata-values>
-            <app-common-words 
-                [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
+            <app-common-words [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
             </app-common-words>
         </div>
     </div>

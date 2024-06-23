@@ -3,7 +3,7 @@ import { offset } from '@floating-ui/dom';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { ShepherdService } from 'angular-shepherd';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, pairwise, takeWhile } from 'rxjs';
 import { StepOptions } from 'shepherd.js/dist/cjs/step';
 
 @Injectable({
@@ -19,6 +19,54 @@ export class TourService {
   ) { }
 
   private async init() {
+    let tour = await this.createMainAppSteps();
+    this.createTour(tour);
+  }
+
+  public async start() {
+    await this.init();
+    this.isOnTour$.update(_ => true);
+    this.shepherdService.start();
+
+    this.onBreakpointChange();
+  }
+
+  private onBreakpointChange() {
+    this.breakpointService$
+      .pipe(
+        takeWhile(() => this.isOnTour$()),
+        pairwise()
+      )
+      .subscribe(([previousBK, currentBK]) => {
+        if (
+          (previousBK === 'desktopLarge' && currentBK === 'desktopSmall') ||
+          (previousBK === 'desktopSmall' && currentBK === 'desktopLarge')) return;
+
+        this.restartTour();
+      });
+  }
+
+  private onTourFinish() {
+    this.isOnTour$.update(_ => false);
+  }
+
+  private createTour(tour: { defaultStepOptions: StepOptions, defaultSteps: StepOptions[] }) {
+    this.shepherdService.defaultStepOptions = tour.defaultStepOptions as any;
+    this.shepherdService.modal = true;
+    this.shepherdService.confirmCancel = false;
+    this.shepherdService.onTourFinish = this.onTourFinish.bind(this);
+    this.shepherdService.addSteps(tour.defaultSteps as any);
+  }
+
+  private async restartTour() {
+    this.shepherdService.cancel();
+
+    await this.init();
+    this.isOnTour$.update(_ => true);
+    this.shepherdService.start();
+  }
+
+  private async createMainAppSteps() {
     let defaultStepOptions: StepOptions = {
       cancelIcon: {
         enabled: true
@@ -195,14 +243,13 @@ export class TourService {
           selector: '#localizationButton',
           event: 'click'
         },
-        when: {
+        when: mobile ? {
           hide: () => {
             let menuButton = document.getElementById('mainMenuButton');
-            console.log("ENTER HIDE", menuButton);
             menuButton?.click();
             menuButton?.click();
           }
-        }
+        } : undefined
       },
       {
         id: 'viewer-container-active-loaded',
@@ -376,21 +423,7 @@ export class TourService {
       },
     ];
 
-    this.shepherdService.defaultStepOptions = defaultStepOptions as any;
-    this.shepherdService.modal = true;
-    this.shepherdService.confirmCancel = false;
-    this.shepherdService.onTourFinish = this.onTourFinish.bind(this);
-    this.shepherdService.addSteps(defaultSteps as any);
-  }
-
-  public async start() {
-    await this.init();
-    this.isOnTour$.update(_ => true);
-    this.shepherdService.start();
-  }
-
-  private onTourFinish() {
-    this.isOnTour$.update(_ => false);
+    return { defaultStepOptions, defaultSteps };
   }
 
 }

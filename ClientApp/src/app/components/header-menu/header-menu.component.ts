@@ -17,7 +17,7 @@ import { TuiRadioBlockModule, TuiSelectModule, TuiInputModule } from '@taiga-ui/
 import { TuiSidebarModule } from '@taiga-ui/addon-mobile';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { TuiButtonModule } from '@taiga-ui/core/components/button';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, skip, takeWhile } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 
@@ -102,21 +102,32 @@ export class HeaderMenuComponent implements OnInit {
     }
   }
 
-  public onToogleMenu() {
-    this.openMenu = !this.openMenu;
-  }
-
   public onToogleSettings() {
     let button = document.getElementById('settingsButton');
     button?.click();
     button?.click();
 
     this.openSetting = !this.openSetting;
+
+    this.onTourOnGoing();
   }
 
   public onSplitModeToggle(event: MouseEvent) {
     if (event.isTrusted)
       this.viewers.splitMode();
+  }
+
+  private onTourOnGoing() {
+    if (!this.appState.isOnTour$()) return;
+
+    this.breakpointService$
+      .pipe(
+        takeWhile(() => this.openSetting),
+        skip(1)
+      )
+      .subscribe(breakpoint => {
+        this.openSetting = false;
+      });
   }
 
   @tuiPure

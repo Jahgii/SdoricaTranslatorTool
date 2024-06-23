@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Type, ViewChild, ViewEncapsulation, ViewRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
@@ -11,6 +11,7 @@ import { LocalizationKeyComponent } from 'src/app/localization/localization-key/
 import { TuiActiveZoneModule } from '@taiga-ui/cdk';
 import { AppViews, viewers } from 'src/app/core/viewers';
 import { AppStateService } from 'src/app/core/services/app-state.service';
+import { skip, take, takeWhile } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -39,7 +40,7 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarComponent implements AfterViewInit {
+export class SidebarComponent {
   @ViewChild(LocalizationKeyComponent) localizationKeyDialog!: LocalizationKeyComponent;
   @ViewChild(GamedataValuesComponent) gamedataDialog!: GamedataValuesComponent;
   @ViewChild(CommonWordsComponent) dictionaryDialog!: CommonWordsComponent;
@@ -60,7 +61,23 @@ export class SidebarComponent implements AfterViewInit {
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 
-  ngAfterViewInit(): void {
+  public onOpenMenu() {
+    this.open = !this.open;
+
+    this.onTourOnGoing();
+  }
+
+  private onTourOnGoing() {
+    if (!this.appState.isOnTour$()) return;
+
+    this.breakpointService$
+      .pipe(
+        takeWhile(() => this.open),
+        skip(1)
+      )
+      .subscribe(breakpoint => {
+        this.open = false;
+      });
   }
 
   public loadComponent(viewerKey: AppViews) {
