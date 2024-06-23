@@ -83,15 +83,21 @@
 
         <div class="blank-space"></div>
 
-        @if ((breakpointService$ | async) !== 'mobile') {
         <div class="sidebar-actions">
+            @if ((breakpointService$ | async) !== 'mobile') {
             <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
+            }
 
-            <app-localization-key></app-localization-key>
-            <app-gamedata-values></app-gamedata-values>
-            <app-common-words></app-common-words>
+            <app-localization-key
+                [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
+            </app-localization-key>
+            <app-gamedata-values
+                [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
+            </app-gamedata-values>
+            <app-common-words 
+                [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
+            </app-common-words>
         </div>
-        }
     </div>
 </div>
 
