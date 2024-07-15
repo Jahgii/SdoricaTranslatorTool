@@ -57,11 +57,11 @@ export class TourService {
   }
 
   private createTour(tour: { defaultStepOptions: StepOptions, defaultSteps: StepOptions[] }) {
-    this.shepherdService.defaultStepOptions = tour.defaultStepOptions as any;
-    this.shepherdService.modal = true;
-    this.shepherdService.confirmCancel = false;
-    this.shepherdService.onTourFinish = this.onTourFinish.bind(this);
-    this.shepherdService.addSteps(tour.defaultSteps as any);
+      this.shepherdService.defaultStepOptions = tour.defaultStepOptions as any;
+      this.shepherdService.modal = true;
+      this.shepherdService.confirmCancel = false;
+      this.shepherdService.onTourFinish = this.onTourFinish.bind(this);
+      this.shepherdService.addSteps(tour.defaultSteps as any);
   }
 
   private async restartTour() {
@@ -413,8 +413,8 @@ export class TourService {
       },
       {
         id: 'end',
-        title: this.translate.instant('tour-end-title'),
-        text: this.translate.instant('tour-end'),
+        title: this.translate.instant('tour-finish-title'),
+        text: this.translate.instant('tour-finish'),
         canClickTarget: false,
         buttons: [
           {

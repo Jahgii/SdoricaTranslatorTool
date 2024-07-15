@@ -5,7 +5,6 @@ var cors = "CustomCors";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services
     .AddControllers()
     .AddJsonOptions(options =>
@@ -57,5 +56,17 @@ app.MapControllers();
 // .RequireAuthorization();
 
 app.MapFallbackToFile("index.html");
+
+app.MapGet("/api/status", () =>
+{
+    var status = new
+    {
+        Version = "1.0.0",
+        Status = "Alive"
+    };
+
+    return status;
+})
+.WithName("Status");
 
 app.Run();

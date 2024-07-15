@@ -25,6 +25,9 @@
                     <ng-container *ngFor="let item of data">
                         <button *tuiItem tuiTab>
                             {{item.Number}}
+                            @if (item.Translated) {
+                            <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                            }
                         </button>
                     </ng-container>
                 </tui-tabs-with-more>
