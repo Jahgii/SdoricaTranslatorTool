@@ -25,22 +25,10 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CommonWord word)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
-            {
-                session.StartTransaction();
-
-                try
-                {
-                    await _cMongoClient.Create<CommonWord>(session, word);
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
-            }
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+            await _cMongoClient.Create(session, word);
+            await session.CommitTransactionAsync();
 
             return Ok(word);
         }
@@ -48,23 +36,10 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPut]
         public async Task<ActionResult> Put([FromBody] CommonWord word)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
-            {
-                session.StartTransaction();
-
-                try
-                {
-                    await _cMongoClient.Replace<CommonWord>(session, e => e.Id == word.Id, word);
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
-            }
-
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+            await _cMongoClient.Replace(session, e => e.Id == word.Id, word);
+            await session.CommitTransactionAsync();
 
             return Ok(word);
         }
@@ -72,22 +47,10 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete([FromBody] CommonWord word)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
-            {
-                session.StartTransaction();
-
-                try
-                {
-                    await _cMongoClient.Delete<CommonWord>(session, e => e.Id == word.Id);
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
-            }
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+            await _cMongoClient.Delete<CommonWord>(session, e => e.Id == word.Id);
+            await session.CommitTransactionAsync();
 
             return Ok(word);
         }

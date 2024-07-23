@@ -1,9 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -33,63 +31,61 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] AuthValidation authValidation, IConfiguration _config)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+
+            try
             {
-                session.StartTransaction();
+                var GoogleCliendId = _config["GoogleCliendId"];
 
-                try
+                if (GoogleCliendId == null) return StatusCode(500);
+
+                var validationSettings = new GoogleJsonWebSignature.ValidationSettings()
                 {
-                    var GoogleCliendId = _config["GoogleCliendId"];
+                    Audience = [GoogleCliendId]
+                };
+                var payload = await GoogleJsonWebSignature.ValidateAsync(authValidation.IdToken, validationSettings);
 
-                    if (GoogleCliendId == null) return StatusCode(500);
+                var user = await _cMongoClient
+                    .GetCollection<User>()
+                    .Find(e => e.Email == payload.Email)
+                    .FirstOrDefaultAsync();
 
-                    var validationSettings = new GoogleJsonWebSignature.ValidationSettings()
+                if (user == null)
+                {
+                    User newUser = new User
                     {
-                        Audience = [GoogleCliendId]
+                        Email = payload.Email,
+                        TranslationCount = 3,
+                        Rol = "guest"
                     };
-                    var payload = await GoogleJsonWebSignature.ValidateAsync(authValidation.IdToken, validationSettings);
 
-                    var user = await _cMongoClient
-                        .GetCollection<User>()
-                        .Find(e => e.Email == payload.Email)
-                        .FirstOrDefaultAsync();
+                    int userCount = (int)await _cMongoClient
+                    .GetCollection<User>()
+                    .Find(_ => true)
+                    .CountDocumentsAsync();
 
-                    if (user == null)
-                    {
-                        User newUser = new User
-                        {
-                            Email = payload.Email,
-                            TranslationCount = 3,
-                            Rol = "guest"
-                        };
+                    if (userCount == 0) newUser.Rol = "admin";
 
-                        int userCount = (int)await _cMongoClient
-                        .GetCollection<User>()
-                        .Find(_ => true)
-                        .CountDocumentsAsync();
+                    await _cMongoClient.Create<User>(session, newUser);
+                    await session.CommitTransactionAsync();
 
-                        if (userCount == 0) newUser.Rol = "admin";
-
-                        await _cMongoClient.Create<User>(session, newUser);
-                        await session.CommitTransactionAsync();
-
-                        user = newUser;
-                    }
-
-                    if (user.Rol == "guest")
-                        user.Token = GenerateToken(0.12);
-                    else if (user.Rol == "admin")
-                        user.Token = GenerateToken(12);
-                    else
-                        return Unauthorized();
-
-                    return Ok(user);
+                    user = newUser;
                 }
-                catch
-                {
-                    await session.AbortTransactionAsync();
+
+                if (user.Rol == "guest")
+                    user.Token = GenerateToken(0.12);
+                else if (user.Rol == "admin")
+                    user.Token = GenerateToken(12);
+                else
                     return Unauthorized();
-                }
+
+                return Ok(user);
+            }
+            catch
+            {
+                await session.AbortTransactionAsync();
+                return Unauthorized();
             }
 
         }

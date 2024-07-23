@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using SdoricaTranslatorTool;
 
 var cors = "CustomCors";
@@ -14,6 +15,9 @@ builder.Services
 
 //JWT
 // builder.Services.ConfigureJwt(builder.Configuration);
+
+builder.Services.AddExceptionHandler<MainExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // CORS
 builder.Services
@@ -39,6 +43,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
