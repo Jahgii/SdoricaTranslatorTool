@@ -16,7 +16,7 @@ namespace SdoricaTranslatorTool.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get([FromHeader]string? id)
+        public async Task<ActionResult> Get([FromHeader] string? id)
         {
             var cursor = await _cMongoClient.GetCollection<Languages>().FindAsync(_ => true);
             var data = await cursor.ToListAsync();
@@ -26,28 +26,17 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<Languages> languages)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+
+            foreach (var l in languages)
             {
-                session.StartTransaction();
+                if (await VerifiedLanguage(l.Name)) continue;
 
-                try
-                {
-                    foreach (var l in languages)
-                    {
-                        if (await VerifiedLanguage(l.Name)) continue;
-
-                        await _cMongoClient.Create<Languages>(session, l);
-                    }
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
+                await _cMongoClient.Create(session, l);
             }
 
+            await session.CommitTransactionAsync();
 
             return Ok();
         }
