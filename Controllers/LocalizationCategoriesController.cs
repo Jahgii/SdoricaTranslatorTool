@@ -30,28 +30,16 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<LocalizationCategory> categories)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+            foreach (var c in categories)
             {
-                session.StartTransaction();
+                if (await VerifiedCategory(c.Name)) continue;
 
-                try
-                {
-                    foreach (var c in categories)
-                    {
-                        if (await VerifiedCategory(c.Name)) continue;
-
-                        await _cMongoClient.Create<LocalizationCategory>(session, c);
-                    }
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
+                await _cMongoClient.Create(session, c);
             }
 
+            await session.CommitTransactionAsync();
 
             return Ok();
         }
@@ -80,27 +68,17 @@ namespace SdoricaTranslatorTool.Controllers
                 }
             });
 
-            using (var session = await _cMongoClient.StartSessionAsync())
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+
+            await _cMongoClient.Delete<LocalizationKey>(session, e => e.Name == "");
+
+            foreach (var c in categories)
             {
-                session.StartTransaction();
-
-                try
-                {
-                    await _cMongoClient.Delete<LocalizationKey>(session, e => e.Name == "");
-
-                    foreach (var c in categories)
-                    {
-                        await _cMongoClient.Replace<LocalizationCategory>(session, e => e.Id == c.Id, c);
-                    }
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
+                await _cMongoClient.Replace<LocalizationCategory>(session, e => e.Id == c.Id, c);
             }
+
+            await session.CommitTransactionAsync();
 
             return Ok();
         }
