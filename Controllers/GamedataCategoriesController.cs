@@ -27,27 +27,17 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<GamedataCategory> categories)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+
+            foreach (var c in categories)
             {
-                session.StartTransaction();
+                if (await VerifiedCategory(c.Name)) continue;
 
-                try
-                {
-                    foreach (var c in categories)
-                    {
-                        if (await VerifiedCategory(c.Name)) continue;
-
-                        await _cMongoClient.Create<GamedataCategory>(session, c);
-                    }
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
+                await _cMongoClient.Create(session, c);
             }
+
+            await session.CommitTransactionAsync();
 
 
             return Ok();
