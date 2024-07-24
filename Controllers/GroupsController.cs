@@ -27,28 +27,17 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<Group> groups)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+
+            foreach (var g in groups)
             {
-                session.StartTransaction();
+                if (await VerifiedGroup(g.OriginalName, g.Language)) continue;
 
-                try
-                {
-                    foreach (var g in groups)
-                    {
-                        if (await VerifiedGroup(g.OriginalName, g.Language)) continue;
-
-                        await _cMongoClient.Create<Group>(session, g);
-                    }
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
+                await _cMongoClient.Create(session, g);
             }
 
+            await session.CommitTransactionAsync();
 
             return Ok();
         }
@@ -56,34 +45,26 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(Group group)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
-            {
-                session.StartTransaction();
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
 
-                try
-                {
-                    var updateGroupName = Builders<Group>.Update.Set(e => e.Name, group.Name);
-                    var updateImageLink = Builders<Group>.Update.Set(e => e.ImageLink, group.ImageLink);
+            var updateGroupName = Builders<Group>.Update.Set(e => e.Name, group.Name);
+            var updateImageLink = Builders<Group>.Update.Set(e => e.ImageLink, group.ImageLink);
 
-                    await _cMongoClient.Update<Group>(session, e => e.Id == group.Id, updateGroupName);
-                    await _cMongoClient.Update<Group>(session, e => e.Id == group.Id, updateImageLink);
+            await _cMongoClient.Update(session, e => e.Id == group.Id, updateGroupName);
+            await _cMongoClient.Update(session, e => e.Id == group.Id, updateImageLink);
 
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
-            }
-
+            await session.CommitTransactionAsync();
 
             return Ok(group);
         }
 
         private async Task<bool> VerifiedGroup(string group, string language)
         {
-            var query = await _cMongoClient.GetCollection<Group>().FindAsync<Group>(e => e.OriginalName == group && e.Language == language);
+            var query = await _cMongoClient
+                .GetCollection<Group>()
+                .FindAsync(e => e.OriginalName == group && e.Language == language);
+            
             var skip = await query.FirstOrDefaultAsync();
 
             return skip != null;
