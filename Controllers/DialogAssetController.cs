@@ -88,64 +88,59 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<DialogAsset> dialogAssets)
         {
-            int FileSkip = 0;
-            using (var session = await _cMongoClient.StartSessionAsync())
-            {
-                session.StartTransaction();
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
 
-                try
-                {
-                    FileSkip = await SkipAssets(dialogAssets);
-                    if (dialogAssets.Count > 0)
-                    {
-                        await _cMongoClient.Create<DialogAsset>(session, dialogAssets);
-                        await session.CommitTransactionAsync();
-                    }
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
+            int FileSkip = await SkipAssets(dialogAssets);
+            if (dialogAssets.Count > 0)
+            {
+                await _cMongoClient.Create<DialogAsset>(session, dialogAssets);
+                await session.CommitTransactionAsync();
             }
 
-            return Ok(new { FileSkip = FileSkip });
+            return Ok(new { FileSkip });
         }
 
         [HttpPut]
         public async Task<ActionResult> Put(DialogAsset dialogAsset)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+
+            var group = await _cMongoClient
+                .GetCollection<Group>()
+                .Find(e => e.OriginalName == dialogAsset.Group && e.Language == dialogAsset.Language && e.MainGroup == dialogAsset.MainGroup)
+                .FirstOrDefaultAsync();
+
+            var mainGroup = await _cMongoClient
+                .GetCollection<MainGroup>()
+                .Find(e => e.OriginalName == dialogAsset.MainGroup && e.Language == dialogAsset.Language)
+                .FirstOrDefaultAsync();
+
+            var oldDialog = await _cMongoClient
+                .GetCollection<DialogAsset>()
+                .Find(e => e.OriginalFilename == dialogAsset.OriginalFilename)
+                .FirstOrDefaultAsync();
+
+            if (oldDialog.Translated != dialogAsset.Translated)
             {
-                session.StartTransaction();
-
-                try
-                {
-                    var group = await _cMongoClient.GetCollection<Group>().Find(e => e.OriginalName == dialogAsset.Group && e.Language == dialogAsset.Language && e.MainGroup == dialogAsset.MainGroup).FirstOrDefaultAsync();
-                    var mainGroup = await _cMongoClient.GetCollection<MainGroup>().Find(e => e.OriginalName == dialogAsset.MainGroup && e.Language == dialogAsset.Language).FirstOrDefaultAsync();
-                    var oldDialog = await _cMongoClient.GetCollection<DialogAsset>().Find(e => e.OriginalFilename == dialogAsset.OriginalFilename).FirstOrDefaultAsync();
-
-                    if (oldDialog.Translated != dialogAsset.Translated)
-                    {
-                        mainGroup.TranslatedFiles += dialogAsset.Translated ? 1 : -1;
-                        group.TranslatedFiles += dialogAsset.Translated ? 1 : -1;
-                    }
-
-                    var updateGroupTranslated = Builders<Group>.Update.Set(e => e.TranslatedFiles, group.TranslatedFiles);
-                    var updateMainTranslated = Builders<MainGroup>.Update.Set(e => e.TranslatedFiles, mainGroup.TranslatedFiles);
-
-                    await _cMongoClient.Replace<DialogAsset>(session, e => e.OriginalFilename == dialogAsset.OriginalFilename, dialogAsset);
-                    await _cMongoClient.Update<Group>(session, e => e.Id == group.Id, updateGroupTranslated);
-                    await _cMongoClient.Update<MainGroup>(session, e => e.Id == mainGroup.Id, updateMainTranslated);
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
+                mainGroup.TranslatedFiles += dialogAsset.Translated ? 1 : -1;
+                group.TranslatedFiles += dialogAsset.Translated ? 1 : -1;
             }
+
+            var updateGroupTranslated = Builders<Group>
+                .Update
+                .Set(e => e.TranslatedFiles, group.TranslatedFiles);
+
+            var updateMainTranslated = Builders<MainGroup>
+                .Update
+                .Set(e => e.TranslatedFiles, mainGroup.TranslatedFiles);
+
+            await _cMongoClient.Replace(session, e => e.OriginalFilename == dialogAsset.OriginalFilename, dialogAsset);
+            await _cMongoClient.Update(session, e => e.Id == group.Id, updateGroupTranslated);
+            await _cMongoClient.Update(session, e => e.Id == mainGroup.Id, updateMainTranslated);
+
+            await session.CommitTransactionAsync();
 
 
             return Ok(dialogAsset);
