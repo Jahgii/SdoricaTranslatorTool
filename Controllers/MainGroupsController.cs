@@ -27,28 +27,17 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<MainGroup> mainGroups)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
+
+            foreach (var mG in mainGroups)
             {
-                session.StartTransaction();
+                if (await VerifiedMainGroups(mG.OriginalName, mG.Language)) continue;
 
-                try
-                {
-                    foreach (var mG in mainGroups)
-                    {
-                        if (await VerifiedMainGroups(mG.OriginalName, mG.Language)) continue;
-
-                        await _cMongoClient.Create<MainGroup>(session, mG);
-                    }
-
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
+                await _cMongoClient.Create(session, mG);
             }
 
+            await session.CommitTransactionAsync();
 
             return Ok();
         }
@@ -56,33 +45,24 @@ namespace SdoricaTranslatorTool.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(MainGroup mainGroup)
         {
-            using (var session = await _cMongoClient.StartSessionAsync())
-            {
-                session.StartTransaction();
+            using var session = await _cMongoClient.StartSessionAsync();
+            session.StartTransaction();
 
-                try
-                {
-                    var updateMainGroupName = Builders<MainGroup>.Update.Set(e => e.Name, mainGroup.Name);
+            var updateMainGroupName = Builders<MainGroup>.Update.Set(e => e.Name, mainGroup.Name);
 
-                    await _cMongoClient.Update<MainGroup>(session, e => e.Id == mainGroup.Id, updateMainGroupName);
+            await _cMongoClient.Update(session, e => e.Id == mainGroup.Id, updateMainGroupName);
 
-                    await session.CommitTransactionAsync();
-                }
-                catch
-                {
-                    await session.AbortTransactionAsync();
-                    return StatusCode(500);
-                }
-            }
-
+            await session.CommitTransactionAsync();
 
             return Ok(mainGroup);
         }
 
-
         private async Task<bool> VerifiedMainGroups(string mainGroup, string language)
         {
-            var query = await _cMongoClient.GetCollection<MainGroup>().FindAsync<MainGroup>(e => e.OriginalName == mainGroup && e.Language == language);
+            var query = await _cMongoClient
+                .GetCollection<MainGroup>()
+                .FindAsync(e => e.OriginalName == mainGroup && e.Language == language);
+            
             var skip = await query.FirstOrDefaultAsync();
 
             return skip != null;
