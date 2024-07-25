@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { TuiAppBarModule } from '@taiga-ui/addon-mobile';
@@ -20,9 +19,7 @@ import { TuiBlockStatusModule } from '@taiga-ui/layout';
 
     TuiBlockStatusModule,
     TuiAppBarModule,
-    TuiLoaderModule,
-
-    GoogleSigninButtonModule
+    TuiLoaderModule
   ]
 })
 export class LoginComponent {

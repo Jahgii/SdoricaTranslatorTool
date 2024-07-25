@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-// import { SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
@@ -14,61 +13,17 @@ export class AuthService {
   public authenticating$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public authenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  // public user: SocialUser | undefined;
   public rol!: 'guest' | 'admin';
   private userDB!: IUser;
 
   constructor(
-    // private socialAuthService: SocialAuthService,
     private local: LocalStorageService,
     private api: ApiService,
     private languageOrigin: LanguageOriginService,
     private alert: TuiAlertService,
     private translate: TranslateService
   ) {
-    // this.socialAuthService
-    //   .authState
-    //   .subscribe(async (user) => {
-    //     if (!user) return;
 
-    //     this.authenticating$.next(true);
-
-    //     let authValidation: IAuthValidation = {
-    //       provider: user.provider,
-    //       idToken: user.idToken
-    //     }
-
-    //     await firstValueFrom(this.api.post<IUser>('auth', authValidation))
-    //       .then(
-    //         async res => {
-    //           this.local.setToken(res.Token);
-    //           this.userDB = res;
-    //           await this.languageOrigin.onRetriveLanguages();
-
-    //           var element = document.querySelector(':root') as any;
-    //           element.style.setProperty('--header-height', '3.9375rem');
-    //           if (this.userDB.Rol == 'guest') {
-    //             this.rol = this.userDB.Rol;
-    //           }
-    //           else if (this.userDB.Rol == 'admin') {
-    //             element.style.setProperty('--menu-width', '3rem');
-    //             this.rol = this.userDB.Rol;
-    //           }
-    //           this.authenticated$.next(true);
-    //           this.user = user;
-    //         },
-    //         error => {
-    //           let alert = this.alert.open(this.translate.instant('can-not-login'), {
-    //             label: 'Error',
-    //             status: 'error',
-    //             autoClose: true
-    //           });
-
-    //           firstValueFrom(alert);
-    //         }
-    //       );
-    //     this.authenticating$.next(false);
-    //   });
   }
 }
 
