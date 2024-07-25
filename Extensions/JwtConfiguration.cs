@@ -8,7 +8,8 @@ namespace SdoricaTranslatorTool
     {
         public static void ConfigureJwt(this IServiceCollection services, IConfiguration config)
         {
-            services.AddAuthentication(opt =>
+            services
+            .AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -26,6 +27,8 @@ namespace SdoricaTranslatorTool
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["IssuerSigningKey"] ?? ""))
                 };
             });
+
+            services.AddSingleton<IJWT, JWT>();
         }
     }
 }

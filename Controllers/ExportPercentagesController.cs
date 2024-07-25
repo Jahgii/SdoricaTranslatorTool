@@ -39,7 +39,7 @@ namespace SdoricaTranslatorTool.Controllers
 
             int dialogsTranslated = (int)await _cMongoClient
                 .GetCollection<DialogAsset>()
-                .Find(e => e.Language.ToLower() == lang.ToLower() && e.Translated == true)
+                .Find(e => e.Language.Equals(lang, StringComparison.CurrentCultureIgnoreCase) && e.Translated == true)
                 .CountDocumentsAsync();
 
             int totalDialogs = (int)await _cMongoClient

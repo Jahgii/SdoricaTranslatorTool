@@ -1,9 +1,11 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
 using SdoricaTranslatorTool;
 
 var cors = "CustomCors";
 var builder = WebApplication.CreateBuilder(args);
+
+//Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Add services to the container.
 builder.Services
@@ -42,10 +44,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
 // app.UseAuthentication();
 // app.UseAuthorization();
@@ -59,8 +65,6 @@ app.MapControllerRoute(
 
 app.MapControllers();
 // .RequireAuthorization();
-
-app.MapFallbackToFile("index.html");
 
 app.MapGet("/api/status", () =>
 {

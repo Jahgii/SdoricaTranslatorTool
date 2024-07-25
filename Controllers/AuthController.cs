@@ -1,9 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Google.Apis.Auth;
+﻿using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
 
@@ -14,17 +11,12 @@ namespace SdoricaTranslatorTool.Controllers
     public class AuthController : Controller
     {
         readonly ICustomMongoClient _cMongoClient;
-        readonly IConfiguration _config;
+        readonly IJWT _jwt;
 
-        public AuthController(ICustomMongoClient cMongoClient, IConfiguration configuration)
+        public AuthController(ICustomMongoClient cMongoClient, IJWT jwt)
         {
             _cMongoClient = cMongoClient;
-            _config = configuration;
-        }
-
-        public IConfiguration Get_config()
-        {
-            return _config;
+            _jwt = jwt;
         }
 
         [AllowAnonymous]
@@ -74,9 +66,9 @@ namespace SdoricaTranslatorTool.Controllers
                 }
 
                 if (user.Rol == "guest")
-                    user.Token = GenerateToken(0.12);
+                    user.Token = _jwt.GenerateToken(0.12);
                 else if (user.Rol == "admin")
-                    user.Token = GenerateToken(12);
+                    user.Token = _jwt.GenerateToken(12);
                 else
                     return Unauthorized();
 
@@ -88,20 +80,6 @@ namespace SdoricaTranslatorTool.Controllers
                 return Unauthorized();
             }
 
-        }
-
-        private string GenerateToken(double hours)
-        {
-            var sSK = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["IssuerSigningKey"] ?? ""));
-            var sC = new SigningCredentials(sSK, SecurityAlgorithms.HmacSha256);
-            var jwtST = new JwtSecurityToken(
-                issuer: _config["Issuer"],
-                audience: _config["Audience"],
-                claims: [],
-                expires: DateTime.Now.AddHours(hours),
-                signingCredentials: sC
-            );
-            return new JwtSecurityTokenHandler().WriteToken(jwtST);
         }
     }
 }
