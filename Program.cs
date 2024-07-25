@@ -15,8 +15,8 @@ builder.Services
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
 
-//JWT
-// builder.Services.ConfigureJwt(builder.Configuration);
+// JWT
+builder.Services.ConfigureJwt(builder.Configuration);
 
 builder.Services.AddExceptionHandler<MainExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -27,9 +27,10 @@ builder.Services
     {
         options.AddPolicy(cors, builder =>
             {
-                builder.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
             });
     });
 
@@ -64,7 +65,7 @@ app.MapControllerRoute(
 // .RequireAuthorization();
 
 app.MapControllers();
-// .RequireAuthorization();
+//    .RequireAuthorization();
 
 app.MapGet("/api/status", () =>
 {
