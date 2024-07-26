@@ -53,6 +53,7 @@ else
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseRouting();
 // app.UseAuthentication();
 // app.UseAuthorization();
