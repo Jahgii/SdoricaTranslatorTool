@@ -4,7 +4,7 @@ import { TuiInputModule, TuiRadioBlockModule, TuiStepperModule } from '@taiga-ui
 import { WizardService } from '../wizard.service';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButtonModule, TuiTextfieldControllerModule } from '@taiga-ui/core';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { AppModes } from 'src/app/core/enums/app-modes';
@@ -89,6 +89,15 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
   public onTestServer() {
     let url = this.modeForm.get('apiUrl')?.value;
     this.api.setBaseUrl(url);
+
+    firstValueFrom(this.api.get("status"))
+      .then(
+        status => {
+          console.log(status);
+        }, error => {
+          console.log(error);
+        }
+      );
   }
 
   public onNext() {

@@ -15,12 +15,12 @@ namespace SdoricaTranslatorTool
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (string.IsNullOrWhiteSpace(context.Request.Headers["STT-Api-Key"]))
+            if (string.IsNullOrWhiteSpace(context.Request.Headers["stt-api-key"]))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return;
             }
-            string? userApiKey = context.Request.Headers["STT-Api-Key"];
+            string? userApiKey = context.Request.Headers["stt-api-key"];
             if (!IsValidApiKey(userApiKey!))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

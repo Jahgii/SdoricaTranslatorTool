@@ -1,10 +1,4 @@
 <div class="main-stepper-container">
-    <!-- <tui-stepper [activeItemIndex]="(index$ | async) ?? -1" class="stepper">
-        <button tuiStep (click)="index$.next(0)" disabled></button>
-        <button tuiStep (click)="index$.next(1)" disabled></button>
-        <button tuiStep (click)="index$.next(2)" disabled></button>
-    </tui-stepper> -->
-
     <div class="step-container">
         @switch ((index$ | async) ?? -1) {
         @case (0) {

@@ -16,7 +16,7 @@ builder.Services
     });
 
 // JWT
-builder.Services.ConfigureJwt(builder.Configuration);
+// builder.Services.ConfigureJwt(builder.Configuration);
 
 builder.Services.AddExceptionHandler<MainExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -51,13 +51,13 @@ else
     app.UseSwaggerUI();
 }
 
+app.UseCors(cors);
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UseRouting();
 // app.UseAuthentication();
 // app.UseAuthorization();
-app.UseCors(cors);
 
 app.MapControllerRoute(
         name: "default",
