@@ -16,6 +16,14 @@ export class LocalStorageService {
     localStorage.setItem('apiUrl', url);
   }
 
+  getAppApiKey() {
+    return localStorage.getItem('apiKey');
+  }
+
+  setAppApiKey(key: string) {
+    localStorage.setItem('apiKey', key);
+  }
+
   getAppMode(): AppModes | undefined {
     return localStorage.getItem('appMode') as AppModes ?? undefined;
   }

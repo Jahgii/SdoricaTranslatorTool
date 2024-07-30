@@ -9,6 +9,7 @@ import { AsyncPipe } from '@angular/common';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { ApiService } from 'src/app/core/services/api.service';
+import { IUser } from 'src/app/core/interfaces/i-user';
 
 @Component({
   selector: 'app-mode-selector',
@@ -31,6 +32,8 @@ import { ApiService } from 'src/app/core/services/api.service';
 })
 export class ModeSelectorComponent implements OnInit, OnDestroy {
   private modeSubs: Subscription | undefined;
+  private apiUrlSubs: Subscription | undefined;
+  private apiKeySubs: Subscription | undefined;
   private urlRegex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
   public modes = AppModes;
   public modeForm = this.wizardService.modeForm;
@@ -44,15 +47,19 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.modeSubs) this.modeSubs.unsubscribe();
+    if (this.apiUrlSubs) this.apiUrlSubs.unsubscribe();
+    if (this.apiKeySubs) this.apiKeySubs.unsubscribe();
   }
 
   ngOnInit(): void {
     let appMode = this.lStorage.getAppMode();
     let appApiUrl = this.lStorage.getAppApiUrl();
+    let appApiKey = this.lStorage.getAppApiKey();
 
     this.modeForm.patchValue({
       mode: appMode,
-      apiUrl: appApiUrl
+      apiUrl: appApiUrl,
+      apiKey: appApiKey
     });
 
     this.api.setBaseUrl(appApiUrl ?? "");
@@ -78,26 +85,39 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
         this.modeForm.get('apiKey')?.updateValueAndValidity();
       });
 
-    this.modeSubs = this.modeForm
+    this.apiUrlSubs = this.modeForm
       .get('apiUrl')
       ?.valueChanges
       .subscribe(url => {
         this.lStorage.setAppApiUrl(url);
       });
+
+    this.apiKeySubs = this.modeForm
+      .get('apiKey')
+      ?.valueChanges
+      .subscribe(url => {
+        this.lStorage.setAppApiKey(url);
+      });
   }
 
-  public onTestServer() {
-    let url = this.modeForm.get('apiUrl')?.value;
-    this.api.setBaseUrl(url);
-
-    firstValueFrom(this.api.get("status"))
+  public async onTestServer() {
+    let status = await firstValueFrom(this.api.get<{ version: string, status: string }>("status"))
       .then(
-        status => {
-          console.log(status);
-        }, error => {
+        status => status, error => {
           console.log(error);
         }
       );
+
+    if (status && status.status === "Alive") {
+      await firstValueFrom(this.api.post<IUser>("auth", { user: "admin", password: "OK" }))
+        .then(
+          user => {
+            this.lStorage.setToken(user.Token);
+          }, error => {
+
+          }
+        );
+    }
   }
 
   public onNext() {

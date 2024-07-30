@@ -1,0 +1,14 @@
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100svh - 2px);
+}
+
+form{
+    width: clamp(min(400px, 100svw), 400px, 400px);
+}
+
+button{
+    float: right;
+}

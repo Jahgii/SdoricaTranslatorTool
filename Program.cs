@@ -16,7 +16,7 @@ builder.Services
     });
 
 // JWT
-// builder.Services.ConfigureJwt(builder.Configuration);
+builder.Services.ConfigureJwt(builder.Configuration);
 
 builder.Services.AddExceptionHandler<MainExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -56,17 +56,15 @@ app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UseRouting();
-// app.UseAuthentication();
-// app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller}/{action=Index}/{id?}"
-    );
-// .RequireAuthorization();
+    ).RequireAuthorization();
 
-app.MapControllers();
-//    .RequireAuthorization();
+app.MapControllers().RequireAuthorization();
 
 app.MapGet("/api/status", () =>
 {

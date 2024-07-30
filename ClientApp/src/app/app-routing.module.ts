@@ -5,7 +5,7 @@ import { ViewerMainComponent } from './mainlayout/viewer-main/viewer-main.compon
 const routes: Routes = [
   {
     path: '',
-    component: ViewerMainComponent,
+    component: ViewerMainComponent
   },
 ];
 

@@ -36,7 +36,7 @@
             <input tuiTextfield />
         </tui-input>
 
-        <button tuiButton size="s" (click)="onTestServer()">
+        <button tuiButton size="s" (click)="onTestServer()" [disabled]="modeForm.get('apiKey')?.invalid ?? false">
             {{'test-server-api' | translate}}
         </button>
     </form>

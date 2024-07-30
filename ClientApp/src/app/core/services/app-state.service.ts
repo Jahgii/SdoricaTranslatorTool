@@ -35,7 +35,13 @@ export class AppStateService {
   }
 
   public async initializeApp() {
-    await this.langService.onRetriveLanguages();
+    let languagesRetrive = await this.langService.onRetriveLanguages();
+
+    if (!languagesRetrive) {
+      this.vS.loadComponent(AppViews.login, viewers.login, {});
+      return;
+    }
+
     this.lStorage.setAppWizardDone();
     await this.vS.initViewer();
     this.initialized$.next(true);

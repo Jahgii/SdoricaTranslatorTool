@@ -1,5 +1,6 @@
 
 using System.Net;
+using System.Text;
 
 namespace SdoricaTranslatorTool
 {
@@ -24,6 +25,8 @@ namespace SdoricaTranslatorTool
             if (!IsValidApiKey(userApiKey!))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                await context.Response.WriteAsync("Api Key Invalid");
+
                 return;
             }
             await _next(context);

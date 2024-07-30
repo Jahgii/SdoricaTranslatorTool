@@ -5,10 +5,12 @@ import { ExportTranslationGuestComponent } from "../export/export-main/export-ma
 import { ImportMainComponent } from "../import/import-main/import-main.component";
 import { WizardInitialComponent } from "../components/wizard-initial/wizard-initial.component";
 import { AppLoadingComponent } from "../components/app-loading/app-loading.component";
+import { LoginComponent } from "../components/login/login.component";
 
 export interface Viewers { [component: string]: Type<any> };
 
 export var viewers: Viewers = {
+    login: LoginComponent,
     localization: LocalizationComponent,
     dialogs: DialogMainComponent,
     import: ImportMainComponent,

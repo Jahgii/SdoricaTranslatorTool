@@ -3,7 +3,7 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { withInterceptorsFromDi, provideHttpClient, HttpClient, HTTP_INTERCEPTORS, withInterceptors } from '@angular/common/http';
+import { withInterceptorsFromDi, provideHttpClient, HttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app/app-routing.module';
@@ -16,6 +16,7 @@ import { TUI_SANITIZER, TuiAlertModule, TuiDialogModule, TuiRootModule, TuiTheme
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ApiKeyInterceptor } from './app/core/interceptors/api-key-interceptor';
 import { of } from 'rxjs';
+import { JwtModule } from '@auth0/angular-jwt';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
@@ -70,18 +71,18 @@ bootstrapApplication(AppComponent, {
                     deps: [HttpClient]
                 }
             }),
-            // JwtModule.forRoot({
-            //     config: {
-            //         tokenGetter: () => localStorage.getItem("token"),
-            //         allowedDomains: [environment.allowedDomains]
-            //     },
-            // })
+            JwtModule.forRoot({
+                config: {
+                    tokenGetter: () => localStorage.getItem("token"),
+                    allowedDomains: [environment.allowedDomains],
+                }
+            })
         ),
         ...appConfigTaigaUI,
         provideAnimations(),
         provideHttpClient(
             withInterceptorsFromDi(),
-            withInterceptors([ApiKeyInterceptor])
+            withInterceptors([ApiKeyInterceptor]),
         ),
     ]
 }).catch(err => console.log(err));
