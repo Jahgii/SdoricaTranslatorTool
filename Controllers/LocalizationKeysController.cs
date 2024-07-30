@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
 
@@ -115,14 +116,23 @@ namespace SdoricaTranslatorTool.Controllers
         {
             List<string> KeysToReplaced = [];
 
-            var session = await _cMongoClient.StartSessionAsync();
+            using var session = await _cMongoClient.StartSessionAsync();
             session.StartTransaction();
 
-            var keysOnDB = await _cMongoClient
-            .GetCollection<LocalizationKey>()
-            .FindAsync(e => keys.Any(k => k.Category == e.Category) && keys.Any(k => k.Name == e.Name))
-            .Result
-            .ToListAsync();
+            var keysOnDB = new List<LocalizationKey>();
+
+            for (int i = 0; i < keys.Count; i++)
+            {
+                var key = await _cMongoClient
+                    .GetCollection<LocalizationKey>()
+                    .Aggregate()
+                    .Match(e => e.Category == keys[i].Category && e.Name == keys[i].Name)
+                    .FirstOrDefaultAsync();
+
+                if(key == null) continue;
+
+                keysOnDB.Add(key);
+            }
 
             var newKeys = keys.FindAll(e => keysOnDB.Any(kDB => kDB.Category == e.Category) && !keysOnDB.Any(kDB => kDB.Name == e.Name));
 
@@ -146,7 +156,7 @@ namespace SdoricaTranslatorTool.Controllers
                     .GetCollection<LocalizationKey>()
                     .BulkWriteAsync(updates, new BulkWriteOptions() { IsOrdered = false });
 
-            await session.CommitTransactionAsync();
+            // await session.CommitTransactionAsync();
 
             return Ok(KeysToReplaced);
         }
