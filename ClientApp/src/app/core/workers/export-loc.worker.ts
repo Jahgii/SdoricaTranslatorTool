@@ -80,10 +80,11 @@ function onExportOffline(db: IDBDatabase, completeMessage: IOnMessage, message: 
 async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMessage) {
   let keys: ILocalizationKey[] = [];
 
-  let promise = fetch('api/localizationkeys/export', {
+  let promise = fetch(`${message.apiUrl}api/localizationkeys/export`, {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
+      "stt-api-key": message.apiKey,
       "Authorization": `Bearer ${message.token}`,
       "language": message.lang
     }

@@ -9,6 +9,8 @@ export interface ExportPostMessage {
     dbName: string;
     dbVersion: number;
     appMode: AppModes;
+    apiUrl: string;
+    apiKey: string;
     file: any;
     decodeResult: any;
     lang: string;

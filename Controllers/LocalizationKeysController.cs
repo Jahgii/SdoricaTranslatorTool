@@ -120,6 +120,7 @@ namespace SdoricaTranslatorTool.Controllers
             session.StartTransaction();
 
             var keysOnDB = new List<LocalizationKey>();
+            var newKeys = new List<LocalizationKey>();
 
             for (int i = 0; i < keys.Count; i++)
             {
@@ -129,12 +130,13 @@ namespace SdoricaTranslatorTool.Controllers
                     .Match(e => e.Category == keys[i].Category && e.Name == keys[i].Name)
                     .FirstOrDefaultAsync();
 
-                if(key == null) continue;
+                if(key == null) {
+                    newKeys.Add(keys[i]);
+                    continue;
+                };
 
                 keysOnDB.Add(key);
             }
-
-            var newKeys = keys.FindAll(e => keysOnDB.Any(kDB => kDB.Category == e.Category) && !keysOnDB.Any(kDB => kDB.Name == e.Name));
 
             var updates = new List<WriteModel<LocalizationKey>>();
 
@@ -156,7 +158,7 @@ namespace SdoricaTranslatorTool.Controllers
                     .GetCollection<LocalizationKey>()
                     .BulkWriteAsync(updates, new BulkWriteOptions() { IsOrdered = false });
 
-            // await session.CommitTransactionAsync();
+            await session.CommitTransactionAsync();
 
             return Ok(KeysToReplaced);
         }

@@ -463,7 +463,9 @@ async function onUploadDialogAssetsServer(message: ImportPostMessage, lang: stri
       method: 'POST',
       body: JSON.stringify(dialogsSet),
       headers: {
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "stt-api-key": message.apiKey,
+        "Authorization": `Bearer ${message.token}`
       }
     });
 
@@ -494,7 +496,9 @@ async function onUploadGroupsServer(message: ImportPostMessage) {
     method: 'POST',
     body: JSON.stringify(parse.languages),
     headers: {
-      "Content-Type": "application/json; charset=utf-8"
+      "Content-Type": "application/json; charset=utf-8",
+      "stt-api-key": message.apiKey,
+      "Authorization": `Bearer ${message.token}`
     }
   });
 
@@ -522,7 +526,9 @@ async function onUploadGroupsServer(message: ImportPostMessage) {
     method: 'POST',
     body: JSON.stringify(parse.mainGroups),
     headers: {
-      "Content-Type": "application/json; charset=utf-8"
+      "Content-Type": "application/json; charset=utf-8",
+      "stt-api-key": message.apiKey,
+      "Authorization": `Bearer ${message.token}`
     }
   });
 
@@ -550,7 +556,9 @@ async function onUploadGroupsServer(message: ImportPostMessage) {
     method: 'POST',
     body: JSON.stringify(parse.groups),
     headers: {
-      "Content-Type": "application/json; charset=utf-8"
+      "Content-Type": "application/json; charset=utf-8",
+      "stt-api-key": message.apiKey,
+      "Authorization": `Bearer ${message.token}`
     }
   });
 
@@ -580,7 +588,9 @@ async function onUploadLocalizationServer(message: ImportPostMessage) {
     method: 'POST',
     body: JSON.stringify(message.localizationCategories),
     headers: {
-      "Content-Type": "application/json; charset=utf-8"
+      "Content-Type": "application/json; charset=utf-8",
+      "stt-api-key": message.apiKey,
+      "Authorization": `Bearer ${message.token}`
     }
   });
 
@@ -610,7 +620,9 @@ async function onUploadLocalizationServer(message: ImportPostMessage) {
       method: 'POST',
       body: JSON.stringify(keysSet),
       headers: {
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "stt-api-key": message.apiKey,
+        "Authorization": `Bearer ${message.token}`
       }
     });
 
@@ -650,7 +662,9 @@ async function onUploadGamedataServer(message: ImportPostMessage) {
     method: 'POST',
     body: JSON.stringify(message.gamedataCategories),
     headers: {
-      "Content-Type": "application/json; charset=utf-8"
+      "Content-Type": "application/json; charset=utf-8",
+      "stt-api-key": message.apiKey,
+      "Authorization": `Bearer ${message.token}`
     }
   });
 
@@ -679,7 +693,9 @@ async function onUploadGamedataServer(message: ImportPostMessage) {
     method: 'POST',
     body: JSON.stringify(message.gamedataValues),
     headers: {
-      "Content-Type": "application/json; charset=utf-8"
+      "Content-Type": "application/json; charset=utf-8",
+      "stt-api-key": message.apiKey,
+      "Authorization": `Bearer ${message.token}`
     }
   });
 

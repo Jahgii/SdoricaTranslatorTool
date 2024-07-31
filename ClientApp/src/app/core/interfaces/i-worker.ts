@@ -10,6 +10,8 @@ export interface ImportPostMessage {
     dbName: string;
     dbVersion: number;
     apiUrl: string;
+    apiKey: string;
+    token: string;
     uploadKeysUrl: string;
     appMode: AppModes;
     obbSkip: boolean;

@@ -78,10 +78,11 @@ function onExportOffline(db: IDBDatabase, completeMessage: IOnMessage, message: 
 async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMessage) {
   let values: IGamedataValue[] = [];
 
-  let promise = fetch('api/gamedatavalues/export', {
+  let promise = fetch(`${message.apiUrl}api/gamedatavalues/export`, {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
+      "stt-api-key": message.apiKey,
       "Authorization": `Bearer ${message.token}`
     }
   });

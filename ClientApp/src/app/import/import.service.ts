@@ -482,6 +482,8 @@ export class ImportService {
       dbName: this.iDB.dbName,
       dbVersion: this.iDB.dbVersion,
       apiUrl: this.lStorage.getAppApiUrl() ?? "",
+      apiKey: this.lStorage.getAppApiKey() ?? "",
+      token: this.lStorage.getToken() ?? "",
       uploadKeysUrl: this.uploadKeysUrl,
       appMode: this.lStorage.getAppMode() ?? AppModes.Pending,
       dialogAssetsUploading: dialogAU,
