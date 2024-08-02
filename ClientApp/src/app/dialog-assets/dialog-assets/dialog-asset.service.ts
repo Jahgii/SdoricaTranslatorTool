@@ -36,7 +36,6 @@ export class DialogAssetService {
   public changes$: BehaviorSubject<IDialogAsset | undefined> = new BehaviorSubject<IDialogAsset | undefined>(undefined);
   public pendingChanges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-
   constructor(
     private api: ApiService,
     private indexedDB: IndexDBService,
@@ -186,15 +185,10 @@ export class DialogAssetService {
 
   public onCopySimpleConversation(dialogAsset: IDialogAsset) {
     let dialog = JSON.parse(JSON.stringify(dialogAsset)) as IDialogAssetExport;
-    let conversation: PlainDialogAsset[] = [];
+    let conversation: { [dialogID: string]: string } = {};
 
     dialog.Model.$content.forEach(d => {
-      let message: PlainDialogAsset = {
-        ID: d.ID,
-        Text: d.OriginalText
-      };
-
-      conversation.push(message);
+      conversation[d.ID] = d.OriginalText;
     });
 
     let exportConversation = JSON.stringify(conversation);
@@ -218,7 +212,7 @@ export class DialogAssetService {
       .clipboard
       .readText()
       .then(text => {
-        let conversation: PlainDialogAsset[] = this.tryParseJson(text);
+        let conversation: { [dialogID: string]: string } = this.tryParseJson(text);
 
         if (!conversation) {
           this.alerts
@@ -232,24 +226,11 @@ export class DialogAssetService {
           return;
         }
 
-        if (!Array.isArray(conversation) || conversation.length == 0) {
-          this.alerts
-            .open(undefined, {
-              label: this.translate.instant('nothing-to-paste')
-              , status: 'warning'
-              , autoClose: true
-            })
-            .subscribe();
-
-          return;
-        };
 
         for (let i = 0; i < dialogAsset.Model.$content.length; i++) {
           let d = dialogAsset.Model.$content[i];
-          let message = conversation.find(e => e.ID == d.ID);
-          if (!message) continue;
-
-          d.Text = message.Text;
+          if (!conversation[d.ID]) continue;
+          d.Text = conversation[d.ID];
         }
 
         this.alerts

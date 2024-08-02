@@ -11,7 +11,7 @@ namespace SdoricaTranslatorTool
             {
                 Status = StatusCodes.Status500InternalServerError,
                 Title = "Server Error",
-                Detail = exception.Message
+                Detail = exception.InnerException?.Message ?? exception.Message
             };
 
             httpContext.Response.StatusCode = problemDetails.Status.Value;
