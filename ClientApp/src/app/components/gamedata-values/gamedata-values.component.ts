@@ -141,14 +141,12 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
           this.cd.detectChanges();
         }
       }
-      else {
-        if (this.subsDialog) {
-          this.subsDialog.unsubscribe();
-          this.subsDialog = undefined;
-          if (this.dialog == 'create') this.dialogState.isHidden = false;
-          else if (this.dialog == 'list') this.listDialogState.isHidden = false;
-          this.cd.detectChanges();
-        }
+      else if (this.subsDialog) {
+        this.subsDialog.unsubscribe();
+        this.subsDialog = undefined;
+        if (this.dialog == 'create') this.dialogState.isHidden = false;
+        else if (this.dialog == 'list') this.listDialogState.isHidden = false;
+        this.cd.detectChanges();
       }
     });
   }
