@@ -1,6 +1,7 @@
-<tui-root style="height: 100%;">
-  <tui-theme-night *ngIf="(theme.nightMode$ | async)"></tui-theme-night>
-  <app-theme-dark *ngIf="(theme.nightMode$ | async)"></app-theme-dark>
+<tui-root style="height: 100%;" [attr.tuiTheme]="theme.darkMode() ? 'dark' : null">
+  <!-- TODO: (Taiga UI migration) TuiThemeNight has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+  <!-- <tui-theme-night *ngIf="(theme.nightMode$ | async)"></tui-theme-night> -->
+  <!-- <app-theme-dark *ngIf="(theme.nightMode$ | async)"></app-theme-dark> -->
 
 
   <main class="main-grid">
@@ -9,23 +10,6 @@
     <div style="grid-area: content;">
       <router-outlet></router-outlet>
     </div>
-    <!-- <app-wizard-initial style="grid-area: content;"></app-wizard-initial> -->
-
-
-    <!-- <ng-container [ngTemplateOutlet]="admin"></ng-container> -->
-
-    <!-- @switch (authService.rol) {
-    @case ('admin') {
-    <ng-container [ngTemplateOutlet]="admin"></ng-container>
-    }
-    @case ('guest') {
-    <ng-container [ngTemplateOutlet]="guest"></ng-container>
-    }
-    @default {
-    <ng-container [ngTemplateOutlet]="default"></ng-container>
-    }
-    }
-     -->
   </main>
 </tui-root>
 

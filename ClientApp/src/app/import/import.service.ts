@@ -240,9 +240,9 @@ export class ImportService {
         this.translate.instant('error-file-obb'),
         {
           label: this.translate.instant('alert-error'),
-          status: 'error',
-          autoClose: true,
-          hasCloseButton: false
+          appearance: 'error',
+          autoClose: 3_000,
+          closeable: false
         }
       );
 
@@ -332,9 +332,9 @@ export class ImportService {
         this.translate.instant('error-file-localization'),
         {
           label: this.translate.instant('alert-error'),
-          status: 'error',
-          autoClose: true,
-          hasCloseButton: false
+          appearance: 'error',
+          autoClose: 3_000,
+          closeable: false
         }
       );
 
@@ -382,9 +382,9 @@ export class ImportService {
         this.translate.instant('error-file-gamedata'),
         {
           label: this.translate.instant('alert-error'),
-          status: 'error',
-          autoClose: true,
-          hasCloseButton: false
+          appearance: 'error',
+          autoClose: 3_000,
+          closeable: false
         }
       );
 
@@ -427,9 +427,9 @@ export class ImportService {
         this.translate.instant('alert-wrong-file-label'),
         {
           label: this.translate.instant('alert-error'),
-          status: 'error',
-          autoClose: true,
-          hasCloseButton: false
+          appearance: 'error',
+          autoClose: 3_000,
+          closeable: false
         }
       );
 

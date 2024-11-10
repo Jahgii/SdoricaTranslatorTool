@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiAlertService } from '@taiga-ui/core';
-import { TuiInputInlineComponent } from '@taiga-ui/kit';
+import { TuiInputInline } from '@taiga-ui/kit';
 import { BehaviorSubject, Observable, Subject, firstValueFrom, map, mergeMap, of, toArray } from 'rxjs';
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { IGroup, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
@@ -105,7 +105,7 @@ export class DGroupsService extends StoreService<TreeNode> {
       );
   }
 
-  public async onChangeName(node: TreeNode, oldName: string, input: TuiInputInlineComponent) {
+  public async onChangeName(node: TreeNode, oldName: string, input: TuiInputInline) {
     let updateNode: IMainGroup = {
       Id: node.Id,
       Name: node.Name,
@@ -147,22 +147,22 @@ export class DGroupsService extends StoreService<TreeNode> {
         this.alerts.open(this.translate.instant('alert-success-label'),
           {
             label: this.translate.instant('alert-success'),
-            autoClose: true,
-            hasCloseButton: false,
-            status: 'success'
+            autoClose: 3_000,
+            closeable: false,
+            appearance: 'success'
           }
         ).subscribe({
           complete: () => {
           },
         });
       }, _ => {
-        input.control?.patchValue(oldName, { emitEvent: false });
+        (input as any).control?.patchValue(oldName, { emitEvent: false });
         this.alerts.open(this.translate.instant('alert-error-label'),
           {
             label: this.translate.instant('alert-error'),
-            autoClose: true,
-            hasCloseButton: false,
-            status: 'error'
+            autoClose: 3_000,
+            closeable: false,
+            appearance: 'error'
           }
         ).subscribe({
           complete: () => {

@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TuiElasticContainerModule, TuiInputInlineComponent, TuiInputInlineModule, TuiProgressModule } from '@taiga-ui/kit';
+import { TuiElasticContainer, TuiInputInline, TuiProgress } from '@taiga-ui/kit';
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { debounceTime, take, takeWhile, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiButtonModule, TuiExpandModule, TuiLoaderModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiExpand, TuiLoader, TuiScrollbar, TuiIcon, TuiButton } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 import { DGroupsService, TreeNode } from './d-groups.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
@@ -20,14 +20,14 @@ import { ViewersService } from 'src/app/core/services/viewers.service';
     FormsModule,
     TranslateModule,
 
-    TuiScrollbarModule,
-    TuiButtonModule,
-    TuiSvgModule,
-    TuiElasticContainerModule,
-    TuiExpandModule,
-    TuiInputInlineModule,
-    TuiProgressModule,
-    TuiLoaderModule,
+    TuiScrollbar,
+    TuiButton,
+    TuiIcon,
+    TuiElasticContainer,
+    TuiExpand,
+    TuiInputInline,
+    TuiProgress,
+    TuiLoader,
 
     DialogAssetsComponent
   ],
@@ -135,14 +135,14 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
       (document.activeElement as any)?.blur();
   }
 
-  public onFocusName(focus: boolean, input: TuiInputInlineComponent, node: TreeNode) {
+  public onFocusName(focus: boolean, input: TuiInputInline, node: TreeNode) {
     if (focus) {
       let oldName = `${node.Name}`;
-      this.subsName = input.control?.valueChanges
+      this.subsName = (input as any).control?.valueChanges
         .pipe(
           tap(_ => node.saving?.next(true)),
           debounceTime(1000),
-        ).subscribe(async _ => {
+        ).subscribe(async (_: any) => {
           await this.groupService.onChangeName(node, oldName, input);
           node.saving?.next(false);
         });
@@ -156,9 +156,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
             if (cS) cS.unsubscribe();
           });
       }
-      else {
-        if (cS) cS.unsubscribe();
-      }
+      else if (cS) cS.unsubscribe();
     }
   }
 

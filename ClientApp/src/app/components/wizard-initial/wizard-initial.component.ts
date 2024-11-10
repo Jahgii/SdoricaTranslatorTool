@@ -1,6 +1,7 @@
+import { TuiStepper } from "@taiga-ui/kit";
+import { TuiIslandDirective } from "@taiga-ui/legacy";
 import { Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiIslandModule, TuiStepperModule } from '@taiga-ui/kit';
 import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
 import { WizardService } from './wizard.service';
 import { AsyncPipe } from '@angular/common';
@@ -14,8 +15,8 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
     AsyncPipe,
     TranslateModule,
 
-    TuiIslandModule,
-    TuiStepperModule,
+    TuiIslandDirective,
+    TuiStepper,
 
     ModeSelectorComponent,
     ImportMainComponent,

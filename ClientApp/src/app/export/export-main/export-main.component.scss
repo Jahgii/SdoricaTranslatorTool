@@ -30,7 +30,7 @@
 }
 
 .not-support {
-    background-color: var(--tui-warning-fill);
+    background-color: var(--tui-status-warning);
     mix-blend-mode: difference;
     height: 96px;
     width: minmax(248px, auto);

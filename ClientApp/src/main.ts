@@ -1,3 +1,5 @@
+import { TUI_SANITIZER } from "@taiga-ui/legacy";
+import { NG_EVENT_PLUGINS } from "@taiga-ui/event-plugins";
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 
 import { environment } from './environments/environment';
@@ -8,11 +10,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { TuiLanguageName } from '@taiga-ui/i18n/interfaces';
-import { tuiLanguageSwitcher } from '@taiga-ui/i18n/switch';
-import { TUI_LANGUAGE, TUI_SPANISH_LANGUAGE } from '@taiga-ui/i18n';
-import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
-import { TUI_SANITIZER, TuiAlertModule, TuiDialogModule, TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
+import { TUI_LANGUAGE, TUI_SPANISH_LANGUAGE, tuiLanguageSwitcher, TuiLanguageName } from '@taiga-ui/i18n';
+import { NgDompurifySanitizer } from '@taiga-ui/dompurify';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ApiKeyInterceptor } from './app/core/interceptors/api-key-interceptor';
 import { of } from 'rxjs';
@@ -57,12 +56,6 @@ bootstrapApplication(AppComponent, {
             FormsModule,
             ReactiveFormsModule,
 
-            //Taiga
-            TuiRootModule,
-            TuiDialogModule,
-            TuiAlertModule,
-            TuiThemeNightModule,
-
             TranslateModule.forRoot({
                 defaultLanguage: 'es',
                 loader: {
@@ -84,5 +77,6 @@ bootstrapApplication(AppComponent, {
             withInterceptorsFromDi(),
             withInterceptors([ApiKeyInterceptor]),
         ),
+        NG_EVENT_PLUGINS
     ]
 }).catch(err => console.log(err));

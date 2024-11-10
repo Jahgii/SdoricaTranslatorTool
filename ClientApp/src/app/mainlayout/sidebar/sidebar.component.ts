@@ -1,14 +1,14 @@
+import { TuiAvatar } from "@taiga-ui/kit";
+import { TuiActiveZone } from "@taiga-ui/cdk";
 import { ChangeDetectionStrategy, Component, Inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
 import { CommonWordsComponent } from 'src/app/components/common-words/common-words.component';
-import { TuiBreakpointService, TuiButtonModule, TuiDataListModule, TuiDropdownModule, TuiHintModule, TuiHostedDropdownModule, TuiLoaderModule, TuiModeModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDataList, TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TuiFallbackSrcPipe } from '@taiga-ui/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiAvatarModule } from '@taiga-ui/kit';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LocalizationKeyComponent } from 'src/app/localization/localization-key/localization-key.component';
-import { TuiActiveZoneModule } from '@taiga-ui/cdk';
 import { AppViews, viewers } from 'src/app/core/viewers';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 import { skip, take, takeWhile } from 'rxjs';
@@ -22,21 +22,20 @@ import { skip, take, takeWhile } from 'rxjs';
     CommonModule,
     TranslateModule,
 
-    TuiButtonModule,
-    TuiHintModule,
-    TuiLoaderModule,
-    TuiAvatarModule,
-    TuiHostedDropdownModule,
-    TuiDataListModule,
-    TuiSvgModule,
-    TuiActiveZoneModule,
-    TuiModeModule,
-    TuiDropdownModule,
+    TuiButton,
+    TuiHint,
+    TuiLoader,
+    TuiAvatar,
+    TuiDropdown,
+    TuiDataList,
+    TuiIcon,
+    TuiActiveZone,
 
     LocalizationKeyComponent,
     GamedataValuesComponent,
-    CommonWordsComponent
-  ],
+    CommonWordsComponent,
+      TuiFallbackSrcPipe
+],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

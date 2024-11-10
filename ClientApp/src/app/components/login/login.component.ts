@@ -1,7 +1,7 @@
+import { TuiInputModule, TuiInputPasswordModule } from "@taiga-ui/legacy";
+import { TuiButton } from "@taiga-ui/core";
 import { Component } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiButtonModule } from '@taiga-ui/core';
-import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/kit';
 import { firstValueFrom } from 'rxjs';
 import { IUser } from 'src/app/core/interfaces/i-user';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -17,7 +17,7 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 
     TuiInputModule,
     TuiInputPasswordModule,
-    TuiButtonModule
+    TuiButton
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

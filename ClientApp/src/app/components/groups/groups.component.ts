@@ -1,3 +1,6 @@
+import { TuiBlockStatus } from "@taiga-ui/layout";
+import { TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
+import { TuiAutoFocus } from "@taiga-ui/cdk";
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, Subscription, firstValueFrom, map } from 'rxjs';
@@ -6,15 +9,9 @@ import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
-import { TuiSvgModule } from '@taiga-ui/core/components/svg';
-import { TuiTextfieldControllerModule, TuiModeModule } from '@taiga-ui/core';
-import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
+import { TuiLoader, TuiDropdown, TuiIcon, TuiButton } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
-import { TuiAutoFocusModule } from '@taiga-ui/cdk';
-import { TuiTilesModule, TuiInputInlineModule, TuiInputModule } from '@taiga-ui/kit';
+import { TuiInputInline, TuiTiles } from '@taiga-ui/kit';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
@@ -28,20 +25,19 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     standalone: true,
     imports: [
         NgIf,
-        TuiTilesModule,
+        TuiTiles,
         NgFor,
-        TuiInputInlineModule,
-        TuiAutoFocusModule,
+        TuiInputInline,
+        TuiAutoFocus,
         FormsModule,
-        TuiButtonModule,
-        TuiDropdownModule,
+        TuiButton,
+        TuiDropdown,
         TuiInputModule,
         TuiTextfieldControllerModule,
-        TuiSvgModule,
-        TuiModeModule,
+        TuiIcon,
         RouterLink,
-        TuiBlockStatusModule,
-        TuiLoaderModule,
+        TuiBlockStatus,
+        TuiLoader,
         AsyncPipe,
         TranslateModule,
     ],

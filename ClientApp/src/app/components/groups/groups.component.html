@@ -9,7 +9,8 @@
                             <img *ngIf="group.ImageLink" src="{{group.ImageLink}}" alt="groupImage" class="tile-image">
                             <h2>
                                 <div class="tile-name" *ngIf="group.editing; else groupName;">
-                                    <tui-input-inline tuiAutoFocus [(ngModel)]="group.Name"
+                                    <!-- TODO: (Taiga UI migration) (focusedChange) output has been removed. Use native (focusin) / (focusout) instead -->
+<tui-input-inline tuiAutoFocus [(ngModel)]="group.Name"
                                         (focusedChange)="onFocusedChange($any($event), group)"
                                         (keydown.enter.prevent)="onEditGroupName(group)">
                                         {{'type-name' | translate}}
@@ -20,10 +21,10 @@
                                         <span class="tile-title">{{ group.Name }}</span>
                                         <div>
                                             <button tuiIconButton type="button" title="{{'edit-name' | translate}}"
-                                                size="xs" appearance="icon" icon="tuiIconEdit2" class="tui-space_left-1"
+                                                size="xs" appearance="icon" iconStart="@tui.pencil" class="tui-space_left-1"
                                                 (click)="toogle(group)"></button>
                                             <button tuiIconButton type="button" title="{{'edit-image' | translate}}"
-                                                size="xs" appearance="icon" icon="tuiIconImage" class="tui-space_left-1"
+                                                size="xs" appearance="icon" iconStart="@tui.image" class="tui-space_left-1"
                                                 [tuiDropdown]="dropdownContent" tuiDropdownHover></button>
                                             <ng-template #dropdownContent>
                                                 <div class="tui-space_vertical-2 tui-space_horizontal-3">
@@ -44,12 +45,13 @@
                             </ng-container>
                             <ng-template #completed>
                                 <div class="tile-file">
-                                    {{ "translated" | translate }}: <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                                    {{ "translated" | translate }}: <tui-icon  icon="@tui.circle-check"></tui-icon>
                                 </div>
                             </ng-template>
-                            <button class="tile-go-button" tuiIconButton
-                                icon="tuiIconArrowRightCircle" appearance="icon" shape="square" size="s"
-                                routerLink="{{group.OriginalName}}" tuiMode="onLight"></button>
+                            <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button class="tile-go-button" tuiIconButton
+                                iconStart="@tui.circle-arrow-right" appearance="icon" shape="square" size="s"
+                                routerLink="{{group.OriginalName}}" tuiTheme="light"></button>
                         </div>
                     </tui-tile>
                 </tui-tiles>

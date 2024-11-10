@@ -5,7 +5,7 @@
     flex-direction: column;
     width: 350px;
     height: 500px;
-    background: var(--tui-base-02);
+    background: var(--tui-background-base-alt);
     box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 16%);
     border-radius: var(--tui-radius-s);
     padding: 0;
@@ -14,7 +14,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: var(--tui-base-01);
+        background-color: var(--tui-background-base);
         backdrop-filter: blur(1rem);
         border-radius: var(--tui-radius-s) var(--tui-radius-s) 0 0;
         cursor: move;

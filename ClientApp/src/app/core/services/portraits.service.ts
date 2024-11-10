@@ -4,7 +4,7 @@ import { ObjectStoreNames } from '../interfaces/i-indexed-db';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiAlertService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { AlertPortraitMode, AlertPortraitsComponent } from 'src/app/components/alert-portraits/alert-portraits.component';
 
 @Injectable({
@@ -59,8 +59,8 @@ export class PortraitsService {
         new PolymorpheusComponent(AlertPortraitsComponent, this.injector),
         {
           label: this.translate.instant('portrait-directory-permission-label'),
-          status: 'warning',
-          autoClose: false,
+          appearance: 'warning',
+          autoClose: 0,
           data: AlertPortraitMode.MissPermission
         },
       )
@@ -102,8 +102,8 @@ export class PortraitsService {
         new PolymorpheusComponent(AlertPortraitsComponent, this.injector),
         {
           label: this.translate.instant('portrait-directory-miss-label'),
-          status: 'warning',
-          autoClose: false,
+          appearance: 'warning',
+          autoClose: 0,
           data: AlertPortraitMode.MissFolder
         },
       ).subscribe();

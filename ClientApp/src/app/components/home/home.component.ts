@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { TuiBreakpointService, TuiSizeL } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiSizeL, TuiButton } from '@taiga-ui/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiAppBarModule } from '@taiga-ui/addon-mobile';
 import { RouterLink } from '@angular/router';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
+import { TuiAppBar, TuiBlockStatus } from '@taiga-ui/layout';
 import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
@@ -21,10 +19,10 @@ import { NgIf, AsyncPipe } from '@angular/common';
     standalone: true,
     imports: [
         NgIf,
-        TuiBlockStatusModule,
-        TuiButtonModule,
+        TuiBlockStatus,
+        TuiButton,
         RouterLink,
-        TuiAppBarModule,
+        TuiAppBar,
         AsyncPipe,
         TranslateModule,
     ],

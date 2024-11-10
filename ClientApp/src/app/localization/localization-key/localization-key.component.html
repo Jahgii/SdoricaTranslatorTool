@@ -1,4 +1,5 @@
-<button tuiButton type="button" appearance="icon" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
+<!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton type="button" appearance="icon" [iconStart]="'@tui.key'" size="xs" tuiTheme="light"
     (click)="onShowCreate(createTemplate, 'm')">
 </button>
 
@@ -7,7 +8,7 @@
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement" [elementAnchorRef]="anchor"
         [draggableElementState]="dialogState">
         <p>{{'new-key-form' | translate}}</p>
-        <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
+        <button tuiIconButton class="tui-space_right-2" appearance="icon" [iconStart]="'@tui.x'" size="xs"
             (click)="dialogState.isHidden = !dialogState.isHidden">
         </button>
     </div>
@@ -29,7 +30,7 @@
                         <tui-input formControlName="Name" tuiTextfieldSize="m"
                             [tuiTextfieldIcon]="availableKeyNameTemplate">
                             {{'key-name' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
@@ -38,7 +39,7 @@
                         <ng-container *ngFor="let keyControl of $any(keyForm.controls['Original']).controls | keyvalue">
                             <div class="tui-form__row">
                                 <tui-input [formControl]="$any(keyControl.value)" tuiTextfieldSize="m">
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                     {{$any(keyControl.key) | translate}}
                                     <span class="tui-required"></span>
                                 </tui-input>
@@ -51,8 +52,8 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
-                    [showLoader]="(creating$ | async) ?? false"
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
+                    [loading]="(creating$ | async) ?? false"
                     [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
                     [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error">
@@ -60,7 +61,7 @@
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m">
                     {{'created-other' | translate}}
                 </button>
             </ng-template>
@@ -82,7 +83,7 @@
                         <tui-input formControlName="Name" tuiTextfieldSize="m"
                             [tuiTextfieldIcon]="availableKeyNameTemplate">
                             {{'key-name' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
@@ -91,7 +92,7 @@
                         <ng-container *ngFor="let keyControl of $any(keyForm.controls['Original']).controls | keyvalue">
                             <div class="tui-form__row">
                                 <tui-input [formControl]="$any(keyControl.value)" tuiTextfieldSize="m">
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                     {{$any(keyControl.key) | translate}}
                                     <span class="tui-required"></span>
                                 </tui-input>
@@ -104,8 +105,8 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
-                    [showLoader]="(creating$ | async) ?? false"
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
+                    [loading]="(creating$ | async) ?? false"
                     [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
                     [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error">
@@ -113,7 +114,7 @@
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m">
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m">
                     {{'created-other' | translate}}
                 </button>
             </ng-template>
@@ -126,16 +127,16 @@
         <ng-container [ngSwitch]="status">
             <p *ngSwitchCase="'verifying'">
                 <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
-                    <button tuiIconButton appearance="icon" [icon]="'tuiIconLoader'">
+                    <button tuiIconButton appearance="icon" [iconStart]="'@tui.loader'">
                     </button>
                 </tui-loader>
             </p>
             <p *ngSwitchCase="'valid'">
-                <button tuiIconButton appearance="icon" [icon]="'tuiIconCheckCircle'">
+                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-check'">
                 </button>
             </p>
             <p *ngSwitchCase="'invalid'">
-                <button tuiIconButton appearance="icon" [icon]="'tuiIconAlertCircle'">
+                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-alert'">
                 </button>
             </p>
         </ng-container>

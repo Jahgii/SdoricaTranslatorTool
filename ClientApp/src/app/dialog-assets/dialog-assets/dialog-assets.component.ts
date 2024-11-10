@@ -1,20 +1,15 @@
+import { TuiTooltipModule } from "@taiga-ui/legacy";
+import { TuiBlockStatus } from "@taiga-ui/layout";
+import { TuiTable } from "@taiga-ui/addon-table";
+import { TuiItem } from "@taiga-ui/cdk";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiScrollbarComponent, TuiScrollbarModule } from '@taiga-ui/core';
+import { TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
-import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
-import { TuiTableModule } from '@taiga-ui/addon-table';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
-import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
-import { TuiHintModule } from '@taiga-ui/core/directives/hint';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
-import { TuiTooltipModule } from '@taiga-ui/core/components/tooltip';
-import { TuiSvgModule } from '@taiga-ui/core/components/svg';
-import { TuiItemModule } from '@taiga-ui/cdk';
-import { TuiTabsModule, TuiToggleModule } from '@taiga-ui/kit';
+import { TuiSwitch, TuiTabs } from '@taiga-ui/kit';
 import { CommonModule } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 import { DialogAssetService } from './dialog-asset.service';
@@ -43,18 +38,18 @@ import { PortraitsService } from 'src/app/core/services/portraits.service';
 
     CommonDictionaryDirective,
 
-    TuiTabsModule,
-    TuiItemModule,
-    TuiSvgModule,
-    TuiToggleModule,
+    TuiTabs,
+    TuiItem,
+    TuiIcon,
+    TuiSwitch,
     TuiTooltipModule,
-    TuiButtonModule,
-    TuiHintModule,
-    TuiLoaderModule,
-    TuiScrollbarModule,
-    TuiTableModule,
-    TuiDropdownModule,
-    TuiBlockStatusModule,
+    TuiButton,
+    TuiHint,
+    TuiLoader,
+    TuiScrollbar,
+    TuiTable,
+    TuiDropdown,
+    TuiBlockStatus,
   ],
   providers: [
     DialogAssetService,
@@ -116,7 +111,7 @@ export class DialogAssetsComponent implements OnDestroy {
     this.dAS.onDownload(dialogAsset);
   }
 
-  public onTooltipCheck(scrollTooltip?: TuiScrollbarComponent) {
+  public onTooltipCheck(scrollTooltip?: TuiScrollbar) {
     let show = false;
     if (scrollTooltip)
       show = scrollTooltip['el']['nativeElement']['offsetHeight'] < scrollTooltip['el']['nativeElement']['scrollHeight'];

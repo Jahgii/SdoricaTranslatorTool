@@ -1,17 +1,18 @@
-<tui-hosted-dropdown tuiDropdownAlign="right" [content]="dropdown" [sided]="true" [(open)]="menuOpen">
-    <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconBook'" tuiMode="onLight"
-        [pseudoActive]="menuOpen || null">
+<div  tuiDropdownAlign="right" [tuiDropdown]="dropdown" [tuiDropdownSided]="true" [(tuiDropdownOpen)]="menuOpen">
+    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button appearance="icon" tuiButton type="button" size="xs" [iconStart]="'@tui.book'" tuiTheme="light"
+        [tuiAppearanceState]="menuOpen || null ? 'active' : null">
     </button>
-</tui-hosted-dropdown>
+</div>
 <ng-template #dropdown>
     <p style="text-align: center;">{{'buffinfo' | translate}}</p>
     <tui-data-list>
         <tui-opt-group>
             <button tuiOption (click)="onShowList(listTemplate, 'm')">
-                <tui-svg src="tuiIconBookOpen"></tui-svg> {{'see-all' | translate}}
+                <tui-icon  icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
             </button>
             <button tuiOption (click)="onShowCreateNew(createTemplate, 'm')">
-                <tui-svg src="tuiIconEdit2"></tui-svg> {{'create-new' | translate}}
+                <tui-icon  icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
             </button>
         </tui-opt-group>
     </tui-data-list>
@@ -22,7 +23,7 @@
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
         [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
         <p>{{'buffinfo-form' | translate}}</p>
-        <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
+        <button tuiIconButton class="tui-space_right-2" appearance="icon" [iconStart]="'@tui.x'" size="xs"
             (click)="dialogState.isHidden = !dialogState.isHidden">
         </button>
     </div>
@@ -37,43 +38,43 @@
                         <tui-input formControlName="id" tuiTextfieldSize="m"
                             [tuiTextfieldIcon]="availableKeyNameTemplate">
                             {{'id' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="iconKey" tuiTextfieldSize="m">
                             {{'iconkey' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="localizationInfoKey" tuiTextfieldSize="m">
                             {{'localizationinfokey' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="localizationNameKey" tuiTextfieldSize="m">
                             {{'localizationnamekey' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input-number tuiHintContent="{{'order-hint' | translate}}" formControlName="order"
-                            [tuiTextfieldSize]="'m'" tuiHintAppearance="onDark">
+                            [tuiTextfieldSize]="'m'" tuiHintAppearance="dark">
                             {{'order' | translate}}
                             <span class="tui-required"></span>
                         </tui-input-number>
                     </div>
                     <div class="tui-form__row">
-                        <tui-checkbox-block contentAlign="right" formControlName="viewable" size="s"
+                       <label tuiBlock="s"> <input tuiCheckbox type="checkbox"  formControlName="viewable" 
                             tuiTextfieldSize="m">
                             {{'viewable' | translate}}
-                        </tui-checkbox-block>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -81,9 +82,9 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(gamedataService.createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'"
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'"
                     (click)="gamedataService.onCreateKey()" size="m"
-                    [showLoader]="(gamedataService.creating$ | async) ?? false"
+                    [loading]="(gamedataService.creating$ | async) ?? false"
                     [disabled]="(gamedataService.availableKeyName$ | async) != 'valid' || gamedataService.buffInfoForm.invalid"
                     [tuiHint]="((gamedataService.availableKeyName$ | async) == 'invalid' || gamedataService.buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error">
@@ -91,7 +92,7 @@
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'"
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'"
                     (click)="gamedataService.onCreateOther()" size="m">
                     {{'created-other' | translate}}
                 </button>
@@ -111,43 +112,43 @@
                         <tui-input formControlName="id" tuiTextfieldSize="m"
                             [tuiTextfieldIcon]="availableKeyNameTemplate">
                             {{'id' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="iconKey" tuiTextfieldSize="m">
                             {{'iconkey' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="localizationInfoKey" tuiTextfieldSize="m">
                             {{'localizationinfokey' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="localizationNameKey" tuiTextfieldSize="m">
                             {{'localizationnamekey' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input-number tuiHintContent="{{'order-hint' | translate}}" formControlName="order"
-                            [tuiTextfieldSize]="'m'" tuiHintAppearance="onDark">
+                            [tuiTextfieldSize]="'m'" tuiHintAppearance="dark">
                             {{'order' | translate}}
                             <span class="tui-required"></span>
                         </tui-input-number>
                     </div>
                     <div class="tui-form__row">
-                        <tui-checkbox-block contentAlign="right" formControlName="viewable" size="s"
+                       <label tuiBlock="s"> <input tuiCheckbox type="checkbox"  formControlName="viewable" 
                             tuiTextfieldSize="m">
                             {{'viewable' | translate}}
-                        </tui-checkbox-block>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -155,9 +156,9 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(gamedataService.createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'"
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'"
                     (click)="gamedataService.onCreateKey()" size="m"
-                    [showLoader]="(gamedataService.creating$ | async) ?? false"
+                    [loading]="(gamedataService.creating$ | async) ?? false"
                     [disabled]="(gamedataService.availableKeyName$ | async) != 'valid' || gamedataService.buffInfoForm.invalid"
                     [tuiHint]="((gamedataService.availableKeyName$ | async) == 'invalid' || gamedataService.buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error">
@@ -165,7 +166,7 @@
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button appearance="outline" tuiButton [icon]="'tuiIconCheckCircle'"
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'"
                     (click)="gamedataService.onCreateOther()" size="m">
                     {{'created-other' | translate}}
                 </button>
@@ -179,16 +180,16 @@
         <ng-container [ngSwitch]="status">
             <p *ngSwitchCase="'verifying'">
                 <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
-                    <button tuiIconButton appearance="icon" [icon]="'tuiIconLoader'">
+                    <button tuiIconButton appearance="icon" [iconStart]="'@tui.loader'">
                     </button>
                 </tui-loader>
             </p>
             <p *ngSwitchCase="'valid'">
-                <button tuiIconButton appearance="icon" [icon]="'tuiIconCheckCircle'">
+                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-check'">
                 </button>
             </p>
             <p *ngSwitchCase="'invalid'">
-                <button tuiIconButton appearance="icon" [icon]="'tuiIconAlertCircle'">
+                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-alert'">
                 </button>
             </p>
         </ng-container>
@@ -200,7 +201,7 @@
     <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
         [draggableElementState]="listDialogState" [elementAnchorRef]="anchor">
         <p>{{'buffinfo-list' | translate}}</p>
-        <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
+        <button tuiIconButton class="tui-space_right-2" appearance="icon" [iconStart]="'@tui.x'" size="xs"
             (click)="listDialogState.isHidden = !listDialogState.isHidden">
         </button>
     </div>
@@ -256,25 +257,25 @@
                                 <td *tuiCell="'id'" tuiTd>
                                     <tui-input [(ngModel)]="v.Content.id">
                                         {{'id' | translate}}
-                                        <input placeholder="***" tuiTextfield />
+                                        <input placeholder="***" tuiTextfieldLegacy />
                                     </tui-input>
                                 </td>
                                 <td *tuiCell="'iconKey'" tuiTd>
                                     <tui-input [(ngModel)]="v.Content.iconKey">
                                         {{'iconkey' | translate}}
-                                        <input placeholder="***" tuiTextfield />
+                                        <input placeholder="***" tuiTextfieldLegacy />
                                     </tui-input>
                                 </td>
                                 <td *tuiCell="'localizationInfoKey'" tuiTd>
                                     <tui-input [(ngModel)]="v.Content.localizationInfoKey">
                                         {{'localizationinfokey' | translate}}
-                                        <input placeholder="***" tuiTextfield />
+                                        <input placeholder="***" tuiTextfieldLegacy />
                                     </tui-input>
                                 </td>
                                 <td *tuiCell="'localizationNameKey'" tuiTd>
                                     <tui-input [(ngModel)]="v.Content.localizationNameKey">
                                         {{'localizationnamekey' | translate}}
-                                        <input placeholder="***" tuiTextfield />
+                                        <input placeholder="***" tuiTextfieldLegacy />
                                     </tui-input>
                                 </td>
                                 <td *tuiCell="'order'" tuiTd>
@@ -285,25 +286,29 @@
                                 <td *tuiCell="'viewable'" tuiTd>
                                     <div
                                         style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                        <tui-checkbox [(ngModel)]="v.Content.viewable"></tui-checkbox>
+                                        <input
+                                            tuiCheckbox
+                                            type="checkbox" [(ngModel)]="v.Content.viewable"/>
                                     </div>
                                 </td>
                                 <td *tuiCell="'custom'" tuiTd>
                                     <div style="display: flex; align-items: center; justify-content: center;">
                                         <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
                                             [overlay]="true">
-                                            <button *ngIf="v.Custom" appearance="flat" icon="tuiIconTrash"
-                                                shape="rounded" size="xs" title="{{'remove' | translate}}" tuiIconButton
+                                            <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button *ngIf="v.Custom" appearance="flat" iconStart="@tui.trash"
+                                                [style.border-radius.%]="100" size="xs" title="{{'remove' | translate}}" tuiIconButton
                                                 type="button" class="remove" (click)="gamedataService.confirmDelete(v)"
-                                                tuiMode="onLight">
+                                                tuiTheme="light">
                                             </button>
                                         </tui-loader>
                                         <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
                                             [overlay]="true">
-                                            <button *ngIf="v.Custom" appearance="flat" icon="tuiIconSave"
-                                                shape="rounded" size="xs" title="{{'update' | translate}}" tuiIconButton
+                                            <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button *ngIf="v.Custom" appearance="flat" iconStart="@tui.save"
+                                                [style.border-radius.%]="100" size="xs" title="{{'update' | translate}}" tuiIconButton
                                                 type="button" class="remove"
-                                                (click)="gamedataService.onUpdateValue(v, i)" tuiMode="onLight">
+                                                (click)="gamedataService.onUpdateValue(v, i)" tuiTheme="light">
                                             </button>
                                         </tui-loader>
                                     </div>
@@ -311,15 +316,17 @@
                                 <ng-template [ngIf]="(v.confirm | async) ?? false">
                                     <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
                                         <p class="text">{{'confirm-text-delete-gamevalue' | translate}}</p>
-                                        <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton size="xs" class="tui-space_left-2" tuiTheme="light"
                                             (click)="gamedataService.onDelete(v, i)"
-                                            [showLoader]="(gamedataService.deleting$ | async) ?? false"
+                                            [loading]="(gamedataService.deleting$ | async) ?? false"
                                             appearance="accent">
                                             {{'confirm-frienly' | translate}}
                                         </button>
-                                        <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton size="xs" class="tui-space_left-2" tuiTheme="light"
                                             (click)="gamedataService.cancelDelete(v)"
-                                            [showLoader]="(gamedataService.deleting$ | async) ?? false"
+                                            [loading]="(gamedataService.deleting$ | async) ?? false"
                                             appearance="flat">
                                             {{'unconfirm-frienly' | translate}}
                                         </button>
@@ -383,25 +390,25 @@
                             <td *tuiCell="'id'" tuiTd>
                                 <tui-input [(ngModel)]="v.Content.id">
                                     {{'id' | translate}}
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                 </tui-input>
                             </td>
                             <td *tuiCell="'iconKey'" tuiTd>
                                 <tui-input [(ngModel)]="v.Content.iconKey">
                                     {{'iconkey' | translate}}
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                 </tui-input>
                             </td>
                             <td *tuiCell="'localizationInfoKey'" tuiTd>
                                 <tui-input [(ngModel)]="v.Content.localizationInfoKey">
                                     {{'localizationinfokey' | translate}}
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                 </tui-input>
                             </td>
                             <td *tuiCell="'localizationNameKey'" tuiTd>
                                 <tui-input [(ngModel)]="v.Content.localizationNameKey">
                                     {{'localizationnamekey' | translate}}
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                 </tui-input>
                             </td>
                             <td *tuiCell="'order'" tuiTd>
@@ -411,24 +418,28 @@
                             </td>
                             <td *tuiCell="'viewable'" tuiTd>
                                 <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                    <tui-checkbox [(ngModel)]="v.Content.viewable"></tui-checkbox>
+                                    <input
+                                        tuiCheckbox
+                                        type="checkbox" [(ngModel)]="v.Content.viewable"/>
                                 </div>
                             </td>
                             <td *tuiCell="'custom'" tuiTd>
                                 <div style="display: flex; align-items: center; justify-content: center;">
                                     <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
                                         [overlay]="true">
-                                        <button *ngIf="v.Custom" appearance="flat" icon="tuiIconTrash" shape="rounded"
+                                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button *ngIf="v.Custom" appearance="flat" iconStart="@tui.trash" [style.border-radius.%]="100"
                                             size="xs" title="{{'remove' | translate}}" tuiIconButton type="button"
-                                            class="remove" (click)="gamedataService.confirmDelete(v)" tuiMode="onLight">
+                                            class="remove" (click)="gamedataService.confirmDelete(v)" tuiTheme="light">
                                         </button>
                                     </tui-loader>
                                     <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
                                         [overlay]="true">
-                                        <button *ngIf="v.Custom" appearance="flat" icon="tuiIconSave" shape="rounded"
+                                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button *ngIf="v.Custom" appearance="flat" iconStart="@tui.save" [style.border-radius.%]="100"
                                             size="xs" title="{{'update' | translate}}" tuiIconButton type="button"
                                             class="remove" (click)="gamedataService.onUpdateValue(v, i)"
-                                            tuiMode="onLight">
+                                            tuiTheme="light">
                                         </button>
                                     </tui-loader>
                                 </div>
@@ -438,14 +449,16 @@
                                     <p class="text tui-text_body-xs">{{'confirm-text-delete-gamevalue-short' |
                                         translate}}
                                     </p>
-                                    <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton size="xs" class="tui-space_left-2" tuiTheme="light"
                                         (click)="gamedataService.onDelete(v, i)"
-                                        [showLoader]="(gamedataService.deleting$ | async) ?? false" appearance="accent">
+                                        [loading]="(gamedataService.deleting$ | async) ?? false" appearance="accent">
                                         {{'confirm-frienly' | translate}}
                                     </button>
-                                    <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton size="xs" class="tui-space_left-2" tuiTheme="light"
                                         (click)="gamedataService.cancelDelete(v)"
-                                        [showLoader]="(gamedataService.deleting$ | async) ?? false" appearance="flat">
+                                        [loading]="(gamedataService.deleting$ | async) ?? false" appearance="flat">
                                         {{'unconfirm-frienly' | translate}}
                                     </button>
                                 </td>

@@ -1,12 +1,7 @@
+import { TuiBlockStatus } from "@taiga-ui/layout";
+import { TuiPrimitiveTextfieldModule, TuiTextfieldControllerModule, TuiComboBoxModule, TuiInputModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  TuiTextfieldControllerModule,
-  TuiPrimitiveTextfieldModule,
-  TuiDataListModule,
-  TuiHostedDropdownModule,
-  TuiModeModule,
-  TuiScrollbarModule
-} from '@taiga-ui/core';
+import { TuiDataList, TuiScrollbar, TuiDropdown, TuiButton, TuiHint } from '@taiga-ui/core';
 import { firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { ILocalizationCategory } from 'src/app/core/interfaces/i-localizations';
@@ -15,13 +10,9 @@ import { LanguageOriginService } from 'src/app/core/services/language-origin.ser
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { LocalizationService } from 'src/app/core/services/localization.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { LocalizationTableComponent } from './localization-table/localization-table.component';
-import { TuiHintModule } from '@taiga-ui/core/directives/hint';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
-import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiComboBoxModule, TuiInputModule, TuiFilterByInputPipeModule } from '@taiga-ui/kit';
+import { TuiDataListWrapper, TuiFilterByInputPipe } from '@taiga-ui/kit';
 import { LocalizationKeyComponent } from './localization-key/localization-key.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 
@@ -47,16 +38,15 @@ import { NgIf, AsyncPipe } from '@angular/common';
     TuiComboBoxModule,
     TuiTextfieldControllerModule,
     TuiPrimitiveTextfieldModule,
-    TuiDataListModule,
-    TuiDataListWrapperModule,
-    TuiHostedDropdownModule,
-    TuiModeModule,
-    TuiButtonModule,
+    TuiDataList,
+    TuiDataListWrapper,
+    TuiDropdown,
+    TuiButton,
     TuiInputModule,
-    TuiHintModule,
-    TuiBlockStatusModule,
-    TuiFilterByInputPipeModule,
-    TuiScrollbarModule,
+    TuiHint,
+    TuiBlockStatus,
+    TuiFilterByInputPipe,
+    TuiScrollbar,
 
     LocalizationKeyComponent,
     LocalizationTableComponent

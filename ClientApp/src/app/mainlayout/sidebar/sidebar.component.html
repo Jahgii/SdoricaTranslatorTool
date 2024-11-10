@@ -2,76 +2,81 @@
     <div class="sidebar">
         <div class="profile-avatar-container">
             <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
-                <tui-avatar class="avatar" size="s" [rounded]="false" fallback="tuiIconUserLarge"
-                    [avatarUrl]="'assets/images/app-icon-simple.svg'">
+                <tui-avatar [src]="'assets/images/app-icon-simple.svg' | tuiFallbackSrc : '@tui.user' | async" class="avatar" size="m" [round]="false"
+                   >
                 </tui-avatar>
             </tui-loader>
 
             @if ((breakpointService$ | async) === 'mobile') {
             @if (appState.isOnTour$()) {
-            <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
-                [pseudoActive]="open || null" tuiMode="onDark" [tuiDropdownDirection]="'bottom'"
+            <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
+                [tuiAppearanceState]="open || null ? 'active' : null" tuiTheme="dark" [tuiDropdownDirection]="'bottom'"
                 [tuiDropdown]="dropdownMenu" [tuiDropdownManual]="open" (click)="onOpenMenu()"
                 [tuiDropdownSided]="false" style="position: absolute;">
             </button>
             }
             @else{
-            <tui-hosted-dropdown [tuiDropdownDirection]="'bottom'" style="position: absolute;" [content]="dropdownMenu"
-                [(open)]="open">
-                <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
-                    [pseudoActive]="open || null" tuiMode="onDark">
+            <div  [tuiDropdownDirection]="'bottom'" style="position: absolute;" [tuiDropdown]="dropdownMenu"
+                [(tuiDropdownOpen)]="open">
+                <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
+                    [tuiAppearanceState]="open || null ? 'active' : null" tuiTheme="dark">
                 </button>
-            </tui-hosted-dropdown>
+            </div>
             }
 
-            <ng-template #dropdownMenu let-close="close" let-activeZone>
+            <ng-template #dropdownMenu let-close="close">
                 <div class="mobile-menu">
                     <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
 
                     <!-- DIALOG OPTIONS -->
-                    <button tuiButton type="button" appearance="icon" [icon]="'tuiIconKey'" size="xs" tuiMode="onLight"
+                    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton type="button" appearance="icon" [iconStart]="'@tui.key'" size="xs" tuiTheme="light"
                         (click)="localizationKeyDialog.onShowCreate(localizationKeyDialog.createTemplateView, 'm')">
                     </button>
 
-                    <tui-hosted-dropdown [tuiActiveZoneParent]="activeZone" tuiDropdownAlign="right"
-                        [content]="dropdownGamedata" [sided]="true" [(open)]="gamedataOpen">
-                        <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconBook'"
-                            tuiMode="onLight" [pseudoActive]="gamedataOpen || null">
+                    <div  tuiDropdownAlign="right"
+                        [tuiDropdown]="dropdownGamedata" [tuiDropdownSided]="true" [(tuiDropdownOpen)]="gamedataOpen">
+                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button appearance="icon" tuiButton type="button" size="xs" [iconStart]="'@tui.book'"
+                            tuiTheme="light" [tuiAppearanceState]="gamedataOpen || null ? 'active' : null">
                         </button>
-                    </tui-hosted-dropdown>
+                    </div>
                     <ng-template #dropdownGamedata let-close="close">
                         <p style="text-align: center;">{{'buffinfo' | translate}}</p>
                         <tui-data-list>
                             <tui-opt-group>
                                 <button tuiOption
                                     (click)="gamedataDialog.onShowList(gamedataDialog.listTemplateView, 'm')">
-                                    <tui-svg src="tuiIconBookOpen"></tui-svg> {{'see-all' | translate}}
+                                    <tui-icon  icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
                                 </button>
                                 <button tuiOption
                                     (click)="gamedataDialog.onShowCreateNew(gamedataDialog.createTemplateView, 'm')">
-                                    <tui-svg src="tuiIconEdit2"></tui-svg> {{'create-new' | translate}}
+                                    <tui-icon  icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
                                 </button>
                             </tui-opt-group>
                         </tui-data-list>
                     </ng-template>
 
-                    <tui-hosted-dropdown [tuiActiveZoneParent]="activeZone" tuiDropdownAlign="right"
-                        [content]="dropdownDictionary" [sided]="true" [(open)]="commonOpen">
-                        <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconBook'"
-                            tuiMode="onLight" [pseudoActive]="commonOpen || null">
+                    <div  tuiDropdownAlign="right"
+                        [tuiDropdown]="dropdownDictionary" [tuiDropdownSided]="true" [(tuiDropdownOpen)]="commonOpen">
+                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button appearance="icon" tuiButton type="button" size="xs" [iconStart]="'@tui.book'"
+                            tuiTheme="light" [tuiAppearanceState]="commonOpen || null ? 'active' : null">
                         </button>
-                    </tui-hosted-dropdown>
+                    </div>
                     <ng-template #dropdownDictionary let-close="close">
                         <h4 style="text-align: center;">{{'dictionary' | translate}}</h4>
                         <tui-data-list>
                             <tui-opt-group>
                                 <button tuiOption
                                     (click)="dictionaryDialog.onShowList(dictionaryDialog.listTemplateView, 'm')">
-                                    <tui-svg src="tuiIconBookOpen"></tui-svg> {{'see-all' | translate}}
+                                    <tui-icon  icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
                                 </button>
                                 <button tuiOption
                                     (click)="dictionaryDialog.onShowCreateNew(dictionaryDialog.createTemplateView, 'm')">
-                                    <tui-svg src="tuiIconEdit2"></tui-svg> {{'create-new' | translate}}
+                                    <tui-icon  icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
                                 </button>
                             </tui-opt-group>
                         </tui-data-list>
@@ -100,26 +105,30 @@
 </div>
 
 <ng-template #sidebarLoadComponentButtons>
-    <button id='localizationButton' tuiIconButton
+    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button id='localizationButton' tuiIconButton
         appearance="{{((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
-        type="button" size="s" [icon]="'tuiIconType'" tuiMode="onLight" (click)="loadComponent(appViews.localization)"
-        tuiHint="{{'main-localization' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+        type="button" size="s" [iconStart]="'@tui.type'" tuiTheme="light" (click)="loadComponent(appViews.localization)"
+        tuiHint="{{'main-localization' | translate}}" tuiHintAppearance="dark" [tuiHintShowDelay]="100"
         [ngClass]="((componentOpens[appViews.localization] | async) ?? 0) > 0 ? 'button-side': undefined">
     </button>
-    <button id='dialogsButton' tuiIconButton
+    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button id='dialogsButton' tuiIconButton
         appearance="{{((componentOpens[appViews.dialogs] | async) ?? 0) > 0 ? 'selected': 'outline' }}" type="button"
-        size="s" [icon]="'tuiIconMessageCircle'" tuiMode="onLight" (click)="loadComponent(appViews.dialogs)"
-        tuiHint="{{'chapter-dialog-localization' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+        size="s" [iconStart]="'@tui.message-circle'" tuiTheme="light" (click)="loadComponent(appViews.dialogs)"
+        tuiHint="{{'chapter-dialog-localization' | translate}}" tuiHintAppearance="dark" [tuiHintShowDelay]="100"
         [ngClass]="((componentOpens[appViews.dialogs] | async) ?? 0) > 0 ? 'button-side': undefined">
     </button>
-    <button tuiIconButton appearance="{{((componentOpens[appViews.import] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
-        type="button" size="s" [icon]="'tuiIconUpload'" tuiMode="onLight" (click)="loadComponent(appViews.import)"
-        tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiIconButton appearance="{{((componentOpens[appViews.import] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
+        type="button" size="s" [iconStart]="'@tui.upload'" tuiTheme="light" (click)="loadComponent(appViews.import)"
+        tuiHint="{{'re-import-files' | translate}}" tuiHintAppearance="dark" [tuiHintShowDelay]="100"
         [ngClass]="((componentOpens[appViews.import] | async) ?? 0) > 0 ? 'button-side': undefined">
     </button>
-    <button tuiIconButton appearance="{{((componentOpens[appViews.export] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
-        type="button" size="s" [icon]="'tuiIconDownload'" tuiMode="onLight" (click)="loadComponent(appViews.export)"
-        tuiHint="{{'export-files' | translate}}" tuiHintAppearance="onDark" [tuiHintShowDelay]="100"
+    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiIconButton appearance="{{((componentOpens[appViews.export] | async) ?? 0) > 0 ? 'selected': 'outline' }}"
+        type="button" size="s" [iconStart]="'@tui.download'" tuiTheme="light" (click)="loadComponent(appViews.export)"
+        tuiHint="{{'export-files' | translate}}" tuiHintAppearance="dark" [tuiHintShowDelay]="100"
         [ngClass]="((componentOpens[appViews.export] | async) ?? 0) > 0 ? 'button-side': undefined">
     </button>
 </ng-template>

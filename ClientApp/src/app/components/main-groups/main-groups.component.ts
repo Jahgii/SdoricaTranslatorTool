@@ -1,19 +1,16 @@
+import { TuiBlockStatus } from "@taiga-ui/layout";
+import { TuiAutoFocus } from "@taiga-ui/cdk";
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { TuiBreakpointService } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiLoader, TuiIcon, TuiButton } from '@taiga-ui/core';
 import { Observable, Subscription, firstValueFrom, map } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
-import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { RouterLink } from '@angular/router';
-import { TuiSvgModule } from '@taiga-ui/core/components/svg';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { FormsModule } from '@angular/forms';
-import { TuiAutoFocusModule } from '@taiga-ui/cdk';
-import { TuiTilesModule, TuiInputInlineModule } from '@taiga-ui/kit';
+import { TuiInputInline, TuiTiles } from '@taiga-ui/kit';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
@@ -27,16 +24,16 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     standalone: true,
     imports: [
         NgIf,
-        TuiTilesModule,
+        TuiTiles,
         NgFor,
-        TuiInputInlineModule,
-        TuiAutoFocusModule,
+        TuiInputInline,
+        TuiAutoFocus,
         FormsModule,
-        TuiButtonModule,
-        TuiSvgModule,
+        TuiButton,
+        TuiIcon,
         RouterLink,
-        TuiLoaderModule,
-        TuiBlockStatusModule,
+        TuiLoader,
+        TuiBlockStatus,
         AsyncPipe,
         TranslateModule,
     ],

@@ -12,7 +12,7 @@ const REGEXP_SPECIAL_CHAR =
 export class CommonDictionaryDirective implements OnInit {
   @Input() text!: string;
 
-  private color: string = 'var(--tui-elevation-02)';
+  private color: string = 'var(--tui-background-elevation-2)';
 
   constructor(
     private commonWords: CommonWordsService,

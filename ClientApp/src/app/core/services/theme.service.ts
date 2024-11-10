@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
+import { TUI_DARK_MODE, TUI_DARK_MODE_KEY } from '@taiga-ui/core';
+import { WA_LOCAL_STORAGE, WA_WINDOW } from '@ng-web-apis/common';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +11,13 @@ export class ThemeService {
   public nightMode$ = new BehaviorSubject<boolean>(false);
   public changeMode$ = new BehaviorSubject<boolean>(true);
 
-  constructor(
-    private localStorage: LocalStorageService
-  ) {
+  private readonly key = inject(TUI_DARK_MODE_KEY);
+  private readonly storage = inject(WA_LOCAL_STORAGE);
+  private readonly media = inject(WA_WINDOW).matchMedia('(prefers-color-scheme: dark)');
+
+  public readonly darkMode = inject(TUI_DARK_MODE);
+
+  constructor(private readonly localStorage: LocalStorageService) {
     this.loadTheme();
   }
 

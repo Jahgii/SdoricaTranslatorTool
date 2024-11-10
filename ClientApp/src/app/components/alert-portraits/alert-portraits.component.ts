@@ -1,9 +1,9 @@
+import { TuiPopover } from "@taiga-ui/cdk";
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiDialog } from '@taiga-ui/cdk';
-import { TuiAlertOptions, TuiButtonModule } from '@taiga-ui/core';
-import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
+import { TuiAlertOptions, TuiButton } from '@taiga-ui/core';
+import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { BehaviorSubject } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 
@@ -15,7 +15,7 @@ import { PortraitsService } from 'src/app/core/services/portraits.service';
     CommonModule,
     TranslateModule,
 
-    TuiButtonModule
+    TuiButton
   ],
   templateUrl: './alert-portraits.component.html',
   styleUrl: './alert-portraits.component.scss'
@@ -25,7 +25,7 @@ export class AlertPortraitsComponent {
 
   constructor(
     @Inject(POLYMORPHEUS_CONTEXT)
-    private readonly context: TuiDialog<TuiAlertOptions<AlertPortraitMode>, boolean>,
+    private readonly context: TuiPopover<TuiAlertOptions<AlertPortraitMode>, boolean>,
     public portraitsService: PortraitsService
   ) {
     this.mode$.next(this.context.data);

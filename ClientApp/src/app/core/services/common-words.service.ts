@@ -50,9 +50,9 @@ export class CommonWordsService {
             .open(this.translate.instant('alert-error-label'),
               {
                 label: this.translate.instant('alert-error'),
-                autoClose: true,
-                hasCloseButton: false,
-                status: 'error'
+                autoClose: 3_000,
+                closeable: false,
+                appearance: 'error'
               }
             ).subscribe({
               complete: () => {
@@ -86,9 +86,9 @@ export class CommonWordsService {
           this.alerts.open(this.translate.instant('alert-error-label'),
             {
               label: this.translate.instant('alert-error'),
-              autoClose: true,
-              hasCloseButton: false,
-              status: 'error'
+              autoClose: 3_000,
+              closeable: false,
+              appearance: 'error'
             }
           ).subscribe({
             complete: () => {
@@ -129,9 +129,9 @@ export class CommonWordsService {
         this.alerts.open(this.translate.instant('alert-error-label'),
           {
             label: this.translate.instant('alert-error'),
-            autoClose: true,
-            hasCloseButton: false,
-            status: 'error'
+            autoClose: 3_000,
+            closeable: false,
+            appearance: 'error'
           }
         ).subscribe({
           complete: () => {
@@ -173,9 +173,9 @@ export class CommonWordsService {
         this.alerts.open(this.translate.instant('alert-error-label'),
           {
             label: this.translate.instant('alert-error'),
-            autoClose: true,
-            hasCloseButton: false,
-            status: 'error'
+            autoClose: 3_000,
+            closeable: false,
+            appearance: 'error'
           }
         ).subscribe({
           complete: () => {

@@ -91,7 +91,7 @@
 
         <div class="translate-button tui-space_vertical-6">
             <button *ngIf="!(eTS.filesCompleted$ | async)" tuiButton appearance="outline"
-                [showLoader]="(eTS.isTranslating$ | async) ?? false" (click)="eTS.onApplyTranslation()"
+                [loading]="(eTS.isTranslating$ | async) ?? false" (click)="eTS.onApplyTranslation()"
                 [disabled]="!(eTS.filesVerified$ | async)"
                 [tuiHint]="!(eTS.filesVerified$ | async) ? ('missing-files' | translate) : undefined"
                 [tuiHintAppearance]="!(eTS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
@@ -135,21 +135,25 @@
         </ng-template>
     </ng-container>
     <ng-template #noSkip>
-        <tui-input-files *ngIf="!filecontrol.control.value" class="file-input" [formControl]="filecontrol.control"
-            [maxFileSize]="filesize" [accept]="accept" [multiple]="false" (reject)="onreject($event)" tuiMode="onLight">
+        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<!-- TODO: (Taiga UI migration) Native input inside is now required and the wrapper has changed from <tui-input-files to <label tuiInputFiles, control moved to native input. See interactive example https://taiga-ui.dev/components/input-files -->
+<tui-input-files *ngIf="!filecontrol.control.value" class="file-input" [formControl]="filecontrol.control"
+            (reject)="onreject($event)" tuiTheme="light">
             <ng-template let-dragged>
                 <div *ngIf="dragged; else base" class="content">
-                    <tui-marker-icon mode="white" src="tuiIconDroplet" size="xs"></tui-marker-icon>
+                    <tui-avatar  appearance="white" src="@tui.droplet" size="s"></tui-avatar>
                     <div>
                         {{'drop' | translate}}
                     </div>
+                    <input accept="image/*" tuiInputFiles [maxFileSize]="filesize" [accept]="accept" [multiple]="false"
+                    [formControl]="filecontrol.control" />
                 </div>
                 <ng-template #base>
                     <div class="content">
-                        <button class="skip-button" tuiIconButton icon="tuiIconXCircle" size="xs" appearance="icon"
+                        <button class="skip-button" tuiIconButton iconStart="@tui.circle-x" size="xs" appearance="icon"
                             (click)="eTS.onSkipFile(filecontrol)">
                         </button>
-                        <tui-marker-icon mode="white" src="tuiIconUploadCloud" size="xs"></tui-marker-icon>
+                        <tui-avatar  appearance="white" src="@tui.cloud-upload" size="s"></tui-avatar>
                         <div>{{filename}}</div>
                     </div>
                 </ng-template>
@@ -159,8 +163,8 @@
             <tui-island size="s">
                 <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false"
                     style="position: absolute; right: 0.5em; top: 0.5em;">
-                    <tui-svg [src]="'tuiIconCheckCircle'" style="position: relative; top: 0.25em;">
-                    </tui-svg>
+                    <tui-icon  [icon]="'@tui.circle-check'" style="position: relative; top: 0.25em;">
+                    </tui-icon>
                 </tui-loader>
                 <p class="tui-island__category">{{'archive' | translate}}</p>
                 <h3 class="tui-island__title">{{filename}}</h3>

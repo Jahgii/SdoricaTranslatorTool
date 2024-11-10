@@ -6,14 +6,9 @@ namespace SdoricaTranslatorTool.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ExportPercentagesController : Controller
+    public class ExportsController(ICustomMongoClient cMongoClient) : ControllerBase
     {
-        readonly ICustomMongoClient _cMongoClient;
-
-        public ExportPercentagesController(ICustomMongoClient cMongoClient)
-        {
-            _cMongoClient = cMongoClient;
-        }
+        readonly ICustomMongoClient _cMongoClient = cMongoClient;
 
         /// <summary>
         /// Get the general percentages on especified Language
@@ -22,8 +17,8 @@ namespace SdoricaTranslatorTool.Controllers
         /// </summary>
         /// <param name="lang"></param>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult> Get([FromHeader] string lang)
+        [HttpGet("Percentages")]
+        public async Task<ActionResult> GetPercentages([FromHeader] string lang)
         {
             int keysTranslated = (int)await _cMongoClient
                 .GetCollection<LocalizationKey>()
@@ -35,21 +30,29 @@ namespace SdoricaTranslatorTool.Controllers
                 .Find(_ => true)
                 .CountDocumentsAsync();
 
-            double keysPercentage = keysTranslated * 100 / totalKeys;
+            double keysPercentage = (double)keysTranslated * 100 / totalKeys;
 
             int dialogsTranslated = (int)await _cMongoClient
                 .GetCollection<DialogAsset>()
-                .Find(e => e.Language.Equals(lang, StringComparison.CurrentCultureIgnoreCase) && e.Translated == true)
+                .Find(e => e.Language.Equals(lang, StringComparison.CurrentCultureIgnoreCase) && e.Translated)
                 .CountDocumentsAsync();
 
             int totalDialogs = (int)await _cMongoClient
                 .GetCollection<DialogAsset>()
-                .Find(e => e.Language.ToLower() == lang.ToLower())
+                .Find(e => e.Language.Equals(lang, StringComparison.CurrentCultureIgnoreCase))
                 .CountDocumentsAsync();
 
-            double dialogsPercentage = dialogsTranslated * 100 / totalDialogs;
+            double dialogsPercentage = (double)dialogsTranslated * 100 / totalDialogs;
 
             return Ok(new { Dialogs = dialogsPercentage, Keys = keysPercentage });
+        }
+
+        [HttpGet("Translation")]
+        public async Task<ActionResult> GetTranslations([FromHeader] string lang)
+        {
+            
+
+            return Ok();
         }
     }
 }

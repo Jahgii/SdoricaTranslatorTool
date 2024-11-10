@@ -1,15 +1,11 @@
+import { TuiIslandDirective } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiSvgModule } from '@taiga-ui/core/components/svg';
-import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiIslandModule, TuiInputFilesModule, TuiMarkerIconModule } from '@taiga-ui/kit';
-import { TuiAppBarModule } from '@taiga-ui/addon-mobile';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
-import { TuiHintModule } from '@taiga-ui/core/directives/hint';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
-import { TuiExpandModule, TuiModeModule, TuiLinkModule } from '@taiga-ui/core';
+import { TuiAvatar, TuiFiles, TuiButtonLoading } from '@taiga-ui/kit';
+import { TuiAppBar, TuiBlockStatus } from '@taiga-ui/layout';
+import { TuiExpand, TuiLoader, TuiIcon, TuiLink, TuiButton, TuiHint } from '@taiga-ui/core';
 import { NgIf, NgTemplateOutlet, AsyncPipe, DecimalPipe } from '@angular/common';
 import { ExportTranslationService } from '../export-translation.service';
 
@@ -28,19 +24,19 @@ import { ExportTranslationService } from '../export-translation.service';
     ReactiveFormsModule,
     TranslateModule,
 
-    TuiExpandModule,
-    TuiButtonModule,
-    TuiHintModule,
-    TuiBlockStatusModule,
-    TuiAppBarModule,
-    TuiIslandModule,
-    TuiInputFilesModule,
-    TuiModeModule,
-    TuiMarkerIconModule,
-    TuiLoaderModule,
-    TuiSvgModule,
-    TuiLinkModule
-  ],
+    TuiExpand,
+    TuiButton,
+    TuiHint,
+    TuiBlockStatus,
+    TuiAppBar,
+    TuiIslandDirective,
+    TuiFiles,
+    TuiAvatar,
+    TuiLoader,
+    TuiIcon,
+    TuiLink,
+      TuiButtonLoading
+],
   providers: [
     ExportTranslationService
   ]

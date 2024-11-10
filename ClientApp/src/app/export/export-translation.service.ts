@@ -170,8 +170,8 @@ export class ExportTranslationService {
         this.translate.instant('alert-wrong-file-label'),
         {
           label: 'Error',
-          status: 'error',
-          autoClose: true
+          appearance: 'error',
+          autoClose: 3_000
         }
       );
 
@@ -195,8 +195,8 @@ export class ExportTranslationService {
         this.translate.instant('error-file-obb'),
         {
           label: 'Error',
-          status: 'error',
-          autoClose: true
+          appearance: 'error',
+          autoClose: 3_000
         }
       );
 
@@ -233,8 +233,8 @@ export class ExportTranslationService {
         this.translate.instant('error-file-localization'),
         {
           label: 'Error',
-          status: 'error',
-          autoClose: true
+          appearance: 'error',
+          autoClose: 3_000
         }
       );
 
@@ -272,8 +272,8 @@ export class ExportTranslationService {
         this.translate.instant('error-file-gamedata'),
         {
           label: 'Error',
-          status: 'error',
-          autoClose: true
+          appearance: 'error',
+          autoClose: 3_000
         }
       );
 

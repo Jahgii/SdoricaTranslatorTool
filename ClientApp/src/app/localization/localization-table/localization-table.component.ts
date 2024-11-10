@@ -1,52 +1,68 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from '@taiga-ui/cdk';
 import {
-  TuiDriver,
-  TuiOptionComponent,
-  TuiScrollbarComponent,
-  tuiGetWordRange,
-  TuiScrollbarModule,
+  TuiInputModule,
+  TuiTextareaModule,
   TuiTextfieldControllerModule,
-  TuiDataListModule
-} from '@taiga-ui/core';
-import { BehaviorSubject, Observable, Subscription, pairwise } from 'rxjs';
-import { fadeinAnimation } from 'src/app/core/animations/fadein';
-import { popinAnimation } from 'src/app/core/animations/popin';
-import { IGamedataValue } from 'src/app/core/interfaces/i-gamedata';
-import { ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
-import { GamedataService } from 'src/app/core/services/gamedata.service';
-import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
-import { LocalizationService } from 'src/app/core/services/localization.service';
-import { TranslateModule } from '@ngx-translate/core';
-import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
-import { TuiAppBarModule } from '@taiga-ui/addon-mobile';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
-import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
-import { TuiHintModule } from '@taiga-ui/core/directives/hint';
-import { TuiCheckboxModule } from '@taiga-ui/kit/components/checkbox';
-import { TuiSvgModule } from '@taiga-ui/core/components/svg';
-import { TuiTooltipModule } from '@taiga-ui/core/components/tooltip';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiToggleModule, TuiInputModule, TuiTextareaModule } from '@taiga-ui/kit';
-import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
-import { TuiTableFiltersModule, TuiTableModule } from '@taiga-ui/addon-table';
-import { CommonModule } from '@angular/common';
-import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
-import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictionary.directive';
+} from "@taiga-ui/legacy";
+import { TuiTooltip } from "@taiga-ui/kit";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from "@angular/core";
+import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from "@taiga-ui/cdk";
+import {
+  TuiAppearance,
+  TuiDataList,
+  TuiDriver,
+  TuiDropdown,
+  tuiGetWordRange,
+  TuiHint,
+  TuiIcon,
+  TuiLoader,
+  TuiOption,
+  TuiScrollbar,
+} from "@taiga-ui/core";
+import { BehaviorSubject, Observable, pairwise, Subscription } from "rxjs";
+import { fadeinAnimation } from "src/app/core/animations/fadein";
+import { popinAnimation } from "src/app/core/animations/popin";
+import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
+import { ILocalizationKey } from "src/app/core/interfaces/i-localizations";
+import { GamedataService } from "src/app/core/services/gamedata.service";
+import { LanguageOriginService } from "src/app/core/services/language-origin.service";
+import { LocalizationService } from "src/app/core/services/localization.service";
+import { TranslateModule } from "@ngx-translate/core";
+import { TuiAppBar, TuiBlockStatus } from "@taiga-ui/layout";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { TuiCheckbox, TuiSwitch } from "@taiga-ui/kit";
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualForOf,
+  CdkVirtualScrollViewport,
+} from "@angular/cdk/scrolling";
+import { TuiTable, TuiTableFilters } from "@taiga-ui/addon-table";
+import { CommonModule } from "@angular/common";
+import { ElementBreakpointService } from "src/app/core/services/element-breakpoint.service";
+import { CommonDictionaryDirective } from "src/app/core/directives/common-dictionary.directive";
 
-const ESPECIAL_CHARACTER = '@'
+const ESPECIAL_CHARACTER = "@";
 
 @Component({
-  selector: 'app-localization-table',
-  templateUrl: './localization-table.component.html',
-  styleUrls: ['./localization-table.component.scss'],
+  selector: "app-localization-table",
+  templateUrl: "./localization-table.component.html",
+  styleUrls: ["./localization-table.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    ElementBreakpointService
+    ElementBreakpointService,
   ],
   animations: [
     popinAnimation,
-    fadeinAnimation
+    fadeinAnimation,
   ],
   standalone: true,
   imports: [
@@ -59,32 +75,36 @@ const ESPECIAL_CHARACTER = '@'
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
 
-    TuiTableFiltersModule,
-    TuiScrollbarModule,
-    TuiTableModule,
-    TuiToggleModule,
-    TuiTooltipModule,
-    TuiSvgModule,
+    TuiTableFilters,
+    TuiScrollbar,
+    TuiTable,
+    TuiSwitch,
+    TuiTooltip,
+    TuiIcon,
     TuiInputModule,
     TuiTextfieldControllerModule,
-    TuiCheckboxModule,
-    TuiHintModule,
+    TuiCheckbox,
+    TuiHint,
     TuiTextareaModule,
-    TuiDropdownModule,
-    TuiDataListModule,
-    TuiBlockStatusModule,
-    TuiAppBarModule,
-    TuiLoaderModule,
+    TuiDropdown,
+    TuiDataList,
+    TuiBlockStatus,
+    TuiAppBar,
+    TuiLoader,
 
-    CommonDictionaryDirective
-  ]
+    CommonDictionaryDirective,
+    TuiAppearance,
+  ],
 })
 export class LocalizationTableComponent implements OnInit, OnDestroy {
-  @ViewChildren(TuiOptionComponent, { read: ElementRef })
+  @ViewChildren(TuiOption, { read: ElementRef })
   private readonly options: QueryList<ElementRef<HTMLElement>> = EMPTY_QUERY;
-  @ViewChild(TuiDriver) readonly driver?: Observable<boolean>;
-  public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  public predicate: TuiBooleanHandler<Range> = range =>
+  @ViewChild(TuiDriver)
+  readonly driver?: Observable<boolean>;
+  public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(
+    false,
+  );
+  public predicate: TuiBooleanHandler<Range> = (range) =>
     tuiGetWordRange(range).toString().startsWith(ESPECIAL_CHARACTER);
 
   private subsBreakpoint!: Subscription;
@@ -93,8 +113,9 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
     public localization: LocalizationService,
     public languageOrigin: LanguageOriginService,
     public buffInfService: GamedataService,
-    @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService
-  ) { }
+    @Inject(ElementBreakpointService) readonly breakpointService:
+      ElementBreakpointService,
+  ) {}
 
   ngOnInit(): void {
     this.reapplySearchOnElementResize();
@@ -104,14 +125,18 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
     if (this.subsBreakpoint) this.subsBreakpoint.unsubscribe();
   }
 
-  public onRenderDefaultLanguage(translations: { [language: string]: string }): string {
+  public onRenderDefaultLanguage(
+    translations: { [language: string]: string },
+  ): string {
     return translations[this.languageOrigin.localizationLang];
   }
 
-  public onTooltipCheck(scrollTooltip?: TuiScrollbarComponent) {
+  public onTooltipCheck(scrollTooltip?: TuiScrollbar) {
     let show = false;
-    if (scrollTooltip)
-      show = scrollTooltip['el']['nativeElement']['offsetHeight'] < scrollTooltip['el']['nativeElement']['scrollHeight'];
+    if (scrollTooltip) {
+      show = scrollTooltip["el"]["nativeElement"]["offsetHeight"] <
+        scrollTooltip["el"]["nativeElement"]["scrollHeight"];
+    }
 
     this.showTooltipArrow$.next(show);
   }
@@ -121,18 +146,25 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
       .mode$
       .pipe(pairwise())
       .subscribe(([previousMode, currentMode]) => {
-        if (currentMode != 'none') {
-
-          if (previousMode === 'desktopSmall' && currentMode === 'desktopLarge') return;
-          if (previousMode === 'desktopLarge' && currentMode === 'desktopSmall') return;
+        if (currentMode != "none") {
+          if (
+            previousMode === "desktopSmall" && currentMode === "desktopLarge"
+          ) return;
+          if (
+            previousMode === "desktopLarge" && currentMode === "desktopSmall"
+          ) return;
 
           let reapplyFilters = false;
 
           let filterOriginal = this.localization.filterForm.controls.original;
-          let filterTranslation = this.localization.filterForm.controls.translation;
-          let filterTranslated = this.localization.filterForm.controls.translated;
+          let filterTranslation =
+            this.localization.filterForm.controls.translation;
+          let filterTranslated =
+            this.localization.filterForm.controls.translated;
 
-          if (filterOriginal.value || filterTranslation.value) reapplyFilters = true;
+          if (filterOriginal.value || filterTranslation.value) {
+            reapplyFilters = true;
+          }
 
           if (filterTranslated.value !== null) reapplyFilters = true;
 
@@ -142,7 +174,7 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
           setTimeout(() => {
             this.localization.filterForm.patchValue({
               original: filterOriginal.value,
-              translation: filterTranslation.value
+              translation: filterTranslation.value,
             }, { emitEvent: true });
           }, 250);
         }
@@ -154,7 +186,7 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
   }
 
   //#region BuffInfo Autocomplete
-  public onArrow(event: Event, which: 'first' | 'last'): void {
+  public onArrow(event: Event, which: "first" | "last"): void {
     const item = this.options[which];
 
     if (!item) {
@@ -166,15 +198,23 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
   }
 
   public filterItems(textarea: HTMLTextAreaElement): readonly IGamedataValue[] {
-    const search = this.getCurrentSearch(textarea).replace(ESPECIAL_CHARACTER, '');
+    const search = this.getCurrentSearch(textarea).replace(
+      ESPECIAL_CHARACTER,
+      "",
+    );
 
     return this.getFilteredItems(this.buffInfService.getData, search);
   }
 
-  public onClick(key: ILocalizationKey, name: string, textarea: HTMLTextAreaElement): void {
+  public onClick(
+    key: ILocalizationKey,
+    name: string,
+    textarea: HTMLTextAreaElement,
+  ): void {
     name = `$BUFF:(${name})`;
     const search = this.getCurrentSearch(textarea);
-    const value = key.Translations[this.languageOrigin.localizationLang].replace(search, name);
+    const value = key.Translations[this.languageOrigin.localizationLang]
+      .replace(search, name);
     const caret = value.indexOf(name) + name.length;
 
     key.Translations[this.languageOrigin.localizationLang] = value;
@@ -184,12 +224,18 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
   }
 
   @tuiPure
-  private getFilteredItems(items: readonly IGamedataValue[], search: string): readonly IGamedataValue[] {
+  private getFilteredItems(
+    items: readonly IGamedataValue[],
+    search: string,
+  ): readonly IGamedataValue[] {
     return items.filter(({ Name }) => Name.startsWith(search));
   }
 
   private getCurrentSearch(textarea: HTMLTextAreaElement): string {
-    return textarea.value.slice(textarea.value.indexOf(ESPECIAL_CHARACTER), textarea.selectionStart);
+    return textarea.value.slice(
+      textarea.value.indexOf(ESPECIAL_CHARACTER),
+      textarea.selectionStart,
+    );
   }
   //#endregion
 }

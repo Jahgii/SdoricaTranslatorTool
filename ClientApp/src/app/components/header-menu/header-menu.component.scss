@@ -26,6 +26,6 @@
     height: var(--header-height);
     align-items: center;
     padding: 0 1.25rem;
-    background: var(--tui-base-01);
-    border-bottom: 1px solid var(--tui-base-03);
+    background: var(--tui-background-base);
+    border-bottom: 1px solid var(--tui-background-neutral-1-hover);
 }

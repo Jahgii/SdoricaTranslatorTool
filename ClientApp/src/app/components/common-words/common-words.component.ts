@@ -1,24 +1,20 @@
+import { TuiButtonLoading } from "@taiga-ui/kit";
+import { TuiBlockStatus } from "@taiga-ui/layout";
+import { TuiTable } from "@taiga-ui/addon-table";
+import { TuiPrimitiveTextfieldModule, TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiHostedDropdownModule, TuiModeModule, TuiDataListModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { ICommonWord } from 'src/app/core/interfaces/i-common-word';
 import { CommonWordsService } from 'src/app/core/services/common-words.service';
-import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
-import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
-import { TuiTableModule } from '@taiga-ui/addon-table';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
-import { TuiHintModule } from '@taiga-ui/core/directives/hint';
-import { TuiInputModule } from '@taiga-ui/kit';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
 import { NgIf, AsyncPipe, NgStyle } from '@angular/common';
-import { TuiSvgModule } from '@taiga-ui/core/components/svg';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
-import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 
@@ -44,23 +40,22 @@ import { DialogState } from 'src/app/core/interfaces/i-dialog';
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
 
-    TuiHostedDropdownModule,
-    TuiDropdownModule,
-    TuiButtonModule,
-    TuiModeModule,
-    TuiDataListModule,
-    TuiSvgModule,
-    TuiScrollbarModule,
+    TuiDropdown,
+    TuiButton,
+    TuiDataList,
+    TuiIcon,
+    TuiScrollbar,
     TuiInputModule,
     TuiTextfieldControllerModule,
     TuiPrimitiveTextfieldModule,
-    TuiHintModule,
-    TuiTableModule,
-    TuiLoaderModule,
-    TuiBlockStatusModule,
+    TuiHint,
+    TuiTable,
+    TuiLoader,
+    TuiBlockStatus,
 
-    DraggableElementDirective
-  ]
+    DraggableElementDirective,
+      TuiButtonLoading
+]
 })
 export class CommonWordsComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;

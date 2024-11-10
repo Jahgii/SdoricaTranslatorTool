@@ -26,7 +26,7 @@
                         <button *tuiItem tuiTab>
                             {{item.Number}}
                             @if (item.Translated) {
-                            <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                            <tui-icon  icon="@tui.circle-check"></tui-icon>
                             }
                         </button>
                     </ng-container>
@@ -39,28 +39,32 @@
                 <span class="tui-space_right-1">
                     {{'translated' | translate}}:
                 </span>
-                <tui-toggle class="tui-space_right-4" [showIcons]="true"
+                <input
+                    tuiSwitch
+                    type="checkbox" class="tui-space_right-4" [showIcons]="true"
                     [(ngModel)]="data[dAS.activeItemIndex].Translated"
-                    (ngModelChange)="onTranslatedChange(data, $event)" appareance="outline"></tui-toggle>
+                    (ngModelChange)="onTranslatedChange(data, $event)" appareance="outline"/>
                 <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
-                <tui-toggle [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"></tui-toggle>
+                <input
+                    tuiSwitch
+                    type="checkbox" [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"/>
                 <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
                 </tui-tooltip>
                 <button tuiIconButton type="button" appearance="icon" shape="square"
                     tuiHint="{{'download-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
-                    (click)="onDownload(data[dAS.activeItemIndex])" icon="tuiIconDownload">
+                    (click)="onDownload(data[dAS.activeItemIndex])" iconStart="@tui.download">
                 </button>
                 <button tuiIconButton type="button" appearance="icon" shape="square"
                     tuiHint="{{'copy-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
-                    (click)="onCopyToClipboard(data[dAS.activeItemIndex])" icon="tuiIconCopy">
+                    (click)="onCopyToClipboard(data[dAS.activeItemIndex])" iconStart="@tui.copy">
                 </button>
                 <button tuiIconButton type="button" appearance="icon" shape="square"
                     tuiHint="{{'paste-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
-                    (click)="onPasteClipboard(data[dAS.activeItemIndex])" icon="tuiIconClipboard">
+                    (click)="onPasteClipboard(data[dAS.activeItemIndex])" iconStart="@tui.clipboard">
                 </button>
                 <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
                     [overlay]="true">
-                    <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox" [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ? 
+                    <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="@tui.box" [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ? 
                                                             ('libretranslate-button-ready' | translate):
                                                             ('libretranslate-button-disabled' | translate)"
                         [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
@@ -88,7 +92,7 @@
                         <tbody tuiTbody>
                             <tr *cdkVirtualFor="let item of dialogAsset.Model['$content']" tuiTr>
                                 <td *tuiCell="'OriginalText'" tuiTd class="tooltip-name-cell" [tuiHint]="otherLanguages"
-                                    tuiHintAppearance="onDark" [tuiHintShowDelay]="200"
+                                    tuiHintAppearance="dark" [tuiHintShowDelay]="200"
                                     (mouseenter)="onGetOtherOriginalText(dialogAsset.Number, item.ID)">
                                     <ng-container *ngIf="focusRow === item.ID; else showNormalText">
                                         <span appCommonDictionary [text]="item.OriginalText"></span>
@@ -169,25 +173,29 @@
                     {{'saving-changes' | translate}}
                 </span>
                 <button tuiIconButton type="button" appearance="icon" shape="square" [tuiDropdown]="dropdownContent"
-                    [tuiDropdownManual]="openOption" (click)="openOption = !openOption" icon="tuiIconMoreVerticalLarge">
+                    [tuiDropdownManual]="openOption" (click)="openOption = !openOption" iconStart="@tui.ellipsis-vertical">
                 </button>
                 <ng-template #dropdownContent>
                     <div class="mobile-dropdown-container">
                         <div>
                             <span class="tui-space_right-1">{{'translated' | translate}}:</span>
-                            <tui-toggle class="tui-space_right-4" [showIcons]="true"
+                            <input
+                                tuiSwitch
+                                type="checkbox" class="tui-space_right-4" [showIcons]="true"
                                 [(ngModel)]="data[dAS.activeItemIndex].Translated"
-                                (ngModelChange)="onTranslatedChange(data, $event)"></tui-toggle>
+                                (ngModelChange)="onTranslatedChange(data, $event)"/>
                         </div>
                         <div>
                             <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
-                            <tui-toggle [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"></tui-toggle>
+                            <input
+                                tuiSwitch
+                                type="checkbox" [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"/>
                             <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
                             </tui-tooltip>
                         </div>
                         <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false"
                             [inheritColor]="true" [overlay]="true">
-                            <button tuiIconButton type="button" appearance="icon" shape="square" icon="tuiIconBox"
+                            <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="@tui.box"
                                 [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ? 
                                                                                 ('libretranslate-button-ready' | translate):
                                                                                 ('libretranslate-button-disabled' | translate)"
@@ -205,7 +213,7 @@
                 <cdk-virtual-scroll-viewport tuiScrollable [itemSize]="5" class="viewport tui-zero-scrollbar">
                     <ng-container
                         *cdkVirtualFor="let item of data[dAS.activeItemIndex].Model['$content']; let last = last">
-                        <p class="tui-text_body-s original-text" [tuiHint]="otherLanguages" tuiHintAppearance="onDark"
+                        <p class="tui-text_body-s original-text" [tuiHint]="otherLanguages" tuiHintAppearance="dark"
                             (mouseenter)="onGetOtherOriginalText(data[dAS.activeItemIndex].Number, item.ID)">
                             <ng-container *ngIf="focusRow === item.ID; else showNormalText">
                                 <span appCommonDictionary [text]="item.OriginalText"></span>
@@ -262,7 +270,7 @@
 </ng-template>
 
 <ng-template #moreContentIcon>
-    <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
+    <tui-icon  icon="@tui.ellipsis"></tui-icon>
 </ng-template>
 
 <ng-template #loading>
@@ -289,9 +297,9 @@
             </ul>
         </ng-container>
     </tui-scrollbar>
-    <tui-svg *ngIf="showTooltipArrow$ | async"
-        style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);" src="tuiIconArrowDown"
-        [@popIn]></tui-svg>
+    <tui-icon  *ngIf="showTooltipArrow$ | async"
+        style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);" icon="@tui.arrow-down"
+        [@popIn]></tui-icon>
 </ng-template>
 
 <ng-template #propagationTooltip>

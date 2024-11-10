@@ -198,11 +198,11 @@ export class DialogAssetService {
       .writeText(exportConversation)
       .then(_ => {
         this.alerts
-          .open(undefined, { label: this.translate.instant('copy-to-clipboard'), status: 'success', autoClose: true })
+          .open(undefined, { label: this.translate.instant('copy-to-clipboard'), appearance: 'success', autoClose: 3_000 })
           .subscribe();
       }, err => {
         this.alerts
-          .open(undefined, { label: this.translate.instant('copy-to-clipboard-error'), status: 'error', autoClose: true })
+          .open(undefined, { label: this.translate.instant('copy-to-clipboard-error'), appearance: 'error', autoClose: 3_000 })
           .subscribe();
       });
   }
@@ -218,8 +218,8 @@ export class DialogAssetService {
           this.alerts
             .open(undefined, {
               label: this.translate.instant('invalid-json')
-              , status: 'warning'
-              , autoClose: true
+              , appearance: 'warning'
+              , autoClose: 3_000
             })
             .subscribe();
 
@@ -234,13 +234,13 @@ export class DialogAssetService {
         }
 
         this.alerts
-          .open(undefined, { label: this.translate.instant('paste-correctly'), status: 'success', autoClose: true })
+          .open(undefined, { label: this.translate.instant('paste-correctly'), appearance: 'success', autoClose: 3_000 })
           .subscribe();
 
         return true;
       }, _ => {
         this.alerts
-          .open(undefined, { label: this.translate.instant('copy-to-clipboard-error'), status: 'error', autoClose: true })
+          .open(undefined, { label: this.translate.instant('copy-to-clipboard-error'), appearance: 'error', autoClose: 3_000 })
           .subscribe();
 
         return false;

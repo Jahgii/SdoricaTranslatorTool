@@ -1,34 +1,18 @@
+import { TuiTable } from "@taiga-ui/addon-table";
+import { TuiPrimitiveTextfieldModule, TuiTextfieldControllerModule, TuiInputModule, TuiInputNumberModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import {
-  TuiBreakpointService,
-  TuiDialogContext,
-  TuiDialogService,
-  TuiDialogSize,
-  TuiHostedDropdownModule,
-  TuiModeModule,
-  TuiDataListModule,
-  TuiScrollbarModule,
-  TuiTextfieldControllerModule,
-  TuiPrimitiveTextfieldModule
-} from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
-import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
 import { GamedataService } from 'src/app/core/services/gamedata.service';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
-import { TuiCheckboxModule } from '@taiga-ui/kit/components/checkbox';
-import { TuiTableModule } from '@taiga-ui/addon-table';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
-import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
-import { TuiHintModule } from '@taiga-ui/core/directives/hint';
-import { TuiInputModule, TuiInputNumberModule, TuiCheckboxBlockModule } from '@taiga-ui/kit';
+import { TuiCheckbox, TuiBlock, TuiButtonLoading } from '@taiga-ui/kit';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
 import { NgIf, NgSwitch, NgSwitchCase, AsyncPipe, NgStyle } from '@angular/common';
-import { TuiSvgModule } from '@taiga-ui/core/components/svg';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
-import { TuiDropdownModule } from '@taiga-ui/core/directives/dropdown';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 
@@ -56,25 +40,21 @@ import { DialogstateService } from 'src/app/core/services/dialogstate.service';
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
 
-    TuiHostedDropdownModule,
-    TuiDropdownModule,
-    TuiButtonModule,
-    TuiModeModule,
-    TuiDataListModule,
-    TuiSvgModule,
-    TuiScrollbarModule,
+    TuiDropdown,
+    TuiButton,
+    TuiDataList,
+    TuiIcon,
+    TuiScrollbar,
     TuiInputModule,
     TuiTextfieldControllerModule,
     TuiPrimitiveTextfieldModule,
     TuiInputNumberModule,
-    TuiHintModule,
-    TuiCheckboxBlockModule,
-    TuiLoaderModule,
-    TuiTableModule,
-    TuiCheckboxModule,
+    TuiHint,
+    TuiBlock, TuiCheckbox,
+    TuiLoader,
+    TuiTable,
 
-    DraggableElementDirective,
-  ]
+    DraggableElementDirective, TuiButtonLoading]
 
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {

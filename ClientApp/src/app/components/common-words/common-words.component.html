@@ -1,17 +1,18 @@
-<tui-hosted-dropdown tuiDropdownAlign="right" [content]="dropdown" [sided]="true" [(open)]="menuOpen">
-    <button appearance="icon" tuiButton type="button" size="xs" [icon]="'tuiIconBook'" tuiMode="onLight"
-        [pseudoActive]="menuOpen || null">
+<div  tuiDropdownAlign="right" [tuiDropdown]="dropdown" [tuiDropdownSided]="true" [(tuiDropdownOpen)]="menuOpen">
+    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button appearance="icon" tuiButton type="button" size="xs" [iconStart]="'@tui.book'" tuiTheme="light"
+        [tuiAppearanceState]="menuOpen || null ? 'active' : null">
     </button>
-</tui-hosted-dropdown>
+</div>
 <ng-template #dropdown>
     <h4 style="text-align: center;">{{'dictionary' | translate}}</h4>
     <tui-data-list>
         <tui-opt-group>
             <button tuiOption (click)="onShowList(listTemplate, 'm')">
-                <tui-svg src="tuiIconBookOpen"></tui-svg> {{'see-all' | translate}}
+                <tui-icon  icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
             </button>
             <button tuiOption (click)="onShowCreateNew(createTemplate, 'm')">
-                <tui-svg src="tuiIconEdit2"></tui-svg> {{'create-new' | translate}}
+                <tui-icon  icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
             </button>
         </tui-opt-group>
     </tui-data-list>
@@ -22,7 +23,7 @@
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
         [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
         <p>{{'common-word-form' | translate}}</p>
-        <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
+        <button tuiIconButton class="tui-space_right-2" appearance="icon" [iconStart]="'@tui.x'" size="xs"
             (click)="dialogState.isHidden = !dialogState.isHidden">
         </button>
     </div>
@@ -36,14 +37,14 @@
                     <div class="tui-form__row">
                         <tui-input formControlName="Original" tuiTextfieldSize="m">
                             {{'original-word' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="Translation" tuiTextfieldSize="m">
                             {{'translation' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
@@ -53,15 +54,15 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(commonWords.createOther$ | async); else createOther">
-                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
-                    [showLoader]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
+                <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
+                    [loading]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
                     [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error" appearance="outline">
                     {{'create' | translate}}
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m" appearance="outline">
+                <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m" appearance="outline">
                     {{'created-other' | translate}}
                 </button>
             </ng-template>
@@ -80,14 +81,14 @@
                     <div class="tui-form__row">
                         <tui-input formControlName="Original" tuiTextfieldSize="m">
                             {{'original-word' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
                     <div class="tui-form__row">
                         <tui-input formControlName="Translation" tuiTextfieldSize="m">
                             {{'translation' | translate}}
-                            <input placeholder="***" tuiTextfield />
+                            <input placeholder="***" tuiTextfieldLegacy />
                             <span class="tui-required"></span>
                         </tui-input>
                     </div>
@@ -97,15 +98,15 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(commonWords.createOther$ | async); else createOther">
-                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateKey()" size="m"
-                    [showLoader]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
+                <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
+                    [loading]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
                     [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error" appearance="outline">
                     {{'create' | translate}}
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button tuiButton [icon]="'tuiIconCheckCircle'" (click)="onCreateOther()" size="m" appearance="outline">
+                <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m" appearance="outline">
                     {{'created-other' | translate}}
                 </button>
             </ng-template>
@@ -118,7 +119,7 @@
     <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
         [draggableElementState]="listDialogState" [elementAnchorRef]="anchor">
         <p>{{'dictionary' | translate}}</p>
-        <button tuiIconButton class="tui-space_right-2" appearance="icon" [icon]="'tuiIconClose'" size="xs"
+        <button tuiIconButton class="tui-space_right-2" appearance="icon" [iconStart]="'@tui.x'" size="xs"
             (click)="listDialogState.isHidden = !listDialogState.isHidden">
         </button>
     </div>
@@ -156,29 +157,31 @@
                             <td *tuiCell="'Original'" tuiTd>
                                 <tui-input [(ngModel)]="w.Original">
                                     {{'original-word' | translate}}
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                 </tui-input>
                             </td>
                             <td *tuiCell="'Translation'" tuiTd>
                                 <tui-input [(ngModel)]="w.Translation">
                                     {{'translation' | translate}}
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                 </tui-input>
                             </td>
                             <td *tuiCell="'custom'" tuiTd>
                                 <div style="display: flex; align-items: center; justify-content: center;">
                                     <tui-loader [showLoader]="(w.loader | async) ?? false" [inheritColor]="true"
                                         [overlay]="true">
-                                        <button appearance="flat" icon="tuiIconTrash" shape="rounded" size="xs"
+                                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button appearance="flat" iconStart="@tui.trash" [style.border-radius.%]="100" size="xs"
                                             title="{{'remove' | translate}}" tuiIconButton type="button"
-                                            tuiMode="onLight" (click)="commonWords.confirmDelete(w);">
+                                            tuiTheme="light" (click)="commonWords.confirmDelete(w);">
                                         </button>
                                     </tui-loader>
                                     <tui-loader [showLoader]="(w.loader | async) ?? false" [inheritColor]="true"
                                         [overlay]="true">
-                                        <button appearance="flat" icon="tuiIconSave" shape="rounded" size="xs"
+                                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button appearance="flat" iconStart="@tui.save" [style.border-radius.%]="100" size="xs"
                                             title="{{'update' | translate}}" tuiIconButton type="button"
-                                            tuiMode="onLight" (click)="commonWords.update(w)">
+                                            tuiTheme="light" (click)="commonWords.update(w)">
                                         </button>
                                     </tui-loader>
                                 </div>
@@ -186,14 +189,16 @@
                             <ng-template [ngIf]="(w.confirm | async) ?? false">
                                 <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
                                     <p class="text">{{'confirm-text-delete-word' | translate}}</p>
-                                    <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton size="xs" class="tui-space_left-2" tuiTheme="light"
                                         (click)="commonWords.delete(w, i)"
-                                        [showLoader]="(commonWords.deleting$ | async) ?? false" appearance="accent">
+                                        [loading]="(commonWords.deleting$ | async) ?? false" appearance="accent">
                                         {{'confirm-frienly' | translate}}
                                     </button>
-                                    <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton size="xs" class="tui-space_left-2" tuiTheme="light"
                                         (click)="commonWords.cancelDelete(w)"
-                                        [showLoader]="(commonWords.deleting$ | async) ?? false" appearance="flat">
+                                        [loading]="(commonWords.deleting$ | async) ?? false" appearance="flat">
                                         {{'unconfirm-frienly' | translate}}
                                     </button>
                                 </td>
@@ -251,29 +256,31 @@
                             <td *tuiCell="'Original'" tuiTd>
                                 <tui-input [(ngModel)]="w.Original">
                                     {{'original-word' | translate}}
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                 </tui-input>
                             </td>
                             <td *tuiCell="'Translation'" tuiTd>
                                 <tui-input [(ngModel)]="w.Translation">
                                     {{'translation' | translate}}
-                                    <input placeholder="***" tuiTextfield />
+                                    <input placeholder="***" tuiTextfieldLegacy />
                                 </tui-input>
                             </td>
                             <td *tuiCell="'custom'" tuiTd>
                                 <div style="display: flex; align-items: center; justify-content: center;">
                                     <tui-loader [showLoader]="(w.loader | async) ?? false" [inheritColor]="true"
                                         [overlay]="true">
-                                        <button appearance="flat" icon="tuiIconTrash" shape="rounded" size="xs"
+                                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button appearance="flat" iconStart="@tui.trash" [style.border-radius.%]="100" size="xs"
                                             title="{{'remove' | translate}}" tuiIconButton type="button"
-                                            tuiMode="onLight" (click)="commonWords.confirmDelete(w);">
+                                            tuiTheme="light" (click)="commonWords.confirmDelete(w);">
                                         </button>
                                     </tui-loader>
                                     <tui-loader [showLoader]="(w.loader | async) ?? false" [inheritColor]="true"
                                         [overlay]="true">
-                                        <button appearance="flat" icon="tuiIconSave" shape="rounded" size="xs"
+                                        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button appearance="flat" iconStart="@tui.save" [style.border-radius.%]="100" size="xs"
                                             title="{{'update' | translate}}" tuiIconButton type="button"
-                                            tuiMode="onLight" (click)="commonWords.update(w)">
+                                            tuiTheme="light" (click)="commonWords.update(w)">
                                         </button>
                                     </tui-loader>
                                 </div>
@@ -282,14 +289,16 @@
                                 <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
                                     <p class="text tui-text_body-xs">{{'confirm-text-delete-word-short' | translate}}
                                     </p>
-                                    <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton size="xs" class="tui-space_left-2" tuiTheme="light"
                                         (click)="commonWords.delete(w, i)"
-                                        [showLoader]="(commonWords.deleting$ | async) ?? false" appearance="accent">
+                                        [loading]="(commonWords.deleting$ | async) ?? false" appearance="accent">
                                         {{'confirm-frienly' | translate}}
                                     </button>
-                                    <button tuiButton size="xs" class="tui-space_left-2" tuiMode="onLight"
+                                    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
+<button tuiButton size="xs" class="tui-space_left-2" tuiTheme="light"
                                         (click)="commonWords.cancelDelete(w)"
-                                        [showLoader]="(commonWords.deleting$ | async) ?? false" appearance="flat">
+                                        [loading]="(commonWords.deleting$ | async) ?? false" appearance="flat">
                                         {{'unconfirm-frienly' | translate}}
                                     </button>
                                 </td>

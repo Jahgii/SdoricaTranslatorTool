@@ -1,3 +1,4 @@
+import { TuiBlockStatus } from "@taiga-ui/layout";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GroupsComponent } from './groups.component';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
@@ -6,14 +7,13 @@ import { firstValueFrom, map, of } from 'rxjs';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TuiInputInlineModule, TuiTilesModule } from '@taiga-ui/kit';
+import { TuiInputInline, TuiTiles } from '@taiga-ui/kit';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiButtonComponent, TuiButtonModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiIcon, TuiButton } from '@taiga-ui/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { ChangeDetectionStrategy } from '@angular/compiler';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const MOCKLANG: string = 'english';
@@ -68,11 +68,11 @@ describe('GroupsComponent', () => {
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        TuiTilesModule,
-        TuiSvgModule,
-        TuiButtonModule,
-        TuiBlockStatusModule,
-        TuiInputInlineModule,
+        TuiTiles,
+        TuiIcon,
+        TuiButton,
+        TuiBlockStatus,
+        TuiInputInline,
         TranslateModule.forRoot({}),
         GroupsComponent,
     ],
@@ -119,7 +119,7 @@ describe('GroupsComponent', () => {
   });
 
   it('should edit name', async () => {
-    let editButton = fixture.debugElement.query(By.directive(TuiButtonComponent));
+    let editButton = fixture.debugElement.query(By.directive(TuiButton));
     spyOn(component, 'toogle');
     spyOn(component, 'onEditGroupName');
     spyOn(component, 'onFocusedChange');

@@ -1,28 +1,15 @@
+import { TuiPrimitiveTextfieldModule, TuiTextfieldControllerModule, TuiInputModule, TuiSelectModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TuiStringHandler } from '@taiga-ui/cdk';
-import {
-  TuiBreakpointService,
-  TuiDialogContext,
-  TuiDialogService,
-  TuiDialogSize,
-  TuiModeModule,
-  TuiScrollbarModule,
-  TuiTextfieldControllerModule,
-  TuiDataListModule,
-  TuiPrimitiveTextfieldModule
-} from '@taiga-ui/core';
-import { tuiItemsHandlersProvider, TuiSelectModule, TuiInputModule } from '@taiga-ui/kit';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiButton, TuiHint } from '@taiga-ui/core';
+import { tuiItemsHandlersProvider, TuiDataListWrapper, TuiButtonLoading } from '@taiga-ui/kit';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of, tap } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
-import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
-import { TuiLoaderModule } from '@taiga-ui/core/components/loader';
-import { TuiHintModule } from '@taiga-ui/core/directives/hint';
-import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
+import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe, KeyValuePipe, NgStyle, JsonPipe } from '@angular/common';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
 import { LocalizationCategoriesService } from '../localization-categories.service';
 import { DraggableElementDirective } from 'src/app/core/directives/draggable-element.directive';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
@@ -57,20 +44,20 @@ type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
     FormsModule,
     TranslateModule,
 
-    TuiButtonModule,
-    TuiModeModule,
-    TuiScrollbarModule,
+    TuiButton,
+    TuiScrollbar,
     TuiSelectModule,
     TuiTextfieldControllerModule,
-    TuiDataListModule,
-    TuiDataListWrapperModule,
+    TuiDataList,
+    TuiDataListWrapper,
     TuiInputModule,
     TuiPrimitiveTextfieldModule,
-    TuiHintModule,
-    TuiLoaderModule,
+    TuiHint,
+    TuiLoader,
 
     DraggableElementDirective,
-  ],
+      TuiButtonLoading
+],
 })
 export class LocalizationKeyComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;

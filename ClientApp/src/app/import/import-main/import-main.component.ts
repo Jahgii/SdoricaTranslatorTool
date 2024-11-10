@@ -1,15 +1,50 @@
-import { AsyncPipe, NgIf, DecimalPipe, NgTemplateOutlet, NgStyle, KeyValuePipe, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { TuiButtonModule, TuiHintModule, TuiLoaderModule, TuiModeModule, TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
-import { TuiAccordionModule, TuiBadgeModule, TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiElasticContainerModule, TuiInputFilesModule, TuiIslandModule, TuiMarkerIconModule, TuiSelectModule } from '@taiga-ui/kit';
-import { ImportService } from '../import.service';
-import { TranslateModule } from '@ngx-translate/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { BehaviorSubject } from 'rxjs';
+import { TuiSelectModule } from "@taiga-ui/legacy";
+import { TuiCardLarge } from "@taiga-ui/layout";
+import {
+  AsyncPipe,
+  DecimalPipe,
+  KeyValuePipe,
+  NgFor,
+  NgIf,
+  NgStyle,
+  NgTemplateOutlet,
+} from "@angular/common";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from "@angular/core";
+import {
+  TuiButton,
+  TuiHint,
+  TuiIcon,
+  TuiLoader,
+  TuiScrollbar,
+} from "@taiga-ui/core";
+import {
+  TuiAccordion,
+  TuiAvatar,
+  TuiBadge,
+  TuiBlock,
+  TuiButtonLoading,
+  TuiCheckbox,
+  TuiDataListWrapper,
+  TuiElasticContainer,
+  TuiFiles,
+} from "@taiga-ui/kit";
+import { ImportService } from "../import.service";
+import { TranslateModule } from "@ngx-translate/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ScrollingModule } from "@angular/cdk/scrolling";
+import { BehaviorSubject } from "rxjs";
 
 @Component({
-  selector: 'app-import-main',
+  selector: "app-import-main",
   standalone: true,
   imports: [
     NgIf,
@@ -24,26 +59,27 @@ import { BehaviorSubject } from 'rxjs';
     ReactiveFormsModule,
     TranslateModule,
 
-    TuiSvgModule,
-    TuiAccordionModule,
-    TuiButtonModule,
-    TuiIslandModule,
-    TuiInputFilesModule,
-    TuiMarkerIconModule,
-    TuiLoaderModule,
-    TuiHintModule,
+    TuiIcon,
+    TuiAccordion,
+    TuiButton,
+    TuiCardLarge,
+    TuiFiles,
+    TuiAvatar,
+    TuiLoader,
+    TuiHint,
     TuiSelectModule,
-    TuiDataListWrapperModule,
-    TuiCheckboxBlockModule,
-    TuiScrollbarModule,
-    TuiElasticContainerModule,
-    TuiBadgeModule,
-    TuiModeModule
+    TuiDataListWrapper,
+    TuiBlock,
+    TuiCheckbox,
+    TuiScrollbar,
+    TuiElasticContainer,
+    TuiBadge,
+    TuiButtonLoading,
   ],
   providers: [ImportService],
-  templateUrl: './import-main.component.html',
-  styleUrl: './import-main.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: "./import-main.component.html",
+  styleUrl: "./import-main.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImportMainComponent implements OnChanges {
   @Output()
@@ -64,5 +100,4 @@ export class ImportMainComponent implements OnChanges {
   public onNext() {
     this.next.emit();
   }
-
 }

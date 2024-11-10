@@ -1,8 +1,8 @@
+import { TuiBlockStatus } from "@taiga-ui/layout";
+import { TuiScrollbar } from "@taiga-ui/core";
 import { ChangeDetectorRef, Component, ComponentRef, HostBinding, HostListener, OnInit, Type, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
-import { TuiScrollbarModule } from '@taiga-ui/core';
-import { TuiBlockStatusModule } from '@taiga-ui/layout';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -13,8 +13,8 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
 
     //Taiga
-    TuiScrollbarModule,
-    TuiBlockStatusModule,
+    TuiScrollbar,
+    TuiBlockStatus,
 
     AdHostDirective
   ],

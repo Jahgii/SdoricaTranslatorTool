@@ -39,10 +39,12 @@
                                 [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null"
                                 style="width: 60%; max-width: 60%;">
                                 {{'translation' | translate}}
-                                <tui-toggle class="tui-space_left-2" [showIcons]="true"
-                                    [(ngModel)]="localization.propagateTranslation"></tui-toggle>
-                                <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
-                                </tui-tooltip>
+                                <input
+                                    tuiSwitch
+                                    type="checkbox" class="tui-space_left-2" [showIcons]="true"
+                                    [(ngModel)]="localization.propagateTranslation"/>
+                                <!-- <tui-tooltip [content]="propagationTooltip" direction="right" [appearance]="'onDark'">
+                                </tui-tooltip> -->
                                 <ng-template #propagationTooltip>
                                     {{'propagation' | translate}}:
                                     {{'propagation-keys-description-0' | translate}}
@@ -59,7 +61,7 @@
                             <th tuiTh *tuiHead="'Translated'" [sticky]="true" style="transform: translate(0);"
                                 [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null"
                                 style="width: 32px;">
-                                <tui-svg style="display: inherit;" src="tuiIconCheckCircle"></tui-svg>
+                                <tui-icon  style="display: inherit;" icon="@tui.circle-check"></tui-icon>
                             </th>
                         </tr>
                         <tr tuiThGroup #filterHeader>
@@ -68,7 +70,7 @@
                                 <tui-input tuiTableFilter="Original"
                                     [formControl]="localization.filterForm.controls['original']"
                                     [tuiGenericFilter]="localization.filterOriginalColumn" [tuiTextfieldSize]="'m'"
-                                    [tuiTextfieldIconLeft]="'tuiIconFilter'">
+                                    [tuiTextfieldIconLeft]="'@tui.filter'">
                                     {{'search-by-original-column' | translate}}
                                 </tui-input>
                             </th>
@@ -78,7 +80,7 @@
                                 <tui-input tuiTableFilter="Translations"
                                     [formControl]="localization.filterForm.controls['translation']"
                                     [tuiGenericFilter]="localization.filterTranslationColumn" [tuiTextfieldSize]="'m'"
-                                    [tuiTextfieldIconLeft]="'tuiIconFilter'">
+                                    [tuiTextfieldIconLeft]="'@tui.filter'">
                                     {{'search-by-translation-column' | translate}}
                                 </tui-input>
                             </th>
@@ -86,10 +88,12 @@
                                 [style.top.px]="-viewport['_renderedContentOffset'] + 44" [sorter]="null"
                                 style="width: 32px; transform: translate(0);">
                                 <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                    <tui-checkbox [formControl]="localization.filterForm.controls['translated']"
+                                    <input
+                                        tuiCheckbox
+                                        type="checkbox" [formControl]="localization.filterForm.controls['translated']"
                                         tuiTableFilter="Translated"
-                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right">
-                                    </tui-checkbox>
+                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right"/>
+                                    
                                 </div>
                             </th>
                         </tr>
@@ -107,7 +111,7 @@
                                             <ul>
                                                 <li class="tooltip-important-text tui-text_body-xs"
                                                     style="text-align: right;">
-                                                    <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
+                                                    <tui-icon  icon="@tui.key" style="font: inherit;"></tui-icon>
                                                     {{item.Name}}
                                                 </li>
                                                 <li *ngFor="let key of item.Original | keyvalue">
@@ -118,10 +122,10 @@
                                                 </li>
                                             </ul>
                                         </tui-scrollbar>
-                                        <tui-svg *ngIf="showTooltipArrow$ | async"
+                                        <tui-icon  *ngIf="showTooltipArrow$ | async"
                                             style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);"
-                                            src="tuiIconArrowDown" [@popIn]>
-                                        </tui-svg>
+                                            icon="@tui.arrow-down" [@popIn]>
+                                        </tui-icon>
                                     </ng-template>
                                     <ng-container *ngIf="localization.focusRow === item.Id; else showNormalText">
                                         <tui-scrollbar class="translation-content-cell">
@@ -137,10 +141,10 @@
                                     <span *ngIf="localization.focusRow !== item.Id"
                                         class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
                                         <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
-                                            <tui-svg src="tuiIconInbox" style="font: inherit;"></tui-svg>
+                                            <tui-icon  icon="@tui.inbox" style="font: inherit;"></tui-icon>
                                             {{item.Category}}
                                         </div>
-                                        <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
+                                        <tui-icon  icon="@tui.key" style="font: inherit;"></tui-icon>
                                         {{item.Name}}
                                     </span>
                                 </td>
@@ -150,7 +154,7 @@
                                         (focusedChange)="localization.focusRow = item.Id" [tuiTextfieldSize]="'m'"
                                         (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
                                         [rows]="4" tuiDropdownSelectionPosition="word"
-                                        [pseudoFocus]="(driver | async) || null" [tuiDropdown]="buffSelection"
+                                        [tuiDropdown]="buffSelection"
                                         [tuiDropdownSelection]="predicate"
                                         (keydown.arrowDown)="onArrow($event, 'first')"
                                         (keydown.arrowUp)="onArrow($event, 'last')">
@@ -171,9 +175,11 @@
                                 <td *tuiCell="'Translated'" tuiTd>
                                     <div
                                         style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                        <tui-checkbox [disabled]="(localization.saving$ | async) ?? false"
+                                        <input
+                                            tuiCheckbox
+                                            type="checkbox" [disabled]="(localization.saving$ | async) ?? false"
                                             [(ngModel)]="item.Translated[localization.language]"
-                                            (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"></tui-checkbox>
+                                            (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"/>
                                     </div>
                                 </td>
                             </tr>
@@ -201,20 +207,22 @@
                                     <tui-input tuiTableFilter="Original" style="transform: translate(0); flex: 1;"
                                         [formControl]="localization.filterForm.controls['original']"
                                         [tuiGenericFilter]="localization.filterOriginalColumn" [tuiTextfieldSize]="'m'"
-                                        [tuiTextfieldIconLeft]="'tuiIconFilter'">
+                                        [tuiTextfieldIconLeft]="'@tui.filter'">
                                         {{'search-by-original-column-short' | translate}}
                                     </tui-input>
                                     <tui-input tuiTableFilter="Translations" style="transform: translate(0); flex: 1;"
                                         [formControl]="localization.filterForm.controls['translation']"
                                         [tuiGenericFilter]="localization.filterTranslationColumn"
-                                        [tuiTextfieldSize]="'m'" [tuiTextfieldIconLeft]="'tuiIconFilter'">
+                                        [tuiTextfieldSize]="'m'" [tuiTextfieldIconLeft]="'@tui.filter'">
                                         {{'search-by-translation-column-short' | translate}}
                                     </tui-input>
-                                    <tui-checkbox style="padding-left: 0.75rem;"
+                                    <input
+                                        tuiCheckbox
+                                        type="checkbox" style="padding-left: 0.75rem;"
                                         [formControl]="localization.filterForm.controls['translated']"
                                         tuiTableFilter="Translated"
-                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right">
-                                    </tui-checkbox>
+                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right"/>
+                                    
                                 </div>
                             </th>
                         </tr>
@@ -242,18 +250,20 @@
                                             <span *ngIf="localization.focusRow !== item.Id"
                                                 class="tooltip-span-name-cell tooltip-important-text tui-text_body-xs">
                                                 <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
-                                                    <tui-svg src="tuiIconInbox" style="font: inherit;"></tui-svg>
+                                                    <tui-icon  icon="@tui.inbox" style="font: inherit;"></tui-icon>
                                                     {{item.Category}}
                                                 </div>
-                                                <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
+                                                <tui-icon  icon="@tui.key" style="font: inherit;"></tui-icon>
                                                 {{item.Name}}
                                             </span>
                                         </div>
                                         <div
                                             style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                            <tui-checkbox [disabled]="(localization.saving$ | async) ?? false"
+                                            <input
+                                                tuiCheckbox
+                                                type="checkbox" [disabled]="(localization.saving$ | async) ?? false"
                                                 [(ngModel)]="item.Translated[localization.language]"
-                                                (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"></tui-checkbox>
+                                                (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"/>
                                         </div>
                                         <ng-template #tooltip>
                                             <tui-scrollbar #scrollTooltip class="tooltip-original-cell" [hidden]="true"
@@ -262,7 +272,7 @@
                                                 <ul>
                                                     <li class="tooltip-important-text tui-text_body-xs"
                                                         style="text-align: right;">
-                                                        <tui-svg src="tuiIconKey" style="font: inherit;"></tui-svg>
+                                                        <tui-icon  icon="@tui.key" style="font: inherit;"></tui-icon>
                                                         {{item.Name}}
                                                     </li>
                                                     <li *ngFor="let key of item.Original | keyvalue">
@@ -274,9 +284,9 @@
                                                     </li>
                                                 </ul>
                                             </tui-scrollbar>
-                                            <tui-svg *ngIf="showTooltipArrow$ | async"
+                                            <tui-icon  *ngIf="showTooltipArrow$ | async"
                                                 style="position: absolute; left: -1px; bottom: -1px; color: var(--important-text);"
-                                                src="tuiIconArrowDown" [@popIn]></tui-svg>
+                                                icon="@tui.arrow-down" [@popIn]></tui-icon>
                                         </ng-template>
                                     </div>
                                     <div>
@@ -285,7 +295,7 @@
                                             (focusedChange)="localization.focusRow = item.Id" [tuiTextfieldSize]="'m'"
                                             (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
                                             [rows]="4" tuiDropdownSelectionPosition="word"
-                                            [pseudoFocus]="(driver | async) || null" [tuiDropdown]="buffSelection"
+                                            [tuiDropdown]="buffSelection"
                                             [tuiDropdownSelection]="predicate"
                                             (keydown.arrowDown)="onArrow($event, 'first')"
                                             (keydown.arrowUp)="onArrow($event, 'last')">

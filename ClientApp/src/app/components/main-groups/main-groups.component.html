@@ -6,7 +6,8 @@
                     [style.order]="order.get(index)" [width]="1" [height]="1" [@popIn]>
                     <div class="content">
                         <h2>
-                            <tui-input-inline *ngIf="mainGroup.editing; else groupName;" tuiAutoFocus
+                            <!-- TODO: (Taiga UI migration) (focusedChange) output has been removed. Use native (focusin) / (focusout) instead -->
+<tui-input-inline *ngIf="mainGroup.editing; else groupName;" tuiAutoFocus
                                 [(ngModel)]="mainGroup.Name" (focusedChange)="onFocusedChange($any($event), mainGroup)"
                                 (keydown.enter.prevent)="onEditGroupName(mainGroup)">
                                 {{'type-name' | translate}}
@@ -15,7 +16,7 @@
                                 <div style="display: flex;">
                                     <span>{{ mainGroup.Name }}</span>
                                     <button tuiIconButton type="button" title="{{'edit-name' | translate}}" size="xs" appearance="icon"
-                                        icon="tuiIconEdit2" class="tui-space_left-1"
+                                        iconStart="@tui.pencil" class="tui-space_left-1"
                                         (click)="toogle(mainGroup)"></button>
                                 </div>
                             </ng-template>
@@ -24,10 +25,10 @@
                             {{ "translated" | translate }}: {{ mainGroup.TranslatedFiles }} / {{ mainGroup.Files }}
                         </ng-container>
                         <ng-template #completed>
-                            {{ "translated" | translate }}: <tui-svg src="tuiIconCheckCircle"></tui-svg>
+                            {{ "translated" | translate }}: <tui-icon  icon="@tui.circle-check"></tui-icon>
                         </ng-template>
                         <button style="position: absolute; bottom: 0; right: 0;" tuiIconButton
-                            icon="tuiIconArrowRightCircle" appearance="icon" shape="square"
+                            iconStart="@tui.circle-arrow-right" appearance="icon" shape="square"
                             [routerLink]="['/dialogsAsset', mainGroup.OriginalName]"></button>
                     </div>
                 </tui-tile>

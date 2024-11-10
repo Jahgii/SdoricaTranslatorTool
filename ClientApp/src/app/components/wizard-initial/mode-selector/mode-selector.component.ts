@@ -1,9 +1,10 @@
+import { TuiButton } from "@taiga-ui/core";
+import { TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiInputModule, TuiRadioBlockModule, TuiStepperModule } from '@taiga-ui/kit';
+import { TuiStepper, TuiBlock, TuiRadio } from '@taiga-ui/kit';
 import { WizardService } from '../wizard.service';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiButtonModule, TuiTextfieldControllerModule } from '@taiga-ui/core';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
@@ -21,11 +22,11 @@ import { IUser } from 'src/app/core/interfaces/i-user';
     ReactiveFormsModule,
     TranslateModule,
 
-    TuiStepperModule,
-    TuiRadioBlockModule,
+    TuiStepper,
+    TuiBlock, TuiRadio,
     TuiInputModule,
     TuiTextfieldControllerModule,
-    TuiButtonModule
+    TuiButton
   ],
   templateUrl: './mode-selector.component.html',
   styleUrl: './mode-selector.component.scss'

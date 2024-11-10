@@ -1,12 +1,12 @@
 $border-size: 1px;
 $border-height: 2px;
-$border-color: var(--tui-base-04);
-$border-active-color: var(--tui-base-09);
+$border-color: var(--tui-border-normal);
+$border-active-color: var(--tui-background-accent-opposite);
 
 .viewer-container {
     height: calc(100vh - var(--header-height) - $border-height);
     min-width: var(--min-width-viewer);
-    background-color: var(--tui-base-01);
+    background-color: var(--tui-background-base);
     padding-top: 1px;
     border-top: $border-size solid $border-color;
     position: relative;
@@ -18,7 +18,7 @@ $border-active-color: var(--tui-base-09);
 }
 
 .component-not-loaded {
-    background-color: var(--tui-base-02);
+    background-color: var(--tui-background-base-alt);
     min-width: 15rem;
     height: calc(100svh - var(--header-height) - $border-height);
     min-height: 30rem;

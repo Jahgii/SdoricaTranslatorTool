@@ -2,13 +2,13 @@
     <form class="b-form" [formGroup]="loginForm">
         <tui-input formControlName="user" tuiTextfieldSize="s" class="tui-space_bottom-4">
             Email
-            <input tuiTextfield type="email" />
+            <input tuiTextfieldLegacy type="email" />
         </tui-input>
         <tui-input-password formControlName="password" tuiTextfieldSize="s" class="tui-space_bottom-4">
             Password
-            <input placeholder="Make it secure!" tuiTextfield />
+            <input placeholder="Make it secure!" tuiTextfieldLegacy />
         </tui-input-password>
-        <button tuiButton appearance="outline" type="button" class="tui-space_bottom-3" icon="tuiIconLogIn" size="m" [disabled]="loginForm.invalid" (click)="onLogin()">
+        <button tuiButton appearance="outline" type="button" class="tui-space_bottom-3" iconStart="@tui.log-in" size="m" [disabled]="loginForm.invalid" (click)="onLogin()">
             Login
         </button>
     </form>

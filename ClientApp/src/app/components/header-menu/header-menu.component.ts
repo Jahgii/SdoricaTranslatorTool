@@ -1,9 +1,11 @@
+import { TuiSidebar } from "@taiga-ui/addon-mobile";
+import { TuiTextfieldControllerModule, TuiInputModule, TuiSelectModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { tuiPure, TuiStringHandler, TuiContextWithImplicit, TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiScrollbarModule, TuiGroupModule, TuiTextfieldControllerModule, TuiPrimitiveTextfieldModule, TuiDataListModule, TuiHintModule } from '@taiga-ui/core';
-import { TuiLanguageSwitcher } from '@taiga-ui/i18n';
+import { tuiPure, TuiStringHandler, TuiActiveZone, TuiContext, TuiLet } from '@taiga-ui/cdk';
+import { TuiBreakpointService, TuiDataList, TuiScrollbar, TuiGroup, TuiButton, TuiHint, TuiTextfield } from '@taiga-ui/core';
+import { TuiLanguageSwitcherService } from '@taiga-ui/i18n';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
@@ -11,13 +13,9 @@ import { LibreTranslateService } from 'src/app/core/services/libre-translate.ser
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { ViewersService } from 'src/app/core/services/viewers.service';
-import { TuiBadgeModule } from '@taiga-ui/kit/components/badge';
-import { TuiDataListWrapperModule } from '@taiga-ui/kit/components/data-list-wrapper';
-import { TuiRadioBlockModule, TuiSelectModule, TuiInputModule } from '@taiga-ui/kit';
-import { TuiSidebarModule } from '@taiga-ui/addon-mobile';
+import { TuiDataListWrapper, TuiBadge, TuiBlock, TuiRadio } from '@taiga-ui/kit';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
-import { TuiButtonModule } from '@taiga-ui/core/components/button';
-import { BehaviorSubject, firstValueFrom, skip, takeWhile } from 'rxjs';
+import { BehaviorSubject, skip, takeWhile } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 
@@ -35,21 +33,21 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
     ReactiveFormsModule,
     TranslateModule,
 
-    TuiButtonModule,
-    TuiActiveZoneModule,
-    TuiSidebarModule,
-    TuiScrollbarModule,
-    TuiGroupModule,
-    TuiRadioBlockModule,
+    TuiButton,
+    TuiActiveZone,
+    TuiSidebar,
+    TuiScrollbar,
+    TuiGroup,
+    TuiBlock, TuiRadio,
     TuiSelectModule,
     TuiTextfieldControllerModule,
-    TuiPrimitiveTextfieldModule,
-    TuiDataListModule,
-    TuiDataListWrapperModule,
+    TuiTextfield,
+    TuiDataList,
+    TuiDataListWrapper,
     TuiInputModule,
-    TuiBadgeModule,
-    TuiLetModule,
-    TuiHintModule
+    TuiBadge,
+    TuiLet,
+    TuiHint
   ]
 })
 export class HeaderMenuComponent implements OnInit {
@@ -76,7 +74,7 @@ export class HeaderMenuComponent implements OnInit {
     private viewers: ViewersService,
     public theme: ThemeService,
     public appState: AppStateService,
-    @Inject(TuiLanguageSwitcher) readonly switcher: TuiLanguageSwitcher,
+    @Inject(TuiLanguageSwitcherService) readonly switcher: TuiLanguageSwitcherService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) {
     this.translate.currentLang = this.translate.defaultLang;
@@ -137,10 +135,10 @@ export class HeaderMenuComponent implements OnInit {
   @tuiPure
   stringify(
     items: readonly ILibreTranslateLanguages[],
-  ): TuiStringHandler<TuiContextWithImplicit<string>> {
+  ): TuiStringHandler<TuiContext<string>> {
     const map = new Map(items.map(({ code, name }) => [code, name] as [string, string]));
 
-    return ({ $implicit }: TuiContextWithImplicit<string>) => map.get($implicit) || '';
+    return ({ $implicit }: TuiContext<string>) => map.get($implicit) || '';
   }
 
   readonly stringifyOriginLang = (name: string): string => this.translate.instant(name);
@@ -148,9 +146,9 @@ export class HeaderMenuComponent implements OnInit {
   @tuiPure
   stringifyLang(
     items: readonly { lang: string; value: string; }[],
-  ): TuiStringHandler<TuiContextWithImplicit<string>> {
+  ): TuiStringHandler<TuiContext<string>> {
     const map = new Map(items.map(({ lang, value }) => [lang, value] as [string, string]));
 
-    return ({ $implicit }: TuiContextWithImplicit<string>) => map.get($implicit) || '';
+    return ({ $implicit }: TuiContext<string>) => map.get($implicit) || '';
   }
 }

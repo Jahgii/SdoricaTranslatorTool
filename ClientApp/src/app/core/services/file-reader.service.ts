@@ -80,8 +80,8 @@ export class FileReaderService {
         this.translate.instant('error-file-obb'),
         {
           label: 'Error',
-          status: 'error',
-          autoClose: true
+          appearance: 'error',
+          autoClose: 3_000
         }
       );
 
