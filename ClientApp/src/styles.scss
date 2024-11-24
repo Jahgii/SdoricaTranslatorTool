@@ -7,6 +7,8 @@
   --blend-mode: normal;
   --menu-width: 0rem;
   --min-width-viewer: 4rem;
+  --stt-primary: black;
+  --stt-secondary: white;
 
   --tui-text-action-hover: white;
   --tui-background-accent-1: black;
@@ -39,20 +41,8 @@
     filter: brightness(0) invert(1);
   }
 
-  [tuiWrapper][data-appearance='selected'][data-mode='onLight'] {
-    color: black !important;
-  }
-
-  [tuiWrapper][data-appearance='selected'][data-mode='onLight']:after {
-    color: black !important;
-  }
-
-  .button-side {
-    background: white !important;
-  }
-
   .active-tree {
-    color: black !important;
+    color: var(--stt-primary) !important;
   }
 
   .dialog-translation-background {
@@ -60,7 +50,6 @@
   }
 
   .avatar {
-
     img {
       filter: invert(1);
     }
@@ -146,10 +135,6 @@ code {
   cursor: col-resize;
 }
 
-.button-side {
-  background: black !important;
-}
-
 .dialog-translation-background {
   width: 320px;
   opacity: 0.1;
@@ -169,6 +154,7 @@ code {
   .shepherd-content {
     background: var(--tui-background-base-alt);
     border-radius: var(--tui-radius-s);
+    font-family: var(--tui-font-text);
 
     .shepherd-header {
       background: var(--tui-background-base);
@@ -191,6 +177,7 @@ code {
       background: var(--tui-background-base-alt);
       color: var(--tui-text-primary);
       border-radius: var(--tui-radius-s);
+      font-size: 13px;
     }
 
     .shepherd-footer {
