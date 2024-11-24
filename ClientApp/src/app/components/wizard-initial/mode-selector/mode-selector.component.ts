@@ -10,7 +10,6 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { ApiService } from 'src/app/core/services/api.service';
 import { IUser } from 'src/app/core/interfaces/i-user';
-import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: 'app-mode-selector',
@@ -20,7 +19,6 @@ import { AsyncPipe } from "@angular/common";
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-    AsyncPipe,
 
     TuiBlock,
     TuiRadio,
