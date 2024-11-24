@@ -11,7 +11,7 @@
         <li class="tui-list__item"><b>Gamedata</b>: {{'gamedata-description' | translate}}</li>
     </ul>
 
-    <div class="file-input-grid tui-space_top-3 tui-space_bottom-6">
+    <div class="file-input-grid tui-space_top-6 tui-space_bottom-9">
         <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importS.obb,
             filesize:(1024*1024*1024*2),
@@ -72,7 +72,7 @@
         }">
         </ng-container>
 
-        @if (!filecontrol.control.value && !(filecontrol.skip | async) && (showSkipButton$ | async)) {
+        @if (!filecontrol.control.value && !(filecontrol.skip | async) && (showSkipButton$ | async) && importS.canSkip$()) {
         <button class="right-top-button" tuiIconButton type="button" iconStart="@tui.circle-x" size="xs"
             appearance="icon" (click)="importS.onSkipFile(filecontrol)" [tuiHint]="'skip-file' | translate"
             tuiHintAppearance="dark" title="skip-file-button"></button>

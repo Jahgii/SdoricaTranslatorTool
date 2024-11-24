@@ -20,9 +20,9 @@ export class LanguageOriginService {
   public localizationLang: string = '';
 
   constructor(
-    private api: ApiService,
-    private indexedDB: IndexDBService,
-    private lStorage: LocalStorageService
+    private readonly api: ApiService,
+    private readonly indexedDB: IndexDBService,
+    private readonly lStorage: LocalStorageService
   ) { }
 
   public async onRetriveLanguages() {

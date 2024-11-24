@@ -16,10 +16,10 @@ export class AppStateService {
   public isOnTour$: Signal<boolean> = computed(() => this.tour.isOnTour$());
 
   constructor(
-    private vS: ViewersService,
-    private indexedDB: IndexDBService,
-    private langService: LanguageOriginService,
-    private lStorage: LocalStorageService,
+    private readonly vS: ViewersService,
+    private readonly indexedDB: IndexDBService,
+    private readonly langService: LanguageOriginService,
+    private readonly lStorage: LocalStorageService,
     public tour: TourService,
   ) { }
 

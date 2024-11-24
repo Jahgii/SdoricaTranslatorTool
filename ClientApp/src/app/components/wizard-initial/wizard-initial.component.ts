@@ -1,5 +1,4 @@
 import { TuiStepper } from "@taiga-ui/kit";
-import { TuiIslandDirective } from "@taiga-ui/legacy";
 import { Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
@@ -15,7 +14,6 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
     AsyncPipe,
     TranslateModule,
 
-    TuiIslandDirective,
     TuiStepper,
 
     ModeSelectorComponent,
@@ -31,8 +29,8 @@ export class WizardInitialComponent {
   public index$ = this.wizardService.stepIndex$;
 
   constructor(
-    private app: AppStateService,
-    @Inject(WizardService) private wizardService: WizardService
+    private readonly app: AppStateService,
+    @Inject(WizardService) private readonly wizardService: WizardService
   ) { }
 
   public wizardEnd() {

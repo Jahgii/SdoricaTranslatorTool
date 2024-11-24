@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { ApiService } from '../core/services/api.service';
 import { ILocalization, ILocalizationCategory, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { IGamedata, IGamedataCategory, IGamedataValue } from '../core/interfaces/i-gamedata';
@@ -22,6 +22,7 @@ import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestWorker, ObjectStor
 import { AppModes } from '../core/enums/app-modes';
 import { IFileControl } from '../core/interfaces/i-file-control';
 import { ApiSucess } from '../core/interfaces/i-api';
+import { LanguageOriginService } from '../core/services/language-origin.service';
 import * as JSZip from 'jszip';
 
 @Injectable()
@@ -135,6 +136,7 @@ export class ImportService {
       if (cv.translateKey === IndexDBSucess.FileCompleted) acc += 1;
       return acc;
     }, 0).toString()));
+  public canSkip$: WritableSignal<boolean> = signal(false);
 
   constructor(
     private readonly api: ApiService,
@@ -143,6 +145,7 @@ export class ImportService {
     private readonly fB: FormBuilder,
     private readonly ddS: DeviceDetectorService,
     private readonly translate: TranslateService,
+    private readonly langService: LanguageOriginService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
   ) {
     this.init();
@@ -150,6 +153,11 @@ export class ImportService {
 
   private init() {
     this.switchUploadKeysUrl();
+
+    if (this.langService.languages) {
+      console.log(this.langService.languages);
+      this.canSkip$.set(true);
+    }
 
     this.defaultLanguage
       .valueChanges
