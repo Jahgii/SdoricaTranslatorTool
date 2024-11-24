@@ -12,6 +12,58 @@
   --tui-text-primary-invert: white;
   --tui-background-accent-1-hover: black;
   --tui-background-accent-1-pressed: black;
+  --tui-text-action: black;
+}
+
+[tuiTheme='dark'] {
+  --tui-background-accent-1: black;
+  --tui-text-primary-invert: white;
+  --tui-background-accent-1-hover: black;
+  --tui-background-accent-1-pressed: black;
+  --tui-text-action: white;
+
+  --important-text: #ffc700;
+  --blend-mode: difference;
+  --tui-background-accent-1: white;
+  --tui-text-primary-invert: black;
+  --tui-background-accent-1-hover: white;
+  --tui-background-accent-1-pressed: white;
+  --tui-text-primary-on-accent-1: black;
+
+  .image {
+    filter: invert(1);
+  }
+
+  .sidebar-link-icon {
+    filter: brightness(0) invert(1);
+  }
+
+  [tuiWrapper][data-appearance='selected'][data-mode='onLight'] {
+    color: black !important;
+  }
+
+  [tuiWrapper][data-appearance='selected'][data-mode='onLight']:after {
+    color: black !important;
+  }
+
+  .button-side {
+    background: white !important;
+  }
+
+  .active-tree {
+    color: black !important;
+  }
+
+  .dialog-translation-background {
+    opacity: 0.5;
+  }
+
+  .avatar {
+
+    img {
+      filter: invert(1);
+    }
+  }
 }
 
 @font-face {
