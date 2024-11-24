@@ -58,8 +58,8 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     let appMode = this.lStorage.getAppMode();
-    let appApiUrl = this.lStorage.getAppApiUrl();
-    let appApiKey = this.lStorage.getAppApiKey();
+    let appApiUrl = this.lStorage.getAppApiUrl() ?? "";
+    let appApiKey = this.lStorage.getAppApiKey() ?? "";
 
     this.api.setBaseUrl(appApiUrl ?? "");
     this.onModeChange();
