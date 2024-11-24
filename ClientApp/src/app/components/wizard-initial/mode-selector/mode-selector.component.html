@@ -1,48 +1,62 @@
 <div class="mode-container">
-    <h3> {{'mode-selection' | translate}}</h3>
+    <h2> {{'mode-selection' | translate}}</h2>
     <p>{{'select-mode-description' | translate}}</p>
 
-    <div class="option-container" [formGroup]="modeForm">
-       <label tuiBlock="s"> <input tuiRadio type="radio" class="mode-option" [value]="modes.Offline"  formControlName="mode">
-            <div class="inner">
-                <h3 class="tui-island__title">{{'offline' | translate}}</h3>
-                <div>
+    <form [formGroup]="modeForm" class="mode-form tui-space_bottom-6">
+        <label appearance="secondary" tuiBlock="s">
+            <tui-icon icon="@tui.computer" />
+            <span tuiTitle>
+                {{'offline' | translate}}
+                <span tuiSubtitle>
                     {{'offline-mode-description' | translate}}
-                </div>
-            </div>
+                </span>
+            </span>
+            <input formControlName="mode" tuiRadio type="radio" [value]="modes.Offline" />
         </label>
-       <label tuiBlock="s"> <input tuiRadio type="radio" class="mode-option" [value]="modes.Online"  formControlName="mode">
-            <div class="inner">
-                <h3 class="tui-island__title">{{'online' | translate}}</h3>
-                <div>
+        <label appearance="secondary" tuiBlock="s">
+            <tui-icon icon="@tui.server" />
+            <span tuiTitle>
+                {{'online' | translate}}
+                <span tuiSubtitle>
                     {{'online-mode-description' | translate}}
-                </div>
-            </div>
+                </span>
+            </span>
+            <input formControlName="mode" tuiRadio type="radio" [value]="modes.Online" />
         </label>
-    </div>
+    </form>
 
     @if (modeControl?.value === modes.Online) {
-    <form class="url-container" [formGroup]="modeForm">
-        <p> {{'api-url' | translate}}</p>
-        <tui-input class="tui-space_bottom-6" formControlName="apiUrl" [tuiTextfieldLabelOutside]="true"
-            tuiTextfieldSize="s">
-            {{'api-url' | translate}}
-            <input tuiTextfieldLegacy />
-        </tui-input>
+    <form class="url-form tui-space_bottom-6" [formGroup]="modeForm">
+        <div>
+            <p> {{'api-url' | translate}}</p>
+            <tui-input class="tui-space_bottom-3" formControlName="apiUrl" [tuiTextfieldLabelOutside]="true"
+                tuiTextfieldSize="s">
+                {{'api-url' | translate}}
+                <input tuiTextfieldLegacy title="api-url" />
+            </tui-input>
+        </div>
 
-        <p> {{'api-key' | translate}}</p>
-        <tui-input formControlName="apiKey" [tuiTextfieldLabelOutside]="true" tuiTextfieldSize="s">
-            {{'api-key' | translate}}
-            <input tuiTextfieldLegacy />
-        </tui-input>
+        <div>
+            <p> {{'api-key' | translate}}</p>
+            <tui-input class="tui-space_bottom-3" formControlName="apiKey" [tuiTextfieldLabelOutside]="true"
+                tuiTextfieldSize="s">
+                {{'api-key' | translate}}
+                <input tuiTextfieldLegacy title="api-key" />
+            </tui-input>
+        </div>
 
-        <button tuiButton size="s" (click)="onTestServer()" [disabled]="modeForm.get('apiKey')?.invalid ?? false">
-            {{'test-server-api' | translate}}
-        </button>
+        <tui-loader class="tui-space_bottom-3" [inheritColor]="true" [overlay]="true" [showLoader]="testApi()">
+            <button type="button" tuiButton size="s" (click)="onTestServer()"
+                [disabled]="modeForm.invalid">
+                {{'test-server-api' | translate}}
+            </button>
+        </tui-loader>
+
     </form>
     }
 
-    <button style="width: 100%;" appearance="outline" tuiIconButton type="button" class="tui-space_top-6"
-        iconStart="@tui.circle-arrow-right" shape="square" size="m" (click)="onNext()" [disabled]="modeForm.invalid">
+    <button type="button" appearance="outline" tuiIconButton type="button" class="width100"
+        iconStart="@tui.circle-arrow-right" shape="square" size="s" (click)="onNext()" [disabled]="modeForm.invalid || !apiAlive()"
+        title="Next Step">
     </button>
 </div>

@@ -5,41 +5,48 @@
     margin: 2rem auto 0 auto;
 }
 
-.option-container {
+.width100 {
+    width: 100%;
+}
+
+form.mode-form {
     display: flex;
-    gap: 1rem;
-    padding-top: 3rem;
     flex-wrap: wrap;
-    justify-content: center;
+    gap: 1em;
 
-}
-
-.mode-option {
-    flex: 1;
-    width: 15rem;
-    min-width: 15rem;
-}
-
-.text_subtitle {
-    color: var(--tui-text-secondary)
-}
-
-.text_center {
-    text-align: center;
-}
-
-.inner {
-    margin: 1rem 0;
-    white-space: normal;
-
-    &_flex {
+    label {
         display: flex;
-        justify-content: space-between;
-        margin: 0;
-        width: 14rem;
+        max-width: 100%;
+        min-width: 260px;
+        flex: 1;
+
+        span {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
     }
 }
 
-.url-container {
-    padding-top: 3rem;
+form.url-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: end;
+
+    * {
+        flex: 1;
+    }
+
+    div {
+        min-width: 260px;
+    }
+
+    tui-loader {
+        min-width: 260px;
+
+        button {
+            min-width: 100%;
+        }
+    }
 }

@@ -3,7 +3,6 @@ import { ThemeService } from './core/services/theme.service';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { HeaderMenuComponent } from './components/header-menu/header-menu.component';
 import { RouterOutlet, RouterLink } from '@angular/router';
-// import { ThemeDarkComponent } from './components/theme-dark/theme-dark.component';
 import { NgIf, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { TuiRoot } from '@taiga-ui/core';
 import { SidebarComponent } from './mainlayout/sidebar/sidebar.component';
@@ -34,7 +33,7 @@ import { AppStateService } from './core/services/app-state.service';
 })
 export class AppComponent {
 
-  public title = 'Translator Tool';
+  public title = 'STT';
 
   constructor(
     public app: AppStateService,

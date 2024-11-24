@@ -1,32 +1,34 @@
-import { TuiButton } from "@taiga-ui/core";
+import { TuiAlertService, TuiButton, TuiIcon, TuiLoader } from "@taiga-ui/core";
 import { TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { TuiStepper, TuiBlock, TuiRadio } from '@taiga-ui/kit';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TuiBlock, TuiRadio } from '@taiga-ui/kit';
 import { WizardService } from '../wizard.service';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { ApiService } from 'src/app/core/services/api.service';
 import { IUser } from 'src/app/core/interfaces/i-user';
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: 'app-mode-selector',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    AsyncPipe,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    AsyncPipe,
 
-    TuiStepper,
-    TuiBlock, TuiRadio,
+    TuiBlock,
+    TuiRadio,
+    TuiIcon,
+    TuiLoader,
+    TuiButton,
     TuiInputModule,
     TuiTextfieldControllerModule,
-    TuiButton
   ],
   templateUrl: './mode-selector.component.html',
   styleUrl: './mode-selector.component.scss'
@@ -35,15 +37,19 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
   private modeSubs: Subscription | undefined;
   private apiUrlSubs: Subscription | undefined;
   private apiKeySubs: Subscription | undefined;
-  private urlRegex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+  private readonly urlRegex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+  private readonly alerts = inject(TuiAlertService);
+  private readonly translate = inject(TranslateService);
   public modes = AppModes;
   public modeForm = this.wizardService.modeForm;
   public modeControl = this.modeForm.get('mode');
+  public testApi: WritableSignal<boolean> = signal(false);
+  public apiAlive: WritableSignal<boolean> = signal(false);
 
   constructor(
-    private wizardService: WizardService
-    , private lStorage: LocalStorageService
-    , private api: ApiService
+    private readonly wizardService: WizardService
+    , private readonly lStorage: LocalStorageService
+    , private readonly api: ApiService
   ) { }
 
   ngOnDestroy(): void {
@@ -57,14 +63,19 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
     let appApiUrl = this.lStorage.getAppApiUrl();
     let appApiKey = this.lStorage.getAppApiKey();
 
+    this.api.setBaseUrl(appApiUrl ?? "");
+    this.onModeChange();
+    this.onApiUrlChange();
+    this.onApiKeyChange();
+
     this.modeForm.patchValue({
       mode: appMode,
       apiUrl: appApiUrl,
       apiKey: appApiKey
     });
+  }
 
-    this.api.setBaseUrl(appApiUrl ?? "");
-
+  private onModeChange() {
     this.modeSubs = this.modeForm
       .get('mode')
       ?.valueChanges
@@ -72,10 +83,10 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
         this.lStorage.setAppMode(mode);
 
         if (mode === AppModes.Online) {
-
           this.modeForm.get('apiUrl')?.addValidators([Validators.required, Validators.pattern(this.urlRegex)]);
           this.modeForm.get('apiKey')?.addValidators([Validators.required]);
           this.modeForm.updateValueAndValidity();
+          this.apiAlive.set(false);
 
           return;
         }
@@ -84,15 +95,20 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
         this.modeForm.get('apiKey')?.removeValidators([Validators.required]);
         this.modeForm.get('apiUrl')?.updateValueAndValidity();
         this.modeForm.get('apiKey')?.updateValueAndValidity();
+        this.apiAlive.set(true);
       });
+  }
 
+  private onApiUrlChange() {
     this.apiUrlSubs = this.modeForm
       .get('apiUrl')
       ?.valueChanges
       .subscribe(url => {
         this.lStorage.setAppApiUrl(url);
       });
+  }
 
+  private onApiKeyChange() {
     this.apiKeySubs = this.modeForm
       .get('apiKey')
       ?.valueChanges
@@ -102,23 +118,33 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
   }
 
   public async onTestServer() {
+    this.testApi.set(true);
     let status = await firstValueFrom(this.api.get<{ version: string, status: string }>("status"))
       .then(
         status => status, error => {
-          console.log(error);
+          this.alerts.open(
+            this.translate.instant('api-connection-error'),
+            { appearance: "negative", icon: 'triangle-alert' }
+          ).subscribe({
+            complete: () => { },
+          });
         }
       );
+    this.testApi.set(false);
 
     if (status && status.status === "Alive") {
-      await firstValueFrom(this.api.post<IUser>("auth", { user: "admin", password: "OK" }))
-        .then(
-          user => {
-            this.lStorage.setToken(user.Token);
-          }, error => {
+      await firstValueFrom(this.api.post<IUser>(
+        "auth",
+        { user: "admin", password: "OK" }
+      )).then(
+        user => {
+          this.lStorage.setToken(user.Token);
+          this.apiAlive.set(true);
+        }, error => {
 
-          }
-        );
-    }
+        }
+      );
+    } else this.apiAlive.set(false);
   }
 
   public onNext() {
