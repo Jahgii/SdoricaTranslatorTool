@@ -1,6 +1,6 @@
 <header class="header">
-    <button class="split-button" tuiIconButton appearance="icon" iconStart="@tui.columns"
-        (click)="onSplitModeToggle($event)">
+    <button class="split-button" tuiIconButton type="button" appearance="icon" iconStart="@tui.between-vertical-start"
+        (click)="onSplitModeToggle($event)" title="split-button">
     </button>
     <ng-container *ngIf="breakpointService$ | async as breakpoint">
         <ng-container *ngIf="breakpoint === 'desktopLarge' || breakpoint === 'desktopSmall'">
@@ -11,7 +11,7 @@
         </ng-container>
     </ng-container>
     <!-- <a tuiIconButton type="button" href="https://github.com/Jahgii/SdoricaTranslatorTool" target="_blank"
-        appearance="icon" [icon]="'@tui.github'">
+        appearance="icon" icon="@tui.github">
     </a> -->
     <button id="tourButton" tuiIconButton appearance="icon" iconStart="@tui.circle-help" (click)="onMainTour()"
         [tuiHint]="'tour-mode' | translate" tuiHintAppearance="dark">
@@ -21,8 +21,8 @@
         [tuiHint]="((theme.nightMode$ | async)? 'toogle-lightmode' : 'toogle-nightmode') | translate"
         tuiHintAppearance="dark">
     </button>
-    <button id="settingsButton" tuiIconButton appearance="icon" [iconStart]="'@tui.settings'" (click)="onToogleSettings()"
-        (tuiActiveZoneChange)="!appState.isOnTour$() ? onToogleSettings(): undefined">
+    <button id="settingsButton" tuiIconButton appearance="icon" [iconStart]="'@tui.settings'"
+        (click)="onToogleSettings()" (tuiActiveZoneChange)="!appState.isOnTour$() ? onToogleSettings(): undefined">
         <tui-scrollbar *tuiSidebar="openSetting; direction: 'right'">
             <div style="height: var(--header-height); display: flex; align-items: center; justify-content: center;">
                 <h3>{{'language-configuration' | translate}}</h3>
@@ -32,8 +32,8 @@
                 <h4>{{'app-language' | translate}}</h4>
                 <div orientation="vertical" tuiGroup class="w-100" [collapsed]="true">
                     <ng-container *ngFor="let lang of langs">
-                       <label tuiBlock="s"> <input tuiRadio type="radio"  [formControl]="langControl" value="{{lang.value}}"
-                            >
+                        <label tuiBlock="s"> <input tuiRadio type="radio" [formControl]="langControl"
+                                value="{{lang.value}}">
                             {{lang.lang | translate}}
                         </label>
                     </ng-container>
@@ -149,8 +149,8 @@
                         </div>
                     </ng-container>
                     <div *ngIf="libreTranslate.serverReady$ | async">
-                        <tui-badge appearance="success"
-                            class="tui-space_top-2 w-100">{{'libretranslate-ready' | translate}}</tui-badge>
+                        <tui-badge appearance="success" class="tui-space_top-2 w-100">{{'libretranslate-ready' |
+                            translate}}</tui-badge>
                     </div>
                     <div *ngIf="(libreTranslate.errorServer$ | async) as error" class="tui-space_top-2">
                         <tui-badge appearance="error" class="w-100">{{ error }}</tui-badge>

@@ -18,17 +18,13 @@
 }
 
 .file-input {
-    min-width: 220px;
+    min-width: 280px;
     min-height: 108px;
+    max-height: 108px;
 }
 
-.wizard-choose-lang {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    grid-gap: 1rem;
-    grid-auto-rows: minmax(108px, auto);
-    justify-content: space-between;
-
+.file-input-provided {
+    width: 100%;
 }
 
 .right-top-button {
@@ -37,30 +33,57 @@
     right: 4px;
 }
 
-.not-support {
-    min-width: calc(220px - 2rem);
-    min-height: calc(108px - 2rem);
-}
-
-.import-button {
-    width: 100%;
-    padding-bottom: 1rem;
-}
-
-.operation-item {
-    height: 3.125rem;
-}
-
-.lang-checkbox {
-    width: 100%;
-}
-
-.text_subtitle {
-    color: var(--tui-text-secondary)
+.wizard-choose-lang {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-gap: 1em;
+    grid-auto-rows: minmax(108px, auto);
+    justify-content: space-between;
 }
 
 .progress-badget-container {
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
+}
+
+.file-avatar {
+    background: transparent;
+}
+
+.file-verified-loader {
+    position: absolute;
+    right: 0.5em;
+    top: 0.5em;
+
+    tui-icon {
+        top: 3px;
+    }
+}
+
+.next-button {
+    width: 100%;
+}
+
+.import-button {
+    padding-bottom: 1.5em;
+}
+
+.padding0 {
+    padding: 0;
+}
+
+.progress-operation-scroll {
+    display: block;
+    width: calc(100% - 4px);
+    height: 200px;
+    border: 2px solid var(--tui-background-base-alt);
+}
+
+.width150 {
+    width: 150px;
+}
+
+.width64 {
+    width: 64px;
 }

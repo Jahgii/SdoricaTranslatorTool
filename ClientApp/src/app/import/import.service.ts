@@ -21,8 +21,8 @@ import { ImportOBBVerificationPostMessage, WorkerImportOBBVerificationPostMessag
 import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestWorker, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { AppModes } from '../core/enums/app-modes';
 import { IFileControl } from '../core/interfaces/i-file-control';
-import * as JSZip from 'jszip';
 import { ApiSucess } from '../core/interfaces/i-api';
+import * as JSZip from 'jszip';
 
 @Injectable()
 export class ImportService {
@@ -107,13 +107,13 @@ export class ImportService {
   public dialogAssetsMainGroups: { [language: string]: { [mainGroup: string]: IMainGroup } } = {};
   public dialogAssetsGroups: { [language: string]: { [mainGroup: string]: { [group: string]: IGroup } } } = {};
   private uploadStackSize = 50;
-  private maxThreads = 5;
+  private readonly maxThreads = 5;
 
   private uploadKeysUrl!: 'localizationkeys/bulk' | 'localizationkeys/import';
-  private gamedataCategories: IGamedataCategory[] = [];
-  private gamedataValues: IGamedataValue[] = [];
-  private localizationCategories: ILocalizationCategory[] = [];
-  private localizationKeys: ILocalizationKey[] = [];
+  private readonly gamedataCategories: IGamedataCategory[] = [];
+  private readonly gamedataValues: IGamedataValue[] = [];
+  private readonly localizationCategories: ILocalizationCategory[] = [];
+  private readonly localizationKeys: ILocalizationKey[] = [];
 
   public operations$: BehaviorSubject<OperationLog[]> = new BehaviorSubject(new Array());
   public operationsSkip$ = this.operations$
@@ -137,12 +137,12 @@ export class ImportService {
     }, 0).toString()));
 
   constructor(
-    private api: ApiService,
-    private lStorage: LocalStorageService,
-    private iDB: IndexDBService,
-    private fB: FormBuilder,
-    private ddS: DeviceDetectorService,
-    private translate: TranslateService,
+    private readonly api: ApiService,
+    private readonly lStorage: LocalStorageService,
+    private readonly iDB: IndexDBService,
+    private readonly fB: FormBuilder,
+    private readonly ddS: DeviceDetectorService,
+    private readonly translate: TranslateService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
   ) {
     this.init();
@@ -419,21 +419,6 @@ export class ImportService {
       fileControl.verifiedFile$.next(true);
     };
     reader.readAsArrayBuffer(file);
-  }
-
-  public onReject(file: TuiFileLike | readonly TuiFileLike[]): void {
-    let alert = this.alerts
-      .open(
-        this.translate.instant('alert-wrong-file-label'),
-        {
-          label: this.translate.instant('alert-error'),
-          appearance: 'error',
-          autoClose: 3_000,
-          closeable: false
-        }
-      );
-
-    this.openAlert(alert);
   }
 
   public onSkipFile(fileControl: IFileControl) {

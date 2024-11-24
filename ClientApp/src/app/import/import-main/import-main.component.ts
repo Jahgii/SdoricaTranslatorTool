@@ -1,12 +1,10 @@
 import { TuiSelectModule } from "@taiga-ui/legacy";
-import { TuiCardLarge } from "@taiga-ui/layout";
+import { TuiCardMedium } from "@taiga-ui/layout";
 import {
   AsyncPipe,
-  DecimalPipe,
   KeyValuePipe,
   NgFor,
   NgIf,
-  NgStyle,
   NgTemplateOutlet,
 } from "@angular/common";
 import {
@@ -20,11 +18,13 @@ import {
   SimpleChanges,
 } from "@angular/core";
 import {
+  TuiAppearance,
   TuiButton,
   TuiHint,
   TuiIcon,
   TuiLoader,
   TuiScrollbar,
+  TuiTitle,
 } from "@taiga-ui/core";
 import {
   TuiAccordion,
@@ -50,9 +50,7 @@ import { BehaviorSubject } from "rxjs";
     NgIf,
     NgFor,
     AsyncPipe,
-    DecimalPipe,
     KeyValuePipe,
-    NgStyle,
     NgTemplateOutlet,
     ScrollingModule,
     FormsModule,
@@ -60,21 +58,23 @@ import { BehaviorSubject } from "rxjs";
     TranslateModule,
 
     TuiIcon,
-    TuiAccordion,
-    TuiButton,
-    TuiCardLarge,
+    TuiHint,
+    TuiBlock,
+    TuiTitle,
     TuiFiles,
+    TuiBadge,
+    TuiButton,
     TuiAvatar,
     TuiLoader,
-    TuiHint,
-    TuiSelectModule,
-    TuiDataListWrapper,
-    TuiBlock,
     TuiCheckbox,
     TuiScrollbar,
-    TuiElasticContainer,
-    TuiBadge,
+    TuiAccordion,
+    TuiCardMedium,
+    TuiAppearance,
+    TuiSelectModule,
     TuiButtonLoading,
+    TuiDataListWrapper,
+    TuiElasticContainer,
   ],
   providers: [ImportService],
   templateUrl: "./import-main.component.html",
