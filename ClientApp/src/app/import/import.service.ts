@@ -154,10 +154,7 @@ export class ImportService {
   private init() {
     this.switchUploadKeysUrl();
 
-    if (this.langService.languages) {
-      console.log(this.langService.languages);
-      this.canSkip$.set(true);
-    }
+    if (this.langService.languages) this.canSkip$.set(true);
 
     this.defaultLanguage
       .valueChanges

@@ -16,19 +16,18 @@
     <ng-template #content>
         <tui-data-list size="l" class="list">
             <tui-opt-group>
-                <button tuiOption (click)="translate.use('en')">
+                <button tuiOption (click)="translate.use('en')" aria-label="Change language to English">
                     {{'en' | translate}}
                 </button>
-                <button tuiOption (click)="translate.use('es')">
+                <button tuiOption (click)="translate.use('es')" aria-label="Change language to Spanish">
                     {{'es' | translate}}
                 </button>
             </tui-opt-group>
         </tui-data-list>
     </ng-template>
 
-    <button tuiIconButton appearance="icon" [iconStart]="(theme.nightMode$ | async)? '@tui.sun' : '@tui.moon'"
+    <button tuiIconButton appearance="icon" [iconStart]="theme.darkMode() ? '@tui.sun' : '@tui.moon'"
         (click)="theme.switchTheme($event)" tuiSlot="right"
-        [tuiHint]="((theme.nightMode$ | async)? 'toogle-lightmode' : 'toogle-nightmode') | translate"
-        tuiHintAppearance="dark">
+        [tuiHint]="(theme.darkMode() ? 'toogle-lightmode' : 'toogle-nightmode') | translate" tuiHintAppearance="dark">
     </button>
 </tui-app-bar>
