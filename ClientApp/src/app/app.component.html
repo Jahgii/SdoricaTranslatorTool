@@ -1,9 +1,4 @@
 <tui-root style="height: 100%;" [attr.tuiTheme]="theme.darkMode() ? 'dark' : null">
-  <!-- TODO: (Taiga UI migration) TuiThemeNight has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
-  <!-- <tui-theme-night *ngIf="(theme.nightMode$ | async)"></tui-theme-night> -->
-  <!-- <app-theme-dark *ngIf="(theme.nightMode$ | async)"></app-theme-dark> -->
-
-
   <main class="main-grid">
     <app-sidebar *ngIf="app.initialized$ | async" style="grid-area: sidebar;"></app-sidebar>
     <app-nav-menu *ngIf="app.initialized$ | async" style="grid-area: header;"></app-nav-menu>
