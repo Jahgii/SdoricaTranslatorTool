@@ -21,11 +21,11 @@ export class ResizerDirective implements OnChanges {
 
   private mouseDown$!: Observable<MouseEvent>;
   private touchStart$!: Observable<TouchEvent>;
-  private mouseMove$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mousemove", { passive: true });
-  private touchMove$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchmove", { passive: true });
-  private mouseUp$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mouseup", { passive: true });
-  private touchUp$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchend", { passive: true });
-  private px_minResizer = 64;
+  private readonly mouseMove$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mousemove", { passive: false });
+  private readonly touchMove$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchmove", { passive: false });
+  private readonly mouseUp$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mouseup", { passive: false });
+  private readonly touchUp$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchend", { passive: false });
+  private readonly px_minResizer = 64;
 
   constructor() { }
 
@@ -60,13 +60,17 @@ export class ResizerDirective implements OnChanges {
 
   private onMouseDownSubs() {
     this.mouseDown$
-      .subscribe(event => this.onMouseDown(event));
+      .subscribe(event => {
+        event.preventDefault();
+        this.onMouseDown(event)
+      });
   }
 
   private onMouseMoveSubs() {
     this.mouseMove$
       .pipe(takeWhile(() => this.resizerState.isResizing))
       .subscribe(event => {
+        event.preventDefault();
         this.moveAxis(event.pageX, event.pageY);
       });
   }
@@ -75,6 +79,7 @@ export class ResizerDirective implements OnChanges {
     this.mouseUp$
       .pipe(take(1))
       .subscribe(e => {
+        e.preventDefault();
         this.resizerState.isResizing = false;
         this.removeActiveClass();
       });
@@ -103,13 +108,17 @@ export class ResizerDirective implements OnChanges {
 
   private onTouchStartSubs() {
     this.touchStart$
-      .subscribe(event => this.onTouchStart(event));
+      .subscribe(event => {
+        event.preventDefault();
+        this.onTouchStart(event);
+      });
   }
 
   private onTouchMoveSubs() {
     this.touchMove$
       .pipe(takeWhile(() => this.resizerState.isResizing))
       .subscribe(event => {
+        event.preventDefault();
         this.moveAxis(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
       });
   }
@@ -118,6 +127,7 @@ export class ResizerDirective implements OnChanges {
     this.touchUp$
       .pipe(take(1))
       .subscribe(e => {
+        e.preventDefault();
         this.resizerState.isResizing = false;
         this.removeActiveClass();
       });
