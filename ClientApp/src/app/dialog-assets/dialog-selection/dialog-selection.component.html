@@ -1,5 +1,5 @@
 @if ((hiddenScroll$ | async) && (groupSelected$ | async)) {
-<tui-icon  icon="@tui.arrow-right" class="hidden-arrow"></tui-icon>
+<tui-icon icon="@tui.arrow-right" class="hidden-arrow"></tui-icon>
 }
 
 <tui-scrollbar #scrollbar class="group-tree" [hidden]="(hiddenScroll$ | async) === true"
@@ -26,13 +26,13 @@
         <div class="tree" (click)="node.children? node.expanded = !node.expanded : onSelectGroup(node)">
             <div class="tree-content">
                 <div class="tree-left-content">
-                    <tui-icon  class="tui-space_right-2" [ngClass]="{'active-tree': node.selected | async}"
-                        [icon]="node.children?'@tui.folder': '@tui.file'"></tui-icon>
+                    <tui-icon class="tui-space_right-2" [ngClass]="{'active-tree': node.selected | async}"
+                        [icon]="node.children?'@tui.folder': '@tui.file'"  />
                     <div class="tree-name tui-space_right-2">
-                        <!-- TODO: (Taiga UI migration) (focusedChange) output has been removed. Use native (focusin) / (focusout) instead -->
-                         <tui-input-inline #input [(ngModel)]="node.Name" [class.input_empty]="!$any(input).value"
+                        <tui-input-inline #input [class.input_empty]="!$any(input).value"
                             (click)="$event.stopPropagation()" (focusin)="onFocusName($any($event), input, node)">
                             {{node.OriginalName}}
+                            <input [(ngModel)]="node.Name" aria-label="Input" />
                         </tui-input-inline>
                     </div>
                 </div>
@@ -41,13 +41,13 @@
                         [{{ node.TranslatedFiles }} /{{node.Files }}]
                         </span>
                         } @else {
-                        <tui-icon  icon="@tui.circle-check"></tui-icon>
+                        <tui-icon icon="@tui.circle-check"></tui-icon>
                         }
                 </div>
             </div>
         </div>
         @if (node.saving | async) {
-        <progress class="tree-progress-bar" max="100" tuiProgressBar></progress>
+        <progress new tuiProgressBar [max]="100" class="tree-progress-bar"></progress>
         }
     </div>
     <tui-expand class="tui-space_left-6" [expanded]="node.expanded ?? false">

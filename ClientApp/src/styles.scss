@@ -54,6 +54,11 @@
       filter: invert(1);
     }
   }
+
+  [tuiSwitch]:checked:before {
+    transform: none;
+    color: var(--stt-primary);
+  }
 }
 
 @font-face {

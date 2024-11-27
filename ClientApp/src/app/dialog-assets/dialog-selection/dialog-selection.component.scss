@@ -24,6 +24,8 @@
     .tree-left-content {
         display: flex;
         flex: 1;
+        align-items: center;
+        justify-content: center;
 
         .tree-name {
             width: 0px;
@@ -61,12 +63,18 @@
     height: 100% !important;
 }
 
+[tuiProgressBar] {
+    border-radius: 0 !important;
+    clip-path: inset(0 .5px round var(--tui-radius-xs)) !important;
+}
+
 .group-tree {
     position: absolute;
     width: 20rem;
     max-width: 20rem;
     max-height: calc(100% - 1px);
     z-index: 1;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     transition: all 0.25s ease-out;
 }
@@ -74,10 +82,12 @@
 .group-tree-hide {
     width: 1.5rem;
     height: 100%;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(0px);
 
     &:hover {
         width: 20rem;
+        -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
     }
 }
@@ -86,6 +96,7 @@
     position: absolute;
     top: 50%;
     border-radius: 50%;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     z-index: 2;
 }
