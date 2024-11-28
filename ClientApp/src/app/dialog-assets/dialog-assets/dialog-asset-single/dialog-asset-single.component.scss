@@ -1,0 +1,106 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.dialog {
+    position: relative;
+}
+
+.dialog-speaker-name {
+    width: 425px;
+    font-size: 22px;
+    font-family: dialog-font;
+    font-weight: bold;
+    color: #e48e45;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    transition: all 500ms;
+
+    &:focus {
+        border: none;
+        outline: none;
+    }
+
+    &:hover {
+        background-color: var(--tui-background-base-alt);
+    }
+}
+
+.dialog-translation {
+    font-size: 17px;
+    font-family: dialog-font;
+    line-height: initial;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    width: 425px;
+    height: 90px;
+    resize: none;
+    overflow: hidden;
+    transition: all 500ms;
+
+    &:focus {
+        border: none;
+        outline: none;
+    }
+
+    &:hover {
+        background-color: var(--tui-background-base-alt);
+    }
+}
+
+.dialog-translation-container {
+    display: flex;
+}
+
+.dialog-translation-portrait-container {
+    position: relative;
+    left: -6px;
+
+    .dialog-translation-portrait {
+        width: 128px;
+        height: 128px;
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+    }
+}
+
+.dialog-translation-frame {
+    width: 148px;
+    height: 148px;
+    position: absolute;
+    bottom: 12px;
+    left: 18px;
+    opacity: 0.50;
+}
+
+.dialog-translation-speaker {
+    position: absolute;
+    top: 30px;
+    left: 168px;
+}
+
+.dialog-translation-input {
+    position: absolute;
+    top: 64px;
+    left: 168px;
+    max-width: 450px;
+}
+
+.dialog-translation-full {
+    position: absolute;
+    top: 44px;
+    left: 120px;
+    max-width: 450px;
+}
+
+.scalex {
+    transform: scaleX(-1);
+}

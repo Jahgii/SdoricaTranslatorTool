@@ -1,0 +1,70 @@
+<div class="row" [ngStyle]="{'zoom': breakpointService.x() > 1320 ? 1 :
+        breakpointService.x() > 768 ? breakpointService.x() / 1320 :
+        breakpointService.x() > 320 ? breakpointService.x() / 660 :
+        320 / 660}">
+    <div class="dialog">
+        <div class="dialog-translation-container">
+            <img class="dialog-translation-background" src="assets/images/dialog_paper.png" alt="dialot_paper">
+            <img class="dialog-translation-background scalex" src="assets/images/dialog_paper.png" alt="dialot_paper">
+        </div>
+        <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
+            <div class="dialog-translation-portrait-container" *ngIf="item.IconName">
+                <img class="dialog-translation-portrait" src="assets/images/figure_base2.png" alt="base" loading="lazy">
+                <img class="dialog-translation-portrait" [src]="onGetPortrait(item.IconName)"
+                    onerror="this.src='assets/images/portrait-miss.svg'" alt="portrait not found" width="100"
+                    height="120" loading="lazy">
+                <img class="dialog-translation-frame" src="assets/images/figure_frame.png" alt="base" loading="lazy">
+            </div>
+            <div class="dialog-translation-speaker">
+                <input [ngModel]="item.SpeakerName" class="dialog-speaker-name" />
+            </div>
+            <div class="dialog-translation-input">
+                <textarea [ngModel]="item.OriginalText" class="dialog-translation" readonly></textarea>
+            </div>
+        </ng-container>
+        <ng-template #fullDialog>
+            <div class="dialog-translation-full">
+                <textarea [ngModel]="item.OriginalText" class="dialog-translation" readonly></textarea>
+            </div>
+        </ng-template>
+    </div>
+    <div class="dialog">
+        <div class="dialog-translation-container">
+            <img class="dialog-translation-background" src="assets/images/dialog_paper.png" alt="dialot_paper">
+            <img class="dialog-translation-background" style="transform: scaleX(-1);"
+                src="assets/images/dialog_paper.png" alt="dialot_paper">
+        </div>
+        <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
+            <div class="dialog-translation-portrait-container" *ngIf="item.IconName">
+                <img class="dialog-translation-portrait" src="assets/images/figure_base2.png" alt="base" loading="lazy">
+                <img class="dialog-translation-portrait" [src]="onGetPortrait(item.IconName)"
+                    onerror="this.src='assets/images/portrait-miss.svg'" alt="portrait not found" width="100"
+                    height="120" loading="lazy">
+                <img class="dialog-translation-frame" src="assets/images/figure_frame.png" alt="base" loading="lazy">
+            </div>
+            <div class="dialog-translation-speaker">
+                <input [(ngModel)]="item.SpeakerName" (focus)="dAS.previousPropagationValue = item.SpeakerName"
+                    (ngModelChange)="onSpeakerNameChange($event, data)" class="dialog-speaker-name" />
+            </div>
+            <div class="dialog-translation-input">
+                <!-- <textarea [(ngModel)]="item.Text"
+                    (ngModelChange)="onTextChange(dialogAsset)"
+                    (focus)="focusRow = item.ID"
+                    [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
+                    class="dialog-translation"></textarea> -->
+                <textarea [(ngModel)]="item.Text" (ngModelChange)="onTextChange(dialogAsset)"
+                    [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
+                    class="dialog-translation"></textarea>
+            </div>
+        </ng-container>
+        <ng-template #fullDialog>
+            <div class="dialog-translation-full">
+                <textarea [(ngModel)]="item.Text" [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
+                    class="dialog-translation"></textarea>
+                <!-- <textarea [(ngModel)]="item.Text" (ngModelChange)="onTextChange(dialogAsset)"
+                    (focus)="focusRow = item.ID" [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
+                    class="dialog-translation"></textarea> -->
+            </div>
+        </ng-template>
+    </div>
+</div>
