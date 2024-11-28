@@ -1,15 +1,19 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { ElementRef, Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class ElementBreakpointService {
   private px_size: IElementSize = { x: 0, y: 0 };
+  public x: WritableSignal<number> = signal(0);
+  public y: WritableSignal<number> = signal(0);
   public mode$: BehaviorSubject<ElementBreakpoint> = new BehaviorSubject<ElementBreakpoint>(ElementBreakpoint.none);
 
-  constructor(private host: ElementRef) {
+  constructor(private readonly host: ElementRef) {
     const observer = new ResizeObserver(entries => {
       this.px_size.x = entries[0].contentRect.width;
       this.px_size.y = entries[0].contentRect.height;
+      this.x.set(entries[0].contentRect.width);
+      this.y.set(entries[0].contentRect.height);
 
       let mode = ElementBreakpoint.none
       if (this.px_size.x <= 768) mode = ElementBreakpoint.mobile;
