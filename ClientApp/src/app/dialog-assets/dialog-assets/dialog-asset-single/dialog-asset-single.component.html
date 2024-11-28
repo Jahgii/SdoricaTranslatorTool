@@ -1,7 +1,10 @@
-<div class="row" [ngStyle]="{'zoom': breakpointService.x() > 1320 ? 1 :
+<div class="row" [ngStyle]="{
+    'flex-wrap': breakpointService.x() > 768 ? undefined: 'wrap',
+    'zoom': breakpointService.x() > 1320 ? 1 :
         breakpointService.x() > 768 ? breakpointService.x() / 1320 :
         breakpointService.x() > 320 ? breakpointService.x() / 660 :
-        320 / 660}">
+        320 / 660
+    }">
     <div class="dialog">
         <div class="dialog-translation-container">
             <img class="dialog-translation-background" src="assets/images/dialog_paper.png" alt="dialot_paper">
