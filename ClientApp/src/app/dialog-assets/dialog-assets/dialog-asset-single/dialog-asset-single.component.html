@@ -19,15 +19,15 @@
                 <img class="dialog-translation-frame" src="assets/images/figure_frame.png" alt="base" loading="lazy">
             </div>
             <div class="dialog-translation-speaker">
-                <input [ngModel]="item.SpeakerName" class="dialog-speaker-name" />
+                <span class="dialog-speaker-name disabled">{{item.SpeakerName}}</span>
             </div>
             <div class="dialog-translation-input">
-                <textarea [ngModel]="item.OriginalText" class="dialog-translation" readonly></textarea>
+                <span class="dialog-translation disabled">{{item.OriginalText}}</span>
             </div>
         </ng-container>
         <ng-template #fullDialog>
             <div class="dialog-translation-full">
-                <textarea [ngModel]="item.OriginalText" class="dialog-translation" readonly></textarea>
+                <span [ngModel]="item.OriginalText" class="dialog-translation disabled" readonly></span>
             </div>
         </ng-template>
     </div>
@@ -71,3 +71,4 @@
         </ng-template>
     </div>
 </div>
+<hr style="max-width: 1260px; margin: 0 auto; background: var(--tui-border-normal);">

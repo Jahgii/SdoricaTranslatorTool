@@ -54,6 +54,13 @@
     }
 }
 
+.disabled {
+    &:hover {
+        background-color: transparent;
+    }
+}
+
+
 .dialog-translation-container {
     display: flex;
 }
