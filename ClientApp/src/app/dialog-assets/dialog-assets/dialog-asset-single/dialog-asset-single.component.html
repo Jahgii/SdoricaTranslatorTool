@@ -5,7 +5,7 @@
         breakpointService.x() > 320 ? breakpointService.x() / 660 :
         320 / 660
     }">
-    <div class="dialog">
+    <div class="dialog" [tuiHint]="otherLanguages" [tuiHintContext]="{$implicit: (otherText$ | async)}">
         <div class="dialog-translation-container">
             <img class="dialog-translation-background" src="assets/images/dialog_paper.png" alt="dialot_paper">
             <img class="dialog-translation-background scalex" src="assets/images/dialog_paper.png" alt="dialot_paper">
@@ -22,12 +22,22 @@
                 <span class="dialog-speaker-name disabled">{{item.SpeakerName}}</span>
             </div>
             <div class="dialog-translation-input">
+                @if (focus()) {
+                <span class="dialog-translation disabled" appCommonDictionary [text]="item.OriginalText"></span>
+                }
+                @else {
                 <span class="dialog-translation disabled">{{item.OriginalText}}</span>
+                }
             </div>
         </ng-container>
         <ng-template #fullDialog>
             <div class="dialog-translation-full">
-                <span [ngModel]="item.OriginalText" class="dialog-translation disabled" readonly></span>
+                @if (focus()) {
+                <span class="dialog-translation disabled" appCommonDictionary [text]="item.OriginalText"></span>
+                }
+                @else {
+                <span class="dialog-translation disabled">{{item.OriginalText}}</span>
+                }
             </div>
         </ng-template>
     </div>
@@ -37,7 +47,7 @@
             <img class="dialog-translation-background" style="transform: scaleX(-1);"
                 src="assets/images/dialog_paper.png" alt="dialot_paper">
         </div>
-        <ng-container *ngIf="item.IconLocate === 2; else fullDialog">
+        <ng-container *ngIf="item.IconLocate === 2; else fullDialogEdit">
             <div class="dialog-translation-portrait-container" *ngIf="item.IconName">
                 <img class="dialog-translation-portrait" src="assets/images/figure_base2.png" alt="base" loading="lazy">
                 <img class="dialog-translation-portrait" [src]="onGetPortrait(item.IconName)"
@@ -50,25 +60,32 @@
                     (ngModelChange)="onSpeakerNameChange($event, data)" class="dialog-speaker-name" />
             </div>
             <div class="dialog-translation-input">
-                <!-- <textarea [(ngModel)]="item.Text"
-                    (ngModelChange)="onTextChange(dialogAsset)"
-                    (focus)="focusRow = item.ID"
-                    [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
-                    class="dialog-translation"></textarea> -->
                 <textarea [(ngModel)]="item.Text" (ngModelChange)="onTextChange(dialogAsset)"
-                    [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
-                    class="dialog-translation"></textarea>
+                    [disabled]="(dAS.libreTranslate.translating$ | async) ?? true" class="dialog-translation"
+                    (focusin)="focus.set(true)" (focusout)="focus.set(false)"></textarea>
             </div>
         </ng-container>
-        <ng-template #fullDialog>
+        <ng-template #fullDialogEdit>
             <div class="dialog-translation-full">
-                <textarea [(ngModel)]="item.Text" [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
-                    class="dialog-translation"></textarea>
-                <!-- <textarea [(ngModel)]="item.Text" (ngModelChange)="onTextChange(dialogAsset)"
-                    (focus)="focusRow = item.ID" [disabled]="(dAS.libreTranslate.translating$ | async) ?? true"
-                    class="dialog-translation"></textarea> -->
+                <textarea [(ngModel)]="item.Text" (ngModelChange)="onTextChange(dialogAsset)"
+                    [disabled]="(dAS.libreTranslate.translating$ | async) ?? true" class="dialog-translation"
+                    (focusin)="focus.set(true)" (focusout)="focus.set(false)"></textarea>
             </div>
         </ng-template>
     </div>
+    <ng-template #otherLanguages let-data>
+        <tui-scrollbar #scrollTooltip class="other-languages-container" [hidden]="true"
+            (mouseenter)="onTooltipCheck(scrollTooltip)" (mouseleave)="onTooltipCheck()">
+            <ul>
+                <li *ngFor="let key of data | keyvalue" class="tui-space_bottom-2">
+                    <span class="tooltip-important-text">
+                        {{$any(key.key) | translate}}
+                    </span>:
+                    {{key.value}}
+                </li>
+            </ul>
+        </tui-scrollbar>
+        <tui-icon *ngIf="showTooltipArrow$ | async" class="tooltip-arrow" icon="@tui.move-down" [@popIn]></tui-icon>
+    </ng-template>
 </div>
-<hr style="max-width: 1260px; margin: 0 auto; background: var(--tui-border-normal);">
+<hr>

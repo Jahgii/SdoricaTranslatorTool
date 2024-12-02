@@ -60,7 +60,6 @@
     }
 }
 
-
 .dialog-translation-container {
     display: flex;
 }
@@ -109,4 +108,26 @@
 
 .scalex {
     transform: scaleX(-1);
+}
+
+.tooltip-important-text {
+    font-weight: bold;
+    color: var(--tui-text-invert);
+}
+
+.other-languages-container {
+    max-height: 15rem;
+}
+
+.tooltip-arrow {
+    position: absolute;
+    left: -1px;
+    bottom: 4px;
+    color: var(--tui-text-invert);
+}
+
+hr {
+    max-width: 1260px;
+    margin: 0 auto;
+    background: var(--tui-border-normal);
 }
