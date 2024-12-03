@@ -1,9 +1,9 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, fromEvent, take, takeWhile } from 'rxjs';
 
 @Directive({
-    selector: '[appDraggableElement]',
-    standalone: true
+  selector: '[appDraggableElement]',
+  standalone: true
 })
 export class DraggableElementDirective {
   @Input() elementRef!: HTMLElement;
@@ -18,8 +18,10 @@ export class DraggableElementDirective {
     yBottomMargin: 0
   };
 
-  public mouseMove$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mousemove");
-  public mouseUp$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mouseup");
+  public mouseMove$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mousemove", { passive: false });
+  private readonly touchMove$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchmove", { passive: false });
+  public mouseUp$: Observable<MouseEvent> = fromEvent<MouseEvent>(document, "mouseup", { passive: false });
+  private readonly touchUp$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchend", { passive: false });
   public margin: number = 5;
   public boundings!: DOMRect;
 
@@ -32,6 +34,16 @@ export class DraggableElementDirective {
     this.renderWindow();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.boundings = this.elementAnchorRef.getBoundingClientRect();
+    this.draggableElementState.xDiff = 0;
+    this.draggableElementState.yDiff = 0;
+    this.moveAxis(this.draggableElementState.x, this.draggableElementState.y);
+    this.renderWindow();
+  }
+
+  //#region Mouse Events
   @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent) {
     this.boundings = this.elementAnchorRef.getBoundingClientRect();
     this.draggableElementState.isDragging = true;
@@ -42,15 +54,6 @@ export class DraggableElementDirective {
 
     this.onMouseMoveSubs();
     this.onMouseUpSubs();
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.boundings = this.elementAnchorRef.getBoundingClientRect();
-    this.draggableElementState.xDiff = 0;
-    this.draggableElementState.yDiff = 0;
-    this.moveAxis(this.draggableElementState.x, this.draggableElementState.y);
-    this.renderWindow();
   }
 
   private onMouseMoveSubs() {
@@ -72,6 +75,44 @@ export class DraggableElementDirective {
       });
 
   }
+  //#endregion 
+
+  //#region Touch Events
+  @HostListener('touchstart', ['$event']) onTouchStart(e: TouchEvent) {
+    let pageX = e.changedTouches[0].pageX;
+    let pageY = e.changedTouches[0].pageY;
+
+    this.boundings = this.elementAnchorRef.getBoundingClientRect();
+    this.draggableElementState.isDragging = true;
+    this.draggableElementState.xDiff = pageX - this.draggableElementState.x;
+    this.draggableElementState.yDiff = pageY - this.draggableElementState.y;
+
+    e.preventDefault();
+
+    this.onTouchMoveSubs();
+    this.onTouchUpSubs();
+  }
+
+  private onTouchMoveSubs() {
+    this.touchMove$
+      .pipe(takeWhile(() => this.draggableElementState.isDragging))
+      .subscribe(event => {
+        event.preventDefault();
+        this.moveAxis(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+        this.renderWindow();
+      });
+  }
+
+  private onTouchUpSubs() {
+    this.touchUp$
+      .pipe(take(1))
+      .subscribe(e => {
+        e.preventDefault();
+        this.draggableElementState.isDragging = false;
+      });
+
+  }
+  //#endregion
 
   private moveAxis(axisX: number, axisY: number) {
     this.draggableElementState.x = this.moveOnAxisX(axisX - this.draggableElementState.xDiff);
