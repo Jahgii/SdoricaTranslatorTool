@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 import { Observable, fromEvent, take, takeWhile } from 'rxjs';
 
 @Directive({

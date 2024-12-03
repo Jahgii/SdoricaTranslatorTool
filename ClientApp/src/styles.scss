@@ -19,12 +19,6 @@
 }
 
 [tuiTheme='dark'] {
-  --tui-background-accent-1: black;
-  --tui-text-primary-invert: white;
-  --tui-background-accent-1-hover: black;
-  --tui-background-accent-1-pressed: black;
-  --tui-text-action: white;
-
   --important-text: #ffc700;
   --blend-mode: difference;
   --tui-background-accent-1: white;
@@ -32,6 +26,7 @@
   --tui-background-accent-1-hover: white;
   --tui-background-accent-1-pressed: white;
   --tui-text-primary-on-accent-1: black;
+  --tui-text-action: white;
 
   .image {
     filter: invert(1);
@@ -41,12 +36,12 @@
     filter: brightness(0) invert(1);
   }
 
-  .active-tree {
-    color: var(--stt-primary) !important;
+  .dialog-translation-background {
+    opacity: 0.35;
   }
 
-  .dialog-translation-background {
-    opacity: 0.5;
+  .active-tree {
+    color: var(--stt-primary) !important;
   }
 
   .avatar {

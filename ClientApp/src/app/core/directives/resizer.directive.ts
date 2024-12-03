@@ -61,7 +61,6 @@ export class ResizerDirective implements OnChanges {
   private onMouseDownSubs() {
     this.mouseDown$
       .subscribe(event => {
-        event.preventDefault();
         this.onMouseDown(event)
       });
   }
@@ -109,7 +108,6 @@ export class ResizerDirective implements OnChanges {
   private onTouchStartSubs() {
     this.touchStart$
       .subscribe(event => {
-        event.preventDefault();
         this.onTouchStart(event);
       });
   }

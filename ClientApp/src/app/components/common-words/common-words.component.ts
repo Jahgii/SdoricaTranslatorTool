@@ -1,7 +1,7 @@
 import { TuiButtonLoading } from "@taiga-ui/kit";
 import { TuiBlockStatus } from "@taiga-ui/layout";
 import { TuiTable } from "@taiga-ui/addon-table";
-import { TuiPrimitiveTextfieldModule, TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
+import { TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
@@ -14,7 +14,7 @@ import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
-import { NgIf, AsyncPipe, NgStyle } from '@angular/common';
+import { NgIf, AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 
@@ -32,6 +32,7 @@ import { DialogState } from 'src/app/core/interfaces/i-dialog';
     NgIf,
     NgStyle,
     AsyncPipe,
+    NgTemplateOutlet,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
@@ -47,15 +48,14 @@ import { DialogState } from 'src/app/core/interfaces/i-dialog';
     TuiScrollbar,
     TuiInputModule,
     TuiTextfieldControllerModule,
-    TuiPrimitiveTextfieldModule,
     TuiHint,
     TuiTable,
     TuiLoader,
     TuiBlockStatus,
 
     DraggableElementDirective,
-      TuiButtonLoading
-]
+    TuiButtonLoading
+  ]
 })
 export class CommonWordsComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;

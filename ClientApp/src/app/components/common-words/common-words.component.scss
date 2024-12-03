@@ -50,10 +50,6 @@
     border-radius: var(--tui-radius-s);
     padding: 0;
 
-    .viewport {
-        height: 100%;
-    }
-
     .main-form-header {
         display: flex;
         align-items: center;
@@ -80,6 +76,10 @@
     }
 }
 
+.viewport {
+    height: 100%;
+}
+
 .viewport-dialog {
     height: 50vh;
 }
@@ -92,8 +92,9 @@
     z-index: 1;
     left: 0;
     width: 100%;
-    height: calc(var(--tui-height-m) - 1px);
+    height: calc(var(--tui-height-s));
     background: var(--tui-status-negative-pale);
+    -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     margin: 0;
     padding: 0;
