@@ -307,6 +307,7 @@
     "gd-values-success": "Valor(GD) Actualizado",
     "copy-to-clipboard": "Copiado al cortapapeles",
     "copy-to-clipboard-error": "No se pudo copiar el cortapapeles",
+    "paste-clipboard-error": "No se pudo pegar el contenido del cortapapeles",
     "copy-dialog-file": "Copiar Json Simple",
     "paste-dialog-file": "Pegar Json Simple",
     "invalid-json": "Json Invalido",

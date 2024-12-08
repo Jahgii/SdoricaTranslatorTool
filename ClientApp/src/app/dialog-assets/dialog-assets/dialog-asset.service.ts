@@ -237,7 +237,7 @@ export class DialogAssetService {
         return true;
       }, _ => {
         this.alerts
-          .open(undefined, { label: this.translate.instant('copy-to-clipboard-error'), appearance: 'error', autoClose: 3_000 })
+          .open(undefined, { label: this.translate.instant('paste-clipboard-error'), appearance: 'error', autoClose: 3_000 })
           .subscribe();
 
         return false;
