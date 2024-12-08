@@ -37,10 +37,10 @@ export class DialogAssetService {
   public pendingChanges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private api: ApiService,
-    private indexedDB: IndexDBService,
-    private lStorage: LocalStorageService,
-    private translate: TranslateService,
+    private readonly api: ApiService,
+    private readonly indexedDB: IndexDBService,
+    private readonly lStorage: LocalStorageService,
+    private readonly translate: TranslateService,
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
@@ -65,7 +65,6 @@ export class DialogAssetService {
     this.subsLanguage = this.languageOrigin.language$
       .subscribe((lang: string) => {
         let dialogs$: Observable<IDialogAsset[]> | Subject<IDialogAsset[]> | undefined;
-
         if (this.lStorage.getAppMode() === AppModes.Offline) {
           let r = this.indexedDB.getIndex<IDialogAsset[]>(ObjectStoreNames.DialogAsset, "Group", [lang, this.mainGroup, this.group]);
           dialogs$ = r.success$;
@@ -114,31 +113,29 @@ export class DialogAssetService {
       });
   }
 
-  public onGetOtherOriginalText(number: number, id: string) {
-    if (this.tempId == id && this.tempNumber == number) return;
-
-    this.tempNumber = number;
-    this.tempId = id;
-
+  public onGetOtherOriginalText(number: number, id: string): Observable<any> {
     let langs$: Observable<any> | undefined;
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let r = this.indexedDB.getIndex<IDialogAsset[]>(ObjectStoreNames.DialogAsset, "Content", [this.mainGroup, this.group, number]);
-      langs$ = r.success$
-        .pipe(
-          map(dialogs => {
-            let languageText: any = {};
-            let index = dialogs.find(e => e.Language == this.languageOrigin.language.value)?.Model.$content.findIndex(e => e.ID == id) ?? -1;
-            if (index === -1) return languageText;
+      langs$ = r.success$.pipe(
+        map(dialogs => {
+          let languageText: any = {};
+          let index = dialogs.find(e => e.Language == this.languageOrigin.language.value)
+            ?.Model
+            .$content
+            .findIndex(e => e.ID == id) ?? -1;
+          
+          if (index === -1) return languageText;
 
-            dialogs.forEach(r => {
-              let originalText = r.Model.$content[index].OriginalText ?? "";
-              languageText[r.Language] = originalText;
-            });
+          dialogs.forEach(r => {
+            let originalText = r.Model.$content[index].OriginalText ?? "";
+            languageText[r.Language] = originalText;
+          });
 
-            return languageText;
-          })
-        );
+          return languageText;
+        })
+      );
     }
     else if (this.lStorage.getAppMode() === AppModes.Online) {
       langs$ = this.api.getWithHeaders('dialogassets/searchothers', {
@@ -150,9 +147,9 @@ export class DialogAssetService {
       });
     }
 
-    if (langs$ === undefined) langs$ = of([]);
+    if (langs$ === undefined) langs$ = of({});
 
-    this.otherText$ = langs$;
+    return langs$;
   }
 
   public onTextChange(dialogAsset: IDialogAsset) {

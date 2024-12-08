@@ -1,5 +1,5 @@
 @if ((hiddenScroll$ | async) && (groupSelected$ | async)) {
-<tui-icon icon="@tui.arrow-right" class="hidden-arrow"></tui-icon>
+<tui-icon icon="@tui.mouse-pointer-2" class="hidden-arrow"></tui-icon>
 }
 
 <tui-scrollbar #scrollbar class="group-tree" [hidden]="(hiddenScroll$ | async) === true"

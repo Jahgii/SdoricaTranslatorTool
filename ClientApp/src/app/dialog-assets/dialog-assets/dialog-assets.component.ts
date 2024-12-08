@@ -1,12 +1,11 @@
-import { TuiTooltipModule } from "@taiga-ui/legacy";
 import { TuiBlockStatus } from "@taiga-ui/layout";
 import { TuiTable } from "@taiga-ui/addon-table";
-import { TuiItem } from "@taiga-ui/cdk";
+import { TuiActiveZone, TuiItem } from "@taiga-ui/cdk";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
+import { TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
 import { popinAnimation } from 'src/app/core/animations/popin';
-import { IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
+import { IDialog, IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { TranslateModule } from '@ngx-translate/core';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { TuiSwitch, TuiTabs } from '@taiga-ui/kit';
@@ -14,9 +13,8 @@ import { CommonModule } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 import { DialogAssetService } from './dialog-asset.service';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
-import { BehaviorSubject } from 'rxjs';
-import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictionary.directive';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
+import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-single.component";
 
 @Component({
   selector: 'app-dialog-assets',
@@ -36,20 +34,19 @@ import { PortraitsService } from 'src/app/core/services/portraits.service';
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
 
-    CommonDictionaryDirective,
+    DialogAssetSingleComponent,
 
     TuiTabs,
     TuiItem,
     TuiIcon,
     TuiSwitch,
-    TuiTooltipModule,
     TuiButton,
     TuiHint,
     TuiLoader,
-    TuiScrollbar,
     TuiTable,
     TuiDropdown,
     TuiBlockStatus,
+    TuiActiveZone,
   ],
   providers: [
     DialogAssetService,
@@ -57,13 +54,12 @@ import { PortraitsService } from 'src/app/core/services/portraits.service';
   ]
 })
 export class DialogAssetsComponent implements OnDestroy {
-  public showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public openOption: boolean = false;
   public focusRow: string = "";
 
   constructor(
-    private portraitsService: PortraitsService,
-    private ref: ChangeDetectorRef,
+    private readonly portraitsService: PortraitsService,
+    private readonly ref: ChangeDetectorRef,
     @Inject(DialogAssetService) readonly dAS: DialogAssetService,
     @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService
   ) { }
@@ -75,10 +71,6 @@ export class DialogAssetsComponent implements OnDestroy {
   public onSelectGroup(node: IGroup) {
     this.dAS.onSelectGroup(node);
     this.ref.markForCheck();
-  }
-
-  public onGetOtherOriginalText(number: number, id: string) {
-    this.dAS.onGetOtherOriginalText(number, id);
   }
 
   public onTranslatedChange(data: IDialogAsset[], translated: boolean) {
@@ -111,16 +103,16 @@ export class DialogAssetsComponent implements OnDestroy {
     this.dAS.onDownload(dialogAsset);
   }
 
-  public onTooltipCheck(scrollTooltip?: TuiScrollbar) {
-    let show = false;
-    if (scrollTooltip)
-      show = scrollTooltip['el']['nativeElement']['offsetHeight'] < scrollTooltip['el']['nativeElement']['scrollHeight'];
-
-    this.showTooltipArrow$.next(show);
-  }
-
   public onGetPortrait(name: string, ext: string = '.png') {
     return this.portraitsService.imageDir[name + ext];
+  }
+
+  public onActiveZone(active: boolean): void {
+    this.openOption = active && this.openOption;
+  }
+
+  public trackByItemId(index: number, item: IDialog): string {
+    return item.ID;
   }
 
 }

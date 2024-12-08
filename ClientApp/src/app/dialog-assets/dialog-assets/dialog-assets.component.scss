@@ -1,12 +1,21 @@
 @import 'node_modules/@taiga-ui/core/styles/taiga-ui-local.scss';
 
+$border-height: 2px;
+
 .group-no-selected {
-    min-width: 320px;
+    min-width: 15rem;
+    height: calc(100svh - var(--header-height) - $border-height);
+    min-height: 30rem;
+
+    .image {
+        width: 5.5rem;
+        height: 5.5rem;
+    }
 }
 
 .viewport {
+    width: 100%;
     height: calc(100vh - var(--header-height) - 5rem);
-    margin: 0 1.1em;
 
     @media #{$tui-mobile} {
         margin: 0 0;
@@ -15,11 +24,7 @@
 
 .tooltip-important-text {
     font-weight: bold;
-    color: var(--important-text);
-}
-
-.other-languages-container {
-    max-height: 15rem;
+    color: var(--tui-text-invert);
 }
 
 .top-main-options {
@@ -28,6 +33,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 1.1em;
+    min-width: 260px;
 
     .option-child {
         display: flex;
@@ -103,6 +109,11 @@
             width: 100%;
         }
     }
+
+}
+
+.dialog {
+    position: relative;
 
     .dialog-translation-portrait-container {
         position: relative;
@@ -200,9 +211,19 @@
 }
 
 .mobile-dropdown-container {
-    padding: 1em;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    padding: 1em;
+    align-items: flex-start;
+    gap: 1em;
+
+    .dropdown-container-option {
+        display: flex;
+        gap: 1em;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 
 .original-text {

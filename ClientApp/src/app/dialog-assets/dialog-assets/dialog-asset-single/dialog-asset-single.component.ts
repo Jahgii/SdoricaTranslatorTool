@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, Inject, Input, OnChanges, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { DialogAssetService } from '../dialog-asset.service';
 import { IDialog, IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
@@ -35,7 +35,7 @@ import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictio
   templateUrl: './dialog-asset-single.component.html',
   styleUrl: './dialog-asset-single.component.scss',
 })
-export class DialogAssetSingleComponent implements OnInit {
+export class DialogAssetSingleComponent implements OnChanges {
   @Input() data!: IDialogAsset[];
   @Input() dialogAsset!: IDialogAsset;
   @Input() item!: IDialog;
@@ -50,8 +50,9 @@ export class DialogAssetSingleComponent implements OnInit {
     @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService
   ) { }
 
-  ngOnInit(): void {
-    this.otherText$ = (this.dAS.onGetOtherOriginalText(this.data[this.dAS.activeItemIndex].Number, this.item.ID) as Subject<any>).asObservable();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.item.currentValue)
+      this.otherText$ = this.dAS.onGetOtherOriginalText(this.data[this.dAS.activeItemIndex].Number, changes.item.currentValue.ID);
   }
 
   public onTextChange(dialogAsset: IDialogAsset) {

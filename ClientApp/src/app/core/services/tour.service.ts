@@ -15,10 +15,10 @@ export class TourService {
   public isOnTour$: WritableSignal<boolean> = signal(false);
 
   constructor(
-    private viewers: ViewersService,
-    private translate: TranslateService,
-    private lStorage: LocalStorageService,
-    private shepherdService: ShepherdService,
+    private readonly viewers: ViewersService,
+    private readonly translate: TranslateService,
+    private readonly lStorage: LocalStorageService,
+    private readonly shepherdService: ShepherdService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 
