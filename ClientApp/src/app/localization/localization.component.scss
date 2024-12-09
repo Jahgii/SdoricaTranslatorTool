@@ -7,7 +7,6 @@
     min-width: 320px;
 
     .localization-data-actions {
-        // @include inset-border(bottom, light);
         padding: 0 1em;
         height: 56px;
         display: flex;
@@ -29,7 +28,7 @@
 }
 
 .limit-width {
-    max-width: 200px
+    max-width: 300px
 }
 
 .localization-keys {

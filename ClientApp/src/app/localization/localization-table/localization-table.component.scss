@@ -1,7 +1,7 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.scss';
 
 .viewport {
-    height: calc(100svh - var(--header-height) - 4.5rem);
+    height: calc(100svh - var(--header-height) - 5.0rem);
     margin: 0 1.1em;
 }
 
@@ -24,7 +24,19 @@
 
 .tooltip-important-text {
     font-weight: bold;
+    color: var(--tui-text-invert);
+}
+
+.tooltip-important-text-colored {
+    font-weight: bold;
     color: var(--important-text);
+}
+
+.tooltip-arrow {
+    position: absolute;
+    left: -1px;
+    bottom: 4px;
+    color: var(--tui-text-invert);
 }
 
 .translation-content-cell {
@@ -54,4 +66,18 @@
         justify-content: space-between;
         max-height: 100px;
     }
+}
+
+.translated-checkbox-container {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.head-toogle {
+    position: absolute;
 }

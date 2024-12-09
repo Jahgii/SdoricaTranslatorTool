@@ -45,10 +45,12 @@
             border-radius: var(--tui-radius-m) !important;
 
             img {
-                width: 12px;
-                height: 14px;
+                width: 16px;
+                height: 16px;
+                padding: 0 !important;
                 position: absolute;
-                left: 9px;
+                left: 12px;
+                top: 12px;
             }
         }
 
@@ -71,12 +73,6 @@
         align-items: center;
         justify-items: center;
     }
-}
-
-.sidebar-link-icon {
-    filter: brightness(0) invert(0);
-    width: 28px;
-    height: 28px;
 }
 
 .app-icon {
@@ -113,4 +109,5 @@
 
 .pabsolute {
     position: absolute;
+    left: -33px;
 }

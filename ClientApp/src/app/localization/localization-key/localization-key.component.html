@@ -1,5 +1,4 @@
-<!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
-<button tuiButton type="button" appearance="icon" [iconStart]="'@tui.key'" size="xs" tuiTheme="light"
+<button tuiButton type="button" appearance="icon" [iconStart]="'@tui.key'" size="xs"
     (click)="onShowCreate(createTemplate, 'm')">
 </button>
 
@@ -52,8 +51,8 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
-                    [loading]="(creating$ | async) ?? false"
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()"
+                    size="m" [loading]="(creating$ | async) ?? false"
                     [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
                     [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error">
@@ -61,7 +60,8 @@
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m">
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()"
+                    size="m">
                     {{'created-other' | translate}}
                 </button>
             </ng-template>
@@ -105,8 +105,8 @@
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
             <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
-                    [loading]="(creating$ | async) ?? false"
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()"
+                    size="m" [loading]="(creating$ | async) ?? false"
                     [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
                     [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? ('form-error' | translate) : undefined"
                     tuiHintAppearance="error">
@@ -114,7 +114,8 @@
                 </button>
             </ng-container>
             <ng-template #createOther>
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m">
+                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()"
+                    size="m">
                     {{'created-other' | translate}}
                 </button>
             </ng-template>

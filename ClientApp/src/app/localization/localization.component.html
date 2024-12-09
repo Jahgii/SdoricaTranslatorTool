@@ -9,7 +9,7 @@
 }
 @else{
 <div class="localization-container" *ngIf="localization.categories$ | async as categories">
-    <div class="localization-data-actions tui-space_bottom-2">
+    <div class="localization-data-actions tui-space_vertical-2">
         <tui-combo-box class="category-input" [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'m'"
             [valueContent]="categoryInputContent" [stringify]="stringify"
             (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
@@ -25,33 +25,33 @@
         </ng-template>
         <ng-container *ngIf="localization.keys$">
             <ng-container *ngIf="localization.searchCategory$ | async; else normalH;">
-                <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
-<div tuiDropdownOpen bottomRight [tuiDropdown]="content" tuiTheme="light">
-                    <button tuiButton appearance="flat" iconStart="@tui.filter" size="s" title="{{'filters' | translate}}">
+                <div tuiDropdownOpen bottomRight [tuiDropdown]="content">
+                    <button tuiButton appearance="flat" type="button" iconStart="@tui.filter" size="s"
+                        attr.aria-label="{{'filters' | translate}}">
                         <span>{{'results' | translate}}:</span>
                         {{localization.searchTotalTranslated}}/{{localization.keys?.length ?? 0}}
                     </button>
                 </div>
                 <ng-template #content>
                     <div class="filter-container">
-                        <p class="limit-width">
+                        <p class="limit-width tui-space_bottom-6">
                             {{'filters-localization-description' | translate}}
                         </p>
 
                         <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.search"
-                            [tuiTextfieldSize]="'m'" [tuiTextfieldCustomContent]="'@tui.search'">
+                            [tuiTextfieldSize]="'m'" [tuiTextfieldIcon]="'@tui.scan-search'">
                             {{'search-by-text' | translate}}
                             <input tuiTextfieldLegacy type="text" />
                         </tui-input>
 
                         <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.searchTranslation"
-                            [tuiTextfieldSize]="'m'" [tuiTextfieldCustomContent]="'@tui.search'">
+                            [tuiTextfieldSize]="'m'" [tuiTextfieldIcon]="'@tui.scan-search'">
                             {{'search-by-translation' | translate}}
                             <input tuiTextfieldLegacy type="text" />
                         </tui-input>
 
                         <tui-input class="limit-width" [formControl]="localization.searchKey" [tuiTextfieldSize]="'m'"
-                            [tuiTextfieldCustomContent]="'@tui.search'">
+                            [tuiTextfieldIcon]="'@tui.scan-search'">
                             {{'search-by-key' | translate}}
                             <input tuiTextfieldLegacy type="text" />
                         </tui-input>
@@ -59,7 +59,7 @@
                 </ng-template>
             </ng-container>
             <ng-template #normalH>
-                <!-- <button tuiButton type="button" appearance="flat" size="s" tuiMode="onLight" icon="@tui.box"
+                <!-- <button tuiButton type="button" appearance="flat" size="s" icon="@tui.box"
                     [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
                                 ('libretranslate-button-ready' | translate):
                                 ('libretranslate-button-disabled' | translate)"

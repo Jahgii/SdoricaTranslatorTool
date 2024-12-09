@@ -37,7 +37,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
 
     TuiComboBoxModule,
     TuiTextfieldControllerModule,
-    TuiPrimitiveTextfieldModule,
+    // TuiPrimitiveTextfieldModule,
     TuiDataList,
     TuiDataListWrapper,
     TuiDropdown,
@@ -46,9 +46,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
     TuiHint,
     TuiBlockStatus,
     TuiFilterByInputPipe,
-    TuiScrollbar,
-
-    LocalizationKeyComponent,
+    
     LocalizationTableComponent
   ],
 })

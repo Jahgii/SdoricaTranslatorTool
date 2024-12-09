@@ -3,7 +3,6 @@ import {
   TuiTextareaModule,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/legacy";
-import { TuiTooltip } from "@taiga-ui/kit";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -79,7 +78,6 @@ const ESPECIAL_CHARACTER = "@";
     TuiScrollbar,
     TuiTable,
     TuiSwitch,
-    TuiTooltip,
     TuiIcon,
     TuiInputModule,
     TuiTextfieldControllerModule,
@@ -115,7 +113,7 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
     public buffInfService: GamedataService,
     @Inject(ElementBreakpointService) readonly breakpointService:
       ElementBreakpointService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.reapplySearchOnElementResize();
@@ -133,10 +131,8 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
 
   public onTooltipCheck(scrollTooltip?: TuiScrollbar) {
     let show = false;
-    if (scrollTooltip) {
-      show = scrollTooltip["el"]["nativeElement"]["offsetHeight"] <
-        scrollTooltip["el"]["nativeElement"]["scrollHeight"];
-    }
+    if (scrollTooltip)
+      show = scrollTooltip['el']['offsetHeight'] < scrollTooltip['el']['scrollHeight'];
 
     this.showTooltipArrow$.next(show);
   }

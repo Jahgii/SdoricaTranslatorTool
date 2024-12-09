@@ -69,13 +69,13 @@ export class LocalizationService implements OnDestroy {
   private subsTranslatedColumn$!: Subscription;
 
   constructor(
-    private api: ApiService,
-    private indexedDB: IndexDBService,
-    private lStorage: LocalStorageService,
-    private lCS: LocalizationCategoriesService,
-    private languageOrigin: LanguageOriginService,
+    private readonly api: ApiService,
+    private readonly indexedDB: IndexDBService,
+    private readonly lStorage: LocalStorageService,
+    private readonly lCS: LocalizationCategoriesService,
+    private readonly languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
-    private translate: TranslateService,
+    private readonly translate: TranslateService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
     this.language = this.languageOrigin.localizationLang;
@@ -454,17 +454,19 @@ export class LocalizationService implements OnDestroy {
 
     this.restartFilters();
 
-    await firstValueFrom(this.keys$).then(
-      r => {
-        this.searchTotalTranslated = 0;
-        this.searchTotalTranslated = r.reduce((ac, v) => {
-          if (v.Translated[this.languageOrigin.localizationLang])
-            return ac + 1;
-          return ac;
-        }, 0);
-        this.keys = r;
-      },
-      e => undefined);
+    await firstValueFrom(this.keys$)
+      .then(
+        r => {
+          this.searchTotalTranslated = 0;
+          this.searchTotalTranslated = r.reduce((ac, v) => {
+            if (v.Translated[this.languageOrigin.localizationLang])
+              return ac + 1;
+            return ac;
+          }, 0);
+          this.keys = r;
+        },
+        e => undefined
+      );
     this.loading$.next(false);
   }
   //#endregion

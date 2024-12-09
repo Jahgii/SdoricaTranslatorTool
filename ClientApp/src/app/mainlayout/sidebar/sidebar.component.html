@@ -1,11 +1,14 @@
 <div class="sidebar-container">
     <div class="sidebar">
         <div class="profile-avatar-container">
-            <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
+            <tui-avatar [src]="'assets/images/app-icon-simple.svg' | tuiFallbackSrc : '@tui.user' | async"
+                class="avatar" size="m" [round]="false">
+            </tui-avatar>
+            <!-- <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
                 <tui-avatar [src]="'assets/images/app-icon-simple.svg' | tuiFallbackSrc : '@tui.user' | async"
                     class="avatar" size="m" [round]="false">
                 </tui-avatar>
-            </tui-loader>
+            </tui-loader> -->
 
             @if ((breakpointService$ | async) === 'mobile') {
             @if (appState.isOnTour$()) {
@@ -18,8 +21,8 @@
             @else{
             <div [tuiDropdownDirection]="'bottom'" class="pabsolute" [tuiDropdown]="dropdownMenu"
                 [(tuiDropdownOpen)]="open">
-                <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button" aria-label="menu-button"
-                    [tuiAppearanceState]="open || null ? 'active' : null">
+                <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
+                    aria-label="menu-button" [tuiAppearanceState]="open || null ? 'active' : null">
                 </button>
             </div>
             }
