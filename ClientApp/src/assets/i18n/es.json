@@ -313,5 +313,6 @@
     "invalid-json": "Json Invalido",
     "paste-correctly": "Cortapapeles Pegado",
     "nothing-to-paste": "Sin nada que copiar",
-    "test-server-api": "Probar Servidor"
+    "test-server-api": "Probar Servidor",
+    "settings": "Configuración"
 }

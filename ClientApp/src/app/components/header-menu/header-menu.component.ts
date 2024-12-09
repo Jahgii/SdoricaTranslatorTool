@@ -1,10 +1,10 @@
 import { TuiSidebar } from "@taiga-ui/addon-mobile";
 import { TuiTextfieldControllerModule, TuiInputModule, TuiSelectModule } from "@taiga-ui/legacy";
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { tuiPure, TuiStringHandler, TuiActiveZone, TuiContext, TuiLet } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiDataList, TuiScrollbar, TuiGroup, TuiButton, TuiHint, TuiTextfield } from '@taiga-ui/core';
+import { tuiPure, TuiStringHandler, TuiContext, TuiLet } from '@taiga-ui/cdk';
+import { TuiBreakpointService, TuiDataList, TuiGroup, TuiButton, TuiHint, TuiTextfield, TuiPopup } from '@taiga-ui/core';
 import { TuiLanguageSwitcherService } from '@taiga-ui/i18n';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -13,7 +13,7 @@ import { LibreTranslateService } from 'src/app/core/services/libre-translate.ser
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { ViewersService } from 'src/app/core/services/viewers.service';
-import { TuiDataListWrapper, TuiBadge, TuiBlock, TuiRadio } from '@taiga-ui/kit';
+import { TuiDataListWrapper, TuiBadge, TuiBlock, TuiRadio, TuiDrawer } from '@taiga-ui/kit';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { BehaviorSubject, skip, takeWhile } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
@@ -33,10 +33,10 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
     ReactiveFormsModule,
     TranslateModule,
 
+    TuiPopup,
+    TuiDrawer,
     TuiButton,
-    TuiActiveZone,
     TuiSidebar,
-    TuiScrollbar,
     TuiGroup,
     TuiBlock, TuiRadio,
     TuiSelectModule,
@@ -52,7 +52,7 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
 })
 export class HeaderMenuComponent implements OnInit {
   public openMenu: boolean = false;
-  public openSetting: boolean = false;
+  public openSetting = signal(false);;
 
   public langControl: FormControl = new FormControl();
 
@@ -105,7 +105,7 @@ export class HeaderMenuComponent implements OnInit {
     button?.click();
     button?.click();
 
-    this.openSetting = !this.openSetting;
+    this.openSetting.set(!this.openSetting);
 
     this.onTourOnGoing();
   }
@@ -124,11 +124,11 @@ export class HeaderMenuComponent implements OnInit {
 
     this.breakpointService$
       .pipe(
-        takeWhile(() => this.openSetting),
+        takeWhile(() => this.openSetting()),
         skip(1)
       )
       .subscribe(breakpoint => {
-        this.openSetting = false;
+        this.openSetting.set(false);
       });
   }
 

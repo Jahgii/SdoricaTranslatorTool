@@ -273,5 +273,7 @@
     "paste-dialog-file": "Paste Simple Json",
     "invalid-json": "Invalid Json",
     "paste-correctly": "Pasted Clipboard",
-    "nothing-to-paste": "Nothing to Paste"
+    "nothing-to-paste": "Nothing to Paste",
+    "test-server-api": "Test Server",
+    "settings": "Settings"
 }

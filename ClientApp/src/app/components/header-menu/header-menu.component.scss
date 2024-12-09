@@ -20,6 +20,14 @@
     width: 100%;
 }
 
+.margin-auto-r {
+    margin-right: auto;
+}
+
+.margin-auto-l {
+    margin-left: auto;
+}
+
 .menu-header {
     box-shadow: 0 0.125rem 1rem #00000014;
     z-index: 1;
@@ -34,4 +42,8 @@
 .right-buttons {
     display: flex;
     gap: 1rem;
+}
+
+.align-center {
+    align-self: center;
 }
