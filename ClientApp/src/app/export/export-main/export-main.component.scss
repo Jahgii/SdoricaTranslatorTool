@@ -14,7 +14,13 @@
 }
 
 .file-input {
-    height: 128px;
+    min-width: 280px;
+    min-height: 108px;
+    max-height: 108px;
+}
+
+.file-input-provided {
+    width: 100%;
 }
 
 .translate-button {
@@ -32,8 +38,8 @@
 .not-support {
     background-color: var(--tui-status-warning);
     mix-blend-mode: difference;
-    height: 96px;
-    width: minmax(248px, auto);
+    height: 108px;
+    width: minmax(280px, auto);
 }
 
 .text-blend {
@@ -42,11 +48,14 @@
 
 .skip-button {
     position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 1;
+    top: 4px;
+    right: 4px;
 }
 
 .empty-language-container {
     min-width: 15rem;
+}
+
+.file-input-empty {
+    position: relative;
 }

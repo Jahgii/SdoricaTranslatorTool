@@ -42,7 +42,7 @@
             <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
                     $implicit: eTS.localization,
                     filesize:(1024*1024*100),
-                    accept: undefined,
+                    accept: '*',
                     filename: 'Localization',
                     onreject: eTS.onReject.bind(this.eTS)
                 }">
@@ -50,7 +50,7 @@
             <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
                     $implicit: eTS.gamedata,
                     filesize:(1024*1024*100),
-                    accept: undefined,
+                    accept: '*',
                     filename: 'Gamedata',
                     onreject: eTS.onReject.bind(this.eTS)
                 }">
@@ -115,72 +115,94 @@
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename"
     let-onreject="onreject">
-    <ng-container *ngIf="filecontrol.skip | async; else noSkip">
-        <tui-island size="s" class="not-support"
+    <div class="file-input-empty">
+        @if (filecontrol.skip | async) {
+        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided"
             *ngIf="filecontrol.notSupported && filecontrol.notSupported | async; else skipN">
-            <p class="text-blend tui-island__category">{{'not-support' | translate}}</p>
-            <h3 class="text-blend tui-island__title">{{filename}}</h3>
-            <p class="text-blend tui-island__paragraph">
-                {{'not-support-mobile' | translate}}
-            </p>
-        </tui-island>
+            <header tuiHeader>
+                <h2 tuiTitle>
+                    {{'not-support' | translate}}
+                    <span tuiSubtitle>{{filename}}</span>
+                </h2>
+            </header>
+            <section>
+                <span>{{'not-support-mobile' | translate}}</span>
+            </section>
+            <footer>
+            </footer>
+        </div>
         <ng-template #skipN>
-            <tui-island size="s" class="not-support">
-                <p class="text-blend tui-island__category">{{'file-skip' | translate}}</p>
-                <h3 class="text-blend tui-island__title">{{filename}}</h3>
-                <p class="text-blend tui-island__paragraph">
+            <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
+                <header tuiHeader>
+                    <h2 tuiTitle>
+                        {{'file-skip' | translate}}
+                        <span tuiSubtitle>{{filename}}</span>
+                    </h2>
+                </header>
+                <section>
                     {{'file-skip-description' | translate}}
-                </p>
-            </tui-island>
+                </section>
+                <footer>
+                </footer>
+            </div>
         </ng-template>
-    </ng-container>
-    <ng-template #noSkip>
-        <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
-<!-- TODO: (Taiga UI migration) Native input inside is now required and the wrapper has changed from <tui-input-files to <label tuiInputFiles, control moved to native input. See interactive example https://taiga-ui.dev/components/input-files -->
-<tui-input-files *ngIf="!filecontrol.control.value" class="file-input" [formControl]="filecontrol.control"
-            (reject)="onreject($event)" tuiTheme="light">
+        }
+        @else {
+        <label tuiInputFiles *ngIf="!filecontrol.control.value" class="file-input">
+            <input accept="image/*" tuiInputFiles [maxFileSize]="filesize" [accept]="accept" [multiple]="false"
+                [formControl]="filecontrol.control" />
             <ng-template let-dragged>
                 <div *ngIf="dragged; else base" class="content">
-                    <tui-avatar  appearance="white" src="@tui.droplet" size="s"></tui-avatar>
-                    <div>
-                        {{'drop' | translate}}
-                    </div>
-                    <input accept="image/*" tuiInputFiles [maxFileSize]="filesize" [accept]="accept" [multiple]="false"
-                    [formControl]="filecontrol.control" />
+                    <tui-avatar appearance="white" src="@tui.droplet" size="s"></tui-avatar>
+                    <div>{{'drop' | translate}}</div>
                 </div>
                 <ng-template #base>
                     <div class="content">
-                        <button class="skip-button" tuiIconButton iconStart="@tui.circle-x" size="xs" appearance="icon"
-                            (click)="eTS.onSkipFile(filecontrol)">
-                        </button>
-                        <tui-avatar  appearance="white" src="@tui.cloud-upload" size="s"></tui-avatar>
+                        <tui-avatar appearance="white" src="@tui.cloud-upload" size="s"></tui-avatar>
                         <div>{{filename}}</div>
                     </div>
                 </ng-template>
             </ng-template>
-        </tui-input-files>
+        </label>
         <ng-container *ngIf="filecontrol.loadedFile$ | async as file">
-            <tui-island size="s">
-                <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false"
-                    style="position: absolute; right: 0.5em; top: 0.5em;">
-                    <tui-icon  [icon]="'@tui.circle-check'" style="position: relative; top: 0.25em;">
-                    </tui-icon>
-                </tui-loader>
-                <p class="tui-island__category">{{'archive' | translate}}</p>
-                <h3 class="tui-island__title">{{filename}}</h3>
-                <p class="tui-island__paragraph">
-                    {{(filecontrol.progressStatus$ | async) ?? '' | translate}}
-                </p>
-                <p class="tui-island__paragraph">
-                    {{'progress' | translate}}: {{((filecontrol.progress$ | async) |
-                    number:'1.0-2')}}/{{(filecontrol.progressMax$ | async)}}
-                </p>
-                <p class="tui-island__paragraph tui-island__paragraph_link" *ngIf="filecontrol.url">
-                    <a href="{{filecontrol.url}}" download="{{filecontrol.control.value.name}}" type="File" tuiLink>
-                        {{'download' | translate}}
-                    </a>
-                </p>
-            </tui-island>
+            <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input">
+                <header tuiHeader>
+                    <h2 tuiTitle>
+                        {{'archive' | translate}}
+                        <span tuiSubtitle>{{filename}}</span>
+                    </h2>
+
+                    <aside tuiAccessories>
+                        <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false"
+                            style="position: absolute; right: 0.5em; top: 0.5em;">
+                            <tui-icon [icon]="'@tui.circle-check'" style="position: relative; top: 0.25em;" />
+                        </tui-loader>
+                    </aside>
+                </header>
+                <section>
+                    <p>
+                        {{'progress' | translate}}: {{((filecontrol.progress$ | async) |
+                        number:'1.0-2')}}/{{(filecontrol.progressMax$ | async)}}
+                    </p>
+                </section>
+                <footer>
+                    <p>
+                        {{(filecontrol.progressStatus$ | async) ?? '' | translate}}
+                    </p>
+                    <p class="tui-island__paragraph tui-island__paragraph_link" *ngIf="filecontrol.url">
+                        <a href="{{filecontrol.url}}" download="{{filecontrol.control.value.name}}" type="File" tuiLink>
+                            {{'download' | translate}}
+                        </a>
+                    </p>
+                </footer>
+            </div>
         </ng-container>
-    </ng-template>
+        }
+
+        @if (!filecontrol.control.value && !(filecontrol.skip | async)) {
+        <button class="skip-button" tuiIconButton iconStart="@tui.circle-x" size="xs" appearance="icon"
+            (click)="eTS.onSkipFile(filecontrol)">
+        </button>
+        }
+    </div>
 </ng-template>

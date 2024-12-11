@@ -1,11 +1,10 @@
-import { TuiIslandDirective } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiAvatar, TuiFiles, TuiButtonLoading } from '@taiga-ui/kit';
-import { TuiAppBar, TuiBlockStatus } from '@taiga-ui/layout';
-import { TuiExpand, TuiLoader, TuiIcon, TuiLink, TuiButton, TuiHint } from '@taiga-ui/core';
+import { TuiAvatar, TuiFiles, TuiButtonLoading, TuiBlock } from '@taiga-ui/kit';
+import { TuiAppBar, TuiBlockStatus, TuiCardMedium } from '@taiga-ui/layout';
+import { TuiExpand, TuiLoader, TuiIcon, TuiLink, TuiButton, TuiHint, TuiAppearance, TuiTitle } from '@taiga-ui/core';
 import { NgIf, NgTemplateOutlet, AsyncPipe, DecimalPipe } from '@angular/common';
 import { ExportTranslationService } from '../export-translation.service';
 
@@ -29,14 +28,16 @@ import { ExportTranslationService } from '../export-translation.service';
     TuiHint,
     TuiBlockStatus,
     TuiAppBar,
-    TuiIslandDirective,
     TuiFiles,
     TuiAvatar,
     TuiLoader,
     TuiIcon,
     TuiLink,
-      TuiButtonLoading
-],
+    TuiButtonLoading,
+    TuiCardMedium,
+    TuiAppearance,
+    TuiTitle,
+  ],
   providers: [
     ExportTranslationService
   ]
