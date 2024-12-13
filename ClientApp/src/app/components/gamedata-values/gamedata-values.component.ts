@@ -12,7 +12,7 @@ import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { TuiCheckbox, TuiBlock, TuiButtonLoading } from '@taiga-ui/kit';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
-import { NgIf, NgSwitch, NgSwitchCase, AsyncPipe, NgStyle } from '@angular/common';
+import { NgIf, NgSwitch, NgSwitchCase, AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 
@@ -35,6 +35,7 @@ import { DialogstateService } from 'src/app/core/services/dialogstate.service';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    NgTemplateOutlet,
 
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
@@ -50,11 +51,14 @@ import { DialogstateService } from 'src/app/core/services/dialogstate.service';
     TuiPrimitiveTextfieldModule,
     TuiInputNumberModule,
     TuiHint,
-    TuiBlock, TuiCheckbox,
+    TuiBlock,
+    TuiCheckbox,
     TuiLoader,
     TuiTable,
+    TuiButtonLoading,
 
-    DraggableElementDirective, TuiButtonLoading]
+    DraggableElementDirective,
+  ]
 
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {
