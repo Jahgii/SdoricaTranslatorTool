@@ -15,8 +15,8 @@
 
 .file-input {
     min-width: 280px;
-    min-height: 108px;
-    max-height: 108px;
+    min-height: 140px;
+    max-height: 140px;
 }
 
 .file-input-provided {
@@ -38,7 +38,7 @@
 .not-support {
     background-color: var(--tui-status-warning);
     mix-blend-mode: difference;
-    height: 108px;
+    height: 140px;
     width: minmax(280px, auto);
 }
 
@@ -58,4 +58,14 @@
 
 .file-input-empty {
     position: relative;
+}
+
+.file-verified-loader {
+    position: absolute;
+    right: 0.5em;
+    top: 0.5em;
+
+    tui-icon {
+        top: 4px;
+    }
 }

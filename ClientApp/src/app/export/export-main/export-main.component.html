@@ -173,9 +173,9 @@
                     </h2>
 
                     <aside tuiAccessories>
-                        <tui-loader [overlay]="true" [showLoader]="(filecontrol.verifyingFile$ | async) ?? false"
-                            style="position: absolute; right: 0.5em; top: 0.5em;">
-                            <tui-icon [icon]="'@tui.circle-check'" style="position: relative; top: 0.25em;" />
+                        <tui-loader class="file-verified-loader" [overlay]="true"
+                            [showLoader]="(filecontrol.verifyingFile$ | async) ?? false">
+                            <tui-icon [icon]="'@tui.circle-check'" />
                         </tui-loader>
                     </aside>
                 </header>
@@ -186,14 +186,15 @@
                     </p>
                 </section>
                 <footer>
-                    <p>
-                        {{(filecontrol.progressStatus$ | async) ?? '' | translate}}
-                    </p>
-                    <p class="tui-island__paragraph tui-island__paragraph_link" *ngIf="filecontrol.url">
-                        <a href="{{filecontrol.url}}" download="{{filecontrol.control.value.name}}" type="File" tuiLink>
-                            {{'download' | translate}}
-                        </a>
-                    </p>
+                    @if (filecontrol.url) {
+                    <a tuiLink href="{{filecontrol.url}}" download="{{filecontrol.control.value.name}}"
+                        appearance="action-grayscale" [pseudo]="true">
+                        {{'download' | translate}}
+                    </a>
+                    }
+                    @else {
+                    <p>{{(filecontrol.progressStatus$ | async) ?? '' | translate}}</p>
+                    }
                 </footer>
             </div>
         </ng-container>
