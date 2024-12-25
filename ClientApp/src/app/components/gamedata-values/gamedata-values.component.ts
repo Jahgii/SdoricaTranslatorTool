@@ -15,6 +15,7 @@ import { DraggableElementDirective } from '../../core/directives/draggable-eleme
 import { NgIf, NgSwitch, NgSwitchCase, AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
+import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
 
 @Component({
   selector: 'app-gamedata-values',
@@ -196,6 +197,11 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
 
   public changeIndex(state: DialogState) {
     this.dStateService.onChangeIndex(state);
+  }
+
+  public trackByItemId(index: number, item: IGamedataValue): string {
+    console.log()
+    return item.Id ?? String(index);
   }
 
 }
