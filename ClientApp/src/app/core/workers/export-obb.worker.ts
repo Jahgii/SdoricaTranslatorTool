@@ -134,8 +134,10 @@ async function onCreateNewObb(completeMessage: IOnMessage, message: ExportPostMe
     postMessage(completeMessage);
 
     zip.generateAsync({ type: 'blob' }, (metadata) => {
-      completeMessage.pg = metadata.percent;
-      postMessage(completeMessage);
+      if (Math.abs(completeMessage.pg - metadata.percent) > 5 || metadata.percent === 100) {
+        completeMessage.pg = metadata.percent;
+        postMessage(completeMessage);
+      }
     }).then(zipBlob => {
       completeMessage.pgState = ProgressStatus.finish;
       completeMessage.blob = zipBlob;
