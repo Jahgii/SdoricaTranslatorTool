@@ -6,13 +6,15 @@ let mainWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
+        title: 'STT',
         width: 800,
         height: 600,
         icon: '/dist/assets/images/app-icon.svg',
         minWidth: 800,
         minHeight: 600,
         webPreferences: {
-            nodeIntegration: false,
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: true,
             devTools: true,
         }
     });
