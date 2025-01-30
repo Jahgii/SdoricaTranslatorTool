@@ -13,10 +13,8 @@
 
 <ng-template #missFolderTemplate>
     <p>{{'portrait-directory-miss-description' | translate}}</p>
-    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
-<div tuiTheme="light">
-        <button tuiButton size="s" style="width: 100%;" appearance="outline"
-            (click)="onFolderChange()">
+    <div tuiTheme="light">
+        <button tuiButton size="s" style="width: 100%;" appearance="outline" (click)="onFolderChange()">
             @if (portraitsService.dirName$ | async; as dirName) {
             {{dirName}}
             }
@@ -29,8 +27,7 @@
 
 <ng-template #missPermissionTemplate>
     <p>{{'portrait-directory-miss-permission-description' | translate}}</p>
-    <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
-<div tuiMode=" onLight">
+    <div tuiMode=" light">
         <button tuiButton size="s" style="width: 100%;" appearance="outline" (click)="onRequestPermissions()">
             {{'portrait-directory-request-access' | translate}}
         </button>

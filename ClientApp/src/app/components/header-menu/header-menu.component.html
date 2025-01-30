@@ -30,14 +30,7 @@
             <h3>{{'language-configuration' | translate}}</h3>
             <div id="appLanguageSetting">
                 <h4>{{'app-language' | translate}}</h4>
-                <div orientation="vertical" tuiGroup class="w-100" [collapsed]="true">
-                    <ng-container *ngFor="let lang of langs">
-                        <label tuiBlock="s">
-                            <input tuiRadio type="radio" [formControl]="langControl" value="{{lang.value}}">
-                            <span class="align-center">{{lang.lang | translate}}</span>
-                        </label>
-                    </ng-container>
-                </div>
+                <app-language-switcher></app-language-switcher>
                 <h4>{{'origin-language' | translate}}</h4>
                 <p class="tui-text_body-xs common-word">
                     {{'origin-language-description' | translate}}
@@ -73,12 +66,14 @@
                 <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.url" tuiTextfieldSize="s"
                     (ngModelChange)="libreTranslate.onUrlChange($event)">
                     {{'libretranslate-url' | translate}}
-                    <input tuiTextfieldLegacy type="url" attr.aria-label="{{'libretranslate-url' | translate}}" />
+                    <input tuiTextfieldLegacy type="url" attr.aria-label="{{'libretranslate-url' | translate}}"
+                        aria-label="libre translate url" />
                 </tui-input>
                 <h4>{{'libretranslate-apikey' | translate}}</h4>
                 <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.apiKey" tuiTextfieldSize="s">
                     {{'libretranslate-apikey' | translate}}
-                    <input tuiTextfieldLegacy attr.aria-label="{{'libretranslate-apikey' | translate}}" />
+                    <input tuiTextfieldLegacy attr.aria-label="{{'libretranslate-apikey' | translate}}"
+                        aria-label="libre translate api key" />
                 </tui-input>
                 <h4>{{'libretranslate-status' | translate}}</h4>
                 <button appearance="outline" class="w-100" tuiButton [iconStart]="'@tui.activity'" size="s"

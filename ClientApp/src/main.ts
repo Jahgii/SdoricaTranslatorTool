@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { TUI_LANGUAGE, TUI_SPANISH_LANGUAGE, tuiLanguageSwitcher, TuiLanguageName } from '@taiga-ui/i18n';
+import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE, TUI_SPANISH_LANGUAGE, TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
 import { NgDompurifySanitizer } from '@taiga-ui/dompurify';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ApiKeyInterceptor } from './app/core/interceptors/api-key-interceptor';
@@ -36,14 +36,14 @@ const appConfigTaigaUI = [
     },
     {
         provide: TUI_LANGUAGE,
-        useValue: of(TUI_SPANISH_LANGUAGE)
+        useValue: of(TUI_ENGLISH_LANGUAGE, TUI_SPANISH_LANGUAGE)
     },
     tuiLanguageSwitcher(async (language: TuiLanguageName): Promise<unknown> => {
         switch (language) {
-            case `es`:
-                return import(`@taiga-ui/i18n/languages/english`);
+            case 'spanish':
+                return import('@taiga-ui/i18n/languages/spanish');
             default:
-                return import(`@taiga-ui/i18n/languages/spanish`);
+                return import('@taiga-ui/i18n/languages/english');
         }
     }),
 ];
@@ -57,7 +57,7 @@ bootstrapApplication(AppComponent, {
             ReactiveFormsModule,
 
             TranslateModule.forRoot({
-                defaultLanguage: 'es',
+                defaultLanguage: 'english',
                 loader: {
                     provide: TranslateLoader,
                     useFactory: HttpLoaderFactory,

@@ -1,5 +1,8 @@
 <div class="mode-container">
-    <h2> {{'mode-selection' | translate}}</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2> {{'mode-selection' | translate}}</h2>
+        <app-language-switcher></app-language-switcher>
+    </div>
     <p>{{'select-mode-description' | translate}}</p>
 
     <form [formGroup]="modeForm" class="mode-form tui-space_bottom-6">
@@ -46,8 +49,7 @@
         </div>
 
         <tui-loader class="tui-space_bottom-3" [inheritColor]="true" [overlay]="true" [showLoader]="testApi()">
-            <button type="button" tuiButton size="s" (click)="onTestServer()"
-                [disabled]="modeForm.invalid">
+            <button type="button" tuiButton size="s" (click)="onTestServer()" [disabled]="modeForm.invalid">
                 {{'test-server-api' | translate}}
             </button>
         </tui-loader>
@@ -56,7 +58,7 @@
     }
 
     <button type="button" appearance="outline" tuiIconButton type="button" class="width100"
-        iconStart="@tui.circle-arrow-right" shape="square" size="s" (click)="onNext()" [disabled]="modeForm.invalid || !apiAlive()"
-        title="Next Step">
+        iconStart="@tui.circle-arrow-right" shape="square" size="s" (click)="onNext()"
+        [disabled]="modeForm.invalid || !apiAlive()" title="Next Step">
     </button>
 </div>

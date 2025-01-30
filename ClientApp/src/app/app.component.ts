@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { HeaderMenuComponent } from './components/header-menu/header-menu.component';
-import { RouterOutlet, RouterLink } from '@angular/router';
-import { NgIf, NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+import { NgIf, AsyncPipe } from '@angular/common';
 import { TuiRoot } from '@taiga-ui/core';
 import { SidebarComponent } from './mainlayout/sidebar/sidebar.component';
-import { WizardInitialComponent } from './components/wizard-initial/wizard-initial.component';
 import { AppStateService } from './core/services/app-state.service';
 
 @Component({
@@ -14,9 +13,7 @@ import { AppStateService } from './core/services/app-state.service';
   templateUrl: './app.component.html',
   standalone: true,
   imports: [
-    NgTemplateOutlet,
     RouterOutlet,
-    RouterLink,
     NgIf,
     AsyncPipe,
 
@@ -24,11 +21,9 @@ import { AppStateService } from './core/services/app-state.service';
     TuiRoot,
 
     //App Components
-    // ThemeDarkComponent,
     SidebarComponent,
     HeaderMenuComponent,
     NavBarComponent,
-    WizardInitialComponent
   ]
 })
 export class AppComponent {

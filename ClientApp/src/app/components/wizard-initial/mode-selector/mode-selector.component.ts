@@ -10,6 +10,7 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { ApiService } from 'src/app/core/services/api.service';
 import { IUser } from 'src/app/core/interfaces/i-user';
+import { LanguageSwitcherComponent } from "../../language-switcher/language-switcher.component";
 
 @Component({
   selector: 'app-mode-selector',
@@ -27,6 +28,8 @@ import { IUser } from 'src/app/core/interfaces/i-user';
     TuiButton,
     TuiInputModule,
     TuiTextfieldControllerModule,
+
+    LanguageSwitcherComponent,
   ],
   templateUrl: './mode-selector.component.html',
   styleUrl: './mode-selector.component.scss'
@@ -78,22 +81,21 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
       .get('mode')
       ?.valueChanges
       .subscribe(mode => {
-        this.lStorage.setAppMode(mode);
-
         if (mode === AppModes.Online) {
+          this.lStorage.setAppMode(mode);
           this.modeForm.get('apiUrl')?.addValidators([Validators.required, Validators.pattern(this.urlRegex)]);
           this.modeForm.get('apiKey')?.addValidators([Validators.required]);
           this.modeForm.updateValueAndValidity();
           this.apiAlive.set(false);
-
-          return;
         }
-
-        this.modeForm.get('apiUrl')?.removeValidators([Validators.required, Validators.pattern(this.urlRegex)]);
-        this.modeForm.get('apiKey')?.removeValidators([Validators.required]);
-        this.modeForm.get('apiUrl')?.updateValueAndValidity();
-        this.modeForm.get('apiKey')?.updateValueAndValidity();
-        this.apiAlive.set(true);
+        else if (mode === AppModes.Offline) {
+          this.lStorage.setAppMode(mode);
+          this.modeForm.get('apiUrl')?.removeValidators([Validators.required, Validators.pattern(this.urlRegex)]);
+          this.modeForm.get('apiKey')?.removeValidators([Validators.required]);
+          this.modeForm.get('apiUrl')?.updateValueAndValidity();
+          this.modeForm.get('apiKey')?.updateValueAndValidity();
+          this.apiAlive.set(true);
+        }
       });
   }
 

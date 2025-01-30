@@ -1,6 +1,6 @@
 import { TuiSidebar } from "@taiga-ui/addon-mobile";
 import { TuiTextfieldControllerModule, TuiInputModule, TuiSelectModule } from "@taiga-ui/legacy";
-import { ChangeDetectionStrategy, Component, Inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { tuiPure, TuiStringHandler, TuiContext, TuiLet } from '@taiga-ui/cdk';
@@ -10,7 +10,6 @@ import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-transl
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { TuiDataListWrapper, TuiBadge, TuiBlock, TuiRadio, TuiDrawer } from '@taiga-ui/kit';
@@ -18,6 +17,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { BehaviorSubject, skip, takeWhile } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { AppStateService } from 'src/app/core/services/app-state.service';
+import { LanguageSwitcherComponent } from "../language-switcher/language-switcher.component";
 
 @Component({
   selector: 'app-nav-menu',
@@ -38,7 +38,7 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
     TuiButton,
     TuiSidebar,
     TuiGroup,
-    TuiBlock, TuiRadio,
+    TuiRadio,
     TuiSelectModule,
     TuiTextfieldControllerModule,
     TuiTextfield,
@@ -47,10 +47,12 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
     TuiInputModule,
     TuiBadge,
     TuiLet,
-    TuiHint
+    TuiHint,
+
+    LanguageSwitcherComponent,
   ]
 })
-export class HeaderMenuComponent implements OnInit {
+export class HeaderMenuComponent {
   public openMenu: boolean = false;
   public openSetting = signal(false);;
 
@@ -68,7 +70,6 @@ export class HeaderMenuComponent implements OnInit {
     readonly languageOrigin: LanguageOriginService,
     public libreTranslate: LibreTranslateService,
     public portraitsService: PortraitsService,
-    private lStorage: LocalStorageService,
     readonly translate: TranslateService,
     public authService: AuthService,
     private viewers: ViewersService,
@@ -77,27 +78,6 @@ export class HeaderMenuComponent implements OnInit {
     @Inject(TuiLanguageSwitcherService) readonly switcher: TuiLanguageSwitcherService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) {
-    this.translate.currentLang = this.translate.defaultLang;
-  }
-
-  ngOnInit(): void {
-    this.langControl.valueChanges
-      .subscribe(lang => {
-        this.translate.use(lang);
-        this.lStorage.setAppLang(lang);
-        this.switcher.setLanguage(lang);
-      });
-
-    let lang = this.lStorage.getAppLang();
-
-    if (lang) {
-      this.lStorage.setAppLang(lang);
-      this.langControl.patchValue(lang);
-    }
-    else {
-      this.lStorage.setAppLang('en');
-      this.langControl.patchValue('en');
-    }
   }
 
   public onToogleSettings() {
