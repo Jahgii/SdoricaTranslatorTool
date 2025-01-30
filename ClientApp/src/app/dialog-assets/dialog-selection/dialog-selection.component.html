@@ -27,7 +27,7 @@
             <div class="tree-content">
                 <div class="tree-left-content">
                     <tui-icon class="tui-space_right-2" [ngClass]="{'active-tree': node.selected | async}"
-                        [icon]="node.children?'@tui.folder': '@tui.file'"  />
+                        [icon]="node.children?'@tui.folder': '@tui.file'" />
                     <div class="tree-name tui-space_right-2">
                         <tui-input-inline #input [class.input_empty]="!$any(input).value"
                             (click)="$event.stopPropagation()" (focusin)="onFocusName($any($event), input, node)">

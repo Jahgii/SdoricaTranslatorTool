@@ -3,7 +3,8 @@
     @if (!componentLoaded) {
     <div class="component-not-loaded">
         <tui-block-status [card]="true">
-            <img alt="hidden content" src="assets/images/localization-not.svg" tuiSlot="top" class="image" />
+            <tui-icon icon="@tui.presentation" tuiSlot="top" [style.color]="'var(--tui-text-primary)'"
+                [background]="'@tui.presentation-filled'" [style.height.px]="128" [style.width.px]="128" />
 
             {{'viewer-not-selected' | translate}}
         </tui-block-status>

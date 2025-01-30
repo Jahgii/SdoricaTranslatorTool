@@ -6,11 +6,6 @@ $border-height: 2px;
     min-width: 15rem;
     height: calc(100svh - var(--header-height) - $border-height);
     min-height: 30rem;
-
-    .image {
-        width: 5.5rem;
-        height: 5.5rem;
-    }
 }
 
 .viewport {
@@ -28,11 +23,10 @@ $border-height: 2px;
 }
 
 .top-main-options {
-    // @include inset-border(bottom, light);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1.1em;
+    padding: 0 1.25rem;
     min-width: 260px;
 
     .option-child {
@@ -40,7 +34,6 @@ $border-height: 2px;
         align-items: center;
 
         .pending-changes-text {
-            width: 60px;
             text-align: center;
         }
     }
