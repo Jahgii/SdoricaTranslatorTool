@@ -1,6 +1,6 @@
 <div tuiDropdownAlign="right" [tuiDropdown]="dropdown" [tuiDropdownSided]="true" [(tuiDropdownOpen)]="menuOpen">
     <button appearance="icon" tuiButton type="button" size="xs" [iconStart]="'@tui.book'"
-        [tuiAppearanceState]="menuOpen || null ? 'active' : null">
+        [tuiAppearanceState]="menuOpen || null ? 'active' : null" aria-label="Open Menu Buff Info">
     </button>
 </div>
 <ng-template #dropdown>
@@ -18,12 +18,14 @@
 </ng-template>
 
 <main class="main-form" #draggableElement *ngIf="!dialogState.isHidden"
-    [ngStyle]="{'z-index': dialogState.zIndex$ | async}" (click)="changeIndex(dialogState)">
+    [ngStyle]="{'z-index': dialogState.zIndex$ | async}" (mousedown)="changeIndex(dialogState)"
+    (touchstart)="changeIndex(dialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
         [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
         <p>{{'buffinfo-form' | translate}}</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [iconStart]="'@tui.x'" size="xs"
-            (click)="dialogState.isHidden = !dialogState.isHidden">
+            (click)="dialogState.isHidden = !dialogState.isHidden"
+            (touchstart)="dialogState.isHidden = !dialogState.isHidden" aria-label="Close Dialog Button">
         </button>
     </div>
 
@@ -109,16 +111,16 @@
         <ng-container [ngSwitch]="status">
             <p *ngSwitchCase="'verifying'">
                 <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
-                    <button tuiIconButton appearance="icon" [iconStart]="'@tui.loader'">
+                    <button tuiIconButton appearance="icon" [iconStart]="'@tui.loader'" aria-label="loader">
                     </button>
                 </tui-loader>
             </p>
             <p *ngSwitchCase="'valid'">
-                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-check'">
+                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-check'" aria-label="loader valid">
                 </button>
             </p>
             <p *ngSwitchCase="'invalid'">
-                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-alert'">
+                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-alert'" aria-label="loader invalid">
                 </button>
             </p>
         </ng-container>
@@ -126,12 +128,14 @@
 </ng-template>
 
 <main class="main-list" #draggableListElement *ngIf="!listDialogState.isHidden"
-    [ngStyle]="{'z-index': listDialogState.zIndex$ | async}" (click)="changeIndex(listDialogState)">
+    [ngStyle]="{'z-index': listDialogState.zIndex$ | async}" (mousedown)="changeIndex(listDialogState)"
+    (touchstart)="changeIndex(listDialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
         [draggableElementState]="listDialogState" [elementAnchorRef]="anchor">
         <p>{{'buffinfo-list' | translate}}</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [iconStart]="'@tui.x'" size="xs"
-            (click)="listDialogState.isHidden = !listDialogState.isHidden" aria-label="Close dialog">
+            (click)="listDialogState.isHidden = !listDialogState.isHidden"
+            (touchstart)="listDialogState.isHidden = !listDialogState.isHidden" aria-label="Close dialog">
         </button>
     </div>
 
@@ -216,7 +220,8 @@
                             </td>
                             <td *tuiCell="'viewable'" tuiTd>
                                 <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                    <input tuiCheckbox type="checkbox" [(ngModel)]="v.Content.viewable" size="s" />
+                                    <input tuiCheckbox type="checkbox" [(ngModel)]="v.Content.viewable" size="s"
+                                        aria-label="viewable checkbox" />
                                 </div>
                             </td>
                             <td *tuiCell="'custom'" tuiTd>
