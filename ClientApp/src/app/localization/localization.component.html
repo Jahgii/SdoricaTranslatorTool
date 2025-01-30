@@ -9,8 +9,8 @@
 }
 @else{
 <div class="localization-container" *ngIf="localization.categories$ | async as categories">
-    <div class="localization-data-actions tui-space_vertical-2">
-        <tui-combo-box class="category-input" [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'m'"
+    <div class="localization-data-actions tui-space_bottom-2">
+        <tui-combo-box class="category-input" [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'s'"
             [valueContent]="categoryInputContent" [stringify]="stringify"
             (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
             {{'categories' | translate}}
@@ -39,21 +39,21 @@
                         </p>
 
                         <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.search"
-                            [tuiTextfieldSize]="'m'" [tuiTextfieldIcon]="'@tui.scan-search'">
+                            [tuiTextfieldSize]="'s'" [tuiTextfieldIcon]="'@tui.scan-search'">
                             {{'search-by-text' | translate}}
-                            <input tuiTextfieldLegacy type="text" />
+                            <input tuiTextfieldLegacy type="text" aria-label="text search" />
                         </tui-input>
 
                         <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.searchTranslation"
-                            [tuiTextfieldSize]="'m'" [tuiTextfieldIcon]="'@tui.scan-search'">
+                            [tuiTextfieldSize]="'s'" [tuiTextfieldIcon]="'@tui.scan-search'">
                             {{'search-by-translation' | translate}}
-                            <input tuiTextfieldLegacy type="text" />
+                            <input tuiTextfieldLegacy type="text" aria-label="translation text search" />
                         </tui-input>
 
-                        <tui-input class="limit-width" [formControl]="localization.searchKey" [tuiTextfieldSize]="'m'"
+                        <tui-input class="limit-width" [formControl]="localization.searchKey" [tuiTextfieldSize]="'s'"
                             [tuiTextfieldIcon]="'@tui.scan-search'">
                             {{'search-by-key' | translate}}
-                            <input tuiTextfieldLegacy type="text" />
+                            <input tuiTextfieldLegacy type="text" aria-label="key text search" />
                         </tui-input>
                     </div>
                 </ng-template>

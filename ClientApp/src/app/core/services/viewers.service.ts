@@ -71,7 +71,7 @@ export class ViewersService {
     }
 
     let element = document.querySelector(':root') as HTMLElement;
-    element.style.setProperty('--header-height', '3.9375rem');
+    element.style.setProperty('--header-height', '2.9375rem');
     element.style.setProperty('--menu-width', '3rem');
   }
 

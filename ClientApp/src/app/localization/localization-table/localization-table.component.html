@@ -38,27 +38,30 @@
                             <th tuiTh *tuiHead="'Translation'" [sticky]="true" style="transform: translate(0);"
                                 [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null"
                                 style="width: 60%; max-width: 60%; ">
-                                <span>{{'translation' | translate}}</span>
-                                <input tuiSwitch type="checkbox" class="tui-space_left-2 head-toogle" [showIcons]="true"
-                                    [(ngModel)]="localization.propagateTranslation" [tuiHint]="propagationTooltip" />
-                                <ng-template #propagationTooltip>
-                                    {{'propagation' | translate}}:
-                                    {{'propagation-keys-description-0' | translate}}
-                                    <span class="tooltip-important-text">
-                                        {{'propagation-keys-description-1' | translate}}
-                                    </span>
-                                    {{'propagation-keys-description-2' | translate}}
-                                    <strong>
-                                        {{'propagation-keys-description-3' | translate}}
-                                    </strong>
-                                    {{'propagation-keys-description-4' | translate}}
-                                </ng-template>
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span>{{'translation' | translate}}</span>
+                                    <input tuiSwitch type="checkbox" [showIcons]="true"
+                                        [(ngModel)]="localization.propagateTranslation" [tuiHint]="propagationTooltip"
+                                        size="s" aria-label="Propagation checkbox" />
+                                    <ng-template #propagationTooltip>
+                                        {{'propagation' | translate}}:
+                                        {{'propagation-keys-description-0' | translate}}
+                                        <span class="tooltip-important-text">
+                                            {{'propagation-keys-description-1' | translate}}
+                                        </span>
+                                        {{'propagation-keys-description-2' | translate}}
+                                        <strong>
+                                            {{'propagation-keys-description-3' | translate}}
+                                        </strong>
+                                        {{'propagation-keys-description-4' | translate}}
+                                    </ng-template>
+                                </div>
                             </th>
                             <th tuiTh *tuiHead="'Translated'" [sticky]="true"
                                 style="transform: translate(0); width: 32px;"
                                 [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
                                 <div class="translated-checkbox-container align-center">
-                                    <tui-icon icon="@tui.circle-check"></tui-icon>
+                                    <tui-icon icon="@tui.circle-check" tuiTextfieldSize="s"></tui-icon>
                                 </div>
                             </th>
                         </tr>
@@ -89,7 +92,8 @@
                                     <input tuiCheckbox type="checkbox"
                                         [formControl]="localization.filterForm.controls['translated']"
                                         tuiTableFilter="Translated"
-                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right" />
+                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right"
+                                        size="s" aria-label="Translated Filter" />
 
                                 </div>
                             </th>
@@ -172,7 +176,8 @@
                                         <input tuiCheckbox type="checkbox"
                                             [disabled]="(localization.saving$ | async) ?? false"
                                             [(ngModel)]="item.Translated[localization.language]"
-                                            (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)" />
+                                            (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"
+                                            size="s" aria-label="Translated Checkbox" />
                                     </div>
                                 </td>
                             </tr>
@@ -212,7 +217,8 @@
                                     <input tuiCheckbox type="checkbox" style="padding-left: 0.75rem;"
                                         [formControl]="localization.filterForm.controls['translated']"
                                         tuiTableFilter="Translated"
-                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right" />
+                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right"
+                                        size="s" aria-label="Translated Filter" />
 
                                 </div>
                             </th>
@@ -252,7 +258,8 @@
                                             <input tuiCheckbox type="checkbox"
                                                 [disabled]="(localization.saving$ | async) ?? false"
                                                 [(ngModel)]="item.Translated[localization.language]"
-                                                (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)" />
+                                                (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"
+                                                size="s" aria-label="Translated Checkbox" />
                                         </div>
                                         <ng-template #tooltip>
                                             <tui-scrollbar #scrollTooltip class="tooltip-original-cell" [hidden]="true"

@@ -1,19 +1,19 @@
 <header class="header">
     <button class="split-button" tuiIconButton type="button" appearance="icon" iconStart="@tui.between-vertical-start"
-        (click)="onSplitModeToggle($event)" aria-label="split-button" size="s">
+        (click)="onSplitModeToggle($event)" aria-label="split-button" size="xs">
     </button>
     <div class="margin-auto-r"></div>
     <div class="right-buttons">
         <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="@tui.circle-help"
-            (click)="onMainTour()" [tuiHint]="'tour-mode' | translate" size="s" aria-label="tour button">
+            (click)="onMainTour()" [tuiHint]="'tour-mode' | translate" size="xs" aria-label="tour button">
         </button>
         <button id="themeButton" aria-label="toogle night mode" type="button" tuiIconButton appearance="icon"
             [iconStart]="theme.darkMode() ? '@tui.sun' : '@tui.moon'" (click)="theme.switchTheme($event)"
-            [tuiHint]="(theme.darkMode() ? 'toogle-lightmode' : 'toogle-nightmode') | translate" size="s"
+            [tuiHint]="(theme.darkMode() ? 'toogle-lightmode' : 'toogle-nightmode') | translate" size="xs"
             aria-label="switch theme button">
         </button>
         <button id="settingsButton" type="button" aria-label="open settings" tuiIconButton appearance="icon"
-            [iconStart]="'@tui.settings'" (click)="openSetting.set(!openSetting())" size="s"
+            [iconStart]="'@tui.settings'" (click)="openSetting.set(!openSetting())" size="xs"
             aria-label="settings button">
         </button>
         <tui-drawer *tuiPopup="openSetting()">
@@ -49,7 +49,7 @@
 
             <h3 class="tui-space_top-9">{{'portraits-dir' | translate}}</h3>
             <div id="appPortraitSetting">
-                <button tuiButton size="s" type="button" class="w-100" appearance="outline"
+                <button tuiButton size="xs" type="button" class="w-100" appearance="outline"
                     (click)="portraitsService.onFolderChange()" aria-label="change portrait directory button">
                     @if (portraitsService.dirName$ | async; as dirName) {
                     {{dirName}}
@@ -76,7 +76,7 @@
                         aria-label="libre translate api key" />
                 </tui-input>
                 <h4>{{'libretranslate-status' | translate}}</h4>
-                <button appearance="outline" class="w-100" tuiButton [iconStart]="'@tui.activity'" size="s"
+                <button appearance="outline" class="w-100" tuiButton [iconStart]="'@tui.activity'" size="xs"
                     (click)="libreTranslate.isAlive()"
                     [disabled]="((libreTranslate.testing$ | async) ?? true) || !libreTranslate.url">
                     {{'libretranslate-testserver' | translate}}
@@ -127,7 +127,7 @@
                         </div>
                         <div class="tui-space_top-2" *ngIf="libreTranslate.target">
                             <h4>{{'libretranslate-translation-status' | translate}}</h4>
-                            <button appearance="outline" tuiButton class="w-100" [iconStart]="'@tui.activity'" size="s"
+                            <button appearance="outline" tuiButton class="w-100" [iconStart]="'@tui.activity'" size="xs"
                                 (click)="libreTranslate.onTestTranslate()" [disabled]="
                                         ((libreTranslate.testing$ | async) ?? true) 
                                         || !libreTranslate.url 

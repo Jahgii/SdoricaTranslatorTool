@@ -8,10 +8,11 @@
 
     .localization-data-actions {
         padding: 0 1em;
-        height: 56px;
+        height: 2.9375rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
 
         .category-input {
             max-width: 320px;

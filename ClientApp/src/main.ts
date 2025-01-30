@@ -14,8 +14,8 @@ import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE, TUI_SPANISH_LANGUAGE, TuiLanguageNa
 import { NgDompurifySanitizer } from '@taiga-ui/dompurify';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ApiKeyInterceptor } from './app/core/interceptors/api-key-interceptor';
-import { of } from 'rxjs';
 import { JwtModule } from '@auth0/angular-jwt';
+import { of } from 'rxjs';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
