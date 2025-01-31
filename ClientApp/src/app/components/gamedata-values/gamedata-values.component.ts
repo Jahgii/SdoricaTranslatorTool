@@ -1,9 +1,9 @@
 import { TuiTable } from "@taiga-ui/addon-table";
-import { TuiPrimitiveTextfieldModule, TuiTextfieldControllerModule, TuiInputModule, TuiInputNumberModule } from "@taiga-ui/legacy";
+import { TuiTextfieldControllerModule, TuiInputModule, TuiInputNumberModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint, TuiTextfield, TuiScrollable } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
@@ -16,6 +16,7 @@ import { NgIf, NgSwitch, NgSwitchCase, AsyncPipe, NgStyle, NgTemplateOutlet } fr
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
+import { TuiBlockStatus } from "@taiga-ui/layout";
 
 @Component({
   selector: 'app-gamedata-values',
@@ -46,10 +47,11 @@ import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
     TuiButton,
     TuiDataList,
     TuiIcon,
+    TuiScrollable,
     TuiScrollbar,
     TuiInputModule,
     TuiTextfieldControllerModule,
-    TuiPrimitiveTextfieldModule,
+    TuiTextfield,
     TuiInputNumberModule,
     TuiHint,
     TuiBlock,
@@ -57,10 +59,10 @@ import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
     TuiLoader,
     TuiTable,
     TuiButtonLoading,
+    TuiBlockStatus,
 
     DraggableElementDirective,
   ]
-
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;
@@ -97,6 +99,8 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
   private subsBreakpoint!: Subscription | undefined;
   private subsDialog!: Subscription | undefined;
   private dialog: 'list' | 'create' | undefined;
+
+  public columns: string[] = ['id', 'iconKey', 'localizationInfoKey', 'localizationNameKey', 'order', 'viewable', 'custom', 'confirmDelete'];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -200,8 +204,7 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
   }
 
   public trackByItemId(index: number, item: IGamedataValue): string {
-    console.log()
-    return item.Id ?? String(index);
+    return String(item.Id);
   }
 
 }

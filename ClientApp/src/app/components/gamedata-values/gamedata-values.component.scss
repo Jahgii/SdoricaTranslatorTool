@@ -93,7 +93,7 @@
     z-index: 1;
     left: 0;
     width: 100%;
-    height: calc(var(--tui-height-s) - 1px);
+    height: calc(var(--tui-height-s));
     background: var(--tui-status-negative-pale);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
@@ -115,4 +115,18 @@
 
 .align-center {
     align-self: center;
+}
+
+.viewport-2 {
+    height: 100%;
+    margin: 0 1rem;
+}
+
+table {
+    inline-size: 100%;
+    table-layout: fixed;
+
+    tr {
+        block-size: var(--tui-height-s);
+    }
 }
