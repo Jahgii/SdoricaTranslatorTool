@@ -1,10 +1,10 @@
 <div class="row" [ngStyle]="{
     'flex-wrap': breakpointService.x() > 768 ? undefined: 'wrap',
-    'zoom': breakpointService.x() > 1320 ? 1 :
+    '--scale': breakpointService.x() > 1320 ? 1 :
         breakpointService.x() > 768 ? breakpointService.x() / 1320 :
         breakpointService.x() > 320 ? breakpointService.x() / 660 :
         320 / 660
-    }">
+}">
     <div class="dialog" [tuiHint]="otherLanguages" [tuiHintContext]="{$implicit: (otherText$ | async)}">
         <div class="dialog-translation-container">
             <img class="dialog-translation-background" src="assets/images/dialog_paper.png" alt="dialot_paper">
@@ -14,8 +14,8 @@
             <div class="dialog-translation-portrait-container" *ngIf="item.IconName">
                 <img class="dialog-translation-portrait" src="assets/images/figure_base2.png" alt="base" loading="lazy">
                 <img class="dialog-translation-portrait" [src]="onGetPortrait(item.IconName)"
-                    onerror="this.src='assets/images/portrait-miss.svg'"
-                    alt="portrait not found" width="100" height="120" loading="lazy">
+                    onerror="this.src='assets/images/portrait-miss.svg'" alt="portrait not found" width="100"
+                    height="120" loading="lazy">
                 <img class="dialog-translation-frame" src="assets/images/figure_frame.png" alt="base" loading="lazy">
             </div>
             <div class="dialog-translation-speaker">

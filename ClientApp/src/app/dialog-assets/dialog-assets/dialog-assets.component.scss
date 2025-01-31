@@ -10,7 +10,7 @@ $border-height: 2px;
 
 .viewport {
     width: 100%;
-    height: calc(100vh - var(--header-height) - 5rem);
+    height: calc(100vh - var(--header-height) - 3.5rem);
 
     @media #{$tui-mobile} {
         margin: 0 0;

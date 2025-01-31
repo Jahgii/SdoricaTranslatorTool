@@ -11,8 +11,8 @@
 }
 
 .dialog-speaker-name {
-    width: 425px;
-    font-size: 22px;
+    width: calc(425px * var(--scale));
+    font-size: calc(22px * var(--scale));
     font-family: dialog-font;
     font-weight: bold;
     color: #e48e45;
@@ -32,14 +32,14 @@
 }
 
 .dialog-translation {
-    font-size: 17px;
+    font-size: calc(17px * var(--scale));
     font-family: dialog-font;
     line-height: initial;
     background-color: transparent;
     border: none;
     border-radius: 6px;
-    width: 425px;
-    height: 90px;
+    width: calc(425px * var(--scale));
+    height: calc(90px * var(--scale));
     resize: none;
     overflow: hidden;
     transition: all 500ms;
@@ -69,42 +69,48 @@
     left: -6px;
 
     .dialog-translation-portrait {
-        width: 128px;
-        height: 128px;
+        width: calc(128px * var(--scale));
+        height: calc(128px * var(--scale));
         position: absolute;
-        bottom: 24px;
-        left: 24px;
+        bottom: calc(26px * var(--scale));
+        left: calc(26px * var(--scale));
     }
 
 }
 
+.dialog-translation-background {
+    width: calc(320px * var(--scale));
+    opacity: 0.1;
+    filter: contrast(0) brightness(0);
+}
+
 .dialog-translation-frame {
-    width: 148px;
-    height: 148px;
+    width: calc(148px * var(--scale));
+    height: calc(148px * var(--scale));
     position: absolute;
-    bottom: 12px;
-    left: 18px;
+    bottom: calc(12px * var(--scale));
+    left: calc(18px * var(--scale));
     opacity: 0.50;
 }
 
 .dialog-translation-speaker {
     position: absolute;
-    top: 30px;
-    left: 168px;
+    top: calc(30px * var(--scale));
+    left: calc(168px * var(--scale));
 }
 
 .dialog-translation-input {
     position: absolute;
-    top: 64px;
-    left: 168px;
-    max-width: 450px;
+    top: calc(64px * var(--scale));
+    left: calc(168px * var(--scale));
+    max-width: calc(450px * var(--scale));
 }
 
 .dialog-translation-full {
     position: absolute;
-    top: 44px;
-    left: 120px;
-    max-width: 450px;
+    top: calc(44px * var(--scale));
+    left: calc(120px * var(--scale));
+    max-width: calc(450px * var(--scale));
 }
 
 .scalex {
