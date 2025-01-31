@@ -121,7 +121,10 @@
     </div>
     <ng-container *ngIf="data[dAS.activeItemIndex] as dialogAsset">
         <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [maxBufferPx]="500"
-            [minBufferPx]="400" [itemSize]="(breakpointService.mode$ | async) === 'desktopLarge' ? 185 : 148">
+            [minBufferPx]="400" [itemSize]="breakpointService.x() > 1320 ? 185 :
+            breakpointService.x() > 768 ? (breakpointService.x() / 1320) * 185 :
+            breakpointService.x() > 320 ? (breakpointService.x() / 660) * 185 :
+            (320 / 660) * 185">
             <div *cdkVirtualFor="let item of dialogAsset.Model['$content']; trackBy: trackByItemId">
                 <app-dialog-asset-single [data]="data" [dialogAsset]="dialogAsset" [item]="item" />
             </div>
