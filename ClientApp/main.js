@@ -13,7 +13,7 @@ let windowConfig = {
     minWidth: 1280,
     minHeight: 680,
     webPreferences: {
-        // preload: path.join(__dirname, 'preload.js'),
+        preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: false,
         devTools: false,
     }
@@ -47,6 +47,16 @@ function createWindow() {
             slashes: true
         })
     );
+
+    mainWindow.webContents.on('did-fail-load', () => {
+        mainWindow.loadURL(
+            url.format({
+                pathname: path.join(__dirname, `/dist/index.html`),
+                protocol: "file:",
+                slashes: true
+            })
+        );
+    });
 
     mainWindow.on('close', () => {
         Object.assign(windowConfig, {

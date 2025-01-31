@@ -56,19 +56,21 @@
             </div>
             <div class="dialog-translation-speaker">
                 <input [(ngModel)]="item.SpeakerName" (focus)="dAS.previousPropagationValue = item.SpeakerName"
-                    (ngModelChange)="onSpeakerNameChange($event, data)" class="dialog-speaker-name" />
+                    (ngModelChange)="onSpeakerNameChange($event, data)" class="dialog-speaker-name"
+                    aria-label="speaker input" />
             </div>
             <div class="dialog-translation-input">
                 <textarea [(ngModel)]="item.Text" (ngModelChange)="onTextChange(dialogAsset)"
                     [disabled]="(dAS.libreTranslate.translating$ | async) ?? true" class="dialog-translation"
-                    (focusin)="focus.set(true)" (focusout)="focus.set(false)"></textarea>
+                    (focusin)="focus.set(true)" (focusout)="focus.set(false)" aria-label="tranlation input"></textarea>
             </div>
         </ng-container>
         <ng-template #fullDialogEdit>
             <div class="dialog-translation-full">
                 <textarea [(ngModel)]="item.Text" (ngModelChange)="onTextChange(dialogAsset)"
                     [disabled]="(dAS.libreTranslate.translating$ | async) ?? true" class="dialog-translation"
-                    (focusin)="focus.set(true)" (focusout)="focus.set(false)"></textarea>
+                    (focusin)="focus.set(true)" (focusout)="focus.set(false)" aria-label="tranlation input"
+                    aria-label="tranlation input"></textarea>
             </div>
         </ng-template>
     </div>
