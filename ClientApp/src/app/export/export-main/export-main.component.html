@@ -202,7 +202,7 @@
 
         @if (!filecontrol.control.value && !(filecontrol.skip | async)) {
         <button class="skip-button" tuiIconButton iconStart="@tui.circle-x" size="xs" appearance="icon"
-            (click)="eTS.onSkipFile(filecontrol)">
+            (click)="eTS.onSkipFile(filecontrol)" aria-label="skip button">
         </button>
         }
     </div>

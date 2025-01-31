@@ -122,7 +122,7 @@ export class ExportTranslationService {
       this.progressPerc$ = result;
     }
     else if (this.lStorage.getAppMode() === AppModes.Online) {
-      this.progressPerc$ = this.api.getWithHeaders('exportpercentages', { lang: LanguageType.english });
+      this.progressPerc$ = this.api.getWithHeaders('exports/percentages', { lang: LanguageType.english });
     }
 
 
@@ -328,7 +328,8 @@ export class ExportTranslationService {
         file: this.obb.control.value,
         decodeResult: undefined,
         lang: 'English',
-        token: this.lStorage.getToken()
+        token: this.lStorage.getToken(),
+        exportMode: 'game-file'
       };
 
       obbWorker.postMessage(message);
@@ -343,7 +344,8 @@ export class ExportTranslationService {
         file: undefined,
         decodeResult: this.dataLoc,
         lang: 'English',
-        token: this.lStorage.getToken()
+        token: this.lStorage.getToken(),
+        exportMode: 'game-file'
       };
 
       locWorker.postMessage(message);
@@ -358,7 +360,8 @@ export class ExportTranslationService {
         file: undefined,
         decodeResult: this.dataGam,
         lang: 'English',
-        token: this.lStorage.getToken()
+        token: this.lStorage.getToken(),
+        exportMode: 'game-file'
       };
 
       gamWorker.postMessage(message);

@@ -40,6 +40,7 @@ function createWindow() {
 
     if (windowConfig.isMaximized) mainWindow.maximize();
 
+    mainWindow.setMenu(null);
     mainWindow.loadURL(
         url.format({
             pathname: path.join(__dirname, `/dist/index.html`),
@@ -68,8 +69,6 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
-
-    mainWindow.setMenu(null);
 }
 
 app.on('ready', createWindow);

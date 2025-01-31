@@ -92,16 +92,26 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   }
   );
 
-  await onCreateNewObb(completeMessage, message, dialogs);
+  onCreateNewObb(completeMessage, message, dialogs);
 }
 
-async function onCreateNewObb(completeMessage: IOnMessage, message: ExportPostMessage, dialogs: IDialogAssetExport[]) {
+function onCreateNewObb(completeMessage: IOnMessage, message: ExportPostMessage, dialogs: IDialogAssetExport[]) {
   if (dialogs.length <= 0) {
     completeMessage.pgState = ProgressStatus.retrivingServerDataEmpty;
     postMessage(completeMessage);
     return;
   }
 
+
+
+  if (message.exportMode == 'game-file') OnCreateNewObbGameFile(completeMessage, message, dialogs);
+  else if (message.exportMode == 'file') OnCreateNewObbFile(completeMessage, message, dialogs);
+  else null;
+
+
+}
+
+function OnCreateNewObbGameFile(completeMessage: IOnMessage, message: ExportPostMessage, dialogs: IDialogAssetExport[]) {
   const zip = new JSZip();
   completeMessage.pgState = ProgressStatus.replacingContent;
   postMessage(completeMessage);
@@ -143,5 +153,48 @@ async function onCreateNewObb(completeMessage: IOnMessage, message: ExportPostMe
       completeMessage.blob = zipBlob;
       postMessage(completeMessage);
     });
+  });
+}
+
+function OnCreateNewObbFile(completeMessage: IOnMessage, message: ExportPostMessage, dialogs: IDialogAssetExport[]) {
+  const zip = new JSZip();
+  completeMessage.pgState = ProgressStatus.replacingContent;
+  postMessage(completeMessage);
+
+  for (let index = 0; index < dialogs.length; index++) {
+    let dialog = dialogs[index];
+    let dialogFileName = dialog.OriginalFilename;
+
+    delete (dialog.Id);
+    delete (dialog.OriginalFilename);
+    delete (dialog.Filename);
+    delete (dialog.MainGroup);
+    delete (dialog.Group);
+    delete (dialog.Number);
+    delete (dialog.Language);
+    delete (dialog.Translated);
+
+    (dialog.Model.$content as any[]).forEach(e => delete (e.OriginalText));
+
+    zip.file(`assets/DialogAssets/${dialogFileName}`, JSON.stringify(dialog));
+    completeMessage.pg = ((index + 1) * 100) / dialogs.length;
+    postMessage(completeMessage);
+  }
+
+  completeMessage.pgState = ProgressStatus.generatingNewFile;
+  completeMessage.maxPg = 100;
+  completeMessage.pg = 0;
+
+  postMessage(completeMessage);
+
+  zip.generateAsync({ type: 'blob' }, (metadata) => {
+    if (Math.abs(completeMessage.pg - metadata.percent) > 5 || metadata.percent === 100) {
+      completeMessage.pg = metadata.percent;
+      postMessage(completeMessage);
+    }
+  }).then(zipBlob => {
+    completeMessage.pgState = ProgressStatus.finish;
+    completeMessage.blob = zipBlob;
+    postMessage(completeMessage);
   });
 }

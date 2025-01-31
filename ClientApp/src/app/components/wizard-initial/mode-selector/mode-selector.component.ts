@@ -105,6 +105,7 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
       ?.valueChanges
       .subscribe(url => {
         this.lStorage.setAppApiUrl(url);
+        this.api.setBaseUrl(url);
       });
   }
 

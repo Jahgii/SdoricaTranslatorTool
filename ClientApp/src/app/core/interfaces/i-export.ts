@@ -15,4 +15,5 @@ export interface ExportPostMessage {
     decodeResult: any;
     lang: string;
     token?: string;
+    exportMode: 'game-file' | 'file'
 }
