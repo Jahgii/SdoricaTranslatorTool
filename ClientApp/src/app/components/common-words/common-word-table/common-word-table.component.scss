@@ -1,0 +1,50 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+
+table {
+    inline-size: 100%;
+    padding: 0 1rem;
+    table-layout: fixed;
+}
+
+.viewport {
+    block-size: 23.625rem;
+    min-width: 100%;
+}
+
+.action-head {
+    width: 64px;
+}
+
+.confirm-delete-head {
+    width: 0px;
+    padding: 0 !important;
+    border: none;
+}
+
+.confirm-delete-column {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    height: calc(var(--tui-height-s));
+    background: var(--tui-status-negative-pale);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    margin: 0;
+    padding: 0;
+
+    .text {
+        font-weight: bold;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 30ch;
+        overflow: hidden;
+
+        @media #{$tui-mobile} {
+            width: 10ch;
+        }
+    }
+}

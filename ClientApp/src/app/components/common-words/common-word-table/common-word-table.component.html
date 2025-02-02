@@ -1,0 +1,72 @@
+<tui-scrollbar>
+    <cdk-virtual-scroll-viewport #viewport appendOnly tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="32"
+        [maxBufferPx]="500" [minBufferPx]="400">
+        <table tuiTable [columns]="columns" [size]="'s'">
+            <thead>
+                <tr tuiThGroup>
+                    <th *tuiHead="'Original'" tuiTh [sorter]="null" [sticky]="true"
+                        [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)">
+                        {{'original-word' | translate}}
+                    </th>
+                    <th *tuiHead="'Translation'" tuiTh [sorter]="null" [sticky]="true"
+                        [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)">
+                        {{'translation' | translate}}
+                    </th>
+                    <th *tuiHead="'actions'" tuiTh class="action-head" [sorter]="null" [sticky]="true"
+                        [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)">
+                    </th>
+                    <th *tuiHead="'confirmDelete'" class="confirm-delete-head" tuiTh [sorter]="null" [sticky]="true"
+                        [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)">
+                    </th>
+                </tr>
+            </thead>
+            <tbody tuiTbody>
+                <tr *cdkVirtualFor="let word of commonWords.words; index as i" tuiTr>
+                    <td *tuiCell="'Original'" tuiTd>
+                        <tui-input [(ngModel)]="word.Original" tuiTextfieldSize="s">
+                            {{'original-word' | translate}}
+                            <input placeholder="***" tuiTextfieldLegacy />
+                        </tui-input>
+                    </td>
+                    <td *tuiCell="'Translation'" tuiTd>
+                        <tui-input [(ngModel)]="word.Translation" tuiTextfieldSize="s">
+                            {{'translation' | translate}}
+                            <input placeholder="***" tuiTextfieldLegacy />
+                        </tui-input>
+                    </td>
+                    <td *tuiCell="'actions'" tuiTd>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <tui-loader [showLoader]="(word.loader | async) ?? false" [inheritColor]="true"
+                                [overlay]="true">
+                                <button appearance="flat" iconStart="@tui.trash" [style.border-radius.%]="100" size="xs"
+                                    aria-label="remove word" tuiIconButton type="button"
+                                    (click)="commonWords.confirmDelete(word);">
+                                </button>
+                            </tui-loader>
+                            <tui-loader [showLoader]="(word.loader | async) ?? false" [inheritColor]="true"
+                                [overlay]="true">
+                                <button appearance="flat" iconStart="@tui.save" [style.border-radius.%]="100" size="xs"
+                                    aria-label="update word" tuiIconButton type="button"
+                                    (click)="commonWords.update(word)">
+                                </button>
+                            </tui-loader>
+                        </div>
+                    </td>
+                    @if (word.confirm | async) {
+                    <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
+                        <p class="text">{{'confirm-text-delete-word' | translate}}</p>
+                        <button tuiButton size="xs" class="tui-space_left-2" (click)="commonWords.delete(word, i)"
+                            [loading]="(commonWords.deleting$ | async) ?? false" appearance="accent">
+                            {{'confirm-frienly' | translate}}
+                        </button>
+                        <button tuiButton size="xs" class="tui-space_left-2" (click)="commonWords.cancelDelete(word)"
+                            [loading]="(commonWords.deleting$ | async) ?? false" appearance="flat">
+                            {{'unconfirm-frienly' | translate}}
+                        </button>
+                    </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </cdk-virtual-scroll-viewport>
+</tui-scrollbar>

@@ -17,17 +17,18 @@ import { DraggableElementDirective } from '../../core/directives/draggable-eleme
 import { NgIf, AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
+import { CommonWordTableComponent } from "./common-word-table/common-word-table.component";
 
 @Component({
   selector: 'app-common-words',
   templateUrl: './common-words.component.html',
   styleUrls: ['./common-words.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   animations: [
     popinAnimation,
     fadeinAnimation
   ],
-  standalone: true,
   imports: [
     NgIf,
     NgStyle,
@@ -41,6 +42,8 @@ import { DialogState } from 'src/app/core/interfaces/i-dialog';
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
 
+    CommonWordTableComponent,
+
     TuiDropdown,
     TuiButton,
     TuiDataList,
@@ -52,9 +55,9 @@ import { DialogState } from 'src/app/core/interfaces/i-dialog';
     TuiTable,
     TuiLoader,
     TuiBlockStatus,
+    TuiButtonLoading,
 
     DraggableElementDirective,
-    TuiButtonLoading
   ]
 })
 export class CommonWordsComponent implements OnInit, OnDestroy {
