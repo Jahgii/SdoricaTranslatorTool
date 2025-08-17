@@ -1,5 +1,4 @@
-import { TUI_SANITIZER } from "@taiga-ui/legacy";
-import { NG_EVENT_PLUGINS } from "@taiga-ui/event-plugins";
+import { provideEventPlugins } from "@taiga-ui/event-plugins";
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 
 import { environment } from './environments/environment';
@@ -11,7 +10,6 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE, TUI_SPANISH_LANGUAGE, TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
-import { NgDompurifySanitizer } from '@taiga-ui/dompurify';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ApiKeyInterceptor } from './app/core/interceptors/api-key-interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -30,10 +28,6 @@ if (environment.production) {
 }
 
 const appConfigTaigaUI = [
-    {
-        provide: TUI_SANITIZER,
-        useClass: NgDompurifySanitizer
-    },
     {
         provide: TUI_LANGUAGE,
         useValue: of(TUI_ENGLISH_LANGUAGE, TUI_SPANISH_LANGUAGE)
@@ -77,6 +71,6 @@ bootstrapApplication(AppComponent, {
             withInterceptorsFromDi(),
             withInterceptors([ApiKeyInterceptor]),
         ),
-        NG_EVENT_PLUGINS
+        provideEventPlugins()
     ]
 }).catch(err => console.log(err));
