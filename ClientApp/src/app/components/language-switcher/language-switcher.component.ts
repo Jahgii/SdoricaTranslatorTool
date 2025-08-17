@@ -1,4 +1,4 @@
-import { NgForOf, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -14,7 +14,6 @@ import type { TuiCountryIsoCode, TuiLanguageName } from '@taiga-ui/i18n/types';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgForOf,
     TitleCasePipe,
 
     TranslateModule,
