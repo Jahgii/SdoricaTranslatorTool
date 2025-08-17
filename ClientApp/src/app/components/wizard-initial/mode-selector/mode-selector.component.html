@@ -1,13 +1,13 @@
 <div class="mode-container">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2> {{'mode-selection' | translate}}</h2>
-        <app-language-switcher></app-language-switcher>
+        <app-language-switcher />
     </div>
     <p>{{'select-mode-description' | translate}}</p>
 
     <form [formGroup]="modeForm" class="mode-form tui-space_bottom-6">
         <label appearance="secondary" tuiBlock="s">
-            <tui-icon icon="@tui.computer" />
+            <tui-icon icon="computer" />
             <span tuiTitle>
                 {{'offline' | translate}}
                 <span tuiSubtitle>
@@ -17,7 +17,7 @@
             <input formControlName="mode" tuiRadio type="radio" [value]="modes.Offline" />
         </label>
         <label appearance="secondary" tuiBlock="s">
-            <tui-icon icon="@tui.server" />
+            <tui-icon icon="server" />
             <span tuiTitle>
                 {{'online' | translate}}
                 <span tuiSubtitle>
@@ -31,21 +31,21 @@
     @if (modeControl?.value === modes.Online) {
     <form class="url-form tui-space_bottom-6" [formGroup]="modeForm">
         <div>
-            <p> {{'api-url' | translate}}</p>
-            <tui-input class="tui-space_bottom-3" formControlName="apiUrl" [tuiTextfieldLabelOutside]="true"
-                tuiTextfieldSize="s">
+            <label tuiLabel>
                 {{'api-url' | translate}}
-                <input tuiTextfieldLegacy title="api-url" />
-            </tui-input>
+                <tui-textfield class="tui-space_bottom-3" tuiTextfieldSize="s">
+                    <input placeholder="https://..." tuiTextfield formControlName="apiUrl" />
+                </tui-textfield>
+            </label>
         </div>
 
         <div>
-            <p> {{'api-key' | translate}}</p>
-            <tui-input class="tui-space_bottom-3" formControlName="apiKey" [tuiTextfieldLabelOutside]="true"
-                tuiTextfieldSize="s">
+            <label tuiLabel>
                 {{'api-key' | translate}}
-                <input tuiTextfieldLegacy title="api-key" />
-            </tui-input>
+                <tui-textfield class="tui-space_bottom-3" tuiTextfieldSize="s">
+                    <input tuiTextfield formControlName="apiKey" />
+                </tui-textfield>
+            </label>
         </div>
 
         <tui-loader class="tui-space_bottom-3" [inheritColor]="true" [overlay]="true" [showLoader]="testApi()">
@@ -58,7 +58,7 @@
     }
 
     <button type="button" appearance="outline" tuiIconButton type="button" class="width100"
-        iconStart="@tui.circle-arrow-right" shape="square" size="s" (click)="onNext()"
+        iconStart="circle-arrow-right" shape="square" size="s" (click)="onNext()"
         [disabled]="modeForm.invalid || !apiAlive()" title="Next Step">
     </button>
 </div>

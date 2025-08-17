@@ -1,5 +1,4 @@
-import { TuiAlertService, TuiButton, TuiIcon, TuiLoader } from "@taiga-ui/core";
-import { TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
+import { TuiAlertService, TuiButton, TuiIcon, TuiLoader, TuiTextfield } from "@taiga-ui/core";
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TuiBlock, TuiRadio } from '@taiga-ui/kit';
@@ -24,10 +23,9 @@ import { LanguageSwitcherComponent } from "../../language-switcher/language-swit
     TuiBlock,
     TuiRadio,
     TuiIcon,
+    TuiTextfield,
     TuiLoader,
     TuiButton,
-    TuiInputModule,
-    TuiTextfieldControllerModule,
 
     LanguageSwitcherComponent,
   ],
