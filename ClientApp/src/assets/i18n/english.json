@@ -314,5 +314,7 @@
     "paste-correctly": "Pasted Clipboard",
     "nothing-to-paste": "Nothing to Paste",
     "test-server-api": "Test Server",
-    "settings": "Settings"
+    "settings": "Settings",
+    "error-capital": "ERROR",
+    "app-loading-services": "...Loading Services..."
 }

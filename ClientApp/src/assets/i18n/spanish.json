@@ -314,5 +314,7 @@
     "paste-correctly": "Cortapapeles Pegado",
     "nothing-to-paste": "Sin nada que copiar",
     "test-server-api": "Probar Servidor",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "error-capital": "ERROR",
+    "app-loading-services": "...Cargando Servicios..."
 }
