@@ -84,10 +84,10 @@
           "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "SdoricaTranslatorTool:build:production"
+              "buildTarget": "SdoricaTranslatorTool:build:production"
             },
             "development": {
-              "browserTarget": "SdoricaTranslatorTool:build:development",
+              "buildTarget": "SdoricaTranslatorTool:build:development",
               "disableHostCheck": true
             }
           },
