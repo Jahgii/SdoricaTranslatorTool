@@ -4,7 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { ApiService } from './api.service';
 import { ILanguage } from '../interfaces/i-dialog-group';
-import { LanguageType } from '../interfaces/i-dialog-asset';
+import { LanguageType } from '../enums/languages';
 import { AppModes } from '../enums/app-modes';
 import { IndexDBService } from './index-db.service';
 import { ObjectStoreNames } from '../interfaces/i-indexed-db';

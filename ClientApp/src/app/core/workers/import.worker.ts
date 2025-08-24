@@ -3,9 +3,10 @@
 import { IndexDBErrors, IndexDBSucess, ObjectStoreNames } from "../interfaces/i-indexed-db";
 import { ILanguage } from "../interfaces/i-dialog-group";
 import { AppModes } from "../enums/app-modes";
-import { IDialogAsset, LanguageType } from "../interfaces/i-dialog-asset";
+import { IDialogAsset } from "../interfaces/i-dialog-asset";
 import { ImportPostMessage, WorkerImportPostMessage } from "../interfaces/i-worker";
-import { ApiErrors, ApiSucess as ApiSuccess } from "../interfaces/i-api";
+import { LanguageType } from "../enums/languages";
+import { ApiErrors, ApiSuccess } from "../interfaces/i-api";
 
 addEventListener('message', async ({ data }) => {
   let message: ImportPostMessage = data;

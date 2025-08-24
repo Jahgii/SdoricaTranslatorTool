@@ -10,14 +10,15 @@ import { ExportPostMessage, IExportPercentages } from '../core/interfaces/i-expo
 import { ProgressStatus, IOnMessage } from '../core/interfaces/i-export-progress';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ApiService } from '../core/services/api.service';
-import * as JSZip from 'jszip';
 import { LocalStorageService } from '../core/services/local-storage.service';
 import { TranslateService } from '@ngx-translate/core';
-import { IDialogAsset, LanguageType } from '../core/interfaces/i-dialog-asset';
+import { IDialogAsset } from '../core/interfaces/i-dialog-asset';
 import { AppModes } from '../core/enums/app-modes';
 import { IndexDBService } from '../core/services/index-db.service';
 import { ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { IFileControl } from '../core/interfaces/i-file-control';
+import { LanguageType } from '../core/enums/languages';
+import * as JSZip from 'jszip';
 
 @Injectable()
 export class ExportTranslationService {

@@ -1,5 +1,5 @@
 import { AppModes } from "../enums/app-modes";
-import { ApiErrors, ApiSucess } from "./i-api";
+import { ApiErrors, ApiSuccess } from "./i-api";
 import { IDialogAsset } from "./i-dialog-asset";
 import { IGroup, IMainGroup } from "./i-dialog-group";
 import { IGamedataCategory, IGamedataValue } from "./i-gamedata";
@@ -31,7 +31,7 @@ export interface ImportPostMessage {
 export interface WorkerImportPostMessage<T> {
     file: 'obb' | 'obb-lang' | 'obb-main' | 'obb-group' | 'gamedata' | 'gamedata-categories' | 'gamedata-values' | 'localization' | 'localization-keys' | 'localization-categories'
     message?: string;
-    translateKey: IndexDBErrors | IndexDBSucess | ApiErrors | ApiSucess;
+    translateKey: IndexDBErrors | IndexDBSucess | ApiErrors | ApiSuccess;
     data: T;
 }
 

@@ -21,7 +21,7 @@ import { ImportOBBVerificationPostMessage, WorkerImportOBBVerificationPostMessag
 import { IndexDBErrors, IndexDBSucess, IndexedDBbCustomRequestWorker, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { AppModes } from '../core/enums/app-modes';
 import { IFileControl } from '../core/interfaces/i-file-control';
-import { ApiSucess } from '../core/interfaces/i-api';
+import { ApiSuccess } from '../core/interfaces/i-api';
 import { LanguageOriginService } from '../core/services/language-origin.service';
 import * as JSZip from 'jszip';
 
@@ -121,7 +121,7 @@ export class ImportService {
     .asObservable()
     .pipe(map(ops => ops.reduce((acc, cv) => {
       if (cv.translateKey === IndexDBErrors.ConstraintError) acc += 1;
-      if (cv.translateKey === ApiSucess.SkipFiles) acc += cv.data;
+      if (cv.translateKey === ApiSuccess.SkipFiles) acc += cv.data;
       return acc;
     }, 0).toString()));
   public operationsUpdated$ = this.operations$

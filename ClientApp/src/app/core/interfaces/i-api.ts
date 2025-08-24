@@ -8,7 +8,7 @@ export enum ApiErrors {
     GDValuesError = "gd-values-error",
 }
 
-export enum ApiSucess {
+export enum ApiSuccess {
     DialogUpdated = "data-updated",
     LanguagesUpdated = "lang-updated",
     MainGroupsUpdated = "main-groups-updated",
