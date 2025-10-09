@@ -79,3 +79,12 @@ td._editable {
     align-content: center;
     box-sizing: border-box;
 }
+
+.translation-cell {
+    &:hover {
+        background: var(--tui-background-base-alt);
+        cursor: text;
+    }
+
+    transition: 0.25s background;
+}

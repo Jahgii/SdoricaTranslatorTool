@@ -25,7 +25,7 @@
                     <td *tuiCell="'Original'" tuiTd>
                         <span class="span-unfocus">{{word.Original}}</span>
                     </td>
-                    <td *tuiCell="'Translation'" tuiTd>
+                    <td *tuiCell="'Translation'" tuiTd class="translation-cell">
                         <app-common-word-table-cell-editable #cell [focusTemplate]="focus" [unfocusTemplate]="unfocus" />
                         <ng-template #focus>
                             <tui-input [(ngModel)]="word.Translation" tuiTextfieldSize="s">
