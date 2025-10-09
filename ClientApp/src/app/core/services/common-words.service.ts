@@ -8,6 +8,7 @@ import { LocalStorageService } from './local-storage.service';
 import { AppModes } from '../enums/app-modes';
 import { IndexDBService } from './index-db.service';
 import { ObjectStoreNames } from '../interfaces/i-indexed-db';
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +21,10 @@ export class CommonWordsService {
   public change$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
   constructor(
-    private api: ApiService,
-    private indexedDB: IndexDBService,
-    private lStorage: LocalStorageService,
-    private translate: TranslateService,
-    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
+    private readonly api: ApiService,
+    private readonly indexedDB: IndexDBService,
+    private readonly lStorage: LocalStorageService,
+    private readonly alert: AlertService
   ) {
     this.init();
   }
@@ -45,19 +45,8 @@ export class CommonWordsService {
     firstValueFrom(words$)
       .then(
         words => { this.words = words },
-        error => {
-          this.alerts
-            .open(this.translate.instant('alert-error-label'),
-              {
-                label: this.translate.instant('alert-error'),
-                autoClose: 3_000,
-                closeable: false,
-                appearance: 'error'
-              }
-            ).subscribe({
-              complete: () => {
-              },
-            });
+        _ => {
+          this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
         }
       );
   }
@@ -73,30 +62,55 @@ export class CommonWordsService {
       request$ = this.api.post<ICommonWord>('commonwords', word);
     }
 
-    if (request$ === undefined) return;
+    if (request$ === undefined) return false;
 
-    await firstValueFrom(request$)
+    return await firstValueFrom(request$)
       .then(
         createdWord => {
           this.words.push(createdWord);
           this.words = [...this.words];
           this.createOther$.next(true);
+          this.creating$.next(false);
+          this.alert.showAlert('alert-success', 'alert-success-label-commonword-created', 'positive');
+          return true;
         },
-        error => {
-          this.alerts.open(this.translate.instant('alert-error-label'),
-            {
-              label: this.translate.instant('alert-error'),
-              autoClose: 3_000,
-              closeable: false,
-              appearance: 'error'
-            }
-          ).subscribe({
-            complete: () => {
-            },
-          });
+        _ => {
+          this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+          this.creating$.next(false);
+          return false;
         }
       );
-    this.creating$.next(false);
+  }
+
+  public async createMany(words: ICommonWord[]) {
+    let request$: Subject<ICommonWord> | Observable<ICommonWord> | undefined = undefined;
+    this.creating$.next(true);
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.postMany<ICommonWord>(ObjectStoreNames.CommonWord, words, 'Id');
+      request$ = r.success$;
+    }
+    else if (this.lStorage.getAppMode() === AppModes.Online) {
+      request$ = this.api.post<ICommonWord>('commonwords', words);
+    }
+
+    if (request$ === undefined) return false;
+
+    return await firstValueFrom(request$)
+      .then(
+        createdWord => {
+          this.words.push(createdWord);
+          this.words = [...this.words];
+          this.createOther$.next(true);
+          this.creating$.next(false);
+          this.alert.showAlert('alert-success', 'alert-success-label-commonword-created', 'positive');
+          return true;
+        },
+        _ => {
+          this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+          this.creating$.next(false);
+          return false;
+        }
+      );
   }
 
   public async update(word: ICommonWord) {
@@ -125,18 +139,9 @@ export class CommonWordsService {
     await firstValueFrom(request$)
       .then(_ => {
         this.change$.next(true);
+        this.alert.showAlert('alert-success', 'alert-success-label-commonword-updated', 'positive');
       }, _ => {
-        this.alerts.open(this.translate.instant('alert-error-label'),
-          {
-            label: this.translate.instant('alert-error'),
-            autoClose: 3_000,
-            closeable: false,
-            appearance: 'error'
-          }
-        ).subscribe({
-          complete: () => {
-          },
-        });
+        this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
       }
       );
 
@@ -169,18 +174,9 @@ export class CommonWordsService {
         this.words.splice(index, 1);
         this.words = [...this.words];
         this.change$.next(true);
-      }, error => {
-        this.alerts.open(this.translate.instant('alert-error-label'),
-          {
-            label: this.translate.instant('alert-error'),
-            autoClose: 3_000,
-            closeable: false,
-            appearance: 'error'
-          }
-        ).subscribe({
-          complete: () => {
-          },
-        });
+        this.alert.showAlert('alert-success', 'alert-success-label-commonword-deleted', 'positive');
+      }, _ => {
+        this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
       }
       );
 

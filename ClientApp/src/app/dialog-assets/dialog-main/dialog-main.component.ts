@@ -1,5 +1,4 @@
 import { TuiBlockStatus } from "@taiga-ui/layout";
-import { TuiLoader } from "@taiga-ui/core";
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
@@ -16,7 +15,6 @@ import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component'
     CommonModule,
 
     TuiBlockStatus,
-    TuiLoader,
 
     DialogSelectionComponent,
     DialogAssetsComponent

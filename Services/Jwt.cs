@@ -4,14 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace SdoricaTranslatorTool
 {
-    public class JWT : IJWT
+    public class Jwt(IConfiguration config) : IJwt
     {
-        private IConfiguration _config;
-
-        public JWT(IConfiguration config)
-        {
-            _config = config;
-        }
+        private IConfiguration _config = config;
 
         public string GenerateToken(double hours)
         {
@@ -29,7 +24,7 @@ namespace SdoricaTranslatorTool
 
     }
 
-    public interface IJWT
+    public interface IJwt
     {
         public string GenerateToken(double hours);
 

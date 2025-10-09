@@ -1,4 +1,3 @@
-import { TuiSelectModule } from "@taiga-ui/legacy";
 import { TuiCardMedium } from "@taiga-ui/layout";
 import {
   AsyncPipe,
@@ -24,6 +23,7 @@ import {
   TuiIcon,
   TuiLoader,
   TuiScrollbar,
+  TuiTextfield,
   TuiTitle,
 } from "@taiga-ui/core";
 import {
@@ -33,9 +33,11 @@ import {
   TuiBlock,
   TuiButtonLoading,
   TuiCheckbox,
+  TuiChevron,
   TuiDataListWrapper,
   TuiElasticContainer,
   TuiFiles,
+  TuiSelect,
 } from "@taiga-ui/kit";
 import { ImportService } from "../import.service";
 import { TranslateModule } from "@ngx-translate/core";
@@ -71,10 +73,12 @@ import { BehaviorSubject } from "rxjs";
     TuiAccordion,
     TuiCardMedium,
     TuiAppearance,
-    TuiSelectModule,
     TuiButtonLoading,
     TuiDataListWrapper,
     TuiElasticContainer,
+    TuiTextfield,
+    TuiChevron,
+    TuiSelect,
   ],
   providers: [ImportService],
   templateUrl: "./import-main.component.html",

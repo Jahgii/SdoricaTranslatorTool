@@ -7,16 +7,10 @@ namespace SdoricaTranslatorTool.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : Controller
+    public class AuthController(ICustomMongoClient cMongoClient, IJwt jwt) : Controller
     {
-        readonly ICustomMongoClient _cMongoClient;
-        readonly IJWT _jwt;
-
-        public AuthController(ICustomMongoClient cMongoClient, IJWT jwt)
-        {
-            _cMongoClient = cMongoClient;
-            _jwt = jwt;
-        }
+        readonly ICustomMongoClient _cMongoClient = cMongoClient;
+        readonly IJwt _jwt = jwt;
 
         [AllowAnonymous]
         [HttpPost]

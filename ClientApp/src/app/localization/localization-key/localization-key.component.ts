@@ -1,15 +1,13 @@
-import { TuiPrimitiveTextfieldModule, TuiTextfieldControllerModule, TuiInputModule, TuiSelectModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { TuiStringHandler } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiButton, TuiHint } from '@taiga-ui/core';
-import { tuiItemsHandlersProvider, TuiDataListWrapper, TuiButtonLoading } from '@taiga-ui/kit';
-import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of, tap } from 'rxjs';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiButton, TuiHint, TuiTextfield, TuiIcon, TuiLabel } from '@taiga-ui/core';
+import { TuiDataListWrapper, TuiButtonLoading, TuiSelect, TuiChevron } from '@taiga-ui/kit';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
 import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe, KeyValuePipe, NgStyle, JsonPipe } from '@angular/common';
+import { AsyncPipe, KeyValuePipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { LocalizationCategoriesService } from '../localization-categories.service';
 import { DraggableElementDirective } from 'src/app/core/directives/draggable-element.directive';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
@@ -18,9 +16,7 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 import { AppModes } from 'src/app/core/enums/app-modes';
-
-const STRINGIFY_CATEGORIES: TuiStringHandler<ILocalizationCategory> = (c: ILocalizationCategory) =>
-  c ? `${c.Name}` : '***';
+import { AlertService } from 'src/app/core/services/alert.service';
 
 type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
 
@@ -29,35 +25,33 @@ type KeyNameVerification = 'untoching' | 'verifying' | 'invalid' | 'valid';
   templateUrl: './localization-key.component.html',
   styleUrls: ['./localization-key.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [tuiItemsHandlersProvider({ stringify: STRINGIFY_CATEGORIES })],
+  providers: [],
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
-    NgSwitch,
-    NgSwitchCase,
-    NgStyle,
-    AsyncPipe,
-    KeyValuePipe,
-    JsonPipe,
     ReactiveFormsModule,
     FormsModule,
+    NgStyle,
+    NgTemplateOutlet,
+    AsyncPipe,
+    KeyValuePipe,
+
     TranslateModule,
 
     TuiButton,
     TuiScrollbar,
-    TuiSelectModule,
-    TuiTextfieldControllerModule,
+    TuiTextfield,
+    TuiLabel,
+    TuiSelect,
+    TuiChevron,
     TuiDataList,
     TuiDataListWrapper,
-    TuiInputModule,
-    TuiPrimitiveTextfieldModule,
     TuiHint,
     TuiLoader,
+    TuiButtonLoading,
+    TuiIcon,
 
     DraggableElementDirective,
-      TuiButtonLoading
-],
+  ],
 })
 export class LocalizationKeyComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;
@@ -99,14 +93,15 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
   private subsDialog!: Subscription | undefined;
 
   constructor(
-    private api: ApiService,
-    private indexedDB: IndexDBService,
-    private fB: FormBuilder,
-    private translate: TranslateService,
-    private cd: ChangeDetectorRef,
-    private lStorage: LocalStorageService,
-    public lCS: LocalizationCategoriesService,
-    private dStateService: DialogstateService,
+    private readonly api: ApiService,
+    private readonly indexedDB: IndexDBService,
+    private readonly fB: FormBuilder,
+    private readonly translate: TranslateService,
+    private readonly cd: ChangeDetectorRef,
+    private readonly lStorage: LocalStorageService,
+    private readonly dStateService: DialogstateService,
+    private readonly alertS: AlertService,
+    public readonly lCS: LocalizationCategoriesService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
   ) {
@@ -261,26 +256,33 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
 
     await firstValueFrom(request$)
       .then(
-        r => {
+        _ => {
           this.createOther$.next(true);
           this.lCS.addCategoryKeys(key);
+          this.alertS.showAlert('alert-success', 'success-create-key', 'positive');
+          this.onCreateOther();
         },
-        error => { }
+        _ => {
+          this.alertS.showAlert('alert-error-label', 'error-create-key', 'accent');
+        }
       );
     this.creating$.next(false);
   }
 
   public onCreateOther() {
     this.keyForm.reset(undefined, { emitEvent: false });
-    this.keyForm.patchValue({ _version: 1 });
+    this.keyForm.patchValue({
+      Category: '',
+      _version: 1
+    });
     let originalForm = this.keyForm.controls['Original'] as FormGroup;
     for (let key in originalForm.controls) {
       originalForm.removeControl(key, { emitEvent: false });
     }
 
     this.availableKeyName$.next('untoching');
-    this.categorySelected$.next(false);
     this.createOther$.next(false);
+    this.categorySelected$.next(false);
   }
 
   public changeIndex(state: DialogState) {

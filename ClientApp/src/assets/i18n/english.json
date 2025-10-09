@@ -316,5 +316,10 @@
     "test-server-api": "Test Server",
     "settings": "Settings",
     "error-capital": "ERROR",
-    "app-loading-services": "...Loading Services..."
+    "app-loading-services": "...Loading Services...",
+    "success-create-key": "Created Key",
+    "error-create-key": "There was an error creating the key. Please try again later.",
+    "alert-success-label-commonword-created": "Created Word",
+    "alert-success-label-commonword-updated": "Updated Word",
+    "alert-success-label-commonword-deleted": "Deleted Word"
 }

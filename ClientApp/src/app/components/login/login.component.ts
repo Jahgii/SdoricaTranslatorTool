@@ -24,7 +24,7 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 })
 export class LoginComponent {
   public loginForm = this.fB.group({
-    user: ['', [Validators.required, Validators.email]],
+    user: ['', [Validators.required]],
     password: ['', [Validators.required]]
   });
 

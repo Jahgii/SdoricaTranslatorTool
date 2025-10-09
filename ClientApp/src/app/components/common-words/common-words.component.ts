@@ -12,7 +12,6 @@ import { ICommonWord } from 'src/app/core/interfaces/i-common-word';
 import { CommonWordsService } from 'src/app/core/services/common-words.service';
 import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
 import { NgIf, AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
@@ -37,10 +36,6 @@ import { CommonWordTableComponent } from "./common-word-table/common-word-table.
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-
-    CdkVirtualScrollViewport,
-    CdkFixedSizeVirtualScroll,
-    CdkVirtualForOf,
 
     CommonWordTableComponent,
 
@@ -203,8 +198,8 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
 
   public async onCreateKey() {
     let word: ICommonWord = this.commonWordForm.getRawValue();
-
-    await this.commonWords.create(word);
+    await this.commonWords.create(word)
+    this.onCreateOther();
   }
 
   public onCreateOther() {

@@ -16,10 +16,10 @@
     <ng-template #content>
         <tui-data-list size="l" class="list">
             <tui-opt-group>
-                <button tuiOption (click)="translate.use('en')" aria-label="Change language to English">
+                <button tuiOption new (click)="translate.use('en')" aria-label="Change language to English">
                     {{'en' | translate}}
                 </button>
-                <button tuiOption (click)="translate.use('es')" aria-label="Change language to Spanish">
+                <button tuiOption new (click)="translate.use('es')" aria-label="Change language to Spanish">
                     {{'es' | translate}}
                 </button>
             </tui-opt-group>

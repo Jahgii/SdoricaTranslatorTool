@@ -72,7 +72,8 @@
         }">
         </ng-container>
 
-        @if (!filecontrol.control.value && !(filecontrol.skip | async) && (showSkipButton$ | async) && importS.canSkip$()) {
+        @if (!filecontrol.control.value && !(filecontrol.skip | async) && (showSkipButton$ | async) &&
+        importS.canSkip$()) {
         <button class="right-top-button" tuiIconButton type="button" iconStart="@tui.circle-x" size="xs"
             appearance="icon" (click)="importS.onSkipFile(filecontrol)" [tuiHint]="'skip-file' | translate"
             tuiHintAppearance="dark" title="skip-file-button"></button>
@@ -165,16 +166,17 @@
         {{'choose-languages-description' | translate}}
     </p>
     @if (importS.multiLanguage$ | async) {
-    <tui-select tuiTextfieldSize="s" [formControl]="importS.defaultLanguage" class="tui-space_bottom-3"
-        [valueContent]="originLang" size="s">
-        {{'default-language' | translate}}
-        <input tuiTextfieldLegacy placeholder="..." />
-        <tui-data-list-wrapper *tuiDataList [items]="importS.languagesSelected" [itemContent]="originLang">
-        </tui-data-list-wrapper>
+
+    <tui-textfield tuiChevron class="tui-space_bottom-3" tuiTextfieldSize="m" [content]="originLang"
+        [tuiTextfieldCleaner]="false">
+        <input tuiSelect [formControl]="importS.defaultLanguage" />
+
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="importS.languagesSelected"
+            [itemContent]="originLang" />
         <ng-template #originLang let-data>
             {{data | translate}}
         </ng-template>
-    </tui-select>
+    </tui-textfield>
     }
     <div class="wizard-choose-lang">
         <label *ngFor="let language of importS.dialogAssets | keyvalue" tuiBlock="l"> <input tuiCheckbox type="checkbox"

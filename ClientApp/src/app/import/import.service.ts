@@ -520,12 +520,12 @@ export class ImportService {
       if (this.lStorage.getAppMode() === AppModes.Offline) {
         let flows = this.iDB.postMany(ObjectStoreNames.DialogAsset, dialogsSet)
 
-        flows.obsSuccess$.subscribe(_ => {
+        flows.success$.subscribe(_ => {
         }, _ => undefined
           , () => this.dialogAssetsUploading[language].Uploading.next(false)
         );
 
-        flows.obsError$.subscribe(res => {
+        flows.error$.subscribe(res => {
           let op: OperationLog = {
             file: 'obb',
             message: res.request.error?.message,
@@ -581,11 +581,11 @@ export class ImportService {
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let flowsL = this.iDB.postMany(ObjectStoreNames.Languages, languages)
-      flowsL.obsSuccess$.subscribe(_ => {
+      flowsL.success$.subscribe(_ => {
       }, _ => undefined
         , () => undefined
       );
-      flowsL.obsError$.subscribe(res => {
+      flowsL.error$.subscribe(res => {
         let op: OperationLog = {
           file: 'obb-lang',
           message: res.request.error?.message,
@@ -598,11 +598,11 @@ export class ImportService {
       );
 
       let flowsMG = this.iDB.postMany(ObjectStoreNames.MainGroup, mainGroups)
-      flowsMG.obsSuccess$.subscribe(_ => {
+      flowsMG.success$.subscribe(_ => {
       }, _ => undefined
         , () => undefined
       );
-      flowsMG.obsError$.subscribe(res => {
+      flowsMG.error$.subscribe(res => {
         let op: OperationLog = {
           file: 'obb-main',
           message: res.request.error?.message,
@@ -615,11 +615,11 @@ export class ImportService {
       );
 
       let flowsG = this.iDB.postMany(ObjectStoreNames.Group, groups)
-      flowsG.obsSuccess$.subscribe(_ => {
+      flowsG.success$.subscribe(_ => {
       }, _ => undefined
         , () => undefined
       );
-      flowsG.obsError$.subscribe(res => {
+      flowsG.error$.subscribe(res => {
         let op: OperationLog = {
           file: 'obb-group',
           message: res.request.error?.message,
@@ -662,11 +662,11 @@ export class ImportService {
   private async onUploadLocalization() {
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let flowsLC = this.iDB.postMany(ObjectStoreNames.LocalizationCategory, this.localizationCategories)
-      flowsLC.obsSuccess$.subscribe(_ => {
+      flowsLC.success$.subscribe(_ => {
       }, _ => undefined
         , () => undefined
       );
-      flowsLC.obsError$.subscribe(res => {
+      flowsLC.error$.subscribe(res => {
 
       }, _ => undefined
         , () => undefined
@@ -675,11 +675,11 @@ export class ImportService {
       while (this.localizationKeys.length > 0) {
         let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
         let flowsLK = this.iDB.postMany(ObjectStoreNames.LocalizationKey, keysSet)
-        flowsLK.obsSuccess$.subscribe(_ => {
+        flowsLK.success$.subscribe(_ => {
         }, _ => undefined
           , () => undefined
         );
-        flowsLK.obsError$.subscribe(_ => {
+        flowsLK.error$.subscribe(_ => {
         }, _ => undefined
           , () => undefined
         );
@@ -782,11 +782,11 @@ export class ImportService {
   private async onUploadGamedata() {
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let flowsGC = this.iDB.postMany(ObjectStoreNames.GamedataCategory, this.gamedataCategories)
-      flowsGC.obsSuccess$.subscribe(_ => {
+      flowsGC.success$.subscribe(_ => {
       }, _ => undefined
         , () => undefined
       );
-      flowsGC.obsError$.subscribe(res => {
+      flowsGC.error$.subscribe(res => {
         let op: OperationLog = {
           file: 'gamedata-categories',
           message: res.request.error?.message,
@@ -801,11 +801,11 @@ export class ImportService {
       while (this.gamedataValues.length > 0) {
         let keysSet = this.gamedataValues.splice(0, this.uploadStackSize);
         let flowsGV = this.iDB.postMany(ObjectStoreNames.GamedataValue, keysSet)
-        flowsGV.obsSuccess$.subscribe(_ => {
+        flowsGV.success$.subscribe(_ => {
         }, _ => undefined
           , () => undefined
         );
-        flowsGV.obsError$.subscribe(res => {
+        flowsGV.error$.subscribe(res => {
           let op: OperationLog = {
             file: 'gamedata-values',
             message: res.request.error?.message,

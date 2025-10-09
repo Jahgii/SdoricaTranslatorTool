@@ -1,31 +1,31 @@
 @if (localization.selectedCategory$ | async) {
 @if ((localization.alreadySearch$ | async) ?? false) {
 @if (localization.loading$ | async) {
-<tui-loader></tui-loader>
+<tui-loader />
 }
 @else {
 @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) === 'desktopSmall') {
-<ng-container [ngTemplateOutlet]="desktopTable"></ng-container>
+<ng-container [ngTemplateOutlet]="desktopTable" />
 }
 @else if ((breakpointService.mode$ | async) === 'mobile') {
-<ng-container [ngTemplateOutlet]="mobileTable"></ng-container>
+<ng-container [ngTemplateOutlet]="mobileTable" />
 }
 }
 }
 @else {
-<ng-container [ngTemplateOutlet]="searchTemplate"></ng-container>
+<ng-container [ngTemplateOutlet]="searchTemplate" />
 }
 }
 @else {
-<ng-container [ngTemplateOutlet]="selectCategory"></ng-container>
+<ng-container [ngTemplateOutlet]="selectCategory" />
 }
 
 <ng-template #desktopTable>
     <ng-container tuiTableFilters>
         <tui-scrollbar>
-            <cdk-virtual-scroll-viewport #viewport *ngIf="localization.keys" tuiScrollable
-                class="viewport tui-zero-scrollbar" [itemSize]="105" [maxBufferPx]="500" [minBufferPx]="400"
-                (scrolledIndexChange)="loseFocus()">
+            @if (localization.keys) {
+            <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="105"
+                [maxBufferPx]="500" [minBufferPx]="400" (scrolledIndexChange)="loseFocus()">
 
                 <table class="tui-table" style="table-layout: fixed;" tuiTable
                     [columns]="['Language', 'Translation', 'Translated']" [@popIn]>
@@ -115,39 +115,44 @@
                                                     <tui-icon icon="@tui.key" style="font: inherit;"></tui-icon>
                                                     {{item.Name}}
                                                 </li>
-                                                <li *ngFor="let key of item.Original | keyvalue"
-                                                    class="tui-space_bottom-2">
+                                                @for (key of item.Original | keyvalue; track $index) {
+                                                <li class="tui-space_bottom-2">
                                                     <span class="tooltip-important-text">
                                                         {{$any(key.key) | translate}}:
                                                     </span>
                                                     {{key.value}}
                                                 </li>
+                                                }
                                             </ul>
                                         </tui-scrollbar>
-                                        <tui-icon *ngIf="showTooltipArrow$ | async" class="tooltip-arrow"
-                                            icon="@tui.move-down" [@popIn]>
-                                        </tui-icon>
+                                        @if (showTooltipArrow$ | async) {
+                                        <tui-icon class="tooltip-arrow" icon="@tui.move-down" [@popIn] />
+                                        }
                                     </ng-template>
-                                    <ng-container *ngIf="localization.focusRow === item.Id; else showNormalText">
-                                        <tui-scrollbar class="translation-content-cell">
-                                            <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
-                                            </span>
-                                        </tui-scrollbar>
-                                    </ng-container>
-                                    <ng-template #showNormalText>
-                                        <tui-scrollbar class="translation-content-cell">
-                                            <span>{{onRenderDefaultLanguage(item.Original)}}</span>
-                                        </tui-scrollbar>
-                                    </ng-template>
-                                    <span *ngIf="localization.focusRow !== item.Id"
+                                    @if (localization.focusRow === item.Id) {
+                                    <tui-scrollbar class="translation-content-cell">
+                                        <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
+                                        </span>
+                                    </tui-scrollbar>
+                                    }
+                                    @else {
+                                    <tui-scrollbar class="translation-content-cell">
+                                        <span>{{onRenderDefaultLanguage(item.Original)}}</span>
+                                    </tui-scrollbar>
+                                    }
+                                    @if (localization.focusRow !== item.Id) {
+                                    <span
                                         class="tooltip-span-name-cell tooltip-important-text-colored tui-text_body-xs">
-                                        <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
-                                            <tui-icon icon="@tui.inbox" style="font: inherit;"></tui-icon>
+                                        @if (localization.selectedCategory.Name == 'SEARCH') {
+                                        <div>
+                                            <tui-icon icon="@tui.inbox" style="font: inherit;" />
                                             {{item.Category}}
                                         </div>
-                                        <tui-icon icon="@tui.key" style="font: inherit;"></tui-icon>
+                                        }
+                                        <tui-icon icon="@tui.key" style="font: inherit;" />
                                         {{item.Name}}
                                     </span>
+                                    }
                                 </td>
                                 <td *tuiCell="'Translation'" tuiTd>
                                     <tui-textarea #tranlationTextArea
@@ -160,15 +165,19 @@
                                         (keydown.arrowUp)="onArrow($event, 'last')">
                                     </tui-textarea>
                                     <ng-template #buffSelection>
-                                        <tui-data-list *ngIf="tranlationTextArea.nativeFocusableElement" class="menu"
+                                        @if (tranlationTextArea.nativeFocusableElement) {
+                                        <tui-data-list class="menu"
                                             (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
-                                            <button tuiOption
-                                                *ngFor="let buff of filterItems(tranlationTextArea.nativeFocusableElement)"
+                                            @for (buff of filterItems(tranlationTextArea.nativeFocusableElement); track
+                                            $index) {
+                                            <button tuiOption new
                                                 (click)="onClick(item, buff.Name, tranlationTextArea.nativeFocusableElement)">
                                                 {{ buff.Name }}
                                             </button>
+                                            }
 
                                         </tui-data-list>
+                                        }
                                     </ng-template>
                                 </td>
                                 <td *tuiCell="'Translated'" tuiTd>
@@ -185,6 +194,7 @@
                     </tbody>
                 </table>
             </cdk-virtual-scroll-viewport>
+            }
         </tui-scrollbar>
     </ng-container>
 </ng-template>
@@ -192,9 +202,9 @@
 <ng-template #mobileTable>
     <ng-container tuiTableFilters>
         <tui-scrollbar>
-            <cdk-virtual-scroll-viewport #viewport *ngIf="localization.keys" tuiScrollable
-                class="viewport tui-zero-scrollbar" [itemSize]="213" [maxBufferPx]="500" [minBufferPx]="400"
-                (scrolledIndexChange)="loseFocus()">
+            @if(localization.keys){
+            <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="213"
+                [maxBufferPx]="500" [minBufferPx]="400" (scrolledIndexChange)="loseFocus()">
 
                 <table class="tui-table" style="table-layout: fixed;" tuiTable [columns]="['Language']" [@popIn]>
                     <thead>
@@ -231,28 +241,31 @@
                                     <div #parent class="cell-content-original" [tuiHint]="tooltip"
                                         [tuiHintShowDelay]="200">
                                         <div>
-                                            <ng-container
-                                                *ngIf="localization.focusRow === item.Id; else showNormalText">
-                                                <tui-scrollbar class="translation-content-cell">
-                                                    <div appCommonDictionary
-                                                        [text]="onRenderDefaultLanguage(item.Original)">
-                                                    </div>
-                                                </tui-scrollbar>
-                                            </ng-container>
-                                            <ng-template #showNormalText>
-                                                <tui-scrollbar class="translation-content-cell">
-                                                    <span>{{onRenderDefaultLanguage(item.Original)}}</span>
-                                                </tui-scrollbar>
-                                            </ng-template>
-                                            <span *ngIf="localization.focusRow !== item.Id"
+                                            @if (localization.focusRow === item.Id) {
+                                            <tui-scrollbar class="translation-content-cell">
+                                                <div appCommonDictionary
+                                                    [text]="onRenderDefaultLanguage(item.Original)">
+                                                </div>
+                                            </tui-scrollbar>
+                                            }
+                                            @else {
+                                            <tui-scrollbar class="translation-content-cell">
+                                                <span>{{onRenderDefaultLanguage(item.Original)}}</span>
+                                            </tui-scrollbar>
+                                            }
+                                            @if (localization.focusRow !== item.Id) {
+                                            <span
                                                 class="tooltip-span-name-cell tooltip-important-text-colored tui-text_body-xs">
-                                                <div *ngIf="localization.selectedCategory.Name == 'SEARCH'">
-                                                    <tui-icon icon="@tui.inbox" style="font: inherit;"></tui-icon>
+                                                @if (localization.selectedCategory.Name == 'SEARCH') {
+                                                <div>
+                                                    <tui-icon icon="@tui.inbox" style="font: inherit;" />
                                                     {{item.Category}}
                                                 </div>
-                                                <tui-icon icon="@tui.key" style="font: inherit;"></tui-icon>
+                                                }
+                                                <tui-icon icon="@tui.key" style="font: inherit;" />
                                                 {{item.Name}}
                                             </span>
+                                            }
                                         </div>
                                         <div class="translated-checkbox-container">
                                             <input tuiCheckbox type="checkbox"
@@ -271,18 +284,20 @@
                                                         <tui-icon icon="@tui.key" style="font: inherit;"></tui-icon>
                                                         {{item.Name}}
                                                     </li>
-                                                    <li *ngFor="let key of item.Original | keyvalue"
-                                                        class="tui-space_bottom-2">
+                                                    @for (key of item.Original | keyvalue; track $index) {
+                                                    <li class="tui-space_bottom-2">
                                                         <span class="tooltip-important-text">
                                                             {{$any(key.key) |
                                                             translate}}:
                                                         </span>
                                                         {{key.value}}
                                                     </li>
+                                                    }
                                                 </ul>
                                             </tui-scrollbar>
-                                            <tui-icon *ngIf="showTooltipArrow$ | async" class="tooltip-arrow"
-                                                icon="@tui.move-down" [@popIn]></tui-icon>
+                                            @if (showTooltipArrow$ | async) {
+                                            <tui-icon class="tooltip-arrow" icon="@tui.move-down" [@popIn] />
+                                            }
                                         </ng-template>
                                     </div>
                                     <div>
@@ -296,16 +311,19 @@
                                             (keydown.arrowUp)="onArrow($event, 'last')">
                                         </tui-textarea>
                                         <ng-template #buffSelection>
-                                            <tui-data-list *ngIf="tranlationTextArea.nativeFocusableElement"
-                                                class="menu"
+                                            @if (tranlationTextArea.nativeFocusableElement) {
+                                            <tui-data-list class="menu"
                                                 (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
-                                                <button tuiOption
-                                                    *ngFor="let buff of filterItems(tranlationTextArea.nativeFocusableElement)"
+                                                @for (buff of filterItems(tranlationTextArea.nativeFocusableElement);
+                                                track $index) {
+                                                <button tuiOption new
                                                     (click)="onClick(item, buff.Name, tranlationTextArea.nativeFocusableElement)">
                                                     {{ buff.Name }}
                                                 </button>
+                                                }
 
                                             </tui-data-list>
+                                            }
                                         </ng-template>
                                     </div>
                                 </div>
@@ -314,6 +332,7 @@
                     </tbody>
                 </table>
             </cdk-virtual-scroll-viewport>
+            }
         </tui-scrollbar>
     </ng-container>
 </ng-template>

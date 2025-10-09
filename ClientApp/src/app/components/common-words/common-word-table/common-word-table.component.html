@@ -1,7 +1,7 @@
 <tui-scrollbar>
-    <cdk-virtual-scroll-viewport #viewport appendOnly tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="32"
+    <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="32"
         [maxBufferPx]="500" [minBufferPx]="400">
-        <table tuiTable [columns]="columns" [size]="'s'">
+        <table class="tui-table" style="table-layout: fixed;" tuiTable [columns]="columns" [size]="'s'">
             <thead>
                 <tr tuiThGroup>
                     <th *tuiHead="'Original'" tuiTh [sorter]="null" [sticky]="true"
@@ -15,24 +15,26 @@
                     <th *tuiHead="'actions'" tuiTh class="action-head" [sorter]="null" [sticky]="true"
                         [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)">
                     </th>
-                    <th *tuiHead="'confirmDelete'" class="confirm-delete-head" tuiTh [sorter]="null" [sticky]="true"
+                    <th *tuiHead="'confirmDelete'" class="confirm-delete-head" tuiTh [sorter]="null"
                         [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)">
                     </th>
                 </tr>
             </thead>
             <tbody tuiTbody>
-                <tr *cdkVirtualFor="let word of commonWords.words; index as i" tuiTr>
+                <tr *cdkVirtualFor="let word of commonWords.words; index as i; trackBy: trackByItemId" tuiTr>
                     <td *tuiCell="'Original'" tuiTd>
-                        <tui-input [(ngModel)]="word.Original" tuiTextfieldSize="s">
-                            {{'original-word' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
-                        </tui-input>
+                        <span class="span-unfocus">{{word.Original}}</span>
                     </td>
                     <td *tuiCell="'Translation'" tuiTd>
-                        <tui-input [(ngModel)]="word.Translation" tuiTextfieldSize="s">
-                            {{'translation' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
-                        </tui-input>
+                        <app-common-word-table-cell-editable #cell [focusTemplate]="focus" [unfocusTemplate]="unfocus" />
+                        <ng-template #focus>
+                            <tui-input [(ngModel)]="word.Translation" tuiTextfieldSize="s">
+                                <input tuiTextfieldLegacy appAutoFocus [cell]="cell" />
+                            </tui-input>
+                        </ng-template>
+                        <ng-template #unfocus>
+                            <span class="span-unfocus">{{word.Translation}}</span>
+                        </ng-template>
                     </td>
                     <td *tuiCell="'actions'" tuiTd>
                         <div style="display: flex; align-items: center; justify-content: center;">
@@ -66,6 +68,14 @@
                     </td>
                     }
                 </tr>
+
+                @if (commonWords.words.length === 0) {
+                <tr>
+                    <td [attr.colspan]="columns.length" [style.height.px]="58">
+                        <p class="empty-columns tui-text_body-m">{{'empty-dictionary' | translate}}</p>
+                    </td>
+                </tr>
+                }
             </tbody>
         </table>
     </cdk-virtual-scroll-viewport>

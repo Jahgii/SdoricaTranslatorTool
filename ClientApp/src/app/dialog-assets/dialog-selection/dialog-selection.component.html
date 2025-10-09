@@ -1,20 +1,20 @@
 @if ((hiddenScroll$ | async) && (groupSelected$ | async)) {
-<tui-icon icon="@tui.mouse-pointer-2" class="hidden-arrow"></tui-icon>
+<tui-icon icon="@tui.mouse-pointer-2" class="hidden-arrow" />
 }
 
 <tui-scrollbar #scrollbar class="group-tree" [hidden]="(hiddenScroll$ | async) === true"
     [ngClass]="{'group-tree-hide': groupSelected$ | async}" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
 
     @if (loadingNodes$ | async) {
-    <tui-loader class="tui-space_top-3" [inheritColor]="true"></tui-loader>
+    <tui-loader class="tui-space_top-3" [inheritColor]="true" />
     }
     @else {
     <tui-elastic-container>
         @for (node of treeNodes$ | async; track node.Id) {
         @defer{
-        <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: node}"></ng-container>
+        <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: node}" />
         } @placeholder {
-        <tui-loader class="tui-space_top-3" [inheritColor]="true"></tui-loader>
+        <tui-loader class="tui-space_top-3" [inheritColor]="true" />
         }
         }
     </tui-elastic-container>
@@ -41,7 +41,7 @@
                         [{{ node.TranslatedFiles }} /{{node.Files }}]
                         </span>
                         } @else {
-                        <tui-icon icon="@tui.circle-check"></tui-icon>
+                        <tui-icon icon="@tui.circle-check" />
                         }
                 </div>
             </div>
@@ -53,8 +53,7 @@
     <tui-expand class="tui-space_left-6" [expanded]="node.expanded ?? false">
         @for (childNode of node.children; track childNode.Id) {
         @defer {
-        <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: childNode}">
-        </ng-container>
+        <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: childNode}" />
         }
         }
     </tui-expand>

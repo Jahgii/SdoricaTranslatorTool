@@ -6,7 +6,7 @@ import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { debounceTime, take, takeWhile, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiExpand, TuiLoader, TuiScrollbar, TuiIcon, TuiButton } from '@taiga-ui/core';
+import { TuiExpand, TuiLoader, TuiScrollbar, TuiIcon } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 import { DGroupsService, TreeNode } from './d-groups.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
@@ -21,15 +21,12 @@ import { ViewersService } from 'src/app/core/services/viewers.service';
     TranslateModule,
 
     TuiScrollbar,
-    TuiButton,
     TuiIcon,
     TuiElasticContainer,
     TuiExpand,
     TuiInputInline,
     TuiProgress,
     TuiLoader,
-
-    DialogAssetsComponent
   ],
   templateUrl: './dialog-selection.component.html',
   styleUrl: './dialog-selection.component.scss',

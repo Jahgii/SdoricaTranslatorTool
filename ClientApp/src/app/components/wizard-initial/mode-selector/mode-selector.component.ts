@@ -10,6 +10,8 @@ import { AppModes } from 'src/app/core/enums/app-modes';
 import { ApiService } from 'src/app/core/services/api.service';
 import { IUser } from 'src/app/core/interfaces/i-user';
 import { LanguageSwitcherComponent } from "../../language-switcher/language-switcher.component";
+import { ViewersService } from "src/app/core/services/viewers.service";
+import { AppViews, viewers } from "src/app/core/viewers";
 
 @Component({
   selector: 'app-mode-selector',
@@ -33,6 +35,11 @@ import { LanguageSwitcherComponent } from "../../language-switcher/language-swit
   styleUrl: './mode-selector.component.scss'
 })
 export class ModeSelectorComponent implements OnInit, OnDestroy {
+  private readonly vS = inject(ViewersService);
+  private readonly wizardService = inject(WizardService);
+  private readonly lStorage = inject(LocalStorageService);
+  private readonly api = inject(ApiService);
+
   private modeSubs: Subscription | undefined;
   private apiUrlSubs: Subscription | undefined;
   private apiKeySubs: Subscription | undefined;
@@ -44,12 +51,6 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
   public modeControl = this.modeForm.get('mode');
   public testApi: WritableSignal<boolean> = signal(false);
   public apiAlive: WritableSignal<boolean> = signal(false);
-
-  constructor(
-    private readonly wizardService: WizardService
-    , private readonly lStorage: LocalStorageService
-    , private readonly api: ApiService
-  ) { }
 
   ngOnDestroy(): void {
     if (this.modeSubs) this.modeSubs.unsubscribe();
@@ -123,7 +124,7 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
         status => status, error => {
           this.alerts.open(
             this.translate.instant('api-connection-error'),
-            { appearance: "negative", icon: 'triangle-alert' }
+            { appearance: 'accent', icon: 'triangle-alert' }
           ).subscribe({
             complete: () => { },
           });
@@ -132,17 +133,7 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
     this.testApi.set(false);
 
     if (status && status.status === "Alive") {
-      await firstValueFrom(this.api.post<IUser>(
-        "auth",
-        { user: "admin", password: "OK" }
-      )).then(
-        user => {
-          this.lStorage.setToken(user.Token);
-          this.apiAlive.set(true);
-        }, error => {
-
-        }
-      );
+      this.vS.loadComponent(AppViews.login, viewers.login, {});
     } else this.apiAlive.set(false);
   }
 

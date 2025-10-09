@@ -1,0 +1,8 @@
+@if (isHovered()) {
+<ng-container [ngTemplateOutlet]="focusTemplate" />
+<!-- <ng-content select="focus"></ng-content> -->
+}
+@else {
+<ng-container [ngTemplateOutlet]="unfocusTemplate" />
+<!-- <ng-content select="unfocus"></ng-content> -->
+}

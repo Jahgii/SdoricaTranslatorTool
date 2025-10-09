@@ -158,23 +158,23 @@ export class IndexDBService {
     return { success$, error$ };
   }
 
-  public postMany<T>(storeName: ObjectStoreNames, data: T[]) {
-    let obsSuccess$ = new Subject<any>();
-    let obsError$ = new Subject<IndexedDBbCustomRequestError<T>>();
+  public postMany<T>(storeName: ObjectStoreNames, data: T[], propIdToSet?: keyof T) {
+    let success$ = new Subject<any>();
+    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
     let dataLength = 1;
     let operationCompleted = 0;
 
     const transaction = this.db.transaction([storeName], "readwrite");
 
     transaction.oncomplete = (event) => {
-      obsSuccess$.complete();
-      obsError$.complete();
+      success$.complete();
+      error$.complete();
     };
 
     transaction.onerror = (event) => {
       if (dataLength === operationCompleted) {
-        obsSuccess$.complete();
-        obsError$.complete();
+        success$.complete();
+        error$.complete();
       }
     };
 
@@ -185,7 +185,11 @@ export class IndexDBService {
       const request = objectStore.add(d);
       request.onsuccess = (event) => {
         operationCompleted += 1;
-        obsSuccess$.next(d);
+        if (propIdToSet) {
+          let id = (event.target as IDBRequest).result;
+          d[propIdToSet] = id;
+        }
+        success$.next(d);
       };
 
       request.onerror = (event) => {
@@ -213,11 +217,11 @@ export class IndexDBService {
           error.translateKey = IndexDBErrors[error.request.error?.name];
         }
 
-        obsError$.next(error);
+        error$.next(error);
       };
     });
 
-    return { obsSuccess$, obsError$ };
+    return { success$, error$ };
   }
 
   public getCursor<T>(storeName: ObjectStoreNames, filter: (d: T) => boolean) {

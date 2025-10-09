@@ -9,7 +9,7 @@ import { LoginComponent } from "../components/login/login.component";
 
 export interface Viewers { [component: string]: Type<any> };
 
-export var viewers: Viewers = {
+export const viewers: Viewers = {
     login: LoginComponent,
     localization: LocalizationComponent,
     dialogs: DialogMainComponent,

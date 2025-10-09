@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AsyncPipe, KeyValuePipe, NgFor, NgIf, NgStyle } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 import { TuiHint, TuiIcon, TuiScrollbar } from '@taiga-ui/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiBlockStatus } from '@taiga-ui/layout';
 import { popinAnimation } from 'src/app/core/animations/popin';

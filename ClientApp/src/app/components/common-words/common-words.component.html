@@ -7,10 +7,10 @@
     <h4 style="text-align: center;">{{'dictionary' | translate}}</h4>
     <tui-data-list>
         <tui-opt-group>
-            <button tuiOption (click)="onShowList(listTemplate, 'm')">
+            <button tuiOption new (click)="onShowList(listTemplate, 'm')">
                 <tui-icon icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
             </button>
-            <button tuiOption (click)="onShowCreateNew(createTemplate, 'm')">
+            <button tuiOption new (click)="onShowCreateNew(createTemplate, 'm')">
                 <tui-icon icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
             </button>
         </tui-opt-group>
@@ -138,7 +138,7 @@
     @defer {
     <app-common-word-table [@popIn]></app-common-word-table>
     } @placeholder {
-        <tui-loader />
+    <tui-loader />
     }
 </ng-template>
 

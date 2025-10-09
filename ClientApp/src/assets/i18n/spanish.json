@@ -316,5 +316,10 @@
     "test-server-api": "Probar Servidor",
     "settings": "Configuración",
     "error-capital": "ERROR",
-    "app-loading-services": "...Cargando Servicios..."
+    "app-loading-services": "...Cargando Servicios...",
+    "success-create-key": "Llave Creada",
+    "error-create-key": "Hubo un error al crear la llave. Intenté de nuevo más tarde.",
+    "alert-success-label-commonword-created": "Palabra Creada",
+    "alert-success-label-commonword-updated": "Palabra Actualizada",
+    "alert-success-label-commonword-deleted": "Palabra Eliminada"
 }

@@ -28,7 +28,7 @@ namespace SdoricaTranslatorTool
                 };
             });
 
-            services.AddSingleton<IJWT, JWT>();
+            services.AddSingleton<IJwt, Jwt>();
         }
     }
 }

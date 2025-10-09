@@ -133,7 +133,7 @@ namespace SdoricaTranslatorTool.Controllers
                 if(key == null) {
                     newKeys.Add(keys[i]);
                     continue;
-                };
+                }
 
                 keysOnDB.Add(key);
             }

@@ -34,8 +34,8 @@ import { skip, take, takeWhile } from 'rxjs';
     LocalizationKeyComponent,
     GamedataValuesComponent,
     CommonWordsComponent,
-      TuiFallbackSrcPipe
-],
+    TuiFallbackSrcPipe
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

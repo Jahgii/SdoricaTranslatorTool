@@ -47,11 +47,11 @@
                         <p style="text-align: center;">{{'buffinfo' | translate}}</p>
                         <tui-data-list>
                             <tui-opt-group>
-                                <button tuiOption type="button"
+                                <button tuiOption new type="button"
                                     (click)="gamedataDialog.onShowList(gamedataDialog.listTemplateView, 'm')">
                                     <tui-icon icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
                                 </button>
-                                <button tuiOption type="button"
+                                <button tuiOption new type="button"
                                     (click)="gamedataDialog.onShowCreateNew(gamedataDialog.createTemplateView, 'm')">
                                     <tui-icon icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
                                 </button>
@@ -69,11 +69,11 @@
                         <h4 style="text-align: center;">{{'dictionary' | translate}}</h4>
                         <tui-data-list>
                             <tui-opt-group>
-                                <button tuiOption type="button"
+                                <button tuiOption new type="button"
                                     (click)="dictionaryDialog.onShowList(dictionaryDialog.listTemplateView, 'm')">
                                     <tui-icon icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
                                 </button>
-                                <button tuiOption type="button"
+                                <button tuiOption new type="button"
                                     (click)="dictionaryDialog.onShowCreateNew(dictionaryDialog.createTemplateView, 'm')">
                                     <tui-icon icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
                                 </button>
@@ -89,16 +89,14 @@
 
         <div class="sidebar-actions">
             @if ((breakpointService$ | async) !== 'mobile') {
-            <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
+            <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons" />
             }
 
             <app-localization-key
-                [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
-            </app-localization-key>
-            <app-gamedata-values [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
-            </app-gamedata-values>
-            <app-common-words [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}">
-            </app-common-words>
+                [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}" />
+            <app-gamedata-values
+                [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}" />
+            <app-common-words [ngStyle]="{'display': (breakpointService$ | async) === 'mobile' ? 'none': 'inherit'}" />
         </div>
     </div>
 </div>

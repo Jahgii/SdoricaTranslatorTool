@@ -2,9 +2,9 @@
     (click)="onShowCreate(createTemplate, 'm')" aria-label="Open Key Dialog">
 </button>
 
-<main class="main-form" #draggableElement *ngIf="!dialogState.isHidden"
-    [ngStyle]="{'z-index': dialogState.zIndex$ | async}" (mousedown)="changeIndex(dialogState)"
-    (touchstart)="changeIndex(dialogState)">
+@if (!dialogState.isHidden) {
+<main class="main-form" #draggableElement [ngStyle]="{'z-index': dialogState.zIndex$ | async}"
+    (mousedown)="changeIndex(dialogState)" (touchstart)="changeIndex(dialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement" [elementAnchorRef]="anchor"
         [draggableElementState]="dialogState">
         <p>{{'new-key-form' | translate}}</p>
@@ -14,136 +14,84 @@
         </button>
     </div>
 
-    <tui-scrollbar class="main-form-content">
-        <form [formGroup]="keyForm" style="padding: 0 1rem;">
-            <div>
-                <div>
-                    <h3 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">
-                        {{'key' | translate}}
-                    </h3>
-                    <div class="tui-form__row">
-                        <tui-select tuiTextfieldSize="m" formControlName="Category">
-                            {{'category' | translate}}
-                            <tui-data-list-wrapper *tuiDataList [items]="categories$ | async"></tui-data-list-wrapper>
-                        </tui-select>
-                    </div>
-                    <div class="tui-form__row">
-                        <tui-input formControlName="Name" tuiTextfieldSize="m"
-                            [tuiTextfieldIcon]="availableKeyNameTemplate">
-                            {{'key-name' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
-                            <span class="tui-required"></span>
-                        </tui-input>
-                    </div>
-                    <ng-container *ngIf="categorySelected$ | async">
-                        <h3 class="tui-form__header">{{'languages' | translate}}</h3>
-                        <ng-container *ngFor="let keyControl of $any(keyForm.controls['Original']).controls | keyvalue">
-                            <div class="tui-form__row">
-                                <tui-input [formControl]="$any(keyControl.value)" tuiTextfieldSize="m">
-                                    <input placeholder="***" tuiTextfieldLegacy />
-                                    {{$any(keyControl.key) | translate}}
-                                    <span class="tui-required"></span>
-                                </tui-input>
-                            </div>
-                        </ng-container>
-                    </ng-container>
-                </div>
-            </div>
-        </form>
-
-        <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
-            <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()"
-                    size="m" [loading]="(creating$ | async) ?? false"
-                    [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
-                    [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? ('form-error' | translate) : undefined"
-                    tuiHintAppearance="error">
-                    {{'create' | translate}}
-                </button>
-            </ng-container>
-            <ng-template #createOther>
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()"
-                    size="m">
-                    {{'created-other' | translate}}
-                </button>
-            </ng-template>
-        </div>
-    </tui-scrollbar>
+    <ng-container [ngTemplateOutlet]="createTemplate" />
 </main>
+}
+
 <ng-template #createTemplate>
     <tui-scrollbar class="main-form-content">
-        <form [formGroup]="keyForm" style="padding: 0 1rem;">
+        <form [formGroup]="keyForm" style="padding: 1rem">
             <div>
                 <div>
                     <div class="tui-form__row">
-                        <tui-select tuiTextfieldSize="m" formControlName="Category">
-                            {{'category' | translate}}
-                            <tui-data-list-wrapper *tuiDataList [items]="categories$ | async"></tui-data-list-wrapper>
-                        </tui-select>
+                        <tui-textfield tuiChevron class="tui-space_bottom-3" tuiTextfieldSize="m"
+                            [tuiTextfieldCleaner]="false" [content]="categoryContent">
+                            <label tuiLabel>{{'category' | translate}}</label>
+                            <input tuiSelect formControlName="Category" />
+
+                            <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="categories$ | async"
+                                [itemContent]="categoryContent" />
+                            <ng-template #categoryContent let-data>
+                                {{data.Name}}
+                            </ng-template>
+                        </tui-textfield>
                     </div>
                     <div class="tui-form__row">
-                        <tui-input formControlName="Name" tuiTextfieldSize="m"
-                            [tuiTextfieldIcon]="availableKeyNameTemplate">
-                            {{'key-name' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
-                            <span class="tui-required"></span>
-                        </tui-input>
+                        <tui-textfield class="tui-space_bottom-3" tuiTextfieldSize="m" [tuiTextfieldCleaner]="false">
+                            <label tuiLabel>{{'key-name' | translate}}</label>
+                            <input tuiTextfield formControlName="Name" />
+                            <ng-container [ngTemplateOutlet]="availableKeyNameTemplate" />
+                        </tui-textfield>
                     </div>
-                    <ng-container *ngIf="categorySelected$ | async">
-                        <h4 class="tui-form__header">{{'languages' | translate}}</h4>
-                        <ng-container *ngFor="let keyControl of $any(keyForm.controls['Original']).controls | keyvalue">
-                            <div class="tui-form__row">
-                                <tui-input [formControl]="$any(keyControl.value)" tuiTextfieldSize="m">
-                                    <input placeholder="***" tuiTextfieldLegacy />
-                                    {{$any(keyControl.key) | translate}}
-                                    <span class="tui-required"></span>
-                                </tui-input>
-                            </div>
-                        </ng-container>
-                    </ng-container>
+
+                    @if (categorySelected$ | async) {
+                    <h3 class="tui-form__header">{{'languages' | translate}}</h3>
+                    @for (keyControl of $any(keyForm.controls['Original']).controls | keyvalue; track $index) {
+                    <tui-textfield class="tui-space_bottom-3" tuiTextfieldSize="m" [tuiTextfieldCleaner]="false">
+                        <label tuiLabel>{{$any(keyControl.key) | translate}}</label>
+                        <input tuiTextfield [formControl]="$any(keyControl.value)" />
+                    </tui-textfield>
+                    }
+                    }
                 </div>
             </div>
         </form>
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
-            <ng-container *ngIf="!(createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()"
-                    size="m" [loading]="(creating$ | async) ?? false"
-                    [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
-                    [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? ('form-error' | translate) : undefined"
-                    tuiHintAppearance="error">
-                    {{'create' | translate}}
-                </button>
-            </ng-container>
-            <ng-template #createOther>
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()"
-                    size="m">
-                    {{'created-other' | translate}}
-                </button>
-            </ng-template>
+            @if (!(createOther$ | async)) {
+            <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
+                [loading]="(creating$ | async) ?? false"
+                [disabled]="(availableKeyName$ | async) != 'valid' || keyForm.invalid"
+                [tuiHint]="((availableKeyName$ | async) == 'invalid' || keyForm.invalid) ? ('form-error' | translate) : undefined"
+                tuiHintAppearance="error">
+                {{'create' | translate}}
+            </button>
+            }
+            @else{
+            <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m">
+                {{'created-other' | translate}}
+            </button>
+            }
         </div>
     </tui-scrollbar>
 </ng-template>
 
 <ng-template #availableKeyNameTemplate>
-    <ng-container *ngIf="availableKeyName$ | async as status">
-        <ng-container [ngSwitch]="status">
-            <p *ngSwitchCase="'verifying'">
-                <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
-                    <button tuiIconButton appearance="icon" [iconStart]="'@tui.loader'" aria-label="Create Key Button">
-                    </button>
-                </tui-loader>
-            </p>
-            <p *ngSwitchCase="'valid'">
-                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-check'" aria-label="Create Key Button">
-                </button>
-            </p>
-            <p *ngSwitchCase="'invalid'">
-                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-alert'" aria-label="Invalid Form Button">
-                </button>
-            </p>
-        </ng-container>
-    </ng-container>
+    @if (availableKeyName$ | async; as status) {
+    @switch (status) {
+    @case ('verifying') {
+    <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
+        <tui-icon icon="loader" [style.top.px]="4" />
+    </tui-loader>
+    }
+    @case ('valid') {
+    <tui-icon icon="circle-check" />
+    }
+    @case ('invalid') {
+    <tui-icon icon="circle-alert" [style.color]="'var(--tui-text-negative)'" />
+    }
+    }
+    }
 </ng-template>
 
 <div #anchor style="position: absolute;"></div>

@@ -91,8 +91,7 @@ export class DGroupsService extends StoreService<TreeNode> {
       groupNodes$ = this.api.getWithHeaders<TreeNode[]>('groups', { language: lang, mainGroup: originalName })
     }
 
-    if (groupNodes$ === undefined) groupNodes$ = of([]);
-
+    groupNodes$ ??= of([]);
 
     return groupNodes$
       .pipe(map(array => array.map(

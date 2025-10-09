@@ -36,3 +36,7 @@
     flex-direction: row-reverse;
     padding: 0 1rem;
 }
+
+[tuiAppearance][data-appearance='iconerror'] {
+    color: var(--tui-text-negative);
+}

@@ -10,7 +10,7 @@
                             <h2>
                                 <div class="tile-name" *ngIf="group.editing; else groupName;">
                                     <!-- TODO: (Taiga UI migration) (focusedChange) output has been removed. Use native (focusin) / (focusout) instead -->
-<tui-input-inline tuiAutoFocus [(ngModel)]="group.Name"
+                                    <tui-input-inline tuiAutoFocus [(ngModel)]="group.Name"
                                         (focusedChange)="onFocusedChange($any($event), group)"
                                         (keydown.enter.prevent)="onEditGroupName(group)">
                                         {{'type-name' | translate}}
@@ -21,11 +21,12 @@
                                         <span class="tile-title">{{ group.Name }}</span>
                                         <div>
                                             <button tuiIconButton type="button" title="{{'edit-name' | translate}}"
-                                                size="xs" appearance="icon" iconStart="@tui.pencil" class="tui-space_left-1"
-                                                (click)="toogle(group)"></button>
+                                                size="xs" appearance="icon" iconStart="@tui.pencil"
+                                                class="tui-space_left-1" (click)="toogle(group)"></button>
                                             <button tuiIconButton type="button" title="{{'edit-image' | translate}}"
-                                                size="xs" appearance="icon" iconStart="@tui.image" class="tui-space_left-1"
-                                                [tuiDropdown]="dropdownContent" tuiDropdownHover></button>
+                                                size="xs" appearance="icon" iconStart="@tui.image"
+                                                class="tui-space_left-1" [tuiDropdown]="dropdownContent"
+                                                tuiDropdownHover></button>
                                             <ng-template #dropdownContent>
                                                 <div class="tui-space_vertical-2 tui-space_horizontal-3">
                                                     <p>Change the image Url to show on the tile</p>
@@ -45,13 +46,13 @@
                             </ng-container>
                             <ng-template #completed>
                                 <div class="tile-file">
-                                    {{ "translated" | translate }}: <tui-icon  icon="@tui.circle-check"></tui-icon>
+                                    {{ "translated" | translate }}: <tui-icon icon="@tui.circle-check"></tui-icon>
                                 </div>
                             </ng-template>
                             <!-- TODO: (Taiga UI migration) TuiMode has been removed. Please use tuiTheme attribute to set theme https://taiga-ui.dev/directives/theme -->
-<button class="tile-go-button" tuiIconButton
-                                iconStart="@tui.circle-arrow-right" appearance="icon" shape="square" size="s"
-                                routerLink="{{group.OriginalName}}" tuiTheme="light"></button>
+                            <button class="tile-go-button" tuiIconButton iconStart="@tui.circle-arrow-right"
+                                appearance="icon" shape="square" size="s" routerLink="{{group.OriginalName}}"
+                                tuiTheme="light"></button>
                         </div>
                     </tui-tile>
                 </tui-tiles>

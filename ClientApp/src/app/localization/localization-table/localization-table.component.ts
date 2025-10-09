@@ -45,9 +45,9 @@ import {
   CdkVirtualScrollViewport,
 } from "@angular/cdk/scrolling";
 import { TuiTable, TuiTableFilters } from "@taiga-ui/addon-table";
-import { CommonModule } from "@angular/common";
 import { ElementBreakpointService } from "src/app/core/services/element-breakpoint.service";
 import { CommonDictionaryDirective } from "src/app/core/directives/common-dictionary.directive";
+import { AsyncPipe, KeyValuePipe, NgTemplateOutlet } from "@angular/common";
 
 const ESPECIAL_CHARACTER = "@";
 
@@ -65,7 +65,9 @@ const ESPECIAL_CHARACTER = "@";
   ],
   standalone: true,
   imports: [
-    CommonModule,
+    KeyValuePipe,
+    AsyncPipe,
+    NgTemplateOutlet,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,

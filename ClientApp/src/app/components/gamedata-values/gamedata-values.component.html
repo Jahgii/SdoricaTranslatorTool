@@ -7,11 +7,13 @@
     <p style="text-align: center;">{{'buffinfo' | translate}}</p>
     <tui-data-list>
         <tui-opt-group>
-            <button tuiOption (click)="onShowList(listTemplate, 'm')">
-                <tui-icon icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
+            <button tuiOption new (click)="onShowList(listTemplate, 'm')">
+                <tui-icon icon="book-open" />
+                {{'see-all' | translate}}
             </button>
-            <button tuiOption (click)="onShowCreateNew(createTemplate, 'm')">
-                <tui-icon icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
+            <button tuiOption new (click)="onShowCreateNew(createTemplate, 'm')">
+                <tui-icon icon="pencil" />
+                {{'create-new' | translate}}
             </button>
         </tui-opt-group>
     </tui-data-list>
@@ -29,7 +31,7 @@
         </button>
     </div>
 
-    <ng-container [ngTemplateOutlet]="createTemplate"></ng-container>
+    <ng-container [ngTemplateOutlet]="createTemplate" />
 </main>
 <ng-template #createTemplate>
     <tui-scrollbar class="main-form-content">
@@ -139,16 +141,16 @@
         </button>
     </div>
 
-    <ng-container [ngTemplateOutlet]="listTemplate"></ng-container>
+    <ng-container [ngTemplateOutlet]="listTemplate" />
 </main>
 <ng-template #listTemplate>
     <h4 class="tui-space_horizontal-3">{{'buffinfo-description' | translate}}</h4>
 
 
     <tui-scrollbar class="viewport" [class.viewport-dialog]="(breakpointService$| async) === 'mobile'">
-        <cdk-virtual-scroll-viewport #viewport appendOnly tuiScrollable class="viewport-2 tui-zero-scrollbar"
-            [itemSize]="33" [maxBufferPx]="300" [minBufferPx]="150">
-            <table tuiTable [size]="'s'" [columns]="columns" [@popIn]>
+        <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport-2 tui-zero-scrollbar"
+            [itemSize]="33" [maxBufferPx]="500" [minBufferPx]="400">
+            <table class="tui-table" style="table-layout: fixed;" tuiTable [size]="'s'" [columns]="columns" [@popIn]>
                 <thead>
                     <tr tuiThGroup>
                         <th tuiTh *tuiHead="'id'" [sticky]="true"
@@ -268,8 +270,6 @@
             </table>
         </cdk-virtual-scroll-viewport>
     </tui-scrollbar>
-
-
 </ng-template>
 
 <div #anchor style="position: absolute;"></div>
