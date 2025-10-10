@@ -3,112 +3,108 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
 
-namespace SdoricaTranslatorTool.Controllers
+namespace SdoricaTranslatorTool.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class GamedataValues(ICustomMongoClient cMongoClient) : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class GamedataValues : Controller
+    readonly ICustomMongoClient _cMongoClient = cMongoClient;
+
+    [HttpGet]
+    public async Task<ActionResult> Get([FromHeader] string category)
     {
-        readonly ICustomMongoClient _cMongoClient;
+        var cursor = _cMongoClient
+            .GetCollection<GamedataValue>()
+            .Find(e => e.Category == category)
+            .SortBy(e => e.Content.order);
+        var data = await cursor.ToListAsync();
+        return Ok(data);
+    }
 
-        public GamedataValues(ICustomMongoClient cMongoClient)
+    [HttpGet("searchkeyequal")]
+    public async Task<ActionResult> SearchByKeyEqual([FromHeader] string category, [FromHeader] string key)
+    {
+        var cursor = _cMongoClient.GetCollection<GamedataValue>()
+            .Find(e => e.Category == category && e.Name == key);
+        var data = await cursor.ToListAsync();
+        return Ok(data);
+    }
+
+    [HttpGet("export")]
+    public async Task<ActionResult> GetExport()
+    {
+        var cursor = await _cMongoClient.GetCollection<GamedataValue>().FindAsync(e => e.Custom == true);
+        var data = await cursor.ToListAsync();
+        return Ok(data);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Post(GamedataValue value)
+    {
+        using var session = await _cMongoClient.StartSessionAsync();
+        session.StartTransaction();
+
+        if (await VerifiedIfValueExist(value.Category, value.Name)) return Ok();
+
+        await _cMongoClient.Create(session, value);
+
+        await session.CommitTransactionAsync();
+
+        return Ok(value);
+    }
+
+    [HttpPost("import")]
+    public async Task<ActionResult> Post(List<GamedataValue> values)
+    {
+        List<string> KeysToReplaced = [];
+        using var session = await _cMongoClient.StartSessionAsync();
+        session.StartTransaction();
+
+        foreach (var v in values)
         {
-            _cMongoClient = cMongoClient;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Get([FromHeader] string category)
-        {
-            var cursor = _cMongoClient
-                .GetCollection<GamedataValue>()
-                .Find(e => e.Category == category)
-                .SortBy(e => e.Content.order);
-            var data = await cursor.ToListAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("searchkeyequal")]
-        public async Task<ActionResult> SearchByKeyEqual([FromHeader] string category, [FromHeader] string key)
-        {
-            var cursor = _cMongoClient.GetCollection<GamedataValue>()
-                .Find(e => e.Category == category && e.Name == key);
-            var data = await cursor.ToListAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("export")]
-        public async Task<ActionResult> GetExport()
-        {
-            var cursor = await _cMongoClient.GetCollection<GamedataValue>().FindAsync(e => e.Custom == true);
-            var data = await cursor.ToListAsync();
-            return Ok(data);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Post(GamedataValue value)
-        {
-            using var session = await _cMongoClient.StartSessionAsync();
-            session.StartTransaction();
-
-            if (await VerifiedIfValueExist(value.Category, value.Name)) return Ok();
-
-            await _cMongoClient.Create(session, value);
-
-            await session.CommitTransactionAsync();
-
-            return Ok(value);
-        }
-
-        [HttpPost("import")]
-        public async Task<ActionResult> Post(List<GamedataValue> values)
-        {
-            List<string> KeysToReplaced = [];
-            using var session = await _cMongoClient.StartSessionAsync();
-            session.StartTransaction();
-
-            foreach (var v in values)
+            if (await VerifiedIfValueExist(v.Category, v.Name))
             {
-                if (await VerifiedIfValueExist(v.Category, v.Name))
-                {
-                    var vToReplace = await UpdateKey(v);
-                    if (vToReplace == null) continue;
-                    KeysToReplaced.Add($"Category: {vToReplace.Category} | Value: {vToReplace.Name}");
-                    await _cMongoClient.Replace(session, e => e.Id == vToReplace.Id, vToReplace);
-                    continue;
-                };
-
-                await _cMongoClient.Create(session, v);
+                var vToReplace = await UpdateKey(v);
+                if (vToReplace == null) continue;
+                KeysToReplaced.Add($"Category: {vToReplace.Category} | Value: {vToReplace.Name}");
+                await _cMongoClient.Replace(session, e => e.Id == vToReplace.Id, vToReplace);
+                continue;
             }
+            ;
 
-            await session.CommitTransactionAsync();
-
-            return Ok(KeysToReplaced);
+            await _cMongoClient.Create(session, v);
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Put([FromBody] GamedataValue value)
-        {
-            using var session = await _cMongoClient.StartSessionAsync();
-            session.StartTransaction();
+        await session.CommitTransactionAsync();
 
-            await _cMongoClient.Replace(session, e => e.Id == value.Id, value);
+        return Ok(KeysToReplaced);
+    }
 
-            await session.CommitTransactionAsync();
+    [HttpPut]
+    public async Task<ActionResult> Put([FromBody] GamedataValue value)
+    {
+        using var session = await _cMongoClient.StartSessionAsync();
+        session.StartTransaction();
 
-            return Ok(value);
-        }
+        await _cMongoClient.Replace(session, e => e.Id == value.Id, value);
 
-        [HttpDelete]
-        public async Task<ActionResult> Delete([FromBody] GamedataValue value)
-        {
-            using var session = await _cMongoClient.StartSessionAsync();
-            session.StartTransaction();
+        await session.CommitTransactionAsync();
 
-            await _cMongoClient.Delete<GamedataValue>(session, e => e.Id == value.Id);
+        return Ok(value);
+    }
 
-            await session.CommitTransactionAsync();
+    [HttpDelete]
+    public async Task<ActionResult> Delete([FromBody] GamedataValue value)
+    {
+        using var session = await _cMongoClient.StartSessionAsync();
+        session.StartTransaction();
 
-            return Ok();
+        await _cMongoClient.Delete<GamedataValue>(session, e => e.Id == value.Id);
+
+        await session.CommitTransactionAsync();
+
+        return Ok();
     }
 
     private async Task<bool> VerifiedIfValueExist(string category, string name)
@@ -142,5 +138,4 @@ namespace SdoricaTranslatorTool.Controllers
         return updated ? OldKey : null;
     }
 
-}
 }
