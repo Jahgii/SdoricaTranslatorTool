@@ -94,11 +94,11 @@ export class ExportTranslationService {
 
   constructor(
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
-    private ddS: DeviceDetectorService,
-    private lStorage: LocalStorageService,
-    private indexedDB: IndexDBService,
-    private api: ApiService,
-    private translate: TranslateService
+    private readonly ddS: DeviceDetectorService,
+    private readonly lStorage: LocalStorageService,
+    private readonly indexedDB: IndexDBService,
+    private readonly api: ApiService,
+    private readonly translate: TranslateService
   ) {
     this.init();
   }

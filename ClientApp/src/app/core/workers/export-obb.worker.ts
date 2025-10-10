@@ -50,18 +50,40 @@ function onExportOffline(db: IDBDatabase, completeMessage: IOnMessage, message: 
   };
 
   let dialogs: IDialogAssetExport[] = [];
-  const request = transaction
-    .objectStore(ObjectStoreNames.DialogAsset)
-    .index("Language")
-    .getAll("english");
+  let request: IDBRequest<any[]>;
+  let onsuccess: ((this: IDBRequest<any[]>, ev: Event) => any);
 
-  request.onsuccess = (event) => {
-    dialogs = (event.target as IDBRequest).result;
-    completeMessage.pgState = ProgressStatus.retrivingServerDataSucess;
-    postMessage(completeMessage);
+  if (isGeckoBased()) {
+    request = transaction
+      .objectStore(ObjectStoreNames.DialogAsset)
+      .index("Language")
+      .getAll("english");
 
-    onCreateNewObb(completeMessage, message, dialogs);
-  };
+    onsuccess = (event) => {
+      dialogs = (event.target as IDBRequest).result;
+      dialogs = dialogs.filter(d => d.Translated);
+      completeMessage.pgState = ProgressStatus.retrivingServerDataSucess;
+      postMessage(completeMessage);
+
+      onCreateNewObb(completeMessage, message, dialogs);
+    };
+  }
+  else {
+    request = transaction
+      .objectStore(ObjectStoreNames.DialogAsset)
+      .index("Translated")
+      .getAll(["english", true] as any);
+
+    onsuccess = (event) => {
+      dialogs = (event.target as IDBRequest).result;
+      completeMessage.pgState = ProgressStatus.retrivingServerDataSucess;
+      postMessage(completeMessage);
+
+      onCreateNewObb(completeMessage, message, dialogs);
+    };
+  }
+
+  request.onsuccess = onsuccess;
 
   request.onerror = (event) => {
     completeMessage.pgState = ProgressStatus.retrivingServerDataError;
@@ -197,4 +219,9 @@ function OnCreateNewObbFile(completeMessage: IOnMessage, message: ExportPostMess
     completeMessage.blob = zipBlob;
     postMessage(completeMessage);
   });
+}
+
+function isGeckoBased(): boolean {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.includes('firefox') || ua.includes('gecko');
 }

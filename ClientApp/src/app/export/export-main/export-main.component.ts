@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -43,10 +43,7 @@ import { ExportTranslationService } from '../export-translation.service';
   ]
 })
 export class ExportTranslationGuestComponent {
-
-  constructor(
-    public eTS: ExportTranslationService,
-    public languageOrigin: LanguageOriginService
-  ) { }
+  protected readonly eTS = inject(ExportTranslationService);
+  protected readonly languageOrigin = inject(LanguageOriginService);
 
 }
