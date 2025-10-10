@@ -8,6 +8,7 @@ import { TuiLanguageSwitcherService } from '@taiga-ui/i18n';
 import { TuiBadge, TuiBadgedContent, TuiButtonSelect } from '@taiga-ui/kit';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import type { TuiCountryIsoCode, TuiLanguageName } from '@taiga-ui/i18n/types';
+import { LangService } from 'src/app/core/services/lang.service';
 
 @Component({
   selector: 'app-language-switcher',
@@ -30,9 +31,8 @@ import type { TuiCountryIsoCode, TuiLanguageName } from '@taiga-ui/i18n/types';
   styleUrl: './language-switcher.component.scss'
 })
 export class LanguageSwitcherComponent {
+  protected readonly langService = inject(LangService);
   protected readonly icons = inject(TUI_DOC_ICONS);
-  protected readonly lStorage = inject(LocalStorageService);
-  protected readonly translate = inject(TranslateService);
   protected readonly switcher = inject(TuiLanguageSwitcherService);
   protected readonly language = new FormControl(capitalize(this.switcher.language));
 
@@ -45,16 +45,10 @@ export class LanguageSwitcherComponent {
 
   public readonly names: TuiLanguageName[] = Array.from(this.flags.keys());
 
-  constructor() {
-    let lang = this.lStorage.getAppLang();
-
-    if (lang) this.setLang(lang);
-    else this.setLang('english');
-  }
+  constructor() { }
 
   public setLang(lang: TuiLanguageName): void {
-    this.lStorage.setAppLang(lang);
-    this.translate.use(lang);
+    this.langService.setLang(lang);
     this.switcher.setLanguage(lang);
     this.open = false;
   }
