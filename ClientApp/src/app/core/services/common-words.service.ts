@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { ApiService } from './api.service';
 import { ICommonWord } from '../interfaces/i-common-word';
 import { BehaviorSubject, Observable, Subject, firstValueFrom, of } from 'rxjs';
@@ -14,7 +14,7 @@ import { AlertService } from './alert.service';
   providedIn: 'root'
 })
 export class CommonWordsService {
-  public words!: ICommonWord[];
+  public words: WritableSignal<ICommonWord[]> = signal([]);
   public createOther$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public creating$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public deleting$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -44,7 +44,7 @@ export class CommonWordsService {
 
     firstValueFrom(words$)
       .then(
-        words => { this.words = words },
+        words => { this.words.set(words) },
         _ => {
           this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
         }
@@ -67,8 +67,7 @@ export class CommonWordsService {
     return await firstValueFrom(request$)
       .then(
         createdWord => {
-          this.words.push(createdWord);
-          this.words = [...this.words];
+          this.words.set([...this.words(), createdWord]);
           this.createOther$.next(true);
           this.creating$.next(false);
           this.alert.showAlert('alert-success', 'alert-success-label-commonword-created', 'positive');
@@ -98,8 +97,7 @@ export class CommonWordsService {
     return await firstValueFrom(request$)
       .then(
         createdWord => {
-          this.words.push(createdWord);
-          this.words = [...this.words];
+          this.words.set([...this.words(), createdWord]);
           this.createOther$.next(true);
           this.creating$.next(false);
           this.alert.showAlert('alert-success', 'alert-success-label-commonword-created', 'positive');
@@ -171,8 +169,8 @@ export class CommonWordsService {
 
     await firstValueFrom(request$)
       .then(_ => {
-        this.words.splice(index, 1);
-        this.words = [...this.words];
+        this.words().splice(index, 1);
+        this.words.set([...this.words()]);
         this.change$.next(true);
         this.alert.showAlert('alert-success', 'alert-success-label-commonword-deleted', 'positive');
       }, _ => {

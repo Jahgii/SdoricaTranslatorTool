@@ -23,7 +23,7 @@ export class CommonDictionaryDirective implements OnInit {
 
   ngOnInit(): void {
     let temporalText = this.text;
-    this.treeSearch(this.commonWords.words, temporalText);
+    this.treeSearch(this.commonWords.words(), temporalText);
   }
 
   /**

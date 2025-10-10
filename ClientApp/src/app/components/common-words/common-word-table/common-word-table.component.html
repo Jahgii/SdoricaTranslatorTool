@@ -21,12 +21,13 @@
                 </tr>
             </thead>
             <tbody tuiTbody>
-                <tr *cdkVirtualFor="let word of commonWords.words; index as i; trackBy: trackByItemId" tuiTr>
+                <tr *cdkVirtualFor="let word of commonWords.words(); index as i; trackBy: trackByItemId" tuiTr>
                     <td *tuiCell="'Original'" tuiTd>
                         <span class="span-unfocus">{{word.Original}}</span>
                     </td>
                     <td *tuiCell="'Translation'" tuiTd class="translation-cell">
-                        <app-common-word-table-cell-editable #cell [focusTemplate]="focus" [unfocusTemplate]="unfocus" />
+                        <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
+                            [unfocusTemplate]="unfocus" />
                         <ng-template #focus>
                             <tui-input [(ngModel)]="word.Translation" tuiTextfieldSize="s">
                                 <input tuiTextfieldLegacy appAutoFocus [cell]="cell" />
@@ -69,7 +70,7 @@
                     }
                 </tr>
 
-                @if (commonWords.words.length === 0) {
+                @if (commonWords.words().length === 0) {
                 <tr>
                     <td [attr.colspan]="columns.length" [style.height.px]="58">
                         <p class="empty-columns tui-text_body-m">{{'empty-dictionary' | translate}}</p>
