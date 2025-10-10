@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppModes } from '../enums/app-modes';
+import { PersistentModes } from '../enums/persistent-modes';
 
 @Injectable({
   providedIn: 'root'
@@ -144,5 +145,21 @@ export class LocalStorageService {
 
   setGroup(view: number, groupId: string) {
     localStorage.setItem('Group' + view, groupId);
+  }
+
+  getPortraitPersistentMode(): PersistentModes | undefined {
+    return (localStorage.getItem('PortraitPersistentMode') as PersistentModes) ?? undefined;
+  }
+
+  setPortraitPersistentMode(mode: PersistentModes) {
+    localStorage.setItem('PortraitPersistentMode', mode);
+  }
+
+  getPortraitFallbackPath(): string | undefined {
+    return localStorage.getItem('PortraitPath') ?? undefined;
+  }
+
+  setPortraitFallbackPath(path: string) {
+    localStorage.setItem('PortraitPath', path);
   }
 }

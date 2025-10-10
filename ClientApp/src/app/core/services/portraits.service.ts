@@ -1,4 +1,4 @@
-import { Inject, Injectable, Injector } from '@angular/core';
+import { Inject, Injectable, Injector, signal } from '@angular/core';
 import { IndexDBService } from './index-db.service';
 import { ObjectStoreNames } from '../interfaces/i-indexed-db';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
@@ -6,6 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { TuiAlertService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { AlertPortraitMode, AlertPortraitsComponent } from 'src/app/components/alert-portraits/alert-portraits.component';
+import { PersistentModes } from '../enums/persistent-modes';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +16,12 @@ export class PortraitsService {
   private dirHandle!: FileSystemDirectoryHandle;
   public dirName$: BehaviorSubject<string> = new BehaviorSubject<string>("");
   public imageDir: { [name: string]: string } = {};
+  public loading$ = signal(false);
 
   constructor(
-    private indexDB: IndexDBService,
-    private translate: TranslateService,
+    private readonly local: LocalStorageService,
+    private readonly indexDB: IndexDBService,
+    private readonly translate: TranslateService,
     @Inject(TuiAlertService)
     private readonly alerts: TuiAlertService,
     @Inject(Injector)
@@ -27,6 +31,35 @@ export class PortraitsService {
   }
 
   private async folderInit() {
+    let mode = this.local.getPortraitPersistentMode();
+
+    if (mode == PersistentModes.FileSystemAPI) this.folderInitFileSystemAPI();
+    else this.folderInitFallback();
+  }
+
+  private openAlert() {
+    this.alerts
+      .open<boolean>(
+        new PolymorpheusComponent(AlertPortraitsComponent, this.injector),
+        {
+          label: this.translate.instant('portrait-directory-miss-label'),
+          appearance: 'warning',
+          autoClose: 0,
+          data: AlertPortraitMode.MissFolder
+        },
+      ).subscribe();
+  }
+
+  public async onFolderChange() {
+    let success = false;
+    if ((window as any).showDirectoryPicker) success = await this.onFolderChangeFileSystemAPI();
+    else success = await this.onFolderChangeFallback();
+
+    return success;
+  }
+
+  //#region File System Access API
+  private async folderInitFileSystemAPI() {
     let request = this.indexDB
       .getAll<FileSystemDirectoryHandle[]>(ObjectStoreNames.UserDirectories)
       .success$;
@@ -36,13 +69,53 @@ export class PortraitsService {
         if (handles.length === 0) return;
 
         let handle = handles[0];
-
         let permissionVerified = await this.verifyPermission(handle);
         if (permissionVerified === false) return;
 
         this.dirHandle = handle;
         this.dirName$.next(handle.name);
-        this.loadFiles();
+        this.loadFilesFileSystemAPI();
+      });
+  }
+
+  private async onFolderChangeFileSystemAPI() {
+    this.dirHandle = await (window as any).showDirectoryPicker();
+
+    if (this.dirHandle) {
+      this.local.setPortraitPersistentMode(PersistentModes.FileSystemAPI);
+      this.dirName$.next(this.dirHandle.name);
+      this.indexDB.clear(ObjectStoreNames.UserDirectories);
+      this.indexDB.post(ObjectStoreNames.UserDirectories, this.dirHandle);
+      this.loadFilesFileSystemAPI();
+      return true;
+    }
+
+    return false;
+  }
+
+  private async loadFilesFileSystemAPI() {
+    const promises: File[] = [];
+
+    try {
+      for await (const entry of (this.dirHandle as any).values()) {
+        if (entry.kind !== 'file') {
+          continue;
+        }
+
+        promises.push(entry.getFile().then((file: File) => file));
+      }
+    }
+    catch (error) {
+      this.openAlert();
+    }
+
+    this.imageDir = {};
+
+    await Promise.all(promises)
+      .then(files => {
+        for (const file of files) {
+          this.imageDir[file.name] = URL.createObjectURL(file);
+        }
       });
   }
 
@@ -69,69 +142,46 @@ export class PortraitsService {
     return false;
   }
 
-  private async loadFiles() {
-    const promises: File[] = [];
-
-    try {
-      for await (const entry of (this.dirHandle as any).values()) {
-        if (entry.kind !== 'file') {
-          continue;
-        }
-
-        promises.push(entry.getFile().then((file: File) => file));
-      }
-    }
-    catch (error) {
-      this.openAlert();
-    }
-
-    this.imageDir = {};
-
-    await Promise.all(promises)
-      .then(files => {
-        for (let index = 0; index < files.length; index++) {
-          const file = files[index];
-          this.imageDir[file.name] = URL.createObjectURL(file);
-        }
-      });
-  }
-
-  private openAlert() {
-    this.alerts
-      .open<boolean>(
-        new PolymorpheusComponent(AlertPortraitsComponent, this.injector),
-        {
-          label: this.translate.instant('portrait-directory-miss-label'),
-          appearance: 'warning',
-          autoClose: 0,
-          data: AlertPortraitMode.MissFolder
-        },
-      ).subscribe();
-  }
-
-  public async onFolderChange() {
-    this.dirHandle = await (window as any).showDirectoryPicker();
-
-    if (this.dirHandle) {
-      this.dirName$.next(this.dirHandle.name);
-      this.indexDB.clear(ObjectStoreNames.UserDirectories);
-      this.indexDB.post(ObjectStoreNames.UserDirectories, this.dirHandle);
-      this.loadFiles();
-      return true;
-    }
-
-    return false;
-  }
-
   public async onRequestPermissions() {
     const options = { mode: "read" };
     if ((await (this.dirHandle as any).requestPermission(options)) === 'granted') {
       this.dirName$.next(this.dirHandle.name);
-      this.loadFiles();
+      this.loadFilesFileSystemAPI();
       return true;
     }
 
     return false;
   }
+  //#endregion
+
+  //#region File System Access API Fallback
+  private async folderInitFallback() {
+    let path = this.local.getPortraitFallbackPath();
+    if (!path) return;
+
+    // await GetImages(path).then(files => {
+    //   this.dirName$.next(path);
+
+    //   this.imageDir = files;
+    // });
+  }
+
+  private async onFolderChangeFallback() {
+    return false;
+    // return await PickFolder().then(async (path: string) => {
+    //   if (!path) return false;
+
+    //   return await GetImages(path).then(async files => {
+    //     this.local.setPortraitPersistentMode(PersistentModes.Fallback);
+    //     this.local.setPortraitFallbackPath(path);
+    //     this.dirName$.next(path);
+
+    //     this.imageDir = files;
+
+    //     return true;
+    //   });
+    // });
+  }
+  //#endregion
 
 }
