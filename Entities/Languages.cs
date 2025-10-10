@@ -1,13 +1,12 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 
-namespace SdoricaTranslatorTool.Entities
+namespace SdoricaTranslatorTool.Entities;
+
+public class Languages
 {
-    public class Languages
-    {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
-        public required string Name { get; set; }
-    }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
+    public required string Name { get; set; }
 }

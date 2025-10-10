@@ -1,4 +1,4 @@
-using SdoricaTranslatorTool;
+using SdoricaTranslatorTool.Extensions;
 
 var cors = "CustomCors";
 var builder = WebApplication.CreateBuilder(args);
@@ -65,17 +65,5 @@ app.MapControllerRoute(
     ).RequireAuthorization();
 
 app.MapControllers().RequireAuthorization();
-
-app.MapGet("/api/status", () =>
-{
-    var status = new
-    {
-        Version = "1.0.0",
-        Status = "Alive"
-    };
-
-    return status;
-})
-.WithName("Status");
 
 app.Run();

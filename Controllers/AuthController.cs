@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
+using SdoricaTranslatorTool.Services;
 
 namespace SdoricaTranslatorTool.Controllers;
 
@@ -26,7 +27,7 @@ public class AuthController(ICustomMongoClient cMongoClient, IJwt jwt) : Control
 
         if (user == null)
         {
-            User newUser = new User
+            User newUser = new()
             {
                 Email = authValidation.User,
                 TranslationCount = 3,

@@ -1,26 +1,25 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SdoricaTranslatorTool
+namespace SdoricaTranslatorTool.Extensions;
+
+internal sealed class MainExceptionHandler : IExceptionHandler
 {
-    internal sealed class MainExceptionHandler : IExceptionHandler
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+        var problemDetails = new ProblemDetails
         {
-            var problemDetails = new ProblemDetails
-            {
-                Status = StatusCodes.Status500InternalServerError,
-                Title = "Server Error",
-                Detail = exception.InnerException?.Message ?? exception.Message
-            };
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "Server Error",
+            Detail = exception.InnerException?.Message ?? exception.Message
+        };
 
-            httpContext.Response.StatusCode = problemDetails.Status.Value;
+        httpContext.Response.StatusCode = problemDetails.Status.Value;
 
-            await httpContext
-                .Response
-                .WriteAsJsonAsync(problemDetails, cancellationToken);
+        await httpContext
+            .Response
+            .WriteAsJsonAsync(problemDetails, cancellationToken);
 
-            return true;
-        }
+        return true;
     }
 }

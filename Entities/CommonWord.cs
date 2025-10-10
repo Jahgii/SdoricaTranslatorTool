@@ -1,14 +1,13 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SdoricaTranslatorTool
+namespace SdoricaTranslatorTool.Entities;
+
+public class CommonWord
 {
-    public class CommonWord
-    {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
-        public required string Original { get; set; }
-        public required string Translation { get; set; }
-    }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
+    public required string Original { get; set; }
+    public required string Translation { get; set; }
 }

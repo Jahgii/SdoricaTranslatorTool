@@ -1,5 +1,5 @@
 import { TuiStepper } from "@taiga-ui/kit";
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
 import { WizardService } from './wizard.service';
@@ -26,12 +26,10 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
   styleUrl: './wizard-initial.component.scss'
 })
 export class WizardInitialComponent {
-  public index$ = this.wizardService.stepIndex$;
+  protected readonly app = inject(AppStateService);
+  protected readonly wizardService = inject(WizardService);
 
-  constructor(
-    private readonly app: AppStateService,
-    @Inject(WizardService) private readonly wizardService: WizardService
-  ) { }
+  public index$ = this.wizardService.stepIndex$;
 
   public wizardEnd() {
     this.app.initializeApp();

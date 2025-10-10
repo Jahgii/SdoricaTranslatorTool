@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SdoricaTranslatorTool.Entities;
+using SdoricaTranslatorTool.Services;
 
 namespace SdoricaTranslatorTool.Controllers;
 
