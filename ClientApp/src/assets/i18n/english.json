@@ -321,5 +321,8 @@
     "error-create-key": "There was an error creating the key. Please try again later.",
     "alert-success-label-commonword-created": "Created Word",
     "alert-success-label-commonword-updated": "Updated Word",
-    "alert-success-label-commonword-deleted": "Deleted Word"
+    "alert-success-label-commonword-deleted": "Deleted Word",
+    "alert-success-label-gamedata-created": "Created Buff Info",
+    "alert-success-label-gamedata-updated": "Updated Buff Info",
+    "alert-success-label-gamedata-deleted": "Deleted Buff Info"
 }

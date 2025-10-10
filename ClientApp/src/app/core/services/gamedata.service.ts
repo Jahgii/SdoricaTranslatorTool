@@ -10,6 +10,7 @@ import { AppModes } from '../enums/app-modes';
 import { IndexDBService } from './index-db.service';
 import { LocalStorageService } from './local-storage.service';
 import { ObjectStoreNames } from '../interfaces/i-indexed-db';
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -46,12 +47,11 @@ export class GamedataService {
   get getData() { return this.store.getData() }
 
   constructor(
-    private fB: FormBuilder,
-    private api: ApiService,
-    private indexedDB: IndexDBService,
-    private lStorage: LocalStorageService,
-    private translate: TranslateService,
-    @Inject(TuiDialogService) private readonly dialogs: TuiDialogService,
+    private readonly fB: FormBuilder,
+    private readonly api: ApiService,
+    private readonly indexedDB: IndexDBService,
+    private readonly lStorage: LocalStorageService,
+    private readonly alert: AlertService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) {
     this.init();
@@ -130,8 +130,12 @@ export class GamedataService {
     if (add$ === undefined) return;
 
     await this.store.addFromHttp(add$)
-      .then(e => {
+      .then(_ => {
         this.createOther$.next(true);
+        this.onCreateOther();
+        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-created', 'positive');
+      }, _ => {
+        this.alert.showAlert('alert-error', 'error-create-gamedata', 'accent');
       });
 
     this.creating$.next(false);
@@ -173,8 +177,11 @@ export class GamedataService {
     if (update$ === undefined) return;
 
     await this.store.updateFromHttp(update$, index)
-      .then(e => {
+      .then(_ => {
         this.createOther$.next(true);
+        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-updated', 'positive');
+      }, _ => {
+        this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
       });
 
     (value as any)['loader'].next(false);
@@ -204,7 +211,11 @@ export class GamedataService {
     if (delete$ === undefined) return;
 
     await this.store.removeFromHttp(delete$, index)
-      .then(e => { });
+      .then(_ => {
+        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-deleted', 'positive');
+      }, _ => {
+        this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+      });
 
     this.deleting$.next(false);
   }

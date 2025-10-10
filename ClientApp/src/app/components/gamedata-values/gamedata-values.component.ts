@@ -12,11 +12,13 @@ import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { TuiCheckbox, TuiBlock, TuiButtonLoading } from '@taiga-ui/kit';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
-import { NgIf, NgSwitch, NgSwitchCase, AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
 import { TuiBlockStatus } from "@taiga-ui/layout";
+import { AutoFocusDirective } from "src/app/core/directives/auto-focus.directive";
+import { CommonWordTableCellEditableComponent } from "../common-words/common-word-table/common-word-table-cell-editable/common-word-table-cell-editable.component";
 
 @Component({
   selector: 'app-gamedata-values',
@@ -29,9 +31,6 @@ import { TuiBlockStatus } from "@taiga-ui/layout";
   ],
   standalone: true,
   imports: [
-    NgIf,
-    NgSwitch,
-    NgSwitchCase,
     NgStyle,
     AsyncPipe,
     FormsModule,
@@ -62,6 +61,8 @@ import { TuiBlockStatus } from "@taiga-ui/layout";
     TuiBlockStatus,
 
     DraggableElementDirective,
+    CommonWordTableCellEditableComponent,
+    AutoFocusDirective,
   ]
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {
@@ -103,10 +104,10 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
   public columns: string[] = ['id', 'iconKey', 'localizationInfoKey', 'localizationNameKey', 'order', 'viewable', 'custom', 'confirmDelete'];
 
   constructor(
-    private cd: ChangeDetectorRef,
-    private translate: TranslateService,
-    public gamedataService: GamedataService,
-    private dStateService: DialogstateService,
+    private readonly cd: ChangeDetectorRef,
+    private readonly translate: TranslateService,
+    private readonly dStateService: DialogstateService,
+    public readonly gamedataService: GamedataService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
   ) {

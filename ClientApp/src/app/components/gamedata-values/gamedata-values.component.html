@@ -19,9 +19,9 @@
     </tui-data-list>
 </ng-template>
 
-<main class="main-form" #draggableElement *ngIf="!dialogState.isHidden"
-    [ngStyle]="{'z-index': dialogState.zIndex$ | async}" (mousedown)="changeIndex(dialogState)"
-    (touchstart)="changeIndex(dialogState)">
+@if (!dialogState.isHidden) {
+<main class="main-form" #draggableElement [ngStyle]="{'z-index': dialogState.zIndex$ | async}"
+    (mousedown)="changeIndex(dialogState)" (touchstart)="changeIndex(dialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
         [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
         <p>{{'buffinfo-form' | translate}}</p>
@@ -33,6 +33,8 @@
 
     <ng-container [ngTemplateOutlet]="createTemplate" />
 </main>
+}
+
 <ng-template #createTemplate>
     <tui-scrollbar class="main-form-content">
         <form [formGroup]="gamedataService.contentForm" style="padding: 0 1rem;">
@@ -88,50 +90,50 @@
         </form>
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
-            <ng-container *ngIf="!(gamedataService.createOther$ | async); else createOther">
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'"
-                    (click)="gamedataService.onCreateKey()" size="m"
-                    [loading]="(gamedataService.creating$ | async) ?? false"
-                    [disabled]="(gamedataService.availableKeyName$ | async) != 'valid' || gamedataService.buffInfoForm.invalid"
-                    [tuiHint]="((gamedataService.availableKeyName$ | async) == 'invalid' || gamedataService.buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
-                    tuiHintAppearance="error">
-                    {{'create' | translate}}
-                </button>
-            </ng-container>
-            <ng-template #createOther>
-                <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'"
-                    (click)="gamedataService.onCreateOther()" size="m">
-                    {{'created-other' | translate}}
-                </button>
-            </ng-template>
+            @if (!(gamedataService.createOther$ | async)) {
+            <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'"
+                (click)="gamedataService.onCreateKey()" size="m"
+                [loading]="(gamedataService.creating$ | async) ?? false"
+                [disabled]="(gamedataService.availableKeyName$ | async) != 'valid' || gamedataService.buffInfoForm.invalid"
+                [tuiHint]="((gamedataService.availableKeyName$ | async) == 'invalid' || gamedataService.buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
+                tuiHintAppearance="error">
+                {{'create' | translate}}
+            </button>
+            }
+            @else {
+            <button appearance="outline" tuiButton [iconStart]="'@tui.circle-check'"
+                (click)="gamedataService.onCreateOther()" size="m">
+                {{'created-other' | translate}}
+            </button>
+            }
         </div>
     </tui-scrollbar>
 </ng-template>
 
 <ng-template #availableKeyNameTemplate>
-    <ng-container *ngIf="gamedataService.availableKeyName$ | async as status">
-        <ng-container [ngSwitch]="status">
-            <p *ngSwitchCase="'verifying'">
-                <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
-                    <button tuiIconButton appearance="icon" [iconStart]="'@tui.loader'" aria-label="loader">
-                    </button>
-                </tui-loader>
-            </p>
-            <p *ngSwitchCase="'valid'">
-                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-check'" aria-label="loader valid">
-                </button>
-            </p>
-            <p *ngSwitchCase="'invalid'">
-                <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-alert'" aria-label="loader invalid">
-                </button>
-            </p>
-        </ng-container>
-    </ng-container>
+    @if (gamedataService.availableKeyName$ | async; as status) {
+    @switch (status) {
+    @case ('verifying') {
+    <tui-loader [showLoader]="true" [inheritColor]="true" [overlay]="true">
+        <button tuiIconButton appearance="icon" [iconStart]="'@tui.loader'" aria-label="loader">
+        </button>
+    </tui-loader>
+    }
+    @case ('valid') {
+    <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-check'" aria-label="loader valid">
+    </button>
+    }
+    @case('invalid'){
+    <button tuiIconButton appearance="icon" [iconStart]="'@tui.circle-alert'" aria-label="loader invalid">
+    </button>
+    }
+    }
+    }
 </ng-template>
 
-<main class="main-list" #draggableListElement *ngIf="!listDialogState.isHidden"
-    [ngStyle]="{'z-index': listDialogState.zIndex$ | async}" (mousedown)="changeIndex(listDialogState)"
-    (touchstart)="changeIndex(listDialogState)">
+@if (!listDialogState.isHidden) {
+<main class="main-list" #draggableListElement [ngStyle]="{'z-index': listDialogState.zIndex$ | async}"
+    (mousedown)="changeIndex(listDialogState)" (touchstart)="changeIndex(listDialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
         [draggableElementState]="listDialogState" [elementAnchorRef]="anchor">
         <p>{{'buffinfo-list' | translate}}</p>
@@ -143,13 +145,13 @@
 
     <ng-container [ngTemplateOutlet]="listTemplate" />
 </main>
+}
 <ng-template #listTemplate>
     <h4 class="tui-space_horizontal-3">{{'buffinfo-description' | translate}}</h4>
 
-
     <tui-scrollbar class="viewport" [class.viewport-dialog]="(breakpointService$| async) === 'mobile'">
-        <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport-2 tui-zero-scrollbar"
-            [itemSize]="33" [maxBufferPx]="500" [minBufferPx]="400">
+        <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport-2 tui-zero-scrollbar" [itemSize]="33"
+            [maxBufferPx]="500" [minBufferPx]="400">
             <table class="tui-table" style="table-layout: fixed;" tuiTable [size]="'s'" [columns]="columns" [@popIn]>
                 <thead>
                     <tr tuiThGroup>
@@ -194,28 +196,54 @@
                         <td *tuiCell="'id'" tuiTd>
                             {{v.Content.id}}
                         </td>
-                        <td *tuiCell="'iconKey'" tuiTd>
-                            <tui-input [(ngModel)]="v.Content.iconKey" tuiTextfieldSize="s">
-                                {{'iconkey' | translate}}
-                                <input placeholder="***" tuiTextfieldLegacy />
-                            </tui-input>
+                        <td *tuiCell="'iconKey'" tuiTd class="editable-cell">
+                            <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
+                                [unfocusTemplate]="unfocus" />
+                            <ng-template #focus>
+                                <tui-input [(ngModel)]="v.Content.iconKey" tuiTextfieldSize="s">
+                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cell" />
+                                </tui-input>
+                            </ng-template>
+                            <ng-template #unfocus>
+                                <span class="span-unfocus">{{v.Content.iconKey}}</span>
+                            </ng-template>
                         </td>
-                        <td *tuiCell="'localizationInfoKey'" tuiTd>
-                            <tui-input [(ngModel)]="v.Content.localizationInfoKey" tuiTextfieldSize="s">
-                                {{'localizationinfokey' | translate}}
-                                <input placeholder="***" tuiTextfieldLegacy />
-                            </tui-input>
+                        <td *tuiCell="'localizationInfoKey'" tuiTd class="editable-cell">
+                            <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
+                                [unfocusTemplate]="unfocus" />
+                            <ng-template #focus>
+                                <tui-input [(ngModel)]="v.Content.localizationInfoKey" tuiTextfieldSize="s">
+                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cell" />
+                                </tui-input>
+                            </ng-template>
+                            <ng-template #unfocus>
+                                <span class="span-unfocus">{{v.Content.localizationInfoKey}}</span>
+                            </ng-template>
                         </td>
-                        <td *tuiCell="'localizationNameKey'" tuiTd>
-                            <tui-input [(ngModel)]="v.Content.localizationNameKey" tuiTextfieldSize="s">
-                                {{'localizationnamekey' | translate}}
-                                <input placeholder="***" tuiTextfieldLegacy />
-                            </tui-input>
+                        <td *tuiCell="'localizationNameKey'" tuiTd class="editable-cell">
+                            <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
+                                [unfocusTemplate]="unfocus" />
+                            <ng-template #focus>
+                                <tui-input [(ngModel)]="v.Content.localizationNameKey" tuiTextfieldSize="s">
+                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cell" />
+                                </tui-input>
+                            </ng-template>
+                            <ng-template #unfocus>
+                                <span class="span-unfocus">{{v.Content.localizationNameKey}}</span>
+                            </ng-template>
                         </td>
-                        <td *tuiCell="'order'" tuiTd>
-                            <tui-input-number [(ngModel)]="v.Content.order" tuiTextfieldSize="s">
-                                {{'order' | translate}}
-                            </tui-input-number>
+                        <td *tuiCell="'order'" tuiTd class="editable-cell">
+                            <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
+                                [unfocusTemplate]="unfocus" />
+                            <ng-template #focus>
+                                <tui-input-number [(ngModel)]="v.Content.order" tuiTextfieldSize="s" appAutoFocus
+                                    [cell]="cell">
+                                    <input placeholder="***" tuiTextfieldLegacy />
+                                </tui-input-number>
+                            </ng-template>
+                            <ng-template #unfocus>
+                                <span class="span-unfocus">{{v.Content.order}}</span>
+                            </ng-template>
                         </td>
                         <td *tuiCell="'viewable'" tuiTd>
                             <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
@@ -227,37 +255,39 @@
                             <div style="display: flex; align-items: center; justify-content: center;">
                                 <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
                                     [overlay]="true">
-                                    <button *ngIf="v.Custom" appearance="flat" iconStart="@tui.trash"
-                                        [style.border-radius.%]="100" size="xs" title="{{'remove' | translate}}"
-                                        tuiIconButton type="button" class="remove"
-                                        (click)="gamedataService.confirmDelete(v)">
+                                    @if (v.Custom) {
+                                    <button appearance="flat" iconStart="@tui.trash" [style.border-radius.%]="100"
+                                        size="xs" title="{{'remove' | translate}}" tuiIconButton type="button"
+                                        class="remove" (click)="gamedataService.confirmDelete(v)">
                                     </button>
+                                    }
                                 </tui-loader>
                                 <tui-loader [showLoader]="(v.loader | async) ?? false" [inheritColor]="true"
                                     [overlay]="true">
-                                    <button *ngIf="v.Custom" appearance="flat" iconStart="@tui.save"
-                                        [style.border-radius.%]="100" size="xs" title="{{'update' | translate}}"
-                                        tuiIconButton type="button" class="remove"
-                                        (click)="gamedataService.onUpdateValue(v, i)">
+                                    @if (v.Custom) {
+                                    <button appearance="flat" iconStart="@tui.save" [style.border-radius.%]="100"
+                                        size="xs" title="{{'update' | translate}}" tuiIconButton type="button"
+                                        class="remove" (click)="gamedataService.onUpdateValue(v, i)">
                                     </button>
+                                    }
                                 </tui-loader>
                             </div>
                         </td>
-                        <ng-template [ngIf]="(v.confirm | async) ?? false">
-                            <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
-                                <p class="text">{{'confirm-text-delete-gamevalue' | translate}}</p>
-                                <button tuiButton size="xs" class="tui-space_left-2"
-                                    (click)="gamedataService.onDelete(v, i)"
-                                    [loading]="(gamedataService.deleting$ | async) ?? false" appearance="accent">
-                                    {{'confirm-frienly' | translate}}
-                                </button>
-                                <button tuiButton size="xs" class="tui-space_left-2"
-                                    (click)="gamedataService.cancelDelete(v)"
-                                    [loading]="(gamedataService.deleting$ | async) ?? false" appearance="flat">
-                                    {{'unconfirm-frienly' | translate}}
-                                </button>
-                            </td>
-                        </ng-template>
+                        @if ((v.confirm | async) ?? false) {
+                        <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
+                            <p class="text">{{'confirm-text-delete-gamevalue' | translate}}</p>
+                            <button tuiButton size="xs" class="tui-space_left-2"
+                                (click)="gamedataService.onDelete(v, i)"
+                                [loading]="(gamedataService.deleting$ | async) ?? false" appearance="accent">
+                                {{'confirm-frienly' | translate}}
+                            </button>
+                            <button tuiButton size="xs" class="tui-space_left-2"
+                                (click)="gamedataService.cancelDelete(v)"
+                                [loading]="(gamedataService.deleting$ | async) ?? false" appearance="flat">
+                                {{'unconfirm-frienly' | translate}}
+                            </button>
+                        </td>
+                        }
                     </tr>
                     } @loading{
                     <tr>

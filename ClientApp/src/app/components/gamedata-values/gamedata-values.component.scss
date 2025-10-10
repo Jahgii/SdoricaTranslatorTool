@@ -1,5 +1,14 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.scss';
 
+table {
+    inline-size: 100%;
+    table-layout: fixed;
+
+    tr {
+        block-size: var(--tui-height-s);
+    }
+}
+
 .main-form {
     position: absolute;
     z-index: 1000;
@@ -50,6 +59,7 @@
     box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 16%);
     border-radius: var(--tui-radius-s);
     padding: 0;
+    padding-bottom: var(--tui-padding-s);
 
     .main-form-header {
         display: flex;
@@ -122,11 +132,30 @@
     margin: 0 1rem;
 }
 
-table {
-    inline-size: 100%;
-    table-layout: fixed;
-
-    tr {
-        block-size: var(--tui-height-s);
+td._editable {
+    .span-unfocus {
+        padding: .25rem .5rem;
     }
+}
+
+
+
+.span-unfocus {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    display: block;
+    height: 100%;
+    align-content: center;
+    box-sizing: border-box;
+}
+
+.editable-cell {
+    &:hover {
+        background: var(--tui-background-base-alt);
+        cursor: text;
+    }
+
+    transition: 0.25s background;
 }

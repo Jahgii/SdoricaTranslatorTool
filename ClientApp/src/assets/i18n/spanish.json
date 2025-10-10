@@ -319,7 +319,11 @@
     "app-loading-services": "...Cargando Servicios...",
     "success-create-key": "Llave Creada",
     "error-create-key": "Hubo un error al crear la llave. Intenté de nuevo más tarde.",
+    "error-create-gamedata": "Hubo un error al crear el buff info. Intenté de nuevo más tarde.",
     "alert-success-label-commonword-created": "Palabra Creada",
     "alert-success-label-commonword-updated": "Palabra Actualizada",
-    "alert-success-label-commonword-deleted": "Palabra Eliminada"
+    "alert-success-label-commonword-deleted": "Palabra Eliminada",
+    "alert-success-label-gamedata-created": "Buff Info Creado",
+    "alert-success-label-gamedata-updated": "Buff Info Actualizado",
+    "alert-success-label-gamedata-deleted": "Buff Info Eliminado"
 }
