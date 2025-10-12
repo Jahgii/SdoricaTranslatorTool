@@ -1,5 +1,12 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.scss';
 
+tui-tabs-with-more {
+    width: 100%;
+    justify-content: flex-end;
+    box-shadow: none;
+    min-height: 48px;
+}
+
 .main-container {
     max-width: 60rem;
     min-width: 20rem;
@@ -68,4 +75,19 @@
     tui-icon {
         top: 4px;
     }
+}
+
+.progress-operation-scroll {
+    display: block;
+    width: calc(100% - 4px);
+    height: 200px;
+    border: 2px solid var(--tui-background-base-alt);
+}
+
+.width150 {
+    width: 150px;
+}
+
+.width64 {
+    width: 64px;
 }

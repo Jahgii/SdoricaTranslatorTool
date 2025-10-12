@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TuiFileLike } from '@taiga-ui/kit';
-import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLatest, zip, map } from 'rxjs';
+import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLatest, zip, map, share, shareReplay } from 'rxjs';
 import { ILocalization, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
 import { IGamedata } from '../core/interfaces/i-gamedata';
@@ -25,6 +25,8 @@ export class ExportTranslationService {
   private zipObb!: JSZip;
   private dataLoc!: ILocalization;
   private dataGam!: IGamedata;
+
+  public readonly exportMessages: WritableSignal<string[]> = signal([]);
 
   public obb: IFileControl = {
     control: new FormControl(),
@@ -92,6 +94,8 @@ export class ExportTranslationService {
 
   public progressPerc$!: Observable<IExportPercentages>;
 
+  public exportStatus = signal(ProgressStatus.waiting);
+
   constructor(
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
     private readonly ddS: DeviceDetectorService,
@@ -134,17 +138,20 @@ export class ExportTranslationService {
         (file ?
           this.onLoadFile(file, this.obb) :
           of(null)
-        ))
+        )),
+        shareReplay()
       );
 
     this.localization.loadedFile$ = this.localization.control
       .valueChanges
       .pipe(
+
         switchMap(file =>
         (file ?
           this.onLoadFile(file, this.localization) :
           of(null)
-        ))
+        )),
+        shareReplay()
       );
 
     this.gamedata.loadedFile$ = this.gamedata.control
@@ -154,7 +161,8 @@ export class ExportTranslationService {
         (file ?
           this.onLoadFile(file, this.gamedata) :
           of(null)
-        ))
+        )),
+        shareReplay()
       );
 
     if (this.ddS.isMobile()) {
@@ -204,7 +212,7 @@ export class ExportTranslationService {
     this.zipObb = new JSZip();
     try {
       await this.zipObb.loadAsync(file, {});
-    } catch (error) {
+    } catch {
       fileControl.verifyingFile$.next(false);
       firstValueFrom(alert);
       fileControl.control.setValue(null);
@@ -243,7 +251,7 @@ export class ExportTranslationService {
     reader.onload = (ev: ProgressEvent<FileReader>) => {
       try {
         this.dataLoc = decode(reader.result as ArrayBuffer) as ILocalization;
-      } catch (error) {
+      } catch {
         fileControl.verifyingFile$.next(false);
         firstValueFrom(alert);
         fileControl.control.setValue(null);
@@ -282,7 +290,7 @@ export class ExportTranslationService {
     reader.onload = (ev: ProgressEvent<FileReader>) => {
       try {
         this.dataGam = decode(reader.result as ArrayBuffer) as ILocalization;
-      } catch (error) {
+      } catch {
         fileControl.verifyingFile$.next(false);
         firstValueFrom(alert);
         fileControl.control.setValue(null);
@@ -372,7 +380,7 @@ export class ExportTranslationService {
   private onMessage(message: IOnMessage, fileControl: IFileControl) {
     if (message.pgState == ProgressStatus.finish && message.blob) {
       fileControl.url = window.URL.createObjectURL(message.blob);
-      // this.onAutoDownload(fileControl);
+      this.onAutoDownload(fileControl);
     }
 
     fileControl.progress$.next(message.pg);
@@ -399,6 +407,49 @@ export class ExportTranslationService {
     fileControl.skip?.next(true);
     fileControl.verifiedFile$.next(true);
     fileControl.progressStatus$.next(ProgressStatus.finish);
+  }
+
+  public onExportTranslation() {
+    const allWorker = new Worker(new URL('../core/workers/export-all.worker', import.meta.url));
+    allWorker.onmessage = ({ data }) => this.onMessageAll(data);
+    this.exportStatus.set(ProgressStatus.retrivingServerData);
+
+    let message: ExportPostMessage = {
+      dbName: this.indexedDB.dbName,
+      dbVersion: this.indexedDB.dbVersion,
+      appMode: this.lStorage.getAppMode() ?? AppModes.Pending,
+      apiUrl: this.lStorage.getAppApiUrl() ?? "",
+      apiKey: this.lStorage.getAppApiKey() ?? "",
+      file: undefined,
+      decodeResult: undefined,
+      lang: 'English',
+      token: this.lStorage.getToken(),
+      exportMode: 'game-file'
+    };
+
+    allWorker.postMessage(message);
+  }
+
+  private onMessageAll(message: IOnMessage | string) {
+    if (typeof message === 'string') {
+      this.exportMessages.set([...this.exportMessages(), message]);
+
+      return;
+    }
+
+    if (!(message.pgState == ProgressStatus.finish && message.blob)) return;
+    this.exportStatus.set(message.pgState);
+    this.exportMessages.set([...this.exportMessages(), message.pgState]);
+
+    const url = window.URL.createObjectURL(message.blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Data';
+    a.type = '';
+    document.body.appendChild(a);
+    a.style.display = 'none';
+    a.click();
+    a.remove();
   }
 
 }
