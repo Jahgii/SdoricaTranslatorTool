@@ -36,8 +36,12 @@ export class IndexDBService {
   private onUpgradeNeededOpenDB(event: Event) {
     this.db = (event.target as any).result;
 
-    if (!this.db.objectStoreNames.contains(ObjectStoreNames.CommonWord))
-      this.db.createObjectStore(ObjectStoreNames.CommonWord, { keyPath: "Id", autoIncrement: true });
+    const storeC: IDBObjectStore = !this.db.objectStoreNames.contains(ObjectStoreNames.CommonWord) ?
+      this.db.createObjectStore(ObjectStoreNames.CommonWord, { keyPath: "Id", autoIncrement: true }) :
+      (event.target as any).transaction.objectStore(ObjectStoreNames.CommonWord);
+
+    if (!storeC.indexNames.contains("Original"))
+      storeC.createIndex("Original", "Original", { unique: true });
 
     const storeDA: IDBObjectStore = !this.db.objectStoreNames.contains(ObjectStoreNames.DialogAsset) ?
       this.db.createObjectStore(ObjectStoreNames.DialogAsset, { keyPath: "Id", autoIncrement: true }) :
