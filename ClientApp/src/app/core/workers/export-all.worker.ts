@@ -185,7 +185,7 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   let valuesK: ILocalizationKey[] = [];
   let valuesC: ICommonWord[] = [];
 
-  let promiseGV = fetch(`${message.apiUrl}api/gamedatavalues/export`, {
+  let fetchGV = fetch(`${message.apiUrl}api/gamedatavalues/export`, {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -195,7 +195,7 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   });
 
   postMessage(ExportMessages.retrivingServerDataGamedataValues);
-  promiseGV.then(
+  let promiseGV = fetchGV.then(
     async res => {
       valuesGV = await res.json();
 
@@ -210,7 +210,7 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
     }
   );
 
-  let promiseDA = fetch(`${message.apiUrl}api/dialogassets/export`, {
+  let fetchDA = fetch(`${message.apiUrl}api/dialogassets/export`, {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -220,7 +220,7 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   });
 
   postMessage(ExportMessages.retrivingServerDataDialogs);
-  promiseDA.then(async res => {
+  let promiseDA = fetchDA.then(async res => {
     valuesDA = await res.json();
 
     if (valuesDA.length === 0)
@@ -232,7 +232,7 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   }
   );
 
-  let promiseK = fetch(`${message.apiUrl}api/localizationkeys/export`, {
+  let fetchK = fetch(`${message.apiUrl}api/localizationkeys/export`, {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -243,21 +243,19 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   });
 
   postMessage(ExportMessages.retrivingServerDataKeys);
-  promiseK.then(
-    async res => {
-      valuesK = await res.json();
+  let promiseK = fetchK.then(async res => {
+    valuesK = await res.json();
 
-      if (valuesK.length === 0)
-        postMessage(ExportMessages.retrivingServerDataKeysEmpty);
-      else
-        postMessage(ExportMessages.retrivingServerDataKeysSuccess);
-    },
-    _ => {
-      postMessage(ExportMessages.retrivingServerDataKeysError);
-    }
+    if (valuesK.length === 0)
+      postMessage(ExportMessages.retrivingServerDataKeysEmpty);
+    else
+      postMessage(ExportMessages.retrivingServerDataKeysSuccess);
+  }, _ => {
+    postMessage(ExportMessages.retrivingServerDataKeysError);
+  }
   );
 
-  let promiseC = fetch(`${message.apiUrl}api/commonWords`, {
+  let fetchC = fetch(`${message.apiUrl}api/commonWords`, {
     method: 'GET',
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -268,18 +266,18 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   });
 
   postMessage(ExportMessages.retrivingServerDataCommonwords);
-  promiseC.then(
-    async res => {
-      valuesC = await res.json();
+  let promiseC = fetchC.then(async res => {
+    valuesC = await res.json();
 
-      if (valuesC.length === 0)
-        postMessage(ExportMessages.retrivingServerDataCommonwordsEmpty);
-      else
-        postMessage(ExportMessages.retrivingServerDataCommonwordsSuccess);
-    },
-    _ => {
-      postMessage(ExportMessages.retrivingServerDataCommonwordsError);
-    }
+    if (valuesC.length === 0)
+      postMessage(ExportMessages.retrivingServerDataCommonwordsEmpty);
+    else
+      postMessage(ExportMessages.retrivingServerDataCommonwordsSuccess);
+
+    return valuesC;
+  }, _ => {
+    postMessage(ExportMessages.retrivingServerDataCommonwordsError);
+  }
   );
 
   await Promise.all([
