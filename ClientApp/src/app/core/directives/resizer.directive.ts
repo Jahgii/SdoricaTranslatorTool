@@ -27,7 +27,12 @@ export class ResizerDirective implements OnChanges {
   private readonly touchUp$: Observable<TouchEvent> = fromEvent<TouchEvent>(document, "touchend", { passive: false });
   private readonly px_minResizer = 64;
 
-  constructor() { }
+  private readonly elementContainer?: Element;
+  private ghostElement?: HTMLElement;
+
+  constructor() {
+    this.elementContainer = document.getElementsByClassName("main-viewer")[0];
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.elementRef) {
@@ -54,6 +59,8 @@ export class ResizerDirective implements OnChanges {
     this.resizerState.combinePercentage = this.resizerState.previousLeftWidth + this.resizerState.previousRightWidth;
 
     this.addActiveClass();
+    this.changeDocumentEvents('none');
+    this.createGhostElement(e.pageX, e.pageY);
     this.onMouseMoveSubs();
     this.onMouseUpSubs();
   }
@@ -70,7 +77,7 @@ export class ResizerDirective implements OnChanges {
       .pipe(takeWhile(() => this.resizerState.isResizing))
       .subscribe(event => {
         event.preventDefault();
-        this.moveAxis(event.pageX, event.pageY);
+        this.moveGhostAxis(event.pageX, event.pageY);
       });
   }
 
@@ -81,6 +88,10 @@ export class ResizerDirective implements OnChanges {
         e.preventDefault();
         this.resizerState.isResizing = false;
         this.removeActiveClass();
+        this.elementRef.parentElement?.removeChild(this.ghostElement!);
+        this.ghostElement = undefined;
+        this.changeDocumentEvents('');
+        this.moveAxis(e.pageX, e.pageY);
       });
 
   }
@@ -101,6 +112,8 @@ export class ResizerDirective implements OnChanges {
     this.resizerState.combinePercentage = this.resizerState.previousLeftWidth + this.resizerState.previousRightWidth;
 
     this.addActiveClass();
+    this.changeDocumentEvents('none');
+    this.createGhostElement(pageX, pageY);
     this.onTouchMoveSubs();
     this.onTouchUpSubs();
   }
@@ -117,7 +130,7 @@ export class ResizerDirective implements OnChanges {
       .pipe(takeWhile(() => this.resizerState.isResizing))
       .subscribe(event => {
         event.preventDefault();
-        this.moveAxis(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+        this.moveGhostAxis(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
       });
   }
 
@@ -128,12 +141,34 @@ export class ResizerDirective implements OnChanges {
         e.preventDefault();
         this.resizerState.isResizing = false;
         this.removeActiveClass();
+        this.elementRef.parentElement?.removeChild(this.ghostElement!);
+        this.ghostElement = undefined;
+        this.changeDocumentEvents('');
+        this.moveAxis(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
       });
 
   }
   //#endregion
 
-  private moveAxis(axisX: number, axisY: number) {
+  private moveGhostAxis(axisX: number, _: number) {
+    let x = axisX;
+    let y = 0;
+    let rect = this.elementContainer?.getBoundingClientRect();
+
+    if (rect) {
+      x = Math.max(
+        rect.left + this.px_minResizer,
+        Math.min(x, rect.right - this.elementRef.offsetWidth - this.px_minResizer)
+      );
+      y = rect.top
+    }
+
+
+    this.ghostElement!.style.left = `${x}px`;
+    this.ghostElement!.style.top = `${y}px`;
+  }
+
+  private moveAxis(axisX: number, _: number) {
     this.moveOnAxisX(axisX - this.resizerState.xDiff);
   }
 
@@ -169,6 +204,26 @@ export class ResizerDirective implements OnChanges {
   private removeActiveClass() {
     this.elementRef.classList.remove("resizer-line-active");
     document.documentElement?.classList.remove("resizer-cursor");
+  }
+
+  private createGhostElement(axisX: number, _: number) {
+    this.ghostElement = this.elementRef.cloneNode(true) as HTMLElement;
+    this.ghostElement.style.position = "absolute";
+    this.ghostElement.style.opacity = "1";
+    this.ghostElement.style.pointerEvents = "none";
+    this.ghostElement.style.zIndex = "1000";
+
+    let rect = this.elementContainer?.getBoundingClientRect();
+    if (rect) this.ghostElement.style.height = `${rect.height}px`;
+
+    this.elementRef.parentElement?.appendChild(this.ghostElement);
+
+    this.moveGhostAxis(axisX, _);
+  }
+
+  private changeDocumentEvents(change: "none" | "") {
+    document.body.style.userSelect = change;
+    document.body.style.pointerEvents = change;
   }
 
 }
