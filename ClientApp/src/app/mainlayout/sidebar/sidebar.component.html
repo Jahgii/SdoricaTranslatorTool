@@ -7,11 +7,13 @@
 
             @if ((breakpointService$ | async) === 'mobile') {
             @if (appState.isOnTour$()) {
-            <button id="mainMenuButton" tuiIconButton appearance="flat" size="s" type="button"
-                [tuiAppearanceState]="open || null ? 'active' : null" [tuiDropdownDirection]="'bottom'"
-                [tuiDropdown]="dropdownMenu" [tuiDropdownManual]="open" (click)="onOpenMenu()"
-                [tuiDropdownSided]="false" class="pabsolute" aria-label="menu-button">
-            </button>
+            <div [tuiDropdownDirection]="'bottom'" class="pabsolute" [tuiDropdown]="dropdownMenu"
+                [tuiDropdownManual]="open" [tuiDropdownSided]="false">
+                <button id="mainMenuButton" tuiIconButton appearance="flat" size="s" type="button"
+                    aria-label="menu-button" [tuiAppearanceState]="open || null ? 'active' : null"
+                    (click)="onOpenMenu()">
+                </button>
+            </div>
             }
             @else{
             <div [tuiDropdownDirection]="'bottom'" class="pabsolute" [tuiDropdown]="dropdownMenu"
@@ -24,7 +26,7 @@
 
             <ng-template #dropdownMenu let-close="close">
                 <div class="mobile-menu">
-                    <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons"></ng-container>
+                    <ng-container [ngTemplateOutlet]="sidebarLoadComponentButtons" />
 
                     <!-- DIALOG OPTIONS -->
                     <button tuiButton type="button" aria-label="key-button" appearance="icon" [iconStart]="'@tui.key'"

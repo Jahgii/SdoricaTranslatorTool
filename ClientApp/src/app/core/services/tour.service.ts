@@ -57,11 +57,11 @@ export class TourService {
   }
 
   private createTour(tour: { defaultStepOptions: StepOptions, defaultSteps: StepOptions[] }) {
-      this.shepherdService.defaultStepOptions = tour.defaultStepOptions as any;
-      this.shepherdService.modal = true;
-      this.shepherdService.confirmCancel = false;
-      this.shepherdService.onTourFinish = this.onTourFinish.bind(this);
-      this.shepherdService.addSteps(tour.defaultSteps as any);
+    this.shepherdService.defaultStepOptions = tour.defaultStepOptions as any;
+    this.shepherdService.modal = true;
+    this.shepherdService.confirmCancel = false;
+    this.shepherdService.onTourFinish = this.onTourFinish.bind(this);
+    this.shepherdService.addSteps(tour.defaultSteps as any);
   }
 
   private async restartTour() {
@@ -90,7 +90,7 @@ export class TourService {
     let nextTranslateText = this.translate.instant('tour-next');
     let endTranslateText = this.translate.instant('tour-end');
     let mobile = await firstValueFrom(this.breakpointService$)
-      .then(r => r === 'mobile' ? true : false);
+      .then(r => r === 'mobile');
 
     let defaultSteps: StepOptions[] = [
       {
