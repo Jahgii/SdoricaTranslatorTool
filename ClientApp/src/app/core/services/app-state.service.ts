@@ -1,4 +1,4 @@
-import { Injectable, Signal, WritableSignal, computed } from '@angular/core';
+import { Injectable, Signal, computed } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ViewersService } from './viewers.service';
 import { LocalStorageService } from './local-storage.service';

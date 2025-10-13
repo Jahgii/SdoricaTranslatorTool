@@ -4,14 +4,16 @@
     </button>
 </div>
 <ng-template #dropdown>
-    <h4 style="text-align: center;">{{'dictionary' | translate}}</h4>
-    <tui-data-list>
+    <h4 style="padding-left: var(--tui-padding-s);">
+        {{'dictionary' | translate}}
+    </h4>
+    <tui-data-list size="s" style="min-width: 120px;">
         <tui-opt-group>
-            <button tuiOption new (click)="onShowList(listTemplate, 'm')">
-                <tui-icon icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
+            <button tuiOption new iconStart="book-open" (click)="onShowList(listTemplate, 'm')">
+                {{'see-all' | translate}}
             </button>
-            <button tuiOption new (click)="onShowCreateNew(createTemplate, 'm')">
-                <tui-icon icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
+            <button tuiOption new iconStart="pencil" (click)="onShowCreateNew(createTemplate, 'm')">
+                {{'create-new' | translate}}
             </button>
         </tui-opt-group>
     </tui-data-list>

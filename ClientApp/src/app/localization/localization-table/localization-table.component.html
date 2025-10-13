@@ -166,7 +166,7 @@
                                     </tui-textarea>
                                     <ng-template #buffSelection>
                                         @if (tranlationTextArea.nativeFocusableElement) {
-                                        <tui-data-list class="menu"
+                                        <tui-data-list size="s" class="menu"
                                             (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
                                             @for (buff of filterItems(tranlationTextArea.nativeFocusableElement); track
                                             $index) {
@@ -312,7 +312,7 @@
                                         </tui-textarea>
                                         <ng-template #buffSelection>
                                             @if (tranlationTextArea.nativeFocusableElement) {
-                                            <tui-data-list class="menu"
+                                            <tui-data-list size="s" class="menu"
                                                 (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
                                                 @for (buff of filterItems(tranlationTextArea.nativeFocusableElement);
                                                 track $index) {
