@@ -96,18 +96,8 @@ export class PortraitsService {
   private async loadFilesFileSystemAPI() {
     const promises: File[] = [];
 
-    try {
-      for await (const entry of (this.dirHandle as any).values()) {
-        if (entry.kind !== 'file') {
-          continue;
-        }
-
-        promises.push(entry.getFile().then((file: File) => file));
-      }
-    }
-    catch (error) {
-      this.openAlert();
-    }
+    try { await this.readDirectory(this.dirHandle, promises); }
+    catch { this.openAlert(); }
 
     this.imageDir = {};
 
@@ -151,6 +141,20 @@ export class PortraitsService {
     }
 
     return false;
+  }
+
+  private async readDirectory(fSDA: FileSystemDirectoryHandle, files: File[]) {
+    for await (const entry of (fSDA as any).values()) {
+      if (entry.kind === 'directory') {
+        this.readDirectory(entry, files);
+        continue;
+      }
+
+      const ext = entry.name.toLowerCase();
+      if (ext.endsWith('.png') || ext.endsWith('.jpg') || ext.endsWith('.jpeg')) {
+        files.push((entry as any).getFile().then((file: File) => file));
+      }
+    }
   }
   //#endregion
 
