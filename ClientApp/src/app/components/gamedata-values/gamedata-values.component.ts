@@ -24,7 +24,6 @@ import { CommonWordTableCellEditableComponent } from "../common-words/common-wor
   selector: 'app-gamedata-values',
   templateUrl: './gamedata-values.component.html',
   styleUrls: ['./gamedata-values.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     popinAnimation,
     fadeinAnimation
@@ -63,7 +62,8 @@ import { CommonWordTableCellEditableComponent } from "../common-words/common-wor
     DraggableElementDirective,
     CommonWordTableCellEditableComponent,
     AutoFocusDirective,
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;

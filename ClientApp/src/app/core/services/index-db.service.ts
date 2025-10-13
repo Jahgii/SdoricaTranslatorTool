@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, firstValueFrom } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors } from '../interfaces/i-indexed-db';
 
 @Injectable({

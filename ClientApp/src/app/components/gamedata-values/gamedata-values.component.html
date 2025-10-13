@@ -147,7 +147,9 @@
 </main>
 }
 <ng-template #listTemplate>
-    <h4 class="tui-space_horizontal-3">{{'buffinfo-description' | translate}}</h4>
+    <h4 class="tui-space_horizontal-3">
+        {{'buffinfo-description' | translate}}
+    </h4>
 
     <tui-scrollbar class="viewport" [class.viewport-dialog]="(breakpointService$| async) === 'mobile'">
         <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport-2 tui-zero-scrollbar" [itemSize]="33"
@@ -189,59 +191,59 @@
                     </tr>
                 </thead>
                 <tbody tuiTbody>
-                    @defer{
                     <tr tuiTr
                         *cdkVirtualFor="let v of (gamedataService.store.store$ | async); index as i; trackBy: trackByItemId">
 
                         <td *tuiCell="'id'" tuiTd>
-                            {{v.Content.id}}
+                            <span class="span-unfocus">
+                                {{v.Content.id}}
+                            </span>
                         </td>
                         <td *tuiCell="'iconKey'" tuiTd class="editable-cell">
-                            <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
-                                [unfocusTemplate]="unfocus" />
-                            <ng-template #focus>
+                            <app-common-word-table-cell-editable #cellIconKey [focusTemplate]="focusIconKey"
+                                [unfocusTemplate]="unfocusIconKey" />
+                            <ng-template #focusIconKey>
                                 <tui-input [(ngModel)]="v.Content.iconKey" tuiTextfieldSize="s">
-                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cell" />
+                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cellIconKey" />
                                 </tui-input>
                             </ng-template>
-                            <ng-template #unfocus>
+                            <ng-template #unfocusIconKey>
                                 <span class="span-unfocus">{{v.Content.iconKey}}</span>
                             </ng-template>
                         </td>
                         <td *tuiCell="'localizationInfoKey'" tuiTd class="editable-cell">
-                            <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
-                                [unfocusTemplate]="unfocus" />
-                            <ng-template #focus>
+                            <app-common-word-table-cell-editable #cellInfoKey [focusTemplate]="focusInfoKey"
+                                [unfocusTemplate]="unfocusInfoKey" />
+                            <ng-template #focusInfoKey>
                                 <tui-input [(ngModel)]="v.Content.localizationInfoKey" tuiTextfieldSize="s">
-                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cell" />
+                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cellInfoKey" />
                                 </tui-input>
                             </ng-template>
-                            <ng-template #unfocus>
+                            <ng-template #unfocusInfoKey>
                                 <span class="span-unfocus">{{v.Content.localizationInfoKey}}</span>
                             </ng-template>
                         </td>
                         <td *tuiCell="'localizationNameKey'" tuiTd class="editable-cell">
-                            <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
-                                [unfocusTemplate]="unfocus" />
-                            <ng-template #focus>
+                            <app-common-word-table-cell-editable #cellNameKey [focusTemplate]="focusNameKey"
+                                [unfocusTemplate]="unfocusNameKey" />
+                            <ng-template #focusNameKey>
                                 <tui-input [(ngModel)]="v.Content.localizationNameKey" tuiTextfieldSize="s">
-                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cell" />
+                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cellNameKey" />
                                 </tui-input>
                             </ng-template>
-                            <ng-template #unfocus>
+                            <ng-template #unfocusNameKey>
                                 <span class="span-unfocus">{{v.Content.localizationNameKey}}</span>
                             </ng-template>
                         </td>
                         <td *tuiCell="'order'" tuiTd class="editable-cell">
-                            <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
-                                [unfocusTemplate]="unfocus" />
-                            <ng-template #focus>
-                                <tui-input-number [(ngModel)]="v.Content.order" tuiTextfieldSize="s" appAutoFocus
-                                    [cell]="cell">
-                                    <input placeholder="***" tuiTextfieldLegacy />
+                            <app-common-word-table-cell-editable #cellOrder [focusTemplate]="focusOrder"
+                                [unfocusTemplate]="unfocusOrder" />
+                            <ng-template #focusOrder>
+                                <tui-input-number [(ngModel)]="v.Content.order" tuiTextfieldSize="s">
+                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cellOrder" />
                                 </tui-input-number>
                             </ng-template>
-                            <ng-template #unfocus>
+                            <ng-template #unfocusOrder>
                                 <span class="span-unfocus">{{v.Content.order}}</span>
                             </ng-template>
                         </td>
@@ -289,13 +291,6 @@
                         </td>
                         }
                     </tr>
-                    } @loading{
-                    <tr>
-                        <td [colSpan]="columns.length">
-                            <tui-loader />
-                        </td>
-                    </tr>
-                    }
                 </tbody>
             </table>
         </cdk-virtual-scroll-viewport>
