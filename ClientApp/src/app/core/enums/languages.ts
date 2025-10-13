@@ -5,3 +5,11 @@ export enum LanguageType {
     chinesesimplified = 'ChineseSimplified',
     korean = 'Korean'
 }
+
+export const LanguageTypeReverse: { [key: string]: keyof typeof LanguageType } = {
+    English: 'english',
+    Japanese: 'japanese',
+    Chinese: 'chinesetraditional',
+    ChineseSimplified: 'chinesesimplified',
+    Korean: 'korean'
+};

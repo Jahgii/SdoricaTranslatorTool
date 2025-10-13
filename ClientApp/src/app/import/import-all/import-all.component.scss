@@ -1,0 +1,96 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+
+tui-tabs-with-more {
+    width: 100%;
+    justify-content: flex-end;
+    box-shadow: none;
+    min-height: 48px;
+}
+
+.main-container {
+    max-width: 60rem;
+    min-width: 20rem;
+    padding: 0 clamp(1em, 2.5%, 5em);
+    margin: 2rem auto 0 auto;
+}
+
+.file-input-empty {
+    position: relative;
+}
+
+.file-input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, auto));
+    gap: 1em;
+}
+
+.file-input {
+    min-width: 280px;
+    min-height: 108px;
+    max-height: 108px;
+}
+
+.file-input-provided {
+    width: 100%;
+}
+
+.right-top-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+}
+
+.wizard-choose-lang {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-gap: 1em;
+    grid-auto-rows: minmax(108px, auto);
+    justify-content: space-between;
+}
+
+.progress-badget-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.file-avatar {
+    background: transparent;
+}
+
+.file-verified-loader {
+    position: absolute;
+    right: 0.5em;
+    top: 0.5em;
+
+    tui-icon {
+        top: 4px;
+    }
+}
+
+.next-button {
+    width: 100%;
+}
+
+.import-button {
+    display: grid;
+}
+
+.padding0 {
+    padding: 0;
+}
+
+.progress-operation-scroll {
+    display: block;
+    width: calc(100% - 4px);
+    height: 200px;
+    border: 2px solid var(--tui-background-base-alt);
+}
+
+.width150 {
+    width: 150px;
+}
+
+.width64 {
+    width: 64px;
+}

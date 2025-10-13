@@ -6,6 +6,7 @@ import { ImportMainComponent } from "../import/import-main/import-main.component
 import { WizardInitialComponent } from "../components/wizard-initial/wizard-initial.component";
 import { AppLoadingComponent } from "../components/app-loading/app-loading.component";
 import { LoginComponent } from "../components/login/login.component";
+import { ImportAllComponent } from "../import/import-all/import-all.component";
 
 export interface Viewers { [component: string]: Type<any> };
 
@@ -14,6 +15,7 @@ export const viewers: Viewers = {
     localization: LocalizationComponent,
     dialogs: DialogMainComponent,
     import: ImportMainComponent,
+    importall: ImportAllComponent,
     export: ExportTranslationGuestComponent,
     wizard: WizardInitialComponent,
     loading: AppLoadingComponent
@@ -24,6 +26,7 @@ export enum AppViews {
     localization = "localization",
     dialogs = "dialogs",
     import = "import",
+    importall = "importall",
     export = "export",
     wizard = 'wizard',
     loading = 'loading'

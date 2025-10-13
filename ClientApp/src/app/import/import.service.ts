@@ -758,16 +758,14 @@ export class ImportService {
           langName = this.dataLoc.C[categoryName].K[langIndex];
           let text = dC[langIndex];
 
-          if (!new_key) {
-            new_key = {
-              Category: categoryName,
-              Name: keyName,
-              _version: Number(_version ?? -1),
-              Translated: {},
-              Original: {},
-              Translations: {}
-            }
-          }
+          new_key ??= {
+            Category: categoryName,
+            Name: keyName,
+            _version: Number(_version ?? -1),
+            Translated: {},
+            Original: {},
+            Translations: {}
+          };
 
           new_key.Translated[langName] = false;
           new_key.Original[langName] = text;

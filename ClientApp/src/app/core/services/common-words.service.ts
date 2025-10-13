@@ -29,7 +29,7 @@ export class CommonWordsService {
     this.init();
   }
 
-  private init() {
+  public init() {
     let words$: Observable<ICommonWord[]> | Subject<ICommonWord[]> | undefined;
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {

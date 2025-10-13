@@ -76,9 +76,7 @@ export function addDialogAssetGroup(
     dialogAssetsGroups: { [language: string]: { [mainGroup: string]: { [group: string]: IGroup } } },
     dialogAsset: IDialogAsset
 ) {
-    if (dialogAssetsMainGroups[dialogAsset.Language] == null) {
-        dialogAssetsMainGroups[dialogAsset.Language] = {};
-    }
+    dialogAssetsMainGroups[dialogAsset.Language] ??= {};
 
     if (dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup] == null) {
         dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup] = {
@@ -95,13 +93,9 @@ export function addDialogAssetGroup(
         dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup].Files += 1;
     }
 
-    if (dialogAssetsGroups[dialogAsset.Language] == null) {
-        dialogAssetsGroups[dialogAsset.Language] = {};
-    }
+    dialogAssetsGroups[dialogAsset.Language] ??= {};
 
-    if (dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup] == null) {
-        dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup] = {};
-    }
+    dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup] ??= {};
 
 
     if (dialogAssetsGroups[dialogAsset.Language][dialogAsset.MainGroup][dialogAsset.Group] == null) {

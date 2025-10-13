@@ -356,5 +356,9 @@
     "retriving-server-data-gamedatavalues-empty": "No Game Data Values",
     "retriving-server-data-dialogs-empty": "No Translated Dialogs",
     "retriving-server-data-keys-empty": "No Translated Keys",
-    "retriving-server-data-commonwords-empty": "No Dictionary"
+    "retriving-server-data-commonwords-empty": "No Dictionary",
+    "waiting-file": "Waiting File",
+    "file-imported": "File Imported",
+    "re-import-game-files": "Import Game Files",
+    "re-import-translation-file": "Import Translation File"
 }

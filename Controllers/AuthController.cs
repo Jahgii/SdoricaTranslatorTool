@@ -22,39 +22,18 @@ public class AuthController(ICustomMongoClient cMongoClient, IJwt jwt) : Control
 
         var user = await _cMongoClient
             .GetCollection<User>()
-            .Find(e => e.Email == authValidation.User)
+            .Find(e =>
+                e.Email == authValidation.User &&
+                e.Password == authValidation.Password
+            )
             .FirstOrDefaultAsync();
 
-        if (user == null)
-        {
-            User newUser = new()
-            {
-                Email = authValidation.User,
-                TranslationCount = 3,
-                Rol = "guest"
-            };
+        if (user == null) return Unauthorized();
 
-            int userCount = (int)await _cMongoClient
-                .GetCollection<User>()
-                .Find(_ => true)
-                .CountDocumentsAsync();
-
-            if (userCount == 0) newUser.Rol = "admin";
-
-            await _cMongoClient.Create(session, newUser);
-            await session.CommitTransactionAsync();
-
-            user = newUser;
-        }
-
-        if (user.Rol == "guest")
-            user.Token = _jwt.GenerateToken(0.12);
-        else if (user.Rol == "admin")
-            user.Token = _jwt.GenerateToken(12);
-        else
-            return Unauthorized();
+        if (user.Rol == "guest") user.Token = _jwt.GenerateToken(0.12);
+        else if (user.Rol == "admin") user.Token = _jwt.GenerateToken(12);
+        else return Unauthorized();
 
         return Ok(user);
-
     }
 }

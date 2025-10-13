@@ -18,9 +18,9 @@ public class StatusController(ICustomMongoClient cMongoClient) : ControllerBase
     {
         var status = new
         {
-            Version = "1.0.0",
-            Status = "Alive",
-            Production = "Ready"
+            version = "1.0.0",
+            status = "Alive",
+            production = "Ready"
         };
 
         var users = await _cMongoClient
@@ -29,7 +29,7 @@ public class StatusController(ICustomMongoClient cMongoClient) : ControllerBase
             .Match(e => true)
             .ToListAsync();
 
-        if (users.Count == 0) status = status with { Production = "Empty" };
+        if (users.Count == 0) status = status with { production = "Empty" };
 
         return Ok(status);
     }

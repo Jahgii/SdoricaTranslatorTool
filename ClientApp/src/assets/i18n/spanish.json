@@ -356,5 +356,9 @@
     "retriving-server-data-gamedatavalues-empty": "Sin Gamedata Values",
     "retriving-server-data-dialogs-empty": "Sin Dialogos Traducidos",
     "retriving-server-data-keys-empty": "Sin Llaves Traducidas",
-    "retriving-server-data-commonwords-empty": "Sin Diccionario"
+    "retriving-server-data-commonwords-empty": "Sin Diccionario",
+    "waiting-file": "Esperando Archivo",
+    "file-imported": "Archivo Importado",
+    "re-import-game-files": "Importar Archivos de Juego",
+    "re-import-translation-file": "Importar Archivo de Traducción"
 }
