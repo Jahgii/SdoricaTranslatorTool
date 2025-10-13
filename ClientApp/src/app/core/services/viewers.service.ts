@@ -119,11 +119,7 @@ export class ViewersService {
       this.adHost.viewContainerRef.remove(1);
       this.adHost.viewContainerRef.remove(1);
       let view = this.views.pop();
-      if (
-        view?.instance.componentLoaded &&
-        view.instance.componentLoadedName &&
-        view.instance.componentLoadedName != this.views[0].instance.componentLoadedName
-      )
+      if (view?.instance.componentLoaded && view.instance.componentLoadedName)
         this.componentOpens[view.instance.componentLoadedName].next(this.componentOpens[view.instance.componentLoadedName].value - 1);
 
       this.lStorage.setC2('');
