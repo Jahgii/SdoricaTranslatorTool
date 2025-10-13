@@ -2,17 +2,12 @@
     <div class="sidebar">
         <div class="profile-avatar-container">
             <tui-avatar [src]="'assets/images/app-icon-simple.svg' | tuiFallbackSrc : '@tui.user' | async"
-                class="avatar" size="m" [round]="false">
+                class="avatar" size="s" [round]="false">
             </tui-avatar>
-            <!-- <tui-loader [showLoader]="(auth.authenticating$ | async) ?? false">
-                <tui-avatar [src]="'assets/images/app-icon-simple.svg' | tuiFallbackSrc : '@tui.user' | async"
-                    class="avatar" size="m" [round]="false">
-                </tui-avatar>
-            </tui-loader> -->
 
             @if ((breakpointService$ | async) === 'mobile') {
             @if (appState.isOnTour$()) {
-            <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
+            <button id="mainMenuButton" tuiIconButton appearance="flat" size="s" type="button"
                 [tuiAppearanceState]="open || null ? 'active' : null" [tuiDropdownDirection]="'bottom'"
                 [tuiDropdown]="dropdownMenu" [tuiDropdownManual]="open" (click)="onOpenMenu()"
                 [tuiDropdownSided]="false" class="pabsolute" aria-label="menu-button">
@@ -21,7 +16,7 @@
             @else{
             <div [tuiDropdownDirection]="'bottom'" class="pabsolute" [tuiDropdown]="dropdownMenu"
                 [(tuiDropdownOpen)]="open">
-                <button id="mainMenuButton" tuiIconButton appearance="flat" size="l" type="button"
+                <button id="mainMenuButton" tuiIconButton appearance="flat" size="s" type="button"
                     aria-label="menu-button" [tuiAppearanceState]="open || null ? 'active' : null">
                 </button>
             </div>
@@ -44,16 +39,18 @@
                         </button>
                     </div>
                     <ng-template #dropdownGamedata let-close="close">
-                        <p style="text-align: center;">{{'buffinfo' | translate}}</p>
-                        <tui-data-list>
+                        <h4 style="padding-left: var(--tui-padding-s);">
+                            {{'buffinfo' | translate}}
+                        </h4>
+                        <tui-data-list size="s" style="min-width: 120px;">
                             <tui-opt-group>
-                                <button tuiOption new type="button"
+                                <button tuiOption new iconStart="book-open"
                                     (click)="gamedataDialog.onShowList(gamedataDialog.listTemplateView, 'm')">
-                                    <tui-icon icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
+                                    {{'see-all' | translate}}
                                 </button>
-                                <button tuiOption new type="button"
+                                <button tuiOption new iconStart="pencil"
                                     (click)="gamedataDialog.onShowCreateNew(gamedataDialog.createTemplateView, 'm')">
-                                    <tui-icon icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
+                                    {{'create-new' | translate}}
                                 </button>
                             </tui-opt-group>
                         </tui-data-list>
@@ -66,16 +63,18 @@
                         </button>
                     </div>
                     <ng-template #dropdownDictionary let-close="close">
-                        <h4 style="text-align: center;">{{'dictionary' | translate}}</h4>
-                        <tui-data-list>
+                        <h4 style="padding-left: var(--tui-padding-s);">
+                            {{'dictionary' | translate}}
+                        </h4>
+                        <tui-data-list size="s" style="min-width: 120px;">
                             <tui-opt-group>
-                                <button tuiOption new type="button"
+                                <button tuiOption new iconStart="book-open"
                                     (click)="dictionaryDialog.onShowList(dictionaryDialog.listTemplateView, 'm')">
-                                    <tui-icon icon="@tui.book-open"></tui-icon> {{'see-all' | translate}}
+                                    {{'see-all' | translate}}
                                 </button>
-                                <button tuiOption new type="button"
+                                <button tuiOption new iconStart="pencil"
                                     (click)="dictionaryDialog.onShowCreateNew(dictionaryDialog.createTemplateView, 'm')">
-                                    <tui-icon icon="@tui.pencil"></tui-icon> {{'create-new' | translate}}
+                                    {{'create-new' | translate}}
                                 </button>
                             </tui-opt-group>
                         </tui-data-list>
@@ -114,12 +113,30 @@
         tuiHint="{{'chapter-dialog-localization' | translate}}" [tuiHintShowDelay]="100"
         [ngClass]="((componentOpens[appViews.dialogs] | async) ?? 0) > 0 ? 'button-side': undefined">
     </button>
-    <button tuiIconButton aria-label="import-button"
-        appearance="{{((componentOpens[appViews.import] | async) ?? 0) > 0 ? 'selected': 'outline' }}" type="button"
-        size="s" [iconStart]="'@tui.upload'" (click)="loadComponent(appViews.import)"
-        tuiHint="{{'re-import-files' | translate}}" [tuiHintShowDelay]="100"
-        [ngClass]="((componentOpens[appViews.import] | async) ?? 0) > 0 ? 'button-side': undefined">
+    <button tuiIconButton aria-label="import-button" appearance="{{
+            (((componentOpens[appViews.import] | async) ?? 0) > 0 || ((componentOpens[appViews.importall] | async) ?? 0) > 0) ? 
+            'selected':
+            'outline'
+        }}" type="button" size="s" [iconStart]="'@tui.upload'"
+        [ngClass]="(((componentOpens[appViews.import] | async) ?? 0) > 0 || ((componentOpens[appViews.importall] | async) ?? 0) > 0) ? 'button-side': undefined"
+        tuiDropdownAlign="right" [tuiDropdown]="importMenu" [tuiDropdownSided]="true" [(tuiDropdownOpen)]="importOpen">
     </button>
+
+    <ng-template #importMenu>
+        <h4 style="padding-left: var(--tui-padding-s);">
+            {{'re-import-files' | translate}}
+        </h4>
+        <tui-data-list size="s" style="min-width: 120px;">
+            <tui-opt-group>
+                <button tuiOption new iconStart="files" (click)="loadComponent(appViews.import); importOpen = false;">
+                    {{'re-import-game-files' | translate}}
+                </button>
+                <button tuiOption new iconStart="file" (click)="loadComponent(appViews.importall); importOpen = false;">
+                    {{'re-import-translation-file' | translate}}
+                </button>
+            </tui-opt-group>
+        </tui-data-list>
+    </ng-template>
     <button tuiIconButton aria-label="export-button"
         appearance="{{((componentOpens[appViews.export] | async) ?? 0) > 0 ? 'selected': 'outline' }}" type="button"
         size="s" [iconStart]="'@tui.download'" (click)="loadComponent(appViews.export)"

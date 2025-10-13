@@ -5,13 +5,14 @@ import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
 import { CommonWordsComponent } from 'src/app/components/common-words/common-words.component';
-import { TuiBreakpointService, TuiDataList, TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TuiFallbackSrcPipe } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDataList, TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TuiFallbackSrcPipe, TuiAppearance } from '@taiga-ui/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LocalizationKeyComponent } from 'src/app/localization/localization-key/localization-key.component';
 import { AppViews, viewers } from 'src/app/core/viewers';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 import { skip, take, takeWhile } from 'rxjs';
+import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
 
 @Component({
   selector: 'app-sidebar',
@@ -21,7 +22,6 @@ import { skip, take, takeWhile } from 'rxjs';
   imports: [
     CommonModule,
     TranslateModule,
-
     TuiButton,
     TuiHint,
     TuiLoader,
@@ -30,11 +30,12 @@ import { skip, take, takeWhile } from 'rxjs';
     TuiDataList,
     TuiIcon,
     TuiActiveZone,
-
     LocalizationKeyComponent,
     GamedataValuesComponent,
     CommonWordsComponent,
-    TuiFallbackSrcPipe
+    TuiFallbackSrcPipe,
+    TuiTextfieldControllerModule,
+    TuiAppearance
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -44,6 +45,7 @@ export class SidebarComponent {
   @ViewChild(GamedataValuesComponent) gamedataDialog!: GamedataValuesComponent;
   @ViewChild(CommonWordsComponent) dictionaryDialog!: CommonWordsComponent;
 
+  public importOpen: boolean = false;
   public open: boolean = false;
   public gamedataOpen: boolean = false;
   public commonOpen: boolean = false;
