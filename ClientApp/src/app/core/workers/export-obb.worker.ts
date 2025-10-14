@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { IDialogAssetExport } from '../interfaces/i-dialog-asset';
 import { IOnMessage, ProgressStatus } from '../interfaces/i-export-progress';
 import { ExportPostMessage } from '../interfaces/i-export';

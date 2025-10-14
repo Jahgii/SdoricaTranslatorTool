@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { onReadFileDialogFromObb } from 'src/app/import/import-logic';
 import { ImportOBBVerificationPostMessage, WorkerImportOBBVerificationPostMessage } from '../interfaces/i-worker';
 

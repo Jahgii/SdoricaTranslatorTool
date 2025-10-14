@@ -23,7 +23,7 @@ import { AppModes } from '../core/enums/app-modes';
 import { IFileControl } from '../core/interfaces/i-file-control';
 import { ApiSuccess } from '../core/interfaces/i-api';
 import { LanguageOriginService } from '../core/services/language-origin.service';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 
 @Injectable()
 export class ImportService {

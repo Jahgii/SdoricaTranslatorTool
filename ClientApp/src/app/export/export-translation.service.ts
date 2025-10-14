@@ -19,7 +19,7 @@ import { ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { IFileControl } from '../core/interfaces/i-file-control';
 import { LanguageType } from '../core/enums/languages';
 import { LanguageOriginService } from '../core/services/language-origin.service';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 
 @Injectable()
 export class ExportTranslationService {
