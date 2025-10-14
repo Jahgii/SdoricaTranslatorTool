@@ -43,7 +43,7 @@
     "@taiga-ui/layout": "4.49.0",
     "@taiga-ui/legacy": "4.49.0",
     "@taiga-ui/styles": "^4.49.0",
-    "angular-shepherd": "^18.0.2",
+    "angular-shepherd": "^20.0.0",
     "dompurify": "2.2.9",
     "dotenv": "^16.4.5",
     "electron-store": "^8.2.0",
@@ -56,7 +56,7 @@
     "zone.js": "^0.15.1"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^18.0.0",
+    "@angular-builders/custom-webpack": "^20.0.0",
     "@angular-builders/dev-server": "^7.3.1",
     "@angular/build": "^19.2.17",
     "@angular/cli": "^19.2.17",
