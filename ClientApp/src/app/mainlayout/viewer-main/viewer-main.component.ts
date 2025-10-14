@@ -5,15 +5,14 @@ import { ViewersService } from 'src/app/core/services/viewers.service';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 
 @Component({
-  selector: 'app-viewer-main',
-  standalone: true,
-  imports: [
-    CommonModule,
-    AdHostDirective
-  ],
-  templateUrl: './viewer-main.component.html',
-  styleUrls: ['./viewer-main.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-viewer-main',
+    imports: [
+        CommonModule,
+        AdHostDirective
+    ],
+    templateUrl: './viewer-main.component.html',
+    styleUrls: ['./viewer-main.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewerMainComponent implements OnInit {
   @HostBinding('class')

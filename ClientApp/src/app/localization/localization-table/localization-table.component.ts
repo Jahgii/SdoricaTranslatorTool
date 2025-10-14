@@ -52,49 +52,45 @@ import { AsyncPipe, KeyValuePipe, NgTemplateOutlet } from "@angular/common";
 const ESPECIAL_CHARACTER = "@";
 
 @Component({
-  selector: "app-localization-table",
-  templateUrl: "./localization-table.component.html",
-  styleUrls: ["./localization-table.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    ElementBreakpointService,
-  ],
-  animations: [
-    popinAnimation,
-    fadeinAnimation,
-  ],
-  standalone: true,
-  imports: [
-    KeyValuePipe,
-    AsyncPipe,
-    NgTemplateOutlet,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-
-    CdkVirtualScrollViewport,
-    CdkFixedSizeVirtualScroll,
-    CdkVirtualForOf,
-
-    TuiTableFilters,
-    TuiScrollbar,
-    TuiTable,
-    TuiSwitch,
-    TuiIcon,
-    TuiInputModule,
-    TuiTextfieldControllerModule,
-    TuiCheckbox,
-    TuiHint,
-    TuiTextareaModule,
-    TuiDropdown,
-    TuiDataList,
-    TuiBlockStatus,
-    TuiAppBar,
-    TuiLoader,
-
-    CommonDictionaryDirective,
-    TuiAppearance,
-  ],
+    selector: "app-localization-table",
+    templateUrl: "./localization-table.component.html",
+    styleUrls: ["./localization-table.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        ElementBreakpointService,
+    ],
+    animations: [
+        popinAnimation,
+        fadeinAnimation,
+    ],
+    imports: [
+        KeyValuePipe,
+        AsyncPipe,
+        NgTemplateOutlet,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        CdkVirtualScrollViewport,
+        CdkFixedSizeVirtualScroll,
+        CdkVirtualForOf,
+        TuiTableFilters,
+        TuiScrollbar,
+        TuiTable,
+        TuiSwitch,
+        TuiIcon,
+        TuiInputModule,
+        TuiTextfieldControllerModule,
+        TuiCheckbox,
+        TuiHint,
+        TuiTextareaModule,
+        TuiDropdown,
+        TuiDataList,
+        TuiBlockStatus,
+        TuiAppBar,
+        TuiLoader,
+        CommonDictionaryDirective,
+        TuiAppearance,
+    ]
 })
 export class LocalizationTableComponent implements OnInit, OnDestroy {
   @ViewChildren(TuiOption, { read: ElementRef })

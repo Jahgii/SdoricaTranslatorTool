@@ -15,30 +15,29 @@ import { skip, take, takeWhile } from 'rxjs';
 import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
 
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss',
-  imports: [
-    CommonModule,
-    TranslateModule,
-    TuiButton,
-    TuiHint,
-    TuiLoader,
-    TuiAvatar,
-    TuiDropdown,
-    TuiDataList,
-    TuiIcon,
-    TuiActiveZone,
-    LocalizationKeyComponent,
-    GamedataValuesComponent,
-    CommonWordsComponent,
-    TuiFallbackSrcPipe,
-    TuiTextfieldControllerModule,
-    TuiAppearance
-  ],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.component.scss',
+    imports: [
+        CommonModule,
+        TranslateModule,
+        TuiButton,
+        TuiHint,
+        TuiLoader,
+        TuiAvatar,
+        TuiDropdown,
+        TuiDataList,
+        TuiIcon,
+        TuiActiveZone,
+        LocalizationKeyComponent,
+        GamedataValuesComponent,
+        CommonWordsComponent,
+        TuiFallbackSrcPipe,
+        TuiTextfieldControllerModule,
+        TuiAppearance
+    ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent {
   @ViewChild(LocalizationKeyComponent) localizationKeyDialog!: LocalizationKeyComponent;

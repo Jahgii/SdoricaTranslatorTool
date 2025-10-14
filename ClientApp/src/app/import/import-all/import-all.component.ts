@@ -9,40 +9,37 @@ import { TuiCardMedium } from '@taiga-ui/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
-  selector: 'app-import-all',
-  standalone: true,
-  providers: [
-    ImportAllService
-  ],
-  imports: [
-    AsyncPipe,
-    NgIf,
-    NgTemplateOutlet,
-    FormsModule,
-    ReactiveFormsModule,
-    ScrollingModule,
-
-    TranslateModule,
-
-    TuiFiles,
-    TuiCardMedium,
-    TuiAppearance,
-    TuiHint,
-    TuiTitle,
-    TuiAvatar,
-    TuiLoader,
-    TuiIcon,
-    TuiTabs,
-    TuiCheckbox,
-    TuiScrollbar,
-    TuiTitle,
-    TuiBadge,
-    TuiButton,
-    TuiButtonLoading,
-  ],
-  templateUrl: './import-all.component.html',
-  styleUrl: './import-all.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-import-all',
+    providers: [
+        ImportAllService
+    ],
+    imports: [
+        AsyncPipe,
+        NgIf,
+        NgTemplateOutlet,
+        FormsModule,
+        ReactiveFormsModule,
+        ScrollingModule,
+        TranslateModule,
+        TuiFiles,
+        TuiCardMedium,
+        TuiAppearance,
+        TuiHint,
+        TuiTitle,
+        TuiAvatar,
+        TuiLoader,
+        TuiIcon,
+        TuiTabs,
+        TuiCheckbox,
+        TuiScrollbar,
+        TuiTitle,
+        TuiBadge,
+        TuiButton,
+        TuiButtonLoading,
+    ],
+    templateUrl: './import-all.component.html',
+    styleUrl: './import-all.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportAllComponent {
   protected readonly importAllS = inject(ImportAllService);

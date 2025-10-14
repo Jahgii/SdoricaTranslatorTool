@@ -17,38 +17,35 @@ import { LocalizationKeyComponent } from './localization-key/localization-key.co
 import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-localization',
-  templateUrl: './localization.component.html',
-  styleUrls: ['./localization.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    LocalizationService
-  ],
-  animations: [
-    popinAnimation
-  ],
-  standalone: true,
-  imports: [
-    NgIf,
-    AsyncPipe,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-
-    TuiComboBoxModule,
-    TuiTextfieldControllerModule,
-    // TuiPrimitiveTextfieldModule,
-    TuiDataList,
-    TuiDataListWrapper,
-    TuiDropdown,
-    TuiButton,
-    TuiInputModule,
-    TuiHint,
-    TuiBlockStatus,
-    TuiFilterByInputPipe,
-    
-    LocalizationTableComponent
-  ],
+    selector: 'app-localization',
+    templateUrl: './localization.component.html',
+    styleUrls: ['./localization.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        LocalizationService
+    ],
+    animations: [
+        popinAnimation
+    ],
+    imports: [
+        NgIf,
+        AsyncPipe,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        TuiComboBoxModule,
+        TuiTextfieldControllerModule,
+        // TuiPrimitiveTextfieldModule,
+        TuiDataList,
+        TuiDataListWrapper,
+        TuiDropdown,
+        TuiButton,
+        TuiInputModule,
+        TuiHint,
+        TuiBlockStatus,
+        TuiFilterByInputPipe,
+        LocalizationTableComponent
+    ]
 })
 export class LocalizationComponent implements OnInit {
   viewIndex: number = -1;

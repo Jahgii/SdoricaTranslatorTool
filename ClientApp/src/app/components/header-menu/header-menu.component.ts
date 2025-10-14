@@ -22,38 +22,35 @@ import { IndexDBService } from "src/app/core/services/index-db.service";
 import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
 
 @Component({
-  selector: 'app-nav-menu',
-  templateUrl: './header-menu.component.html',
-  styleUrls: ['./header-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    NgIf,
-    NgFor,
-    AsyncPipe,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-
-    PolymorpheusTemplate,
-    TuiPopup,
-    TuiDrawer,
-    TuiButton,
-    TuiSidebar,
-    TuiGroup,
-    TuiRadio,
-    TuiSelectModule,
-    TuiTextfieldControllerModule,
-    TuiTextfield,
-    TuiDataList,
-    TuiDataListWrapper,
-    TuiInputModule,
-    TuiBadge,
-    TuiLet,
-    TuiHint,
-
-    LanguageSwitcherComponent,
-  ]
+    selector: 'app-nav-menu',
+    templateUrl: './header-menu.component.html',
+    styleUrls: ['./header-menu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgIf,
+        NgFor,
+        AsyncPipe,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        PolymorpheusTemplate,
+        TuiPopup,
+        TuiDrawer,
+        TuiButton,
+        TuiSidebar,
+        TuiGroup,
+        TuiRadio,
+        TuiSelectModule,
+        TuiTextfieldControllerModule,
+        TuiTextfield,
+        TuiDataList,
+        TuiDataListWrapper,
+        TuiInputModule,
+        TuiBadge,
+        TuiLet,
+        TuiHint,
+        LanguageSwitcherComponent,
+    ]
 })
 export class HeaderMenuComponent {
   @ViewChild('restartTemplate')

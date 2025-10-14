@@ -6,20 +6,17 @@ import { DialogSelectionComponent } from '../dialog-selection/dialog-selection.c
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
 
 @Component({
-  selector: 'app-dialog-main',
-  standalone: true,
-  templateUrl: './dialog-main.component.html',
-  styleUrl: './dialog-main.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-
-    TuiBlockStatus,
-
-    DialogSelectionComponent,
-    DialogAssetsComponent
-  ],
-  providers: [ElementBreakpointService]
+    selector: 'app-dialog-main',
+    templateUrl: './dialog-main.component.html',
+    styleUrl: './dialog-main.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        TuiBlockStatus,
+        DialogSelectionComponent,
+        DialogAssetsComponent
+    ],
+    providers: [ElementBreakpointService]
 })
 export class DialogMainComponent {
   viewIndex: number = -1;

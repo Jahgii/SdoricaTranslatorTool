@@ -19,41 +19,37 @@ import { DialogState } from 'src/app/core/interfaces/i-dialog';
 import { CommonWordTableComponent } from "./common-word-table/common-word-table.component";
 
 @Component({
-  selector: 'app-common-words',
-  templateUrl: './common-words.component.html',
-  styleUrls: ['./common-words.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  animations: [
-    popinAnimation,
-    fadeinAnimation
-  ],
-  imports: [
-    NgIf,
-    NgStyle,
-    AsyncPipe,
-    NgTemplateOutlet,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-
-    CommonWordTableComponent,
-
-    TuiDropdown,
-    TuiButton,
-    TuiDataList,
-    TuiIcon,
-    TuiScrollbar,
-    TuiInputModule,
-    TuiTextfieldControllerModule,
-    TuiHint,
-    TuiTable,
-    TuiLoader,
-    TuiBlockStatus,
-    TuiButtonLoading,
-
-    DraggableElementDirective,
-  ]
+    selector: 'app-common-words',
+    templateUrl: './common-words.component.html',
+    styleUrls: ['./common-words.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        popinAnimation,
+        fadeinAnimation
+    ],
+    imports: [
+        NgIf,
+        NgStyle,
+        AsyncPipe,
+        NgTemplateOutlet,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        CommonWordTableComponent,
+        TuiDropdown,
+        TuiButton,
+        TuiDataList,
+        TuiIcon,
+        TuiScrollbar,
+        TuiInputModule,
+        TuiTextfieldControllerModule,
+        TuiHint,
+        TuiTable,
+        TuiLoader,
+        TuiBlockStatus,
+        TuiButtonLoading,
+        DraggableElementDirective,
+    ]
 })
 export class CommonWordsComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;

@@ -14,37 +14,32 @@ import { CommonWordTableCellEditableComponent } from './common-word-table-cell-e
 import { AutoFocusDirective } from 'src/app/core/directives/auto-focus.directive';
 
 @Component({
-  selector: 'app-common-word-table',
-  standalone: true,
-  templateUrl: './common-word-table.component.html',
-  styleUrl: './common-word-table.component.scss',
-  animations: [
-    fadeinAnimation
-  ],
-  imports: [
-    FormsModule,
-    AsyncPipe,
-
-    CdkVirtualScrollViewport,
-    CdkFixedSizeVirtualScroll,
-    CdkVirtualForOf,
-
-    TranslateModule,
-
-    TuiScrollable,
-    TuiScrollbar,
-    TuiTable,
-    TuiInputModule,
-    TuiTextfield,
-    TuiTextfieldControllerModule,
-    TuiLoader,
-    TuiButton,
-    TuiButtonLoading,
-
-    CommonWordTableCellEditableComponent,
-    AutoFocusDirective,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-common-word-table',
+    templateUrl: './common-word-table.component.html',
+    styleUrl: './common-word-table.component.scss',
+    animations: [
+        fadeinAnimation
+    ],
+    imports: [
+        FormsModule,
+        AsyncPipe,
+        CdkVirtualScrollViewport,
+        CdkFixedSizeVirtualScroll,
+        CdkVirtualForOf,
+        TranslateModule,
+        TuiScrollable,
+        TuiScrollbar,
+        TuiTable,
+        TuiInputModule,
+        TuiTextfield,
+        TuiTextfieldControllerModule,
+        TuiLoader,
+        TuiButton,
+        TuiButtonLoading,
+        CommonWordTableCellEditableComponent,
+        AutoFocusDirective,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommonWordTableComponent {
   protected readonly breakpointService$ = inject(TuiBreakpointService);

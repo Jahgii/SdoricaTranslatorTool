@@ -11,24 +11,21 @@ import type { TuiCountryIsoCode, TuiLanguageName } from '@taiga-ui/i18n/types';
 import { LangService } from 'src/app/core/services/lang.service';
 
 @Component({
-  selector: 'app-language-switcher',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    TitleCasePipe,
-
-    TranslateModule,
-
-    TuiBadge,
-    TuiBadgedContent,
-    TuiButton,
-    TuiButtonSelect,
-    TuiDataList,
-    TuiFlagPipe,
-    TuiTextfield,
-  ],
-  templateUrl: './language-switcher.component.html',
-  styleUrl: './language-switcher.component.scss'
+    selector: 'app-language-switcher',
+    imports: [
+        ReactiveFormsModule,
+        TitleCasePipe,
+        TranslateModule,
+        TuiBadge,
+        TuiBadgedContent,
+        TuiButton,
+        TuiButtonSelect,
+        TuiDataList,
+        TuiFlagPipe,
+        TuiTextfield,
+    ],
+    templateUrl: './language-switcher.component.html',
+    styleUrl: './language-switcher.component.scss'
 })
 export class LanguageSwitcherComponent {
   protected readonly langService = inject(LangService);

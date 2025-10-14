@@ -13,25 +13,23 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 import { ViewersService } from 'src/app/core/services/viewers.service';
 
 @Component({
-  selector: 'app-dialog-selection',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TranslateModule,
-
-    TuiScrollbar,
-    TuiIcon,
-    TuiElasticContainer,
-    TuiExpand,
-    TuiInputInline,
-    TuiProgress,
-    TuiLoader,
-  ],
-  templateUrl: './dialog-selection.component.html',
-  styleUrl: './dialog-selection.component.scss',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-dialog-selection',
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        TuiScrollbar,
+        TuiIcon,
+        TuiElasticContainer,
+        TuiExpand,
+        TuiInputInline,
+        TuiProgress,
+        TuiLoader,
+    ],
+    templateUrl: './dialog-selection.component.html',
+    styleUrl: './dialog-selection.component.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogSelectionComponent implements OnInit, OnDestroy {
   @Input() dialogs!: DialogAssetsComponent;

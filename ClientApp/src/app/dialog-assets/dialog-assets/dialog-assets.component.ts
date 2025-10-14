@@ -17,41 +17,37 @@ import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-single.component";
 
 @Component({
-  selector: 'app-dialog-assets',
-  standalone: true,
-  templateUrl: './dialog-assets.component.html',
-  styleUrls: ['./dialog-assets.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    popinAnimation
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    TranslateModule,
-
-    CdkVirtualScrollViewport,
-    CdkFixedSizeVirtualScroll,
-    CdkVirtualForOf,
-
-    DialogAssetSingleComponent,
-
-    TuiTabs,
-    TuiItem,
-    TuiIcon,
-    TuiSwitch,
-    TuiButton,
-    TuiHint,
-    TuiLoader,
-    TuiTable,
-    TuiDropdown,
-    TuiBlockStatus,
-    TuiActiveZone,
-  ],
-  providers: [
-    DialogAssetService,
-    ElementBreakpointService
-  ]
+    selector: 'app-dialog-assets',
+    templateUrl: './dialog-assets.component.html',
+    styleUrls: ['./dialog-assets.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        popinAnimation
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        CdkVirtualScrollViewport,
+        CdkFixedSizeVirtualScroll,
+        CdkVirtualForOf,
+        DialogAssetSingleComponent,
+        TuiTabs,
+        TuiItem,
+        TuiIcon,
+        TuiSwitch,
+        TuiButton,
+        TuiHint,
+        TuiLoader,
+        TuiTable,
+        TuiDropdown,
+        TuiBlockStatus,
+        TuiActiveZone,
+    ],
+    providers: [
+        DialogAssetService,
+        ElementBreakpointService
+    ]
 })
 export class DialogAssetsComponent implements OnDestroy {
   public openOption: boolean = false;

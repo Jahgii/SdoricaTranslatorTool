@@ -16,7 +16,6 @@ import { NgIf, AsyncPipe } from '@angular/common';
     animations: [
         popinAnimation
     ],
-    standalone: true,
     imports: [
         NgIf,
         TuiBlockStatus,
@@ -25,7 +24,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
         TuiAppBar,
         AsyncPipe,
         TranslateModule,
-    ],
+    ]
 })
 export class HomeComponent {
   size$: Observable<TuiSizeL> = this.breakpointService.pipe(

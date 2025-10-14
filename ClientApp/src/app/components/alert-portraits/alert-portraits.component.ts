@@ -8,17 +8,15 @@ import { BehaviorSubject } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 
 @Component({
-  selector: 'app-alert-portraits',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    CommonModule,
-    TranslateModule,
-
-    TuiButton
-  ],
-  templateUrl: './alert-portraits.component.html',
-  styleUrl: './alert-portraits.component.scss'
+    selector: 'app-alert-portraits',
+    imports: [
+        AsyncPipe,
+        CommonModule,
+        TranslateModule,
+        TuiButton
+    ],
+    templateUrl: './alert-portraits.component.html',
+    styleUrl: './alert-portraits.component.scss'
 })
 export class AlertPortraitsComponent {
   public mode$ = new BehaviorSubject<AlertPortraitMode>(AlertPortraitMode.Default);

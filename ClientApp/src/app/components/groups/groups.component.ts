@@ -22,7 +22,6 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     animations: [
         popinAnimation
     ],
-    standalone: true,
     imports: [
         NgIf,
         TuiTiles,
@@ -40,7 +39,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
         TuiLoader,
         AsyncPipe,
         TranslateModule,
-    ],
+    ]
 })
 export class GroupsComponent {
   public groups$!: Observable<IGroup[]>;

@@ -13,27 +13,24 @@ import { popinAnimation } from 'src/app/core/animations/popin';
 import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictionary.directive';
 
 @Component({
-  selector: 'app-dialog-asset-single',
-  standalone: true,
-  imports: [
-    FormsModule,
-    AsyncPipe,
-    NgStyle,
-    NgIf,
-    NgFor,
-    KeyValuePipe,
-    CommonDictionaryDirective,
-
-    TranslateModule,
-
-    TuiHint,
-    TuiIcon,
-    TuiScrollbar,
-    TuiBlockStatus,
-  ],
-  animations: [popinAnimation],
-  templateUrl: './dialog-asset-single.component.html',
-  styleUrl: './dialog-asset-single.component.scss',
+    selector: 'app-dialog-asset-single',
+    imports: [
+        FormsModule,
+        AsyncPipe,
+        NgStyle,
+        NgIf,
+        NgFor,
+        KeyValuePipe,
+        CommonDictionaryDirective,
+        TranslateModule,
+        TuiHint,
+        TuiIcon,
+        TuiScrollbar,
+        TuiBlockStatus,
+    ],
+    animations: [popinAnimation],
+    templateUrl: './dialog-asset-single.component.html',
+    styleUrl: './dialog-asset-single.component.scss'
 })
 export class DialogAssetSingleComponent implements OnChanges {
   @Input() data!: IDialogAsset[];

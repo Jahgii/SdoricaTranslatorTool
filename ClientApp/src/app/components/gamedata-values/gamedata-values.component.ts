@@ -21,49 +21,45 @@ import { AutoFocusDirective } from "src/app/core/directives/auto-focus.directive
 import { CommonWordTableCellEditableComponent } from "../common-words/common-word-table/common-word-table-cell-editable/common-word-table-cell-editable.component";
 
 @Component({
-  selector: 'app-gamedata-values',
-  templateUrl: './gamedata-values.component.html',
-  styleUrls: ['./gamedata-values.component.scss'],
-  animations: [
-    popinAnimation,
-    fadeinAnimation
-  ],
-  standalone: true,
-  imports: [
-    NgStyle,
-    AsyncPipe,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    NgTemplateOutlet,
-
-    CdkVirtualScrollViewport,
-    CdkFixedSizeVirtualScroll,
-    CdkVirtualForOf,
-
-    TuiDropdown,
-    TuiButton,
-    TuiDataList,
-    TuiIcon,
-    TuiScrollable,
-    TuiScrollbar,
-    TuiInputModule,
-    TuiTextfieldControllerModule,
-    TuiTextfield,
-    TuiInputNumberModule,
-    TuiHint,
-    TuiBlock,
-    TuiCheckbox,
-    TuiLoader,
-    TuiTable,
-    TuiButtonLoading,
-    TuiBlockStatus,
-
-    DraggableElementDirective,
-    CommonWordTableCellEditableComponent,
-    AutoFocusDirective,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-gamedata-values',
+    templateUrl: './gamedata-values.component.html',
+    styleUrls: ['./gamedata-values.component.scss'],
+    animations: [
+        popinAnimation,
+        fadeinAnimation
+    ],
+    imports: [
+        NgStyle,
+        AsyncPipe,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        NgTemplateOutlet,
+        CdkVirtualScrollViewport,
+        CdkFixedSizeVirtualScroll,
+        CdkVirtualForOf,
+        TuiDropdown,
+        TuiButton,
+        TuiDataList,
+        TuiIcon,
+        TuiScrollable,
+        TuiScrollbar,
+        TuiInputModule,
+        TuiTextfieldControllerModule,
+        TuiTextfield,
+        TuiInputNumberModule,
+        TuiHint,
+        TuiBlock,
+        TuiCheckbox,
+        TuiLoader,
+        TuiTable,
+        TuiButtonLoading,
+        TuiBlockStatus,
+        DraggableElementDirective,
+        CommonWordTableCellEditableComponent,
+        AutoFocusDirective,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GamedataValuesComponent implements OnInit, OnDestroy {
   @ViewChild('createTemplate') createTemplateView!: TemplateRef<any>;

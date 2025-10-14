@@ -11,43 +11,40 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TuiTable } from '@taiga-ui/addon-table';
 
 @Component({
-  selector: 'app-export-main',
-  templateUrl: './export-main.component.html',
-  styleUrls: ['./export-main.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    NgIf,
-    NgTemplateOutlet,
-    AsyncPipe,
-    DecimalPipe,
-    ScrollingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-
-    TuiExpand,
-    TuiTabs,
-    TuiButton,
-    TuiHint,
-    TuiBlockStatus,
-    TuiAppBar,
-    TuiFiles,
-    TuiAvatar,
-    TuiLoader,
-    TuiIcon,
-    TuiLink,
-    TuiButtonLoading,
-    TuiCardMedium,
-    TuiAppearance,
-    TuiTitle,
-    TuiScrollbar,
-    TuiTable,
-
-  ],
-  providers: [
-    ExportTranslationService
-  ]
+    selector: 'app-export-main',
+    templateUrl: './export-main.component.html',
+    styleUrls: ['./export-main.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgIf,
+        NgTemplateOutlet,
+        AsyncPipe,
+        DecimalPipe,
+        ScrollingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        TuiExpand,
+        TuiTabs,
+        TuiButton,
+        TuiHint,
+        TuiBlockStatus,
+        TuiAppBar,
+        TuiFiles,
+        TuiAvatar,
+        TuiLoader,
+        TuiIcon,
+        TuiLink,
+        TuiButtonLoading,
+        TuiCardMedium,
+        TuiAppearance,
+        TuiTitle,
+        TuiScrollbar,
+        TuiTable,
+    ],
+    providers: [
+        ExportTranslationService
+    ]
 })
 export class ExportTranslationGuestComponent {
   protected readonly eTS = inject(ExportTranslationService);

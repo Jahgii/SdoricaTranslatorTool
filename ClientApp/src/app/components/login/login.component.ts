@@ -9,18 +9,16 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-
-    TuiInputModule,
-    TuiInputPasswordModule,
-    TuiButton
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+    selector: 'app-login',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        TuiInputModule,
+        TuiInputPasswordModule,
+        TuiButton
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   public loginForm = this.fB.group({

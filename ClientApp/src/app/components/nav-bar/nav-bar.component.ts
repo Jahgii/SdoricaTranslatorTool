@@ -8,24 +8,22 @@ import { TuiDataList, TuiLoader, TuiDropdown, TuiButton, TuiHint } from '@taiga-
 import { TuiAppBar, TuiBlockStatus } from '@taiga-ui/layout';
 
 @Component({
-  selector: 'app-nav-bar',
-  templateUrl: './nav-bar.component.html',
-  styleUrls: ['./nav-bar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    TranslateModule,
-
-    TuiAppBar,
-    TuiBlockStatus,
-    TuiLoader,
-    TuiAvatar,
-    TuiDropdown,
-    TuiButton,
-    TuiDataList,
-    TuiHint
-  ]
+    selector: 'app-nav-bar',
+    templateUrl: './nav-bar.component.html',
+    styleUrls: ['./nav-bar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        AsyncPipe,
+        TranslateModule,
+        TuiAppBar,
+        TuiBlockStatus,
+        TuiLoader,
+        TuiAvatar,
+        TuiDropdown,
+        TuiButton,
+        TuiDataList,
+        TuiHint
+    ]
 })
 export class NavBarComponent {
   constructor(

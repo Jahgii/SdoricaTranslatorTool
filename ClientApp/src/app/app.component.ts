@@ -10,22 +10,19 @@ import { AppStateService } from './core/services/app-state.service';
 import { LangService } from './core/services/lang.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    NgIf,
-    AsyncPipe,
-
-    //Taiga UI
-    TuiRoot,
-
-    //App Components
-    SidebarComponent,
-    HeaderMenuComponent,
-    NavBarComponent,
-  ]
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    imports: [
+        RouterOutlet,
+        NgIf,
+        AsyncPipe,
+        //Taiga UI
+        TuiRoot,
+        //App Components
+        SidebarComponent,
+        HeaderMenuComponent,
+        NavBarComponent,
+    ]
 })
 export class AppComponent {
   protected readonly app = inject(AppStateService);

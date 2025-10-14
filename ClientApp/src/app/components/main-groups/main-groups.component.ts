@@ -21,7 +21,6 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     animations: [
         popinAnimation
     ],
-    standalone: true,
     imports: [
         NgIf,
         TuiTiles,
@@ -36,7 +35,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
         TuiBlockStatus,
         AsyncPipe,
         TranslateModule,
-    ],
+    ]
 })
 export class MainGroupsComponent {
   public mainGroups$!: Observable<IMainGroup[]>;

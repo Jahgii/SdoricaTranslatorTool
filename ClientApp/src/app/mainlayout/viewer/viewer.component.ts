@@ -6,21 +6,18 @@ import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-viewer',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TranslateModule,
-
-    //Taiga
-    TuiScrollbar,
-    TuiBlockStatus,
-    TuiIcon,
-
-    AdHostDirective
-  ],
-  templateUrl: './viewer.component.html',
-  styleUrls: ['./viewer.component.scss']
+    selector: 'app-viewer',
+    imports: [
+        CommonModule,
+        TranslateModule,
+        //Taiga
+        TuiScrollbar,
+        TuiBlockStatus,
+        TuiIcon,
+        AdHostDirective
+    ],
+    templateUrl: './viewer.component.html',
+    styleUrls: ['./viewer.component.scss']
 })
 export class ViewerComponent implements OnInit {
   @ViewChild(AdHostDirective, { static: true })
