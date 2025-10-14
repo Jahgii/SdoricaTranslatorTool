@@ -2,7 +2,7 @@ import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TuiFileLike } from '@taiga-ui/kit';
-import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLatest, zip, map, share, shareReplay } from 'rxjs';
+import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLatest, zip, map, shareReplay } from 'rxjs';
 import { ILocalization, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
 import { IGamedata } from '../core/interfaces/i-gamedata';
@@ -18,6 +18,7 @@ import { IndexDBService } from '../core/services/index-db.service';
 import { ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { IFileControl } from '../core/interfaces/i-file-control';
 import { LanguageType } from '../core/enums/languages';
+import { LanguageOriginService } from '../core/services/language-origin.service';
 import * as JSZip from 'jszip';
 
 @Injectable()
@@ -101,6 +102,7 @@ export class ExportTranslationService {
     private readonly ddS: DeviceDetectorService,
     private readonly lStorage: LocalStorageService,
     private readonly indexedDB: IndexDBService,
+    readonly languageOrigin: LanguageOriginService,
     private readonly api: ApiService,
     private readonly translate: TranslateService
   ) {
@@ -108,28 +110,32 @@ export class ExportTranslationService {
   }
 
   private init() {
-    if (this.lStorage.getAppMode() === AppModes.Offline) {
-      let countKeys = this.indexedDB.getCount<number>(ObjectStoreNames.LocalizationKey);
-      let countKeysTranslated = this.indexedDB
-        .getCursorCount<ILocalizationKey>(ObjectStoreNames.LocalizationKey, e => e.Translated[LanguageType.english]);
-      let countDialogs = this.indexedDB
-        .getCursorCount<IDialogAsset>(ObjectStoreNames.DialogAsset, e => e.Language === 'english');
-      let countDialogsTranslated = this.indexedDB
-        .getCursorCount<IDialogAsset>(ObjectStoreNames.DialogAsset, e => e.Language === 'english' && e.Translated === true);
+    this.languageOrigin.language$
+      .subscribe((langReverse: string) => {
+        const lang = (LanguageType as any)[this.lStorage.getDefaultLang()];
 
-      let result = zip(
-        countKeys.success$,
-        countKeysTranslated.success$,
-        countDialogs.success$,
-        countDialogsTranslated.success$
-      ).pipe(map(r => { return { Dialogs: r[3] * 100 / r[2], Keys: r[1] * 100 / r[0] } }));
+        if (this.lStorage.getAppMode() === AppModes.Offline) {
+          let countKeys = this.indexedDB.getCount<number>(ObjectStoreNames.LocalizationKey);
+          let countKeysTranslated = this.indexedDB
+            .getCursorCount<ILocalizationKey>(ObjectStoreNames.LocalizationKey, e => e.Translated[lang]);
+          let countDialogs = this.indexedDB
+            .getCursorCount<IDialogAsset>(ObjectStoreNames.DialogAsset, e => e.Language === langReverse);
+          let countDialogsTranslated = this.indexedDB
+            .getCursorCount<IDialogAsset>(ObjectStoreNames.DialogAsset, e => e.Language === langReverse && e.Translated);
 
-      this.progressPerc$ = result;
-    }
-    else if (this.lStorage.getAppMode() === AppModes.Online) {
-      this.progressPerc$ = this.api.getWithHeaders('exports/percentages', { lang: LanguageType.english });
-    }
+          let result = zip(
+            countKeys.success$,
+            countKeysTranslated.success$,
+            countDialogs.success$,
+            countDialogsTranslated.success$
+          ).pipe(map(r => { return { Dialogs: r[3] * 100 / r[2], Keys: r[1] * 100 / r[0] } }));
 
+          this.progressPerc$ = result;
+        }
+        else if (this.lStorage.getAppMode() === AppModes.Online) {
+          this.progressPerc$ = this.api.getWithHeaders('exports/percentages', { lang: lang });
+        }
+      });
 
     this.obb.loadedFile$ = this.obb.control
       .valueChanges
@@ -319,6 +325,7 @@ export class ExportTranslationService {
   }
 
   private onApplyTranslationWorkers() {
+    const lang = (LanguageType as any)[this.lStorage.getDefaultLang()];
     const obbWorker = new Worker(new URL('../core/workers/export-obb.worker', import.meta.url));
     const locWorker = new Worker(new URL('../core/workers/export-loc.worker', import.meta.url));
     const gamWorker = new Worker(new URL('../core/workers/export-gam.worker', import.meta.url));
@@ -336,7 +343,7 @@ export class ExportTranslationService {
         apiKey: this.lStorage.getAppApiKey() ?? "",
         file: this.obb.control.value,
         decodeResult: undefined,
-        lang: 'English',
+        lang: lang,
         token: this.lStorage.getToken(),
         exportMode: 'game-file'
       };
@@ -352,7 +359,7 @@ export class ExportTranslationService {
         apiKey: this.lStorage.getAppApiKey() ?? "",
         file: undefined,
         decodeResult: this.dataLoc,
-        lang: 'English',
+        lang: lang,
         token: this.lStorage.getToken(),
         exportMode: 'game-file'
       };
@@ -368,7 +375,7 @@ export class ExportTranslationService {
         apiKey: this.lStorage.getAppApiKey() ?? "",
         file: undefined,
         decodeResult: this.dataGam,
-        lang: 'English',
+        lang: lang,
         token: this.lStorage.getToken(),
         exportMode: 'game-file'
       };
@@ -410,6 +417,7 @@ export class ExportTranslationService {
   }
 
   public onExportTranslation() {
+    const lang = (LanguageType as any)[this.lStorage.getDefaultLang()];
     const allWorker = new Worker(new URL('../core/workers/export-all.worker', import.meta.url));
     allWorker.onmessage = ({ data }) => this.onMessageAll(data);
     this.exportStatus.set(ProgressStatus.retrivingServerData);
@@ -422,7 +430,7 @@ export class ExportTranslationService {
       apiKey: this.lStorage.getAppApiKey() ?? "",
       file: undefined,
       decodeResult: undefined,
-      lang: 'English',
+      lang: lang,
       token: this.lStorage.getToken(),
       exportMode: 'game-file'
     };

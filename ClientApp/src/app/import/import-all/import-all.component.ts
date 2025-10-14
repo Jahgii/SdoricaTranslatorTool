@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiAvatar, TuiBadge, TuiButtonLoading, TuiCheckbox, TuiFiles, TuiTabs } from '@taiga-ui/kit';
 import { TuiAppearance, TuiButton, TuiHint, TuiIcon, TuiLoader, TuiScrollbar, TuiTitle } from '@taiga-ui/core';
-import { TuiCardMedium, TuiHeader } from '@taiga-ui/layout';
+import { TuiCardMedium } from '@taiga-ui/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({

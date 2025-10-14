@@ -14,9 +14,7 @@ import { ILocalizationCategory, ILocalizationKey } from '../core/interfaces/i-lo
 import { IGamedataValue } from '../core/interfaces/i-gamedata';
 import { ICommonWord } from '../core/interfaces/i-common-word';
 import { CommonWordsService } from '../core/services/common-words.service';
-import { DGroupsService } from '../dialog-assets/dialog-selection/d-groups.service';
 import { IGroup, IMainGroup } from '../core/interfaces/i-dialog-group';
-import { LocalizationCategoriesService } from '../localization/localization-categories.service';
 import { LanguageTypeReverse } from '../core/enums/languages';
 import { LanguageOriginService } from '../core/services/language-origin.service';
 
