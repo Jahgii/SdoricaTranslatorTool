@@ -2,11 +2,10 @@ import { Inject, Injectable, WritableSignal, inject, signal } from '@angular/cor
 import { offset } from '@floating-ui/dom';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiBreakpointService } from '@taiga-ui/core';
-import { ShepherdService } from 'angular-shepherd';
 import { firstValueFrom, pairwise, takeWhile } from 'rxjs';
-import { StepOptions } from 'node_modules/shepherd.js/dist/cjs/step';
 import { LocalStorageService } from './local-storage.service';
 import { ViewersService } from './viewers.service';
+import Shepherd, { StepOptions, Tour } from 'shepherd.js';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +13,11 @@ import { ViewersService } from './viewers.service';
 export class TourService {
   protected translate = inject(TranslateService);
   public isOnTour$: WritableSignal<boolean> = signal(false);
+  protected tour?: Tour;
 
   constructor(
     private readonly viewers: ViewersService,
     private readonly lStorage: LocalStorageService,
-    private readonly shepherdService: ShepherdService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 
@@ -31,7 +30,7 @@ export class TourService {
   public async start() {
     await this.init();
     this.isOnTour$.update(_ => true);
-    this.shepherdService.start();
+    this.tour?.start();
 
     this.onBreakpointChange();
   }
@@ -57,19 +56,34 @@ export class TourService {
   }
 
   private createTour(tour: { defaultStepOptions: StepOptions, defaultSteps: StepOptions[] }) {
-    this.shepherdService.defaultStepOptions = tour.defaultStepOptions as any;
-    this.shepherdService.modal = true;
-    this.shepherdService.confirmCancel = false;
-    this.shepherdService.onTourFinish = this.onTourFinish.bind(this);
-    this.shepherdService.addSteps(tour.defaultSteps as any);
+    this.tour = new Shepherd.Tour({
+      useModalOverlay: true,
+      confirmCancel: false,
+      modalContainer: (document.querySelector("tui-root") as HTMLElement),
+      defaultStepOptions: tour.defaultStepOptions,
+      steps: tour.defaultSteps
+    });
+
+    this.tour.on('complete', this.onTourFinish.bind(this));
+    this.tour.on('cancel', this.onTourFinish.bind(this));
+    this.tour.on('show', () => {
+      setTimeout(() => {
+        const dialogs = document.querySelectorAll('.stt-custom-shapherd');
+        const dialog = dialogs[dialogs.length - 1];
+        const targetContainer = document.querySelector('tui-root');
+        if (dialog && targetContainer) {
+          targetContainer.appendChild(dialog);
+        }
+      }, 1);
+    });
   }
 
   private async restartTour() {
-    this.shepherdService.cancel();
+    this.tour?.cancel();
 
     await this.init();
     this.isOnTour$.update(_ => true);
-    this.shepherdService.start();
+    this.tour?.start();
   }
 
   private async createMainAppSteps() {
@@ -86,6 +100,8 @@ export class TourService {
         middleware: [offset({ mainAxis: 16 })]
       },
     };
+
+    (defaultStepOptions as any)['renderInElement'] = (document.querySelector("#mainGrid") as HTMLElement);
 
     let nextTranslateText = this.translate.instant('tour-next');
     let endTranslateText = this.translate.instant('tour-end');
@@ -279,6 +295,7 @@ export class TourService {
         id: 'viewer-container',
         title: this.translate.instant('tour-viewer-container-select-title'),
         text: this.translate.instant('tour-viewer-container-select'),
+        classes: 'stt-custom-shapherd-header-arrow',
         canClickTarget: true,
         showOn: () => !mobile,
         attachTo: {
@@ -361,7 +378,6 @@ export class TourService {
         title: this.translate.instant('tour-settings-language-title'),
         text: this.translate.instant('tour-settings-language'),
         canClickTarget: false,
-        classes: 'stt-custom-shapherd-header-arrow',
         attachTo: {
           element: '#appLanguageSetting',
           on: mobile ? 'bottom' : 'left'
