@@ -13,7 +13,7 @@ import { LibreTranslateService } from 'src/app/core/services/libre-translate.ser
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { TuiDataListWrapper, TuiBadge, TuiBlock, TuiRadio, TuiDrawer } from '@taiga-ui/kit';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { BehaviorSubject, skip, takeWhile } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { AppStateService } from 'src/app/core/services/app-state.service';
@@ -27,30 +27,28 @@ import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
     styleUrls: ['./header-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgIf,
-        NgFor,
-        AsyncPipe,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        PolymorpheusTemplate,
-        TuiPopup,
-        TuiDrawer,
-        TuiButton,
-        TuiSidebar,
-        TuiGroup,
-        TuiRadio,
-        TuiSelectModule,
-        TuiTextfieldControllerModule,
-        TuiTextfield,
-        TuiDataList,
-        TuiDataListWrapper,
-        TuiInputModule,
-        TuiBadge,
-        TuiLet,
-        TuiHint,
-        LanguageSwitcherComponent,
-    ]
+    AsyncPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    PolymorpheusTemplate,
+    TuiPopup,
+    TuiDrawer,
+    TuiButton,
+    TuiSidebar,
+    TuiGroup,
+    TuiRadio,
+    TuiSelectModule,
+    TuiTextfieldControllerModule,
+    TuiTextfield,
+    TuiDataList,
+    TuiDataListWrapper,
+    TuiInputModule,
+    TuiBadge,
+    TuiLet,
+    TuiHint,
+    LanguageSwitcherComponent
+]
 })
 export class HeaderMenuComponent {
   @ViewChild('restartTemplate')

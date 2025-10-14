@@ -213,7 +213,7 @@ export class FileReaderLocalizationService {
   }
 
   public async onDownloadLocalization(result: ILocalization, fileName: string) {
-    var encodeResult = encode(result);
+    var encodeResult = encode(result) as any;
 
     const blob = new Blob([encodeResult], {
       type: ''

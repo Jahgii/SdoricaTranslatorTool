@@ -1,10 +1,10 @@
-import { Inject, Injectable, WritableSignal, signal } from '@angular/core';
+import { Inject, Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { offset } from '@floating-ui/dom';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { ShepherdService } from 'angular-shepherd';
 import { firstValueFrom, pairwise, takeWhile } from 'rxjs';
-import { StepOptions } from 'shepherd.js/dist/cjs/step';
+import { StepOptions } from 'node_modules/shepherd.js/dist/cjs/step';
 import { LocalStorageService } from './local-storage.service';
 import { ViewersService } from './viewers.service';
 
@@ -12,11 +12,11 @@ import { ViewersService } from './viewers.service';
   providedIn: 'root'
 })
 export class TourService {
+  protected translate = inject(TranslateService);
   public isOnTour$: WritableSignal<boolean> = signal(false);
 
   constructor(
     private readonly viewers: ViewersService,
-    private readonly translate: TranslateService,
     private readonly lStorage: LocalStorageService,
     private readonly shepherdService: ShepherdService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,

@@ -1,166 +1,177 @@
 <header class="header">
-    <button class="split-button" tuiIconButton type="button" appearance="icon" iconStart="@tui.between-vertical-start"
-        (click)="onSplitModeToggle($event)" aria-label="split-button" size="xs">
+  <button class="split-button" tuiIconButton type="button" appearance="icon" iconStart="@tui.between-vertical-start"
+    (click)="onSplitModeToggle($event)" aria-label="split-button" size="xs">
+  </button>
+  <div class="margin-auto-r"></div>
+  <div class="right-buttons">
+    <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="@tui.circle-help"
+      (click)="onMainTour()" [tuiHint]="'tour-mode' | translate" size="xs" aria-label="tour button">
     </button>
-    <div class="margin-auto-r"></div>
-    <div class="right-buttons">
-        <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="@tui.circle-help"
-            (click)="onMainTour()" [tuiHint]="'tour-mode' | translate" size="xs" aria-label="tour button">
-        </button>
-        <button id="themeButton" aria-label="toogle night mode" type="button" tuiIconButton appearance="icon"
-            [iconStart]="theme.darkMode() ? '@tui.sun' : '@tui.moon'" (click)="theme.switchTheme($event)"
-            [tuiHint]="(theme.darkMode() ? 'toogle-lightmode' : 'toogle-nightmode') | translate" size="xs"
-            aria-label="switch theme button">
-        </button>
-        <button id="settingsButton" type="button" aria-label="open settings" tuiIconButton appearance="icon"
-            [iconStart]="'@tui.settings'" (click)="openSetting.set(!openSetting())" size="xs"
-            aria-label="settings button">
-        </button>
-        <tui-drawer *tuiPopup="openSetting()" style="inline-size: 25.25rem;">
-            <header>
-                <h2 tuiHeader>
-                    <div tuiTitle class="align-center">{{'settings' | translate}}</div>
-                    <div tuiAccessories class="margin-auto-l">
-                        <button appearance="icon" iconStart="@tui.x" tuiIconButton type="button"
-                            (click)="openSetting.set(false)" aria-label="settings close button">
-                        </button>
-                    </div>
-                </h2>
-            </header>
-            <h3>{{'language-configuration' | translate}}</h3>
-            <div id="appLanguageSetting">
-                <h4>{{'app-language' | translate}}</h4>
-                <app-language-switcher />
-                <h4>{{'origin-language' | translate}}</h4>
-                <p class="tui-text_body-xs common-word">
-                    {{'origin-language-description' | translate}}
-                </p>
-                <tui-select class="tui-space_top-2" tuiTextfieldSize="s" [formControl]="languageOrigin.language"
-                    [valueContent]="originLang">
-                    {{'language' | translate}}
-                    <input tuiTextfieldLegacy placeholder="..." />
-                    <tui-data-list-wrapper *tuiDataList [items]="languageOrigin.languages" [itemContent]="originLang">
-                    </tui-data-list-wrapper>
-                    <ng-template #originLang let-data>
-                        {{data | translate}}
-                    </ng-template>
+    <button id="themeButton" aria-label="toogle night mode" type="button" tuiIconButton appearance="icon"
+      [iconStart]="theme.darkMode() ? '@tui.sun' : '@tui.moon'" (click)="theme.switchTheme($event)"
+      [tuiHint]="(theme.darkMode() ? 'toogle-lightmode' : 'toogle-nightmode') | translate" size="xs"
+      aria-label="switch theme button">
+    </button>
+    <button id="settingsButton" type="button" aria-label="open settings" tuiIconButton appearance="icon"
+      [iconStart]="'@tui.settings'" (click)="openSetting.set(!openSetting())" size="xs"
+      aria-label="settings button">
+    </button>
+    <tui-drawer *tuiPopup="openSetting()" style="inline-size: 25.25rem;">
+      <header>
+        <h2 tuiHeader>
+          <div tuiTitle class="align-center">{{'settings' | translate}}</div>
+          <div tuiAccessories class="margin-auto-l">
+            <button appearance="icon" iconStart="@tui.x" tuiIconButton type="button"
+              (click)="openSetting.set(false)" aria-label="settings close button">
+            </button>
+          </div>
+        </h2>
+      </header>
+      <h3>{{'language-configuration' | translate}}</h3>
+      <div id="appLanguageSetting">
+        <h4>{{'app-language' | translate}}</h4>
+        <app-language-switcher />
+        <h4>{{'origin-language' | translate}}</h4>
+        <p class="tui-text_body-xs common-word">
+          {{'origin-language-description' | translate}}
+        </p>
+        <tui-select class="tui-space_top-2" tuiTextfieldSize="s" [formControl]="languageOrigin.language"
+          [valueContent]="originLang">
+          {{'language' | translate}}
+          <input tuiTextfieldLegacy placeholder="..." />
+          <tui-data-list-wrapper *tuiDataList [items]="languageOrigin.languages" [itemContent]="originLang">
+          </tui-data-list-wrapper>
+          <ng-template #originLang let-data>
+            {{data | translate}}
+          </ng-template>
+        </tui-select>
+      </div>
+
+      <h3 class="tui-space_top-9">{{'portraits-dir' | translate}}</h3>
+      <div id="appPortraitSetting">
+        <button tuiButton size="xs" type="button" class="w-100" appearance="outline"
+          (click)="portraitsService.onFolderChange()" aria-label="change portrait directory button">
+          @if (portraitsService.dirName$ | async; as dirName) {
+            {{dirName}}
+          }
+          @else {
+          {{'portraits-directory' | translate}}
+        }
+      </button>
+    </div>
+
+    <h3 class="tui-space_top-9">{{'libretranslate-configuration' | translate}}</h3>
+    <div id="appLibreTranslateSetting">
+      <h4>{{'libretranslate-url' | translate}}</h4>
+      <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.url" tuiTextfieldSize="s"
+        (ngModelChange)="libreTranslate.onUrlChange($event)">
+        {{'libretranslate-url' | translate}}
+        <input tuiTextfieldLegacy type="url" attr.aria-label="{{'libretranslate-url' | translate}}"
+          aria-label="libre translate url" />
+      </tui-input>
+      <h4>{{'libretranslate-apikey' | translate}}</h4>
+      <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.apiKey" tuiTextfieldSize="s">
+        {{'libretranslate-apikey' | translate}}
+        <input tuiTextfieldLegacy attr.aria-label="{{'libretranslate-apikey' | translate}}"
+          aria-label="libre translate api key" />
+      </tui-input>
+      <h4>{{'libretranslate-status' | translate}}</h4>
+      <button appearance="outline" class="w-100" tuiButton [iconStart]="'@tui.activity'" size="xs"
+        (click)="libreTranslate.isAlive()"
+        [disabled]="((libreTranslate.testing$ | async) ?? true) || !libreTranslate.url">
+        {{'libretranslate-testserver' | translate}}
+      </button>
+      @if ((libreTranslate.errors$ | async); as error) {
+        <div class="tui-space_top-2">
+          <tui-badge appearance="error" class="w-100">{{ error }}</tui-badge>
+        </div>
+      }
+      @if ((libreTranslate.serverAlive$ | async)) {
+        <div class="tui-space_top-2">
+          <tui-badge appearance="success" class="w-100">{{'libretranslate-serveralive' | translate}}
+          </tui-badge>
+        </div>
+        <h4>{{'libretranslate-origin-target' | translate}}</h4>
+        @if (libreTranslate.languages) {
+          <div tuiGroup class="tui-space_top-2">
+            <div>
+              <tui-select *tuiLet="libreTranslate.languages as languages" tuiTextfieldSize="s"
+                [(ngModel)]="libreTranslate.source" class="tui-group__inherit-item"
+                (ngModelChange)="libreTranslate.onSourceChange($event)"
+                [tuiTextfieldLabelOutside]="true"
+                [valueContent]="languages ? stringify(languages) : undefined">
+                <input tuiTextfieldLegacy placeholder="{{'libretranslate-source' | translate}}" />
+                {{'libretranslate-source' | translate}}
+                <ng-template tuiDataList>
+                  <tui-data-list>
+                    @for (language of languages; track language) {
+                      <button tuiOption [value]="language.code"
+                        type="button">
+                        {{ language.name | translate }}
+                      </button>
+                    }
+                  </tui-data-list>
+                </ng-template>
+              </tui-select>
+            </div>
+            @if (libreTranslate.targetLanguages) {
+              <div>
+                <tui-select tuiTextfieldSize="s" [(ngModel)]="libreTranslate.target"
+                  class="tui-group__inherit-item" [tuiTextfieldLabelOutside]="true"
+                  (ngModelChange)="libreTranslate.onTargetChange($event)">
+                  <input tuiTextfieldLegacy placeholder="{{'libretranslate-target' | translate}}" />
+                  {{'libretranslate-target' | translate}}
+                  <tui-data-list-wrapper *tuiDataList [items]="libreTranslate.targetLanguages">
+                  </tui-data-list-wrapper>
+                  <ng-template #selectSource>
+                    {{'libretranslate-target' | translate}}
+                  </ng-template>
                 </tui-select>
-            </div>
-
-            <h3 class="tui-space_top-9">{{'portraits-dir' | translate}}</h3>
-            <div id="appPortraitSetting">
-                <button tuiButton size="xs" type="button" class="w-100" appearance="outline"
-                    (click)="portraitsService.onFolderChange()" aria-label="change portrait directory button">
-                    @if (portraitsService.dirName$ | async; as dirName) {
-                    {{dirName}}
-                    }
-                    @else {
-                    {{'portraits-directory' | translate}}
-                    }
-                </button>
-            </div>
-
-            <h3 class="tui-space_top-9">{{'libretranslate-configuration' | translate}}</h3>
-            <div id="appLibreTranslateSetting">
-                <h4>{{'libretranslate-url' | translate}}</h4>
-                <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.url" tuiTextfieldSize="s"
-                    (ngModelChange)="libreTranslate.onUrlChange($event)">
-                    {{'libretranslate-url' | translate}}
-                    <input tuiTextfieldLegacy type="url" attr.aria-label="{{'libretranslate-url' | translate}}"
-                        aria-label="libre translate url" />
-                </tui-input>
-                <h4>{{'libretranslate-apikey' | translate}}</h4>
-                <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.apiKey" tuiTextfieldSize="s">
-                    {{'libretranslate-apikey' | translate}}
-                    <input tuiTextfieldLegacy attr.aria-label="{{'libretranslate-apikey' | translate}}"
-                        aria-label="libre translate api key" />
-                </tui-input>
-                <h4>{{'libretranslate-status' | translate}}</h4>
-                <button appearance="outline" class="w-100" tuiButton [iconStart]="'@tui.activity'" size="xs"
-                    (click)="libreTranslate.isAlive()"
-                    [disabled]="((libreTranslate.testing$ | async) ?? true) || !libreTranslate.url">
-                    {{'libretranslate-testserver' | translate}}
-                </button>
-                <div *ngIf="(libreTranslate.errors$ | async) as error" class="tui-space_top-2">
-                    <tui-badge appearance="error" class="w-100">{{ error }}</tui-badge>
-                </div>
-                <ng-container *ngIf="(libreTranslate.serverAlive$ | async)">
-                    <div class="tui-space_top-2">
-                        <tui-badge appearance="success" class="w-100">{{'libretranslate-serveralive' | translate}}
-                        </tui-badge>
-                    </div>
-
-                    <h4>{{'libretranslate-origin-target' | translate}}</h4>
-                    <ng-container *ngIf="libreTranslate.languages">
-                        <div tuiGroup class="tui-space_top-2">
-                            <div>
-                                <tui-select *tuiLet="libreTranslate.languages as languages" tuiTextfieldSize="s"
-                                    [(ngModel)]="libreTranslate.source" class="tui-group__inherit-item"
-                                    (ngModelChange)="libreTranslate.onSourceChange($event)"
-                                    [tuiTextfieldLabelOutside]="true"
-                                    [valueContent]="languages ? stringify(languages) : undefined">
-                                    <input tuiTextfieldLegacy placeholder="{{'libretranslate-source' | translate}}" />
-                                    {{'libretranslate-source' | translate}}
-                                    <ng-template tuiDataList>
-                                        <tui-data-list>
-                                            <button *ngFor="let language of languages" tuiOption [value]="language.code"
-                                                type="button">
-                                                {{ language.name | translate }}
-                                            </button>
-                                        </tui-data-list>
-                                    </ng-template>
-                                </tui-select>
-                            </div>
-                            <div *ngIf="libreTranslate.targetLanguages">
-                                <tui-select tuiTextfieldSize="s" [(ngModel)]="libreTranslate.target"
-                                    class="tui-group__inherit-item" [tuiTextfieldLabelOutside]="true"
-                                    (ngModelChange)="libreTranslate.onTargetChange($event)">
-                                    <input tuiTextfieldLegacy placeholder="{{'libretranslate-target' | translate}}" />
-                                    {{'libretranslate-target' | translate}}
-                                    <tui-data-list-wrapper *tuiDataList [items]="libreTranslate.targetLanguages">
-                                    </tui-data-list-wrapper>
-                                    <ng-template #selectSource>
-                                        {{'libretranslate-target' | translate}}
-                                    </ng-template>
-                                </tui-select>
-                            </div>
-                        </div>
-                        <div class="tui-space_top-2" *ngIf="libreTranslate.target">
-                            <h4>{{'libretranslate-translation-status' | translate}}</h4>
-                            <button appearance="outline" tuiButton class="w-100" [iconStart]="'@tui.activity'" size="xs"
+              </div>
+            }
+          </div>
+          @if (libreTranslate.target) {
+            <div class="tui-space_top-2">
+              <h4>{{'libretranslate-translation-status' | translate}}</h4>
+              <button appearance="outline" tuiButton class="w-100" [iconStart]="'@tui.activity'" size="xs"
                                 (click)="libreTranslate.onTestTranslate()" [disabled]="
                                         ((libreTranslate.testing$ | async) ?? true) 
                                         || !libreTranslate.url 
                                         || !libreTranslate.source 
                                         || !libreTranslate.target">
-                                {{'libretranslate-testtranslation' | translate}}
-                            </button>
-                        </div>
-                    </ng-container>
-                    <div *ngIf="libreTranslate.serverReady$ | async">
-                        <tui-badge appearance="success" class="tui-space_top-2 w-100">{{'libretranslate-ready' |
-                            translate}}</tui-badge>
-                    </div>
-                    <div *ngIf="(libreTranslate.errorServer$ | async) as error" class="tui-space_top-2">
-                        <tui-badge appearance="error" class="w-100">{{ error }}</tui-badge>
-                    </div>
-                </ng-container>
+                {{'libretranslate-testtranslation' | translate}}
+              </button>
             </div>
-
-            <h3 class="tui-space_top-9">{{'reset-all-configuration' | translate}}</h3>
-            <div id="appResetAllSetting">
-                <button tuiButton appearance="accent" class="w-100" iconStart="brush-cleaning" size="xs"
-                    (click)="showWarningAlert()">
-                    {{'app-restart' | translate}}
-                </button>
-            </div>
-        </tui-drawer>
+          }
+        }
+        @if (libreTranslate.serverReady$ | async) {
+          <div>
+            <tui-badge appearance="success" class="tui-space_top-2 w-100">{{'libretranslate-ready' |
+            translate}}</tui-badge>
+          </div>
+        }
+        @if ((libreTranslate.errorServer$ | async); as error) {
+          <div class="tui-space_top-2">
+            <tui-badge appearance="error" class="w-100">{{ error }}</tui-badge>
+          </div>
+        }
+      }
     </div>
+
+    <h3 class="tui-space_top-9">{{'reset-all-configuration' | translate}}</h3>
+    <div id="appResetAllSetting">
+      <button tuiButton appearance="accent" class="w-100" iconStart="brush-cleaning" size="xs"
+        (click)="showWarningAlert()">
+        {{'app-restart' | translate}}
+      </button>
+    </div>
+  </tui-drawer>
+</div>
 </header>
 
 <ng-template #restartTemplate="polymorpheus" polymorpheus>
-    <p>{{'app-restart-description' | translate}}</p>
-    <button tuiButton type="button" (click)="onRestartApp()">
-        <span>{{ 'confirm' | translate }}</span>
-    </button>
+  <p>{{'app-restart-description' | translate}}</p>
+  <button tuiButton type="button" (click)="onRestartApp()">
+    <span>{{ 'confirm' | translate }}</span>
+  </button>
 </ng-template>

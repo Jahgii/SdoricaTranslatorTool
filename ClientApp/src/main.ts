@@ -3,24 +3,20 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { withInterceptorsFromDi, provideHttpClient, HttpClient, withInterceptors } from '@angular/common/http';
+import { provideTranslateService } from '@ngx-translate/core';
+import { withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE, TUI_SPANISH_LANGUAGE, TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateHttpLoader } from "@ngx-translate/http-loader";
 import { ApiKeyInterceptor } from './app/core/interceptors/api-key-interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { of } from 'rxjs';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
-}
-
-export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 if (environment.production) {
@@ -49,15 +45,6 @@ bootstrapApplication(AppComponent, {
             AppRoutingModule,
             FormsModule,
             ReactiveFormsModule,
-
-            TranslateModule.forRoot({
-                defaultLanguage: 'english',
-                loader: {
-                    provide: TranslateLoader,
-                    useFactory: HttpLoaderFactory,
-                    deps: [HttpClient]
-                }
-            }),
             JwtModule.forRoot({
                 config: {
                     tokenGetter: () => localStorage.getItem("token"),
@@ -71,6 +58,14 @@ bootstrapApplication(AppComponent, {
             withInterceptorsFromDi(),
             withInterceptors([ApiKeyInterceptor]),
         ),
-        provideEventPlugins()
+        provideEventPlugins(),
+        provideTranslateService({
+            fallbackLang: 'english',
+            lang: 'english',
+            loader: provideTranslateHttpLoader({
+                prefix: './assets/i18n/',
+                suffix: '.json'
+            })
+        })
     ]
 }).catch(err => console.log(err));

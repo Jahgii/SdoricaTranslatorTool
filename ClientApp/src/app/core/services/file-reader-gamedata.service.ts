@@ -152,7 +152,7 @@ export class FileReaderGamedataService {
   }
 
   public async onDownloadLocalization(result: IGamedata, fileName: string) {
-    var encodeResult = encode(result);
+    let encodeResult = encode(result) as any;
 
     const blob = new Blob([encodeResult], {
       type: ''

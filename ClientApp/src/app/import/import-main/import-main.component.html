@@ -1,234 +1,239 @@
 <main class="main-container">
-    <h2> {{'import' | translate}}</h2>
-    <p>
-        {{'import-description' | translate}}
-    </p>
+  <h2> {{'import' | translate}}</h2>
+  <p>
+    {{'import-description' | translate}}
+  </p>
 
-    <ul class="tui-list tui-list_ordered tui-list_nested tui-text_body-s">
-        <li class="tui-list__item"><b>OBB</b>: {{'obb-description' | translate}}
-        </li>
-        <li class="tui-list__item"><b>Localization</b>: {{'localization-description' | translate}} </li>
-        <li class="tui-list__item"><b>Gamedata</b>: {{'gamedata-description' | translate}}</li>
-    </ul>
+  <ul class="tui-list tui-list_ordered tui-list_nested tui-text_body-s">
+    <li class="tui-list__item"><b>OBB</b>: {{'obb-description' | translate}}
+  </li>
+  <li class="tui-list__item"><b>Localization</b>: {{'localization-description' | translate}} </li>
+  <li class="tui-list__item"><b>Gamedata</b>: {{'gamedata-description' | translate}}</li>
+</ul>
 
-    <div class="file-input-grid tui-space_top-6 tui-space_bottom-9">
+<div class="file-input-grid tui-space_top-6 tui-space_bottom-9">
         <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importS.obb,
             filesize:(1024*1024*1024*2),
             accept: '.obb',
             filename: 'OBB'
         }">
-        </ng-container>
+  </ng-container>
         <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importS.localization,
             filesize:(1024*1024*100),
             accept: '*',
             filename: 'Localization'
         }">
-        </ng-container>
+  </ng-container>
         <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importS.gamedata,
             filesize:(1024*1024*100),
             accept: '*',
             filename: 'Gamedata',
         }">
-        </ng-container>
-    </div>
+  </ng-container>
+</div>
 
-    <tui-elastic-container>
-        @if ((importS.filesVerified$ | async) ?? false) {
-        @if (!(importS.obb.skip | async)) {
-        <ng-container [ngTemplateOutlet]="configurationObb"></ng-container>
-        }
-        <ng-container [ngTemplateOutlet]="progressLog"></ng-container>
+<tui-elastic-container>
+  @if ((importS.filesVerified$ | async) ?? false) {
+    @if (!(importS.obb.skip | async)) {
+      <ng-container [ngTemplateOutlet]="configurationObb"></ng-container>
+    }
+    <ng-container [ngTemplateOutlet]="progressLog"></ng-container>
 
-        <div class="import-button tui-space_vertical-6">
-            @if (!(importS.importsCompleted$ | async)) {
-            <button tuiButton appearance="outline" class="next-button" type="button"
-                [loading]="(importS.isImporting$ | async) ?? false" (click)="importS.onImportBegins()"
-                [disabled]="!(importS.filesVerified$ | async)"
-                [tuiHint]="!(importS.filesVerified$ | async) ? ('missing-files-import' | translate) : undefined"
-                [tuiHintAppearance]="!(importS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
-                {{'begin-import' | translate}}
-            </button>
-            }
-            @else {
-            <button tuiIconButton appearance="outline" type="button" class="next-button"
-                iconStart="@tui.circle-arrow-right" title="next-button" (click)="onNext()">
-            </button>
-            }
-        </div>
-        }
-    </tui-elastic-container>
+    <div class="import-button tui-space_vertical-6">
+      @if (!(importS.importsCompleted$ | async)) {
+        <button tuiButton appearance="outline" class="next-button" type="button"
+          [loading]="(importS.isImporting$ | async) ?? false" (click)="importS.onImportBegins()"
+          [disabled]="!(importS.filesVerified$ | async)"
+          [tuiHint]="!(importS.filesVerified$ | async) ? ('missing-files-import' | translate) : undefined"
+          [tuiHintAppearance]="!(importS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
+          {{'begin-import' | translate}}
+        </button>
+      }
+      @else {
+      <button tuiIconButton appearance="outline" type="button" class="next-button"
+        iconStart="@tui.circle-arrow-right" title="next-button" (click)="onNext()">
+      </button>
+    }
+  </div>
+}
+</tui-elastic-container>
 </main>
 
 <ng-template #fileInput let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
-    <div class="file-input-empty">
+  <div class="file-input-empty">
         <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
             $implicit: filecontrol,
             filesize:filesize,
             accept: accept,
             filename: filename
         }">
-        </ng-container>
+    </ng-container>
 
-        @if (!filecontrol.control.value && !(filecontrol.skip | async) && (showSkipButton$ | async) &&
-        importS.canSkip$()) {
-        <button class="right-top-button" tuiIconButton type="button" iconStart="@tui.circle-x" size="xs"
-            appearance="icon" (click)="importS.onSkipFile(filecontrol)" [tuiHint]="'skip-file' | translate"
-            tuiHintAppearance="dark" title="skip-file-button"></button>
-        }
-    </div>
+    @if (!filecontrol.control.value && !(filecontrol.skip | async) && (showSkipButton$ | async) &&
+      importS.canSkip$()) {
+      <button class="right-top-button" tuiIconButton type="button" iconStart="@tui.circle-x" size="xs"
+        appearance="icon" (click)="importS.onSkipFile(filecontrol)" [tuiHint]="'skip-file' | translate"
+      tuiHintAppearance="dark" title="skip-file-button"></button>
+    }
+  </div>
 </ng-template>
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
-    @if (filecontrol.skip | async) {
-    <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input-provided"
-        *ngIf="filecontrol.notSupported && filecontrol.notSupported | async; else skipN">
+  @if (filecontrol.skip | async) {
+    @if (filecontrol.notSupported && filecontrol.notSupported | async) {
+      <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input-provided"
+        >
         <header tuiHeader>
-            <h2 tuiTitle>
-                {{'not-support' | translate}}
-                <span tuiSubtitle>{{filename}}</span>
-            </h2>
+          <h2 tuiTitle>
+            {{'not-support' | translate}}
+            <span tuiSubtitle>{{filename}}</span>
+          </h2>
         </header>
         <section>
-            <span>{{'not-support-mobile' | translate}}</span>
+          <span>{{'not-support-mobile' | translate}}</span>
         </section>
         <footer>
         </footer>
-    </div>
-    <ng-template #skipN>
-        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
-            <header tuiHeader>
-                <h2 tuiTitle>
-                    {{'file-skip' | translate}}
-                    <span tuiSubtitle>{{filename}}</span>
-                </h2>
-            </header>
-            <section>
-                <span>{{'file-import-skip-description' | translate}}</span>
-            </section>
-            <footer>
-            </footer>
-        </div>
-    </ng-template>
+      </div>
+    } @else {
+      <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
+        <header tuiHeader>
+          <h2 tuiTitle>
+            {{'file-skip' | translate}}
+            <span tuiSubtitle>{{filename}}</span>
+          </h2>
+        </header>
+        <section>
+          <span>{{'file-import-skip-description' | translate}}</span>
+        </section>
+        <footer>
+        </footer>
+      </div>
     }
-    @else {
-    <label tuiInputFiles *ngIf="!filecontrol.control.value" class="file-input padding0">
-        <input tuiInputFiles [formControl]="filecontrol.control" [accept]="accept" />
-        <ng-template let-dragged>
-            <div *ngIf="dragged; else base">
-                <tui-avatar class="file-avatar" src="@tui.droplet" />
-                <div>{{'drop' | translate}}</div>
-            </div>
-            <ng-template #base>
-                <div class="content">
-                    <tui-avatar class="file-avatar" src="@tui.cloud-upload" />
-                    <div>{{filename}}</div>
-                </div>
-            </ng-template>
-        </ng-template>
+  }
+  @else {
+  @if (!filecontrol.control.value) {
+    <label tuiInputFiles class="file-input padding0">
+      <input tuiInputFiles [formControl]="filecontrol.control" [accept]="accept" />
+      <ng-template let-dragged>
+        @if (dragged) {
+          <div>
+            <tui-avatar class="file-avatar" src="@tui.droplet" />
+            <div>{{'drop' | translate}}</div>
+          </div>
+        } @else {
+          <div class="content">
+            <tui-avatar class="file-avatar" src="@tui.cloud-upload" />
+            <div>{{filename}}</div>
+          </div>
+        }
+      </ng-template>
     </label>
-    <ng-container *ngIf="filecontrol.loadedFile$ | async as file">
-        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
-            <header tuiHeader>
-                <h2 tuiTitle>
-                    {{'archive' | translate}}
-                    <span tuiSubtitle>{{filename}}</span>
-                </h2>
-
-                <aside tuiAccessories>
-                    <tui-loader class="file-verified-loader" [overlay]="true"
-                        [showLoader]="(filecontrol.verifyingFile$ | async) ?? false">
-                        <tui-icon [icon]="'@tui.circle-check'" />
-                    </tui-loader>
-                </aside>
-            </header>
-            <section>
-                <p>
-                    {{
-                    (filecontrol.verifyingFile$ | async) ?? false ?
-                    ('file-import-verifying' | translate) :
-                    ('file-import-verified' | translate)
-                    }}
-                </p>
-            </section>
-            <footer>
-            </footer>
-        </div>
-    </ng-container>
-    }
+  }
+  @if (filecontrol.loadedFile$ | async; as file) {
+    <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
+      <header tuiHeader>
+        <h2 tuiTitle>
+          {{'archive' | translate}}
+          <span tuiSubtitle>{{filename}}</span>
+        </h2>
+        <aside tuiAccessories>
+          <tui-loader class="file-verified-loader" [overlay]="true"
+            [showLoader]="(filecontrol.verifyingFile$ | async) ?? false">
+            <tui-icon [icon]="'@tui.circle-check'" />
+          </tui-loader>
+        </aside>
+      </header>
+      <section>
+        <p>
+          {{
+          (filecontrol.verifyingFile$ | async) ?? false ?
+          ('file-import-verifying' | translate) :
+          ('file-import-verified' | translate)
+          }}
+        </p>
+      </section>
+      <footer>
+      </footer>
+    </div>
+  }
+}
 </ng-template>
 
 <ng-template #configurationObb>
-    <h2>{{'choose-languages' | translate}}</h2>
-    <p>
-        {{'choose-languages-description' | translate}}
-    </p>
-    @if (importS.multiLanguage$ | async) {
+  <h2>{{'choose-languages' | translate}}</h2>
+  <p>
+    {{'choose-languages-description' | translate}}
+  </p>
+  @if (importS.multiLanguage$ | async) {
 
     <tui-textfield tuiChevron class="tui-space_bottom-3" tuiTextfieldSize="m" [content]="originLang"
-        [tuiTextfieldCleaner]="false">
-        <input tuiSelect [formControl]="importS.defaultLanguage" />
+      [tuiTextfieldCleaner]="false">
+      <input tuiSelect [formControl]="importS.defaultLanguage" />
 
-        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="importS.languagesSelected"
-            [itemContent]="originLang" />
-        <ng-template #originLang let-data>
-            {{data | translate}}
-        </ng-template>
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="importS.languagesSelected"
+        [itemContent]="originLang" />
+      <ng-template #originLang let-data>
+        {{data | translate}}
+      </ng-template>
     </tui-textfield>
+  }
+  <div class="wizard-choose-lang">
+    @for (language of importS.dialogAssets | keyvalue; track language) {
+      <label tuiBlock="l"> <input tuiCheckbox type="checkbox"
+        [(ngModel)]="importS.dialogAssetsInclude[language.key]"
+        (ngModelChange)="importS.onSelectLanguage(language.key, $event)">
+        <div class="content">
+          <div>
+            <div class="label">{{language.key | translate}}</div>
+            {{'files' | translate}}: {{language.value.length}}
+          </div>
+        </div>
+      </label>
     }
-    <div class="wizard-choose-lang">
-        <label *ngFor="let language of importS.dialogAssets | keyvalue" tuiBlock="l"> <input tuiCheckbox type="checkbox"
-                [(ngModel)]="importS.dialogAssetsInclude[language.key]"
-                (ngModelChange)="importS.onSelectLanguage(language.key, $event)">
-            <div class="content">
-                <div>
-                    <div class="label">{{language.key | translate}}</div>
-                    {{'files' | translate}}: {{language.value.length}}
-                </div>
-            </div>
-        </label>
-    </div>
+  </div>
 </ng-template>
 
 <ng-template #progressLog>
-    <div class="progress-badget-container tui-space_top-6 tui-space_bottom-3">
-        <tui-badge appearance="warning" [tuiHint]="'skip-file-hint' | translate" tuiHintAppearance="dark">{{
-            importS.operationsSkip$ | async }}
-        </tui-badge>
-        <tui-badge appearance="info" [tuiHint]="'replaced-file-hint' | translate" tuiHintAppearance="dark">{{
-            importS.operationsUpdated$ | async }}
-        </tui-badge>
-    </div>
-    <tui-scrollbar>
-        <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
-            <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
-                <thead>
-                    <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
-                        <th class="tui-table__th tui-table_layout_fixed" class="width150">{{'file' | translate}}
-                        </th>
-                        <th class="tui-table__th tui-table_layout_fixed">{{'message' | translate}}</th>
-                        <th class="tui-table__th" class="width64"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *cdkVirtualFor="let log of (importS.operations$ | async)"
-                        class="tui-table__tr tui-table__tr_border_none">
-                        <td class="tui-table__td tui-table__td_text_overflow">
-                            {{log.file}}
-                        </td>
-                        <td class="tui-table__td tui-table__td_text_overflow">
-                            <span [title]="log.translateKey | translate">{{ log.translateKey | translate}}</span>
-                        </td>
-                        <td class="tui-table__td">
-                            <button appearance="icon" iconStart="@tui.chevron-right" tuiIconButton type="button"
-                                size="xs" title="import-operation-details">
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </cdk-virtual-scroll-viewport>
-    </tui-scrollbar>
+  <div class="progress-badget-container tui-space_top-6 tui-space_bottom-3">
+    <tui-badge appearance="warning" [tuiHint]="'skip-file-hint' | translate" tuiHintAppearance="dark">{{
+      importS.operationsSkip$ | async }}
+    </tui-badge>
+    <tui-badge appearance="info" [tuiHint]="'replaced-file-hint' | translate" tuiHintAppearance="dark">{{
+      importS.operationsUpdated$ | async }}
+    </tui-badge>
+  </div>
+  <tui-scrollbar>
+    <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
+      <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
+        <thead>
+          <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
+            <th class="tui-table__th tui-table_layout_fixed" class="width150">{{'file' | translate}}
+            </th>
+            <th class="tui-table__th tui-table_layout_fixed">{{'message' | translate}}</th>
+            <th class="tui-table__th" class="width64"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *cdkVirtualFor="let log of (importS.operations$ | async)"
+            class="tui-table__tr tui-table__tr_border_none">
+            <td class="tui-table__td tui-table__td_text_overflow">
+              {{log.file}}
+            </td>
+            <td class="tui-table__td tui-table__td_text_overflow">
+              <span [title]="log.translateKey | translate">{{ log.translateKey | translate}}</span>
+            </td>
+            <td class="tui-table__td">
+              <button appearance="icon" iconStart="@tui.chevron-right" tuiIconButton type="button"
+                size="xs" title="import-operation-details">
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </cdk-virtual-scroll-viewport>
+  </tui-scrollbar>
 </ng-template>

@@ -305,7 +305,7 @@ async function onCreate(completeMessage: IOnMessage, message: ExportPostMessage,
 
   postMessage(completeMessage);
 
-  let encodeResult = encode(values);
+  let encodeResult = encode(values) as any;
 
   const blob = new Blob([encodeResult], {
     type: ''

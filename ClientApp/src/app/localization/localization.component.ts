@@ -14,7 +14,7 @@ import { LocalizationTableComponent } from './localization-table/localization-ta
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiDataListWrapper, TuiFilterByInputPipe } from '@taiga-ui/kit';
 import { LocalizationKeyComponent } from './localization-key/localization-key.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-localization',
@@ -28,24 +28,22 @@ import { NgIf, AsyncPipe } from '@angular/common';
         popinAnimation
     ],
     imports: [
-        NgIf,
-        AsyncPipe,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        TuiComboBoxModule,
-        TuiTextfieldControllerModule,
-        // TuiPrimitiveTextfieldModule,
-        TuiDataList,
-        TuiDataListWrapper,
-        TuiDropdown,
-        TuiButton,
-        TuiInputModule,
-        TuiHint,
-        TuiBlockStatus,
-        TuiFilterByInputPipe,
-        LocalizationTableComponent
-    ]
+    AsyncPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    TuiComboBoxModule,
+    TuiTextfieldControllerModule,
+    TuiDataList,
+    TuiDataListWrapper,
+    TuiDropdown,
+    TuiButton,
+    TuiInputModule,
+    TuiHint,
+    TuiBlockStatus,
+    TuiFilterByInputPipe,
+    LocalizationTableComponent
+]
 })
 export class LocalizationComponent implements OnInit {
   viewIndex: number = -1;

@@ -1,8 +1,8 @@
 <main class="main-container">
-    <h2> {{'importall' | translate}}</h2>
-    <p>
-        {{'importall-description' | translate}}
-    </p>
+  <h2> {{'importall' | translate}}</h2>
+  <p>
+    {{'importall-description' | translate}}
+  </p>
 
     <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importAllS.dataFile,
@@ -11,23 +11,23 @@
             filename: 'Data'
         }" />
 
-    <tui-tabs-with-more [itemsLimit]="3" underline="var(--tui-background-accent-opposite)"
-        [(activeItemIndex)]="activeItemIndex" class="tui-space_top-6 tui-space_bottom-3" size="m">
-        <button *tuiItem iconStart="book" tuiTab type="button">
-            {{'buffinfo' | translate}}
-        </button>
-        <button *tuiItem iconStart="message-circle" tuiTab type="button">
-            {{'dialogassets' | translate}}
-        </button>
-        <button *tuiItem iconStart="key" tuiTab type="button">
-            {{'localization-keys' | translate}}
-        </button>
-        <button *tuiItem iconStart="whole-word" tuiTab type="button">
-            {{'dictionary' | translate}}
-        </button>
-    </tui-tabs-with-more>
+  <tui-tabs-with-more [itemsLimit]="3" underline="var(--tui-background-accent-opposite)"
+    [(activeItemIndex)]="activeItemIndex" class="tui-space_top-6 tui-space_bottom-3" size="m">
+    <button *tuiItem iconStart="book" tuiTab type="button">
+      {{'buffinfo' | translate}}
+    </button>
+    <button *tuiItem iconStart="message-circle" tuiTab type="button">
+      {{'dialogassets' | translate}}
+    </button>
+    <button *tuiItem iconStart="key" tuiTab type="button">
+      {{'localization-keys' | translate}}
+    </button>
+    <button *tuiItem iconStart="whole-word" tuiTab type="button">
+      {{'dictionary' | translate}}
+    </button>
+  </tui-tabs-with-more>
 
-    @switch (activeItemIndex) {
+  @switch (activeItemIndex) {
     @case (0) {
     <ng-container [ngTemplateOutlet]="gvT" [ngTemplateOutletContext]="{
         $implicit: importAllS.gVReplace,
@@ -84,126 +84,129 @@
         hint: 'conflict-count'
         }" />
     }
+  }
+
+  <div class="import-button tui-space_vertical-6">
+    @switch (importAllS.status()) {
+      @case ('waiting-file') {
+        <button tuiButton appearance="outline" disabled>
+          {{'waiting-file' | translate}}
+        </button>
+      }
+      @case ('reading-file') {
+        <button tuiButton appearance="outline" [loading]="true"></button>
+      }
+      @case ('import-file') {
+        <button tuiButton appearance="outline" (click)="importAllS.onImport()">
+          {{'import' | translate}}
+        </button>
+      }
+      @case ('importing-file') {
+        <button tuiButton appearance="outline" [loading]="true"></button>
+      }
+      @case ('file-imported') {
+        <button tuiButton appearance="outline">
+          {{'file-imported' | translate}}
+        </button>
+      }
     }
 
-    <div class="import-button tui-space_vertical-6">
-        @switch (importAllS.status()) {
-        @case ('waiting-file') {
-        <button tuiButton appearance="outline" disabled>
-            {{'waiting-file' | translate}}
-        </button>
-        }
-        @case ('reading-file') {
-        <button tuiButton appearance="outline" [loading]="true"></button>
-        }
-        @case ('import-file') {
-        <button tuiButton appearance="outline" (click)="importAllS.onImport()">
-            {{'import' | translate}}
-        </button>
-        }
-        @case ('importing-file') {
-        <button tuiButton appearance="outline" [loading]="true"></button>
-        }
-        @case ('file-imported') {
-        <button tuiButton appearance="outline">
-            {{'file-imported' | translate}}
-        </button>
-        }
-        }
-
-    </div>
+  </div>
 
 </main>
 
 <ng-template #fileInput let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
-    <div class="file-input-empty">
+  <div class="file-input-empty">
         <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
             $implicit: filecontrol,
             filesize:filesize,
             accept: accept,
             filename: filename
         }">
-        </ng-container>
-    </div>
+    </ng-container>
+  </div>
 </ng-template>
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
-    @if (filecontrol.skip | async) {
-    <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided"
-        *ngIf="filecontrol.notSupported && filecontrol.notSupported | async; else skipN">
+  @if (filecontrol.skip | async) {
+    @if (filecontrol.notSupported && filecontrol.notSupported | async) {
+      <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided"
+        >
         <header tuiHeader>
-            <h2 tuiTitle>
-                {{'not-support' | translate}}
-                <span tuiSubtitle>{{filename}}</span>
-            </h2>
+          <h2 tuiTitle>
+            {{'not-support' | translate}}
+            <span tuiSubtitle>{{filename}}</span>
+          </h2>
         </header>
         <section>
-            <span>{{'not-support-mobile' | translate}}</span>
+          <span>{{'not-support-mobile' | translate}}</span>
         </section>
         <footer>
         </footer>
-    </div>
-    <ng-template #skipN>
-        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
-            <header tuiHeader>
-                <h2 tuiTitle>
-                    {{'file-skip' | translate}}
-                    <span tuiSubtitle>{{filename}}</span>
-                </h2>
-            </header>
-            <section>
-                <span>{{'file-import-skip-description' | translate}}</span>
-            </section>
-            <footer>
-            </footer>
-        </div>
-    </ng-template>
+      </div>
+    } @else {
+      <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
+        <header tuiHeader>
+          <h2 tuiTitle>
+            {{'file-skip' | translate}}
+            <span tuiSubtitle>{{filename}}</span>
+          </h2>
+        </header>
+        <section>
+          <span>{{'file-import-skip-description' | translate}}</span>
+        </section>
+        <footer>
+        </footer>
+      </div>
     }
-    @else {
-    <label tuiInputFiles *ngIf="!filecontrol.control.value" class="file-input">
-        <input tuiInputFiles [formControl]="filecontrol.control" [accept]="accept" />
-        <ng-template let-dragged>
-            <div *ngIf="dragged; else base">
-                <tui-avatar class="file-avatar" src="@tui.droplet" />
-                <div>{{'drop' | translate}}</div>
-            </div>
-            <ng-template #base>
-                <div class="content">
-                    <tui-avatar class="file-avatar" src="@tui.cloud-upload" />
-                    <div>{{filename}}</div>
-                </div>
-            </ng-template>
-        </ng-template>
+  }
+  @else {
+  @if (!filecontrol.control.value) {
+    <label tuiInputFiles class="file-input">
+      <input tuiInputFiles [formControl]="filecontrol.control" [accept]="accept" />
+      <ng-template let-dragged>
+        @if (dragged) {
+          <div>
+            <tui-avatar class="file-avatar" src="@tui.droplet" />
+            <div>{{'drop' | translate}}</div>
+          </div>
+        } @else {
+          <div class="content">
+            <tui-avatar class="file-avatar" src="@tui.cloud-upload" />
+            <div>{{filename}}</div>
+          </div>
+        }
+      </ng-template>
     </label>
-    <ng-container *ngIf="filecontrol.loadedFile$ | async as file">
-        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
-            <header tuiHeader>
-                <h2 tuiTitle>
-                    {{'archive' | translate}}
-                    <span tuiSubtitle>{{filename}}</span>
-                </h2>
-
-                <aside tuiAccessories>
-                    <tui-loader class="file-verified-loader" [overlay]="true"
-                        [showLoader]="(filecontrol.verifyingFile$ | async) ?? false">
-                        <tui-icon [icon]="'@tui.circle-check'" />
-                    </tui-loader>
-                </aside>
-            </header>
-            <section>
-                <p>
-                    {{
-                    (filecontrol.verifyingFile$ | async) ?? false ?
-                    ('file-import-verifying' | translate) :
-                    ('file-import-verified' | translate)
-                    }}
-                </p>
-            </section>
-            <footer>
-            </footer>
-        </div>
-    </ng-container>
-    }
+  }
+  @if (filecontrol.loadedFile$ | async; as file) {
+    <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
+      <header tuiHeader>
+        <h2 tuiTitle>
+          {{'archive' | translate}}
+          <span tuiSubtitle>{{filename}}</span>
+        </h2>
+        <aside tuiAccessories>
+          <tui-loader class="file-verified-loader" [overlay]="true"
+            [showLoader]="(filecontrol.verifyingFile$ | async) ?? false">
+            <tui-icon [icon]="'@tui.circle-check'" />
+          </tui-loader>
+        </aside>
+      </header>
+      <section>
+        <p>
+          {{
+          (filecontrol.verifyingFile$ | async) ?? false ?
+          ('file-import-verifying' | translate) :
+          ('file-import-verified' | translate)
+          }}
+        </p>
+      </section>
+      <footer>
+      </footer>
+    </div>
+  }
+}
 </ng-template>
 
 <ng-template #gvT let-data let-title="title" let-appearance="appearance" let-hint="hint">
@@ -213,41 +216,41 @@
         appearance: appearance,
         hint: hint
         }" />
-    <tui-scrollbar class="tui-space_bottom-6">
-        <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
-            <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
-                <thead>
-                    <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
-                        <th class="tui-table__th tui-table_layout_fixed" class="width64">
-                            {{'import' | translate}}
-                        </th>
-                        <th class="tui-table__th tui-table_layout_fixed">
-                            {{'category' | translate}}
-                        </th>
-                        <th class="tui-table__th tui-table_layout_fixed">
-                            {{'name' | translate}}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
-                        <td class="tui-table__td">
-                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
-                                    aria-label="viewable checkbox" />
-                            </div>
-                        </td>
-                        <td class="tui-table__td tui-table__td_text_overflow">
-                            {{item.Category}}
-                        </td>
-                        <td class="tui-table__td tui-table__td_text_overflow">
-                            {{item.Name}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </cdk-virtual-scroll-viewport>
-    </tui-scrollbar>
+  <tui-scrollbar class="tui-space_bottom-6">
+    <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
+      <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
+        <thead>
+          <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
+            <th class="tui-table__th tui-table_layout_fixed" class="width64">
+              {{'import' | translate}}
+            </th>
+            <th class="tui-table__th tui-table_layout_fixed">
+              {{'category' | translate}}
+            </th>
+            <th class="tui-table__th tui-table_layout_fixed">
+              {{'name' | translate}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
+            <td class="tui-table__td">
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
+                  aria-label="viewable checkbox" />
+              </div>
+            </td>
+            <td class="tui-table__td tui-table__td_text_overflow">
+              {{item.Category}}
+            </td>
+            <td class="tui-table__td tui-table__td_text_overflow">
+              {{item.Name}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </cdk-virtual-scroll-viewport>
+  </tui-scrollbar>
 </ng-template>
 
 <ng-template #daT let-data let-title="title" let-appearance="appearance" let-hint="hint">
@@ -257,35 +260,35 @@
         appearance: appearance,
         hint: hint
         }" />
-    <tui-scrollbar class="tui-space_bottom-6">
-        <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
-            <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
-                <thead>
-                    <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
-                        <th class="tui-table__th tui-table_layout_fixed" class="width64">
-                            {{'import' | translate}}
-                        </th>
-                        <th class="tui-table__th tui-table_layout_fixed">
-                            {{'name' | translate}}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
-                        <td class="tui-table__td">
-                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
-                                    aria-label="viewable checkbox" />
-                            </div>
-                        </td>
-                        <td class="tui-table__td tui-table__td_text_overflow">
-                            {{item.Filename}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </cdk-virtual-scroll-viewport>
-    </tui-scrollbar>
+  <tui-scrollbar class="tui-space_bottom-6">
+    <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
+      <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
+        <thead>
+          <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
+            <th class="tui-table__th tui-table_layout_fixed" class="width64">
+              {{'import' | translate}}
+            </th>
+            <th class="tui-table__th tui-table_layout_fixed">
+              {{'name' | translate}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
+            <td class="tui-table__td">
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
+                  aria-label="viewable checkbox" />
+              </div>
+            </td>
+            <td class="tui-table__td tui-table__td_text_overflow">
+              {{item.Filename}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </cdk-virtual-scroll-viewport>
+  </tui-scrollbar>
 </ng-template>
 
 <ng-template #kT let-data let-title="title" let-appearance="appearance" let-hint="hint">
@@ -295,41 +298,41 @@
         appearance: appearance,
         hint: hint
         }" />
-    <tui-scrollbar class="tui-space_bottom-6">
-        <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
-            <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
-                <thead>
-                    <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
-                        <th class="tui-table__th tui-table_layout_fixed" class="width64">
-                            {{'import' | translate}}
-                        </th>
-                        <th class="tui-table__th tui-table_layout_fixed">
-                            {{'category' | translate}}
-                        </th>
-                        <th class="tui-table__th tui-table_layout_fixed">
-                            {{'name' | translate}}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
-                        <td class="tui-table__td">
-                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
-                                    aria-label="viewable checkbox" />
-                            </div>
-                        </td>
-                        <td class="tui-table__td tui-table__td_text_overflow">
-                            {{item.Category}}
-                        </td>
-                        <td class="tui-table__td tui-table__td_text_overflow">
-                            {{item.Name}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </cdk-virtual-scroll-viewport>
-    </tui-scrollbar>
+  <tui-scrollbar class="tui-space_bottom-6">
+    <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
+      <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
+        <thead>
+          <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
+            <th class="tui-table__th tui-table_layout_fixed" class="width64">
+              {{'import' | translate}}
+            </th>
+            <th class="tui-table__th tui-table_layout_fixed">
+              {{'category' | translate}}
+            </th>
+            <th class="tui-table__th tui-table_layout_fixed">
+              {{'name' | translate}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
+            <td class="tui-table__td">
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
+                  aria-label="viewable checkbox" />
+              </div>
+            </td>
+            <td class="tui-table__td tui-table__td_text_overflow">
+              {{item.Category}}
+            </td>
+            <td class="tui-table__td tui-table__td_text_overflow">
+              {{item.Name}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </cdk-virtual-scroll-viewport>
+  </tui-scrollbar>
 </ng-template>
 
 <ng-template #cT let-data let-title="title" let-appearance="appearance" let-hint="hint">
@@ -339,42 +342,42 @@
         appearance: appearance,
         hint: hint
         }" />
-    <tui-scrollbar class="tui-space_bottom-6">
-        <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
-            <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
-                <thead>
-                    <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
-                        <th class="tui-table__th tui-table_layout_fixed" class="width64">
-                            {{'import' | translate}}
-                        </th>
-                        <th class="tui-table__th tui-table_layout_fixed">
-                            {{'original' | translate}}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
-                        <td class="tui-table__td">
-                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
-                                    aria-label="viewable checkbox" />
-                            </div>
-                        </td>
-                        <td class="tui-table__td tui-table__td_text_overflow">
-                            {{item.Original}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </cdk-virtual-scroll-viewport>
-    </tui-scrollbar>
+  <tui-scrollbar class="tui-space_bottom-6">
+    <cdk-virtual-scroll-viewport itemSize="50" tuiScrollable class="tui-zero-scrollbar progress-operation-scroll">
+      <table class="tui-table tui-table_font-size_s tui-table_layout_fixed">
+        <thead>
+          <tr class="tui-table__tr tui-table__tr_border_none tui-table__tr_hover_disabled">
+            <th class="tui-table__th tui-table_layout_fixed" class="width64">
+              {{'import' | translate}}
+            </th>
+            <th class="tui-table__th tui-table_layout_fixed">
+              {{'original' | translate}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
+            <td class="tui-table__td">
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
+                  aria-label="viewable checkbox" />
+              </div>
+            </td>
+            <td class="tui-table__td tui-table__td_text_overflow">
+              {{item.Original}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </cdk-virtual-scroll-viewport>
+  </tui-scrollbar>
 </ng-template>
 
 <ng-template #tableTitle let-data let-title="title" let-appearance="appearance" let-hint="hint">
-    <section style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>{{title | translate}}</h3>
-        <tui-badge [appearance]="appearance" [tuiHint]="hint | translate">
-            {{data().length}}
-        </tui-badge>
-    </section>
+  <section style="display: flex; justify-content: space-between; align-items: center;">
+    <h3>{{title | translate}}</h3>
+    <tui-badge [appearance]="appearance" [tuiHint]="hint | translate">
+      {{data().length}}
+    </tui-badge>
+  </section>
 </ng-template>

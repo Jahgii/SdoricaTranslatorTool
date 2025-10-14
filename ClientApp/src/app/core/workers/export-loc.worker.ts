@@ -144,7 +144,7 @@ async function onCreateNewLoc(completeMessage: IOnMessage, message: ExportPostMe
 
   postMessage(completeMessage);
 
-  let encodeResult = encode(decodeResult);
+  let encodeResult = encode(decodeResult) as any;
 
   const blob = new Blob([encodeResult], {
     type: ''

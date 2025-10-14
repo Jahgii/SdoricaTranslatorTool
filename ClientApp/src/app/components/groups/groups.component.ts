@@ -12,34 +12,32 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TuiLoader, TuiDropdown, TuiIcon, TuiButton } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 import { TuiInputInline, TuiTiles } from '@taiga-ui/kit';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-groups',
-    templateUrl: './groups.component.html',
-    styleUrls: ['./groups.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        popinAnimation
-    ],
-    imports: [
-        NgIf,
-        TuiTiles,
-        NgFor,
-        TuiInputInline,
-        TuiAutoFocus,
-        FormsModule,
-        TuiButton,
-        TuiDropdown,
-        TuiInputModule,
-        TuiTextfieldControllerModule,
-        TuiIcon,
-        RouterLink,
-        TuiBlockStatus,
-        TuiLoader,
-        AsyncPipe,
-        TranslateModule,
-    ]
+  selector: 'app-groups',
+  templateUrl: './groups.component.html',
+  styleUrls: ['./groups.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    popinAnimation
+  ],
+  imports: [
+    TuiTiles,
+    TuiInputInline,
+    TuiAutoFocus,
+    FormsModule,
+    TuiButton,
+    TuiDropdown,
+    TuiInputModule,
+    TuiTextfieldControllerModule,
+    TuiIcon,
+    RouterLink,
+    TuiBlockStatus,
+    TuiLoader,
+    AsyncPipe,
+    TranslateModule
+  ]
 })
 export class GroupsComponent {
   public groups$!: Observable<IGroup[]>;
@@ -53,8 +51,8 @@ export class GroupsComponent {
   ) { }
 
   ngOnInit(): void {
-    if(!this.mainGroup)
-    this.mainGroup = this.route.snapshot.params['mid'];
+    if (!this.mainGroup)
+      this.mainGroup = this.route.snapshot.params['mid'];
 
     this.subsLanguage = this.languageOrigin.language$.subscribe((lang: string) => {
       this.groups$ = this.api.getWithHeaders<IGroup[]>('groups', { language: lang, mainGroup: this.mainGroup })

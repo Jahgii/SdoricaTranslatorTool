@@ -1,155 +1,158 @@
 @if (dAS.mainGroup) {
-<ng-container *ngIf="(dAS.dialogAssetsChange$ | async) && (dAS.dialogAssets$ | async) as data; else loading;">
+  @if ((dAS.dialogAssetsChange$ | async) && (dAS.dialogAssets$ | async); as data) {
     <ng-container [ngTemplateOutlet]="simpleUI" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
-</ng-container>
+  } @else {
+    <div class="loading-container">
+      <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">
+        <tui-block-status>
+          <h4>{{'loading-3-dots' | translate}}</h4>
+        </tui-block-status>
+      </tui-loader>
+    </div>
+  }
 }
 @else {
 <div class="group-no-selected">
-    <tui-block-status [card]="true">
-        <tui-icon icon="@tui.mouse-pointer-2" tuiSlot="top" [style.color]="'var(--tui-text-primary)'"
-            [background]="'@tui.mouse-pointer-2-filled'" style="background: var(--tui-text-primary);"
-            [style.height.px]="128" [style.width.px]="128" />
-        {{'select-group-tree' | translate}}
-    </tui-block-status>
+  <tui-block-status [card]="true">
+    <tui-icon icon="@tui.mouse-pointer-2" tuiSlot="top" [style.color]="'var(--tui-text-primary)'"
+      [background]="'@tui.mouse-pointer-2-filled'" style="background: var(--tui-text-primary);"
+      [style.height.px]="128" [style.width.px]="128" />
+    {{'select-group-tree' | translate}}
+  </tui-block-status>
 </div>
 }
 
 <ng-template #simpleUI let-data>
-    <div class="top-main-options">
-        <div class="option-child">
-            <span class="tui-text_body-s tui-space_right-4 text-bold">{{'file-number' | translate}}:</span>
-            <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="dAS.activeItemIndex" class="tabs"
-                [moreContent]="moreContentIcon" size="m">
-                <ng-container *ngFor="let item of data">
-                    <button *tuiItem tuiTab>
-                        {{item.Number}}
-                        @if (item.Translated) {
-                        <tui-icon class="tui-space_left-3" icon="@tui.circle-check"></tui-icon>
-                        }
-                    </button>
-                </ng-container>
-            </tui-tabs-with-more>
-        </div>
-        <div class="option-child">
-            @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) ===
-            'desktopSmall') {
-            <tui-loader class="tui-space_right-4" [showLoader]="(dAS.pendingChanges$ | async) ?? false"
-                [overlay]="true">
-                <span *ngIf="dAS.pendingChanges$ | async">
-                    {{'saving-changes' | translate}}
-                </span>
-
-            </tui-loader>
-            <span class="tui-space_right-1">
-                {{'translated' | translate}}:
+  <div class="top-main-options">
+    <div class="option-child">
+      <span class="tui-text_body-s tui-space_right-4 text-bold">{{'file-number' | translate}}:</span>
+      <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="dAS.activeItemIndex" class="tabs"
+        [moreContent]="moreContentIcon" size="m">
+        @for (item of data; track item) {
+          <button *tuiItem tuiTab>
+            {{item.Number}}
+            @if (item.Translated) {
+              <tui-icon class="tui-space_left-3" icon="@tui.circle-check"></tui-icon>
+            }
+          </button>
+        }
+      </tui-tabs-with-more>
+    </div>
+    <div class="option-child">
+      @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) ===
+        'desktopSmall') {
+        <tui-loader class="tui-space_right-4" [showLoader]="(dAS.pendingChanges$ | async) ?? false"
+          [overlay]="true">
+          @if (dAS.pendingChanges$ | async) {
+            <span>
+              {{'saving-changes' | translate}}
             </span>
-            <input tuiSwitch type="checkbox" class="tui-space_right-4" [showIcons]="true"
-                [(ngModel)]="data[dAS.activeItemIndex].Translated" (ngModelChange)="onTranslatedChange(data, $event)"
-                appareance="outline" size="s" aria-label="Translated file checkbox" />
-            <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
-            <input tuiSwitch type="checkbox" class="tui-space_right-4" [showIcons]="true"
-                [(ngModel)]="dAS.propagateTranslation" [tuiHint]="propagationTooltip" tuiHintDirection="right" size="s"
-                aria-label="Toggle Propagation Translation" />
-            <button tuiIconButton type="button" class="tui-space_right-4" appearance="icon" shape="square"
-                tuiHint="{{'download-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
-                (click)="onDownload(data[dAS.activeItemIndex])" iconStart="@tui.download" size="xs"
-                aria-label="Download Dialog File">
-            </button>
-            <button tuiIconButton type="button" class="tui-space_right-4" appearance="icon" shape="square"
-                tuiHint="{{'copy-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
-                (click)="onCopyToClipboard(data[dAS.activeItemIndex])" iconStart="@tui.copy" size="xs"
-                aria-label="Copy Json">
-            </button>
-            <button tuiIconButton type="button" class="tui-space_right-4" appearance="icon" shape="square"
-                tuiHint="{{'paste-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
-                (click)="onPasteClipboard(data[dAS.activeItemIndex])" iconStart="@tui.clipboard" size="xs"
-                aria-label="Paste Json">
-            </button>
-            <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
-                [overlay]="true">
+          }
+
+        </tui-loader>
+        <span class="tui-space_right-1">
+          {{'translated' | translate}}:
+        </span>
+        <input tuiSwitch type="checkbox" class="tui-space_right-4" [showIcons]="true"
+          [(ngModel)]="data[dAS.activeItemIndex].Translated" (ngModelChange)="onTranslatedChange(data, $event)"
+          appareance="outline" size="s" aria-label="Translated file checkbox" />
+        <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
+        <input tuiSwitch type="checkbox" class="tui-space_right-4" [showIcons]="true"
+          [(ngModel)]="dAS.propagateTranslation" [tuiHint]="propagationTooltip" tuiHintDirection="right" size="s"
+          aria-label="Toggle Propagation Translation" />
+        <button tuiIconButton type="button" class="tui-space_right-4" appearance="icon" shape="square"
+          tuiHint="{{'download-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
+          (click)="onDownload(data[dAS.activeItemIndex])" iconStart="@tui.download" size="xs"
+          aria-label="Download Dialog File">
+        </button>
+        <button tuiIconButton type="button" class="tui-space_right-4" appearance="icon" shape="square"
+          tuiHint="{{'copy-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
+          (click)="onCopyToClipboard(data[dAS.activeItemIndex])" iconStart="@tui.copy" size="xs"
+          aria-label="Copy Json">
+        </button>
+        <button tuiIconButton type="button" class="tui-space_right-4" appearance="icon" shape="square"
+          tuiHint="{{'paste-dialog-file' | translate}}" [tuiHintAppearance]="'onDark'"
+          (click)="onPasteClipboard(data[dAS.activeItemIndex])" iconStart="@tui.clipboard" size="xs"
+          aria-label="Paste Json">
+        </button>
+        <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
+          [overlay]="true">
                 <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="@tui.box" [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ?
                         ('libretranslate-button-ready' | translate):
                         ('libretranslate-button-disabled' | translate)"
-                    [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-                    (click)="onMachineTranslate(data)" [disabled]="!(dAS.libreTranslate.serverReady$ | async)" size="xs"
-                    aria-label="Libre Translate Button">
-                </button>
-            </tui-loader>
-            }
-            @else if ((breakpointService.mode$ | async) === 'mobile') {
-            <tui-loader [showLoader]="(dAS.pendingChanges$ | async) ?? false" [overlay]="true" class="tui-space_right-4"
-                size="s">
-                <span *ngIf="dAS.pendingChanges$ | async" class="pending-changes-text">
-                    {{'saving-changes' | translate}}
-                </span>
-            </tui-loader>
-            <button tuiIconButton type="button" appearance="icon" shape="square" [tuiDropdown]="dropdownContent"
-                [tuiDropdownManual]="openOption" (click)="openOption = !openOption"
-                (tuiActiveZoneChange)="onActiveZone($event)" iconStart="@tui.ellipsis-vertical" aria-label="options"
-                size="xs">
-            </button>
-            <ng-template #dropdownContent>
-                <div class="mobile-dropdown-container">
-                    <div class="dropdown-container-option">
-                        <span class="tui-space_right-1">{{'translated' | translate}}:</span>
-                        <input tuiSwitch type="checkbox" [showIcons]="true"
-                            [(ngModel)]="data[dAS.activeItemIndex].Translated"
-                            (ngModelChange)="onTranslatedChange(data, $event)" size="s"
-                            aria-label="Translated file checkbox" />
-                    </div>
-                    <div class="dropdown-container-option">
-                        <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
-                        <input tuiSwitch type="checkbox" [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"
-                            [tuiHint]="propagationTooltip" tuiHintDirection="right" size="s"
-                            aria-label="Toggle Propagation Translation" />
-                    </div>
-                    <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
-                        [overlay]="true">
-                        <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="@tui.box"
+            [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
+            (click)="onMachineTranslate(data)" [disabled]="!(dAS.libreTranslate.serverReady$ | async)" size="xs"
+            aria-label="Libre Translate Button">
+          </button>
+        </tui-loader>
+      }
+      @else if ((breakpointService.mode$ | async) === 'mobile') {
+      <tui-loader [showLoader]="(dAS.pendingChanges$ | async) ?? false" [overlay]="true" class="tui-space_right-4"
+        size="s">
+        @if (dAS.pendingChanges$ | async) {
+          <span class="pending-changes-text">
+            {{'saving-changes' | translate}}
+          </span>
+        }
+      </tui-loader>
+      <button tuiIconButton type="button" appearance="icon" shape="square" [tuiDropdown]="dropdownContent"
+        [tuiDropdownManual]="openOption" (click)="openOption = !openOption"
+        (tuiActiveZoneChange)="onActiveZone($event)" iconStart="@tui.ellipsis-vertical" aria-label="options"
+        size="xs">
+      </button>
+      <ng-template #dropdownContent>
+        <div class="mobile-dropdown-container">
+          <div class="dropdown-container-option">
+            <span class="tui-space_right-1">{{'translated' | translate}}:</span>
+            <input tuiSwitch type="checkbox" [showIcons]="true"
+              [(ngModel)]="data[dAS.activeItemIndex].Translated"
+              (ngModelChange)="onTranslatedChange(data, $event)" size="s"
+              aria-label="Translated file checkbox" />
+          </div>
+          <div class="dropdown-container-option">
+            <span class="tui-space_right-1">{{'propagation' | translate}}:</span>
+            <input tuiSwitch type="checkbox" [showIcons]="true" [(ngModel)]="dAS.propagateTranslation"
+              [tuiHint]="propagationTooltip" tuiHintDirection="right" size="s"
+              aria-label="Toggle Propagation Translation" />
+          </div>
+          <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
+            [overlay]="true">
+            <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="@tui.box"
                             [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ?
                                         ('libretranslate-button-ready' | translate):
                                         ('libretranslate-button-disabled' | translate)"
-                            [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-                            (click)="onMachineTranslate(data)" [disabled]="!(dAS.libreTranslate.serverReady$ | async)"
-                            size="xs" aria-label="Libre Translate Button">
-                        </button>
-                    </tui-loader>
-                </div>
-            </ng-template>
-            }
+              [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
+              (click)="onMachineTranslate(data)" [disabled]="!(dAS.libreTranslate.serverReady$ | async)"
+              size="xs" aria-label="Libre Translate Button">
+            </button>
+          </tui-loader>
         </div>
-    </div>
-    <ng-container *ngIf="data[dAS.activeItemIndex] as dialogAsset">
-        <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [maxBufferPx]="500"
+      </ng-template>
+    }
+  </div>
+</div>
+@if (data[dAS.activeItemIndex]; as dialogAsset) {
+  <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [maxBufferPx]="500"
             [minBufferPx]="400" [itemSize]="breakpointService.x() > 1320 ? 185 :
             breakpointService.x() > 768 ? (breakpointService.x() / 1320) * 185 :
             breakpointService.x() > 320 ? (breakpointService.x() / 660) * 185 :
             (320 / 660) * 185">
-            <div *cdkVirtualFor="let item of dialogAsset.Model['$content']; trackBy: trackByItemId" >
-                <app-dialog-asset-single [data]="data" [dialogAsset]="dialogAsset" [item]="item" />
-            </div>
-        </cdk-virtual-scroll-viewport>
-    </ng-container>
+    <div *cdkVirtualFor="let item of dialogAsset.Model['$content']; trackBy: trackByItemId" >
+      <app-dialog-asset-single [data]="data" [dialogAsset]="dialogAsset" [item]="item" />
+    </div>
+  </cdk-virtual-scroll-viewport>
+}
 </ng-template>
 
 <ng-template #moreContentIcon>
-    <tui-icon icon="@tui.ellipsis"></tui-icon>
+  <tui-icon icon="@tui.ellipsis"></tui-icon>
 </ng-template>
 
-<ng-template #loading>
-    <div class="loading-container">
-        <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">
-            <tui-block-status>
-                <h4>{{'loading-3-dots' | translate}}</h4>
-            </tui-block-status>
-        </tui-loader>
-    </div>
-</ng-template>
 
 <ng-template #propagationTooltip>
-    {{'propagation' | translate}}: {{'propagation-dialog-description-0' | translate}}
-    <span class="tooltip-important-text">{{'propagation-dialog-description-1' | translate}}</span>
-    {{'propagation-dialog-description-2' | translate}}
-    <strong>{{'propagation-dialog-description-3' | translate}}</strong>
-    {{'propagation-dialog-description-4' |translate}}
+  {{'propagation' | translate}}: {{'propagation-dialog-description-0' | translate}}
+  <span class="tooltip-important-text">{{'propagation-dialog-description-1' | translate}}</span>
+  {{'propagation-dialog-description-2' | translate}}
+  <strong>{{'propagation-dialog-description-3' | translate}}</strong>
+  {{'propagation-dialog-description-4' |translate}}
 </ng-template>

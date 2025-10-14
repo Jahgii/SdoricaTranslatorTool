@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ImportAllService } from '../import-all.service';
-import { AsyncPipe, NgIf, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiAvatar, TuiBadge, TuiButtonLoading, TuiCheckbox, TuiFiles, TuiTabs } from '@taiga-ui/kit';
@@ -14,29 +14,28 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
         ImportAllService
     ],
     imports: [
-        AsyncPipe,
-        NgIf,
-        NgTemplateOutlet,
-        FormsModule,
-        ReactiveFormsModule,
-        ScrollingModule,
-        TranslateModule,
-        TuiFiles,
-        TuiCardMedium,
-        TuiAppearance,
-        TuiHint,
-        TuiTitle,
-        TuiAvatar,
-        TuiLoader,
-        TuiIcon,
-        TuiTabs,
-        TuiCheckbox,
-        TuiScrollbar,
-        TuiTitle,
-        TuiBadge,
-        TuiButton,
-        TuiButtonLoading,
-    ],
+    AsyncPipe,
+    NgTemplateOutlet,
+    FormsModule,
+    ReactiveFormsModule,
+    ScrollingModule,
+    TranslateModule,
+    TuiFiles,
+    TuiCardMedium,
+    TuiAppearance,
+    TuiHint,
+    TuiTitle,
+    TuiAvatar,
+    TuiLoader,
+    TuiIcon,
+    TuiTabs,
+    TuiCheckbox,
+    TuiScrollbar,
+    TuiTitle,
+    TuiBadge,
+    TuiButton,
+    TuiButtonLoading
+],
     templateUrl: './import-all.component.html',
     styleUrl: './import-all.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

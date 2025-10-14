@@ -9,6 +9,9 @@ export interface IGamedataValue {
     Name: string;
     Custom?: boolean;
     Content: { [key: string]: any };
+
+    loader?: any;
+    confirm?: any;
 }
 
 export interface IGamedata {

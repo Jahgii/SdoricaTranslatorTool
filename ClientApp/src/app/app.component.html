@@ -1,7 +1,11 @@
 <tui-root style="height: 100%;" [attr.tuiTheme]="theme.darkMode() ? 'dark' : null">
   <main class="main-grid">
-    <app-sidebar *ngIf="app.initialized$ | async" style="grid-area: sidebar;"></app-sidebar>
-    <app-nav-menu *ngIf="app.initialized$ | async" style="grid-area: header;"></app-nav-menu>
+    @if (app.initialized$ | async) {
+      <app-sidebar style="grid-area: sidebar;"></app-sidebar>
+    }
+    @if (app.initialized$ | async) {
+      <app-nav-menu style="grid-area: header;"></app-nav-menu>
+    }
     <div style="grid-area: content;">
       <router-outlet></router-outlet>
     </div>

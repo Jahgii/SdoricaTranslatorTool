@@ -3,7 +3,7 @@ import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { DialogAssetService } from '../dialog-asset.service';
 import { IDialog, IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { FormsModule } from '@angular/forms';
-import { AsyncPipe, KeyValuePipe, NgFor, NgIf, NgStyle } from '@angular/common';
+import { AsyncPipe, KeyValuePipe, NgStyle } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 import { TuiHint, TuiIcon, TuiScrollbar } from '@taiga-ui/core';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -15,19 +15,17 @@ import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictio
 @Component({
     selector: 'app-dialog-asset-single',
     imports: [
-        FormsModule,
-        AsyncPipe,
-        NgStyle,
-        NgIf,
-        NgFor,
-        KeyValuePipe,
-        CommonDictionaryDirective,
-        TranslateModule,
-        TuiHint,
-        TuiIcon,
-        TuiScrollbar,
-        TuiBlockStatus,
-    ],
+    FormsModule,
+    AsyncPipe,
+    NgStyle,
+    KeyValuePipe,
+    CommonDictionaryDirective,
+    TranslateModule,
+    TuiHint,
+    TuiIcon,
+    TuiScrollbar,
+    TuiBlockStatus
+],
     animations: [popinAnimation],
     templateUrl: './dialog-asset-single.component.html',
     styleUrl: './dialog-asset-single.component.scss'

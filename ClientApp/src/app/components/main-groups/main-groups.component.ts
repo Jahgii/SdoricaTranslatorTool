@@ -11,7 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TuiInputInline, TuiTiles } from '@taiga-ui/kit';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-main-groups',
@@ -22,20 +22,18 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
         popinAnimation
     ],
     imports: [
-        NgIf,
-        TuiTiles,
-        NgFor,
-        TuiInputInline,
-        TuiAutoFocus,
-        FormsModule,
-        TuiButton,
-        TuiIcon,
-        RouterLink,
-        TuiLoader,
-        TuiBlockStatus,
-        AsyncPipe,
-        TranslateModule,
-    ]
+    TuiTiles,
+    TuiInputInline,
+    TuiAutoFocus,
+    FormsModule,
+    TuiButton,
+    TuiIcon,
+    RouterLink,
+    TuiLoader,
+    TuiBlockStatus,
+    AsyncPipe,
+    TranslateModule
+]
 })
 export class MainGroupsComponent {
   public mainGroups$!: Observable<IMainGroup[]>;

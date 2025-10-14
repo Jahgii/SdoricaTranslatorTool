@@ -6,7 +6,7 @@ import { LanguageOriginService } from 'src/app/core/services/language-origin.ser
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { TuiAppBar, TuiBlockStatus } from '@taiga-ui/layout';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-home',
@@ -17,14 +17,13 @@ import { NgIf, AsyncPipe } from '@angular/common';
         popinAnimation
     ],
     imports: [
-        NgIf,
-        TuiBlockStatus,
-        TuiButton,
-        RouterLink,
-        TuiAppBar,
-        AsyncPipe,
-        TranslateModule,
-    ]
+    TuiBlockStatus,
+    TuiButton,
+    RouterLink,
+    TuiAppBar,
+    AsyncPipe,
+    TranslateModule
+]
 })
 export class HomeComponent {
   size$: Observable<TuiSizeL> = this.breakpointService.pipe(

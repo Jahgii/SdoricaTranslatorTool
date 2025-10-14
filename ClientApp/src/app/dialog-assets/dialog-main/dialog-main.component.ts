@@ -1,6 +1,6 @@
 import { TuiBlockStatus } from "@taiga-ui/layout";
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 import { DialogSelectionComponent } from '../dialog-selection/dialog-selection.component';
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
@@ -11,11 +11,10 @@ import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component'
     styleUrl: './dialog-main.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
-        TuiBlockStatus,
-        DialogSelectionComponent,
-        DialogAssetsComponent
-    ],
+    TuiBlockStatus,
+    DialogSelectionComponent,
+    DialogAssetsComponent
+],
     providers: [ElementBreakpointService]
 })
 export class DialogMainComponent {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { AppStateService } from 'src/app/core/services/app-state.service';
@@ -7,9 +7,8 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
 @Component({
     selector: 'app-viewer-main',
     imports: [
-        CommonModule,
-        AdHostDirective
-    ],
+    AdHostDirective
+],
     templateUrl: './viewer-main.component.html',
     styleUrls: ['./viewer-main.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
