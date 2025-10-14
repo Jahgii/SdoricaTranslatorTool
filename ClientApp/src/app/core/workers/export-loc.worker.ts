@@ -153,5 +153,4 @@ async function onCreateNewLoc(completeMessage: IOnMessage, message: ExportPostMe
   completeMessage.pgState = ProgressStatus.finish;
   completeMessage.blob = blob;
   completeMessage.pg = 100;
-  postMessage(completeMessage);
 }

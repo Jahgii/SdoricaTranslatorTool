@@ -129,9 +129,9 @@
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
     @if (filecontrol.skip | async) {
-    <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input-provided"
+    <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided"
         *ngIf="filecontrol.notSupported && filecontrol.notSupported | async; else skipN">
-        <header tuiHeader="body-m">
+        <header tuiHeader>
             <h2 tuiTitle>
                 {{'not-support' | translate}}
                 <span tuiSubtitle>{{filename}}</span>
@@ -145,7 +145,7 @@
     </div>
     <ng-template #skipN>
         <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
-            <header tuiHeader="body-m">
+            <header tuiHeader>
                 <h2 tuiTitle>
                     {{'file-skip' | translate}}
                     <span tuiSubtitle>{{filename}}</span>
@@ -160,7 +160,7 @@
     </ng-template>
     }
     @else {
-    <label tuiInputFiles *ngIf="!filecontrol.control.value" class="file-input padding0">
+    <label tuiInputFiles *ngIf="!filecontrol.control.value" class="file-input">
         <input tuiInputFiles [formControl]="filecontrol.control" [accept]="accept" />
         <ng-template let-dragged>
             <div *ngIf="dragged; else base">
@@ -176,8 +176,8 @@
         </ng-template>
     </label>
     <ng-container *ngIf="filecontrol.loadedFile$ | async as file">
-        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
-            <header tuiHeader="body-m">
+        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input">
+            <header tuiHeader>
                 <h2 tuiTitle>
                     {{'archive' | translate}}
                     <span tuiSubtitle>{{filename}}</span>
@@ -371,16 +371,10 @@
 </ng-template>
 
 <ng-template #tableTitle let-data let-title="title" let-appearance="appearance" let-hint="hint">
-    <section class="tui-space_bottom-1">
-        <header tuiHeader="body-m">
-            <hgroup tuiTitle>
-                <h5>{{title | translate}}</h5>
-            </hgroup>
-            <aside tuiAccessories>
-                <tui-badge [appearance]="appearance" [tuiHint]="hint | translate">
-                    {{data().length}}
-                </tui-badge>
-            </aside>
-        </header>
+    <section style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>{{title | translate}}</h3>
+        <tui-badge [appearance]="appearance" [tuiHint]="hint | translate">
+            {{data().length}}
+        </tui-badge>
     </section>
 </ng-template>

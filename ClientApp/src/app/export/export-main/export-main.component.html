@@ -104,7 +104,7 @@
         </label>
         }
         @if (filecontrol.loadedFile$ | async; as file) {
-        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input">
+        <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
             <header tuiHeader>
                 <h2 tuiTitle>
                     {{'archive' | translate}}
@@ -195,7 +195,7 @@
                 {{'before-translation-apply-2' | translate}}
             </p> -->
 
-            <p>
+            <p class="important-text">
                 {{'before-translation-apply-3' | translate}}
             </p>
         </ng-template>
@@ -210,9 +210,9 @@
             {{'after-translation-apply-1' | translate}}
         </p>
 
-        <p>
+        <!-- <p>
             {{'after-translation-apply-2' | translate}}
-        </p>
+        </p> -->
     </tui-expand>
 
     <div class="translate-button tui-space_vertical-6">

@@ -14,10 +14,6 @@ tui-tabs-with-more {
     margin: 2rem auto 0 auto;
 }
 
-.file-input-empty {
-    position: relative;
-}
-
 .file-input-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, auto));
@@ -26,8 +22,9 @@ tui-tabs-with-more {
 
 .file-input {
     min-width: 280px;
-    min-height: 108px;
-    max-height: 108px;
+    min-height: 140px;
+    max-height: 140px;
+    width: 100%;
 }
 
 .file-input-provided {
@@ -40,14 +37,6 @@ tui-tabs-with-more {
     right: 4px;
 }
 
-.wizard-choose-lang {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    grid-gap: 1em;
-    grid-auto-rows: minmax(108px, auto);
-    justify-content: space-between;
-}
-
 .progress-badget-container {
     display: flex;
     gap: 0.5rem;
@@ -56,6 +45,10 @@ tui-tabs-with-more {
 
 .file-avatar {
     background: transparent;
+}
+
+.file-input-empty {
+    position: relative;
 }
 
 .file-verified-loader {
