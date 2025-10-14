@@ -806,4 +806,9 @@ export class IndexDBService {
 
     return { success$, error$ };
   }
+
+  public destroyDB() {
+    this.db.close();
+    indexedDB.deleteDatabase(this.dbName);
+  }
 }

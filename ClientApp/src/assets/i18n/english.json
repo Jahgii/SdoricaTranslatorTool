@@ -360,5 +360,10 @@
     "waiting-file": "Waiting File",
     "file-imported": "File Imported",
     "re-import-game-files": "Import Game Files",
-    "re-import-translation-file": "Import Translation File"
+    "re-import-translation-file": "Import Translation File",
+    "reset-all-configuration": "Warning",
+    "app-restart": "Restart App",
+    "app-restart-title": "Irreversible Operation",
+    "app-restart-description": "All information will be deleted, it is recommended to export your information to a file before proceeding.",
+    "confirm": "Confirm"
 }

@@ -146,6 +146,21 @@
                     </div>
                 </ng-container>
             </div>
+
+            <h3 class="tui-space_top-9">{{'reset-all-configuration' | translate}}</h3>
+            <div id="appResetAllSetting">
+                <button tuiButton appearance="accent" class="w-100" iconStart="brush-cleaning" size="xs"
+                    (click)="showWarningAlert()">
+                    {{'app-restart' | translate}}
+                </button>
+            </div>
         </tui-drawer>
     </div>
 </header>
+
+<ng-template #restartTemplate="polymorpheus" polymorpheus>
+    <p>{{'app-restart-description' | translate}}</p>
+    <button tuiButton type="button" (click)="onRestartApp()">
+        <span>{{ 'confirm' | translate }}</span>
+    </button>
+</ng-template>

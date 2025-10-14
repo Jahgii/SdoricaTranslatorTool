@@ -1,10 +1,10 @@
 import { TuiSidebar } from "@taiga-ui/addon-mobile";
 import { TuiTextfieldControllerModule, TuiInputModule, TuiSelectModule } from "@taiga-ui/legacy";
-import { ChangeDetectionStrategy, Component, Inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Inject, signal, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { tuiPure, TuiStringHandler, TuiContext, TuiLet } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiDataList, TuiGroup, TuiButton, TuiHint, TuiTextfield, TuiPopup } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDataList, TuiGroup, TuiButton, TuiHint, TuiTextfield, TuiPopup, TuiAlertService, TuiAlertContext } from '@taiga-ui/core';
 import { TuiLanguageSwitcherService } from '@taiga-ui/i18n';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -18,6 +18,8 @@ import { BehaviorSubject, skip, takeWhile } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 import { LanguageSwitcherComponent } from "../language-switcher/language-switcher.component";
+import { IndexDBService } from "src/app/core/services/index-db.service";
+import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
 
 @Component({
   selector: 'app-nav-menu',
@@ -33,6 +35,7 @@ import { LanguageSwitcherComponent } from "../language-switcher/language-switche
     ReactiveFormsModule,
     TranslateModule,
 
+    PolymorpheusTemplate,
     TuiPopup,
     TuiDrawer,
     TuiButton,
@@ -53,8 +56,13 @@ import { LanguageSwitcherComponent } from "../language-switcher/language-switche
   ]
 })
 export class HeaderMenuComponent {
+  @ViewChild('restartTemplate')
+  protected restartTemplate?: TemplateRef<TuiAlertContext>;
+
+  private readonly alerts = inject(TuiAlertService);
+
   public openMenu: boolean = false;
-  public openSetting = signal(false);;
+  public openSetting = signal(false);
 
   public langControl: FormControl = new FormControl();
 
@@ -75,6 +83,7 @@ export class HeaderMenuComponent {
     private viewers: ViewersService,
     public theme: ThemeService,
     public appState: AppStateService,
+    public indexDB: IndexDBService,
     @Inject(TuiLanguageSwitcherService) readonly switcher: TuiLanguageSwitcherService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) {
@@ -110,6 +119,23 @@ export class HeaderMenuComponent {
       .subscribe(breakpoint => {
         this.openSetting.set(false);
       });
+  }
+
+  protected showWarningAlert(): void {
+    this.alerts
+      .open(this.restartTemplate || '', {
+        label: this.translate.instant('app-restart-title'),
+        appearance: 'negative',
+        autoClose: 0,
+      })
+      .subscribe();
+  }
+
+  protected onRestartApp() {
+    this.indexDB.destroyDB();
+    window.localStorage.clear();
+
+    window.location.reload();
   }
 
   @tuiPure

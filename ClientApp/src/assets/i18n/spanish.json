@@ -360,5 +360,10 @@
     "waiting-file": "Esperando Archivo",
     "file-imported": "Archivo Importado",
     "re-import-game-files": "Importar Archivos de Juego",
-    "re-import-translation-file": "Importar Archivo de Traducción"
+    "re-import-translation-file": "Importar Archivo de Traducción",
+    "reset-all-configuration": "Precaución",
+    "app-restart": "Reiniciar App",
+    "app-restart-title": "Operacion Irréversible",
+    "app-restart-description": "Toda la información se eliminará, se recomienda exportar su información a un archivo antes de proceder.",
+    "confirm": "Confirmar"
 }
