@@ -412,6 +412,24 @@ export class TourService {
         ]
       },
       {
+        id: 'settings-sidebar-apprestart',
+        title: this.translate.instant('tour-settings-apprestart-title'),
+        text: this.translate.instant('tour-settings-apprestart'),
+        canClickTarget: false,
+        attachTo: {
+          element: '#appResetAllSetting',
+          on: mobile ? 'top' : 'left'
+        },
+        buttons: [
+          {
+            action() {
+              return this.next();
+            },
+            text: nextTranslateText
+          }
+        ]
+      },
+      {
         id: 'end',
         title: this.translate.instant('tour-finish-title'),
         text: this.translate.instant('tour-finish'),

@@ -35,6 +35,8 @@
     "tour-settings-portraits": "Es esta sección se especifica el directorio de los retratos, son las imagenes que se utilizaran al mostrar la vista previa de los dialogos.",
     "tour-settings-libretranslate-title": "LibreTranslate",
     "tour-settings-libretranslate": "En está sección se especifica la ruta y Api Key del servicio LibreTranslate (https://github.com/LibreTranslate/LibreTranslate), requiere que pague el servicio o que lo auto hostee.",
+    "tour-settings-apprestart-title": "Reiniciar",
+    "tour-settings-apprestart": "Con este botón puedes eliminar toda la información en la app, utilízalo con precaución.",
     "tour-finish-title": "Hemos Terminado",
     "tour-finish": "Buena suerte y gracias por probar la app.",
     "tour-end": "Cerrar",

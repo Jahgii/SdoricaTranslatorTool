@@ -105,6 +105,7 @@ export class HeaderMenuComponent {
   }
 
   public onMainTour() {
+    this.openSetting.set(false);
     this.appState.tour.start();
   }
 
