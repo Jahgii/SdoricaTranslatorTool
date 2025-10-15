@@ -23,15 +23,15 @@ export class AppStateService {
   ) { }
 
   public async init() {
-    this.vS.loadComponent(AppViews.loading, viewers.loading, {});
+    this.vS.loadComponent(AppViews.loading, await viewers.loading, {});
 
     this.indexedDB.dbLoaded$.pipe(
       shareReplay(),
       takeWhile(e => !e, true)
-    ).subscribe(_ => {
+    ).subscribe(async _ => {
       if (!_) return;
       if (this.lStorage.getAppWizardDone() === 1) this.initializeApp();
-      else this.vS.loadComponent(AppViews.wizard, viewers.wizard, {});
+      else this.vS.loadComponent(AppViews.wizard, await viewers.wizard, {});
     });
   }
 
@@ -39,7 +39,7 @@ export class AppStateService {
     let languagesRetrive = await this.langService.onRetriveLanguages();
 
     if (!languagesRetrive) {
-      this.vS.loadComponent(AppViews.login, viewers.login, {});
+      this.vS.loadComponent(AppViews.login, await viewers.login, {});
       return;
     }
 

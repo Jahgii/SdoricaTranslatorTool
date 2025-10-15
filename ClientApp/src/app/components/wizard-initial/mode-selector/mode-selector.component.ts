@@ -14,22 +14,22 @@ import { ViewersService } from "src/app/core/services/viewers.service";
 import { AppViews, viewers } from "src/app/core/viewers";
 
 @Component({
-    selector: 'app-mode-selector',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        TuiBlock,
-        TuiRadio,
-        TuiIcon,
-        TuiTextfield,
-        TuiLoader,
-        TuiButton,
-        LanguageSwitcherComponent,
-    ],
-    templateUrl: './mode-selector.component.html',
-    styleUrl: './mode-selector.component.scss'
+  selector: 'app-mode-selector',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    TuiBlock,
+    TuiRadio,
+    TuiIcon,
+    TuiTextfield,
+    TuiLoader,
+    TuiButton,
+    LanguageSwitcherComponent,
+  ],
+  templateUrl: './mode-selector.component.html',
+  styleUrl: './mode-selector.component.scss'
 })
 export class ModeSelectorComponent implements OnInit, OnDestroy {
   private readonly vS = inject(ViewersService);
@@ -130,7 +130,7 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
     this.testApi.set(false);
 
     if (status && status.status === "Alive") {
-      this.vS.loadComponent(AppViews.login, viewers.login, {});
+      this.vS.loadComponent(AppViews.login, await viewers.login, {});
     } else this.apiAlive.set(false);
   }
 

@@ -78,8 +78,8 @@ export class SidebarComponent {
       });
   }
 
-  public loadComponent(viewerKey: AppViews) {
-    this.viewersService.loadComponent(viewerKey, viewers[viewerKey], {});
+  public async loadComponent(viewerKey: AppViews) {
+    this.viewersService.loadComponent(viewerKey, await viewers[viewerKey], {});
     this.open = false;
   }
 

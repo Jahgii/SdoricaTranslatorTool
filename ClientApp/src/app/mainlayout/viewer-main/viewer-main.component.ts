@@ -33,10 +33,6 @@ export class ViewerMainComponent implements OnInit {
   ngOnInit() {
     this.viewers.init(this.adHost);
     this.app.init();
-
-    // this.viewers.notifier.susbcribe(e => {
-    //   this.cd.markForCheck();
-    // });
   }
 
 }
