@@ -77,7 +77,9 @@ export class LibreTranslateService {
     this.testing$.next(false);
   }
 
-  public async onTestTranslate() {
+  public async onTestTranslate(event?: MouseEvent) {
+    if (event && !event.isTrusted) return;
+
     this.testing$.next(true);
     this.errorServer$.next('');
     let body = this.getTranslationBody(`I'm alive`);

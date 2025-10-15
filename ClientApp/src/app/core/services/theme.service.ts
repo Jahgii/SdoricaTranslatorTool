@@ -14,8 +14,7 @@ export class ThemeService {
   constructor() { }
 
   public switchTheme(event: MouseEvent): void {
-    if (event.isTrusted === false) return;
-
-    this.darkMode.set(!this.darkMode())
+    if (event.isTrusted)
+      this.darkMode.set(!this.darkMode())
   }
 }

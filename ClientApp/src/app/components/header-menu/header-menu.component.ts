@@ -22,11 +22,11 @@ import { IndexDBService } from "src/app/core/services/index-db.service";
 import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
 
 @Component({
-    selector: 'app-header-menu',
-    templateUrl: './header-menu.component.html',
-    styleUrls: ['./header-menu.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
+  selector: 'app-header-menu',
+  templateUrl: './header-menu.component.html',
+  styleUrls: ['./header-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
     AsyncPipe,
     FormsModule,
     ReactiveFormsModule,
@@ -48,7 +48,7 @@ import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
     TuiLet,
     TuiHint,
     LanguageSwitcherComponent
-]
+  ]
 })
 export class HeaderMenuComponent {
   @ViewChild('restartTemplate')
@@ -132,6 +132,10 @@ export class HeaderMenuComponent {
     window.localStorage.clear();
 
     window.location.reload();
+  }
+
+  protected onOpenSettings(event: MouseEvent, toogle: boolean) {
+    if (event.isTrusted) this.openSetting.set(toogle);
   }
 
   @tuiPure

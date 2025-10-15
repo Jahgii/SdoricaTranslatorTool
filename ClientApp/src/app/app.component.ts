@@ -26,4 +26,5 @@ export class AppComponent {
   protected readonly translate = inject(LangService);
 
   public title = 'STT';
+
 }

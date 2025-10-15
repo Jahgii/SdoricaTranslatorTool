@@ -169,10 +169,6 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
       });
   }
 
-  public loseFocus() {
-    (document.activeElement as any)?.click();
-  }
-
   //#region BuffInfo Autocomplete
   public onArrow(event: Event, which: "first" | "last"): void {
     const item = this.options[which];
