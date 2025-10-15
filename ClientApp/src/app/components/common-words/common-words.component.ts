@@ -4,7 +4,7 @@ import { TuiTable } from "@taiga-ui/addon-table";
 import { TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiButton, TuiHint } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { popinAnimation } from 'src/app/core/animations/popin';
@@ -39,7 +39,6 @@ import { CommonWordTableComponent } from "./common-word-table/common-word-table.
     TuiDropdown,
     TuiButton,
     TuiDataList,
-    TuiIcon,
     TuiScrollbar,
     TuiInputModule,
     TuiTextfieldControllerModule,

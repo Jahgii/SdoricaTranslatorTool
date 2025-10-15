@@ -3,7 +3,7 @@ import { TuiTextfieldControllerModule, TuiInputModule, TuiInputNumberModule } fr
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiIcon, TuiButton, TuiHint, TuiTextfield, TuiScrollable } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiButton, TuiHint, TuiTextfield, TuiScrollable } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { popinAnimation } from 'src/app/core/animations/popin';
 import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
@@ -41,7 +41,6 @@ import { CommonWordTableCellEditableComponent } from "../common-words/common-wor
     TuiDropdown,
     TuiButton,
     TuiDataList,
-    TuiIcon,
     TuiScrollable,
     TuiScrollbar,
     TuiInputModule,

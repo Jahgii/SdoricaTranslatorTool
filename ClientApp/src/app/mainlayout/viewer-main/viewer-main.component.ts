@@ -1,17 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, HostBinding, OnInit, ViewChild } from '@angular/core';
 
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 
 @Component({
-    selector: 'app-viewer-main',
-    imports: [
+  selector: 'app-viewer-main',
+  imports: [
     AdHostDirective
-],
-    templateUrl: './viewer-main.component.html',
-    styleUrls: ['./viewer-main.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  ],
+  templateUrl: './viewer-main.component.html',
+  styleUrls: ['./viewer-main.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewerMainComponent implements OnInit {
   @HostBinding('class')
@@ -20,19 +20,23 @@ export class ViewerMainComponent implements OnInit {
   private adHost!: AdHostDirective;
 
   constructor(
-    private viewers: ViewersService,
-    private app: AppStateService,
-    private cd: ChangeDetectorRef
+    private readonly viewers: ViewersService,
+    private readonly app: AppStateService,
+    private readonly cd: ChangeDetectorRef
   ) {
+    effect(() => {
+      this.viewers.notifier();
+      this.cd.markForCheck();
+    });
   }
 
   ngOnInit() {
     this.viewers.init(this.adHost);
     this.app.init();
 
-    this.viewers.notifier.subscribe(e => {
-      this.cd.markForCheck();
-    });
+    // this.viewers.notifier.susbcribe(e => {
+    //   this.cd.markForCheck();
+    // });
   }
 
 }

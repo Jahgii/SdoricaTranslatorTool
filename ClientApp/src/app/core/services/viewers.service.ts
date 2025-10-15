@@ -1,4 +1,4 @@
-import { ComponentRef, Inject, Injectable, Type } from '@angular/core';
+import { ComponentRef, Inject, Injectable, signal, Type } from '@angular/core';
 import { ViewerComponent } from 'src/app/mainlayout/viewer/viewer.component';
 import { AdHostDirective } from '../directives/host-directive';
 import { ViewerResizerComponent } from 'src/app/mainlayout/viewer-resizer/viewer-resizer.component';
@@ -15,12 +15,12 @@ export class ViewersService {
   public views: ComponentRef<ViewerComponent>[] = [];
   public activeView!: ComponentRef<ViewerComponent>;
   private adHost!: AdHostDirective;
-  public notifier: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  public notifier = signal(true);
   public componentOpens: { [componentName: string]: BehaviorSubject<number> } = {};
 
   constructor(
-    private lStorage: LocalStorageService,
-    private auth: AuthService,
+    private readonly lStorage: LocalStorageService,
+    private readonly auth: AuthService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService
   ) { }
 
@@ -32,27 +32,6 @@ export class ViewersService {
       if (v === 'mobile' && this.views.length === 2)
         this.splitMode();
     });
-
-    // this.auth.authenticated$.subscribe(async auth => {
-    //   if (!auth) this.loadComponent(AppViews.login, viewers.login, {});
-    //   else {
-    //     this.activeView.instance.onClearComponent();
-
-    //     if (this.auth.rol == 'guest')
-    //       this.loadComponent(AppViews.export, viewers.export, {});
-
-    //     else if (this.auth.rol == 'admin') {
-    //       let c1 = this.lStorage.getC1();
-    //       let c2 = this.lStorage.getC2();
-    //       if (c1) this.loadComponent(c1 as AppViews, viewers[c1], {});
-    //       if (c2 && await firstValueFrom(this.breakpointService$) !== 'mobile') {
-    //         this.splitMode();
-    //         this.loadComponent(c2 as AppViews, viewers[c2], {});
-    //       }
-    //     }
-
-    //   }
-    // });
   }
 
   public async initViewer() {
@@ -128,7 +107,7 @@ export class ViewersService {
       this.onChangeActiveView(this.views[0]);
     }
 
-    this.notifier.next(true);
+    this.notifier.set(true);
   }
 
   public loadComponent(viewerKey: AppViews, component: Type<any>, args: { [arg: string]: any }) {

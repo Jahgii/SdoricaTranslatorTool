@@ -1,14 +1,13 @@
 import { provideEventPlugins } from "@taiga-ui/event-plugins";
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { provideTranslateService } from '@ngx-translate/core';
 import { withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app/app-routing.module';
-import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE, TUI_SPANISH_LANGUAGE, TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
 import { provideTranslateHttpLoader } from "@ngx-translate/http-loader";
 import { ApiKeyInterceptor } from './app/core/interceptors/api-key-interceptor';
@@ -40,11 +39,9 @@ const appConfigTaigaUI = [
 
 bootstrapApplication(AppComponent, {
     providers: [
+        ...appConfigTaigaUI,
         importProvidersFrom(
-            BrowserModule,
             AppRoutingModule,
-            FormsModule,
-            ReactiveFormsModule,
             JwtModule.forRoot({
                 config: {
                     tokenGetter: () => localStorage.getItem("token"),
@@ -52,7 +49,6 @@ bootstrapApplication(AppComponent, {
                 }
             })
         ),
-        ...appConfigTaigaUI,
         provideAnimations(),
         provideHttpClient(
             withInterceptorsFromDi(),
@@ -66,6 +62,7 @@ bootstrapApplication(AppComponent, {
                 prefix: './assets/i18n/',
                 suffix: '.json'
             })
-        })
+        }),
+        provideZonelessChangeDetection()
     ]
 }).catch(err => console.log(err));

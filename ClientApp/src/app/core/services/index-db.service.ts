@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors } from '../interfaces/i-indexed-db';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IndexDBService {
-  public dbLoaded$: Subject<boolean> = new Subject();
+  public dbLoaded$ = new BehaviorSubject<boolean>(false);
   public dbName = "Translations";
   public dbVersion = 1;
   private db!: IDBDatabase;

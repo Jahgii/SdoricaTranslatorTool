@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ViewersService } from 'src/app/core/services/viewers.service';
 import { GamedataValuesComponent } from 'src/app/components/gamedata-values/gamedata-values.component';
 import { CommonWordsComponent } from 'src/app/components/common-words/common-words.component';
-import { TuiBreakpointService, TuiDataList, TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TuiFallbackSrcPipe, TuiAppearance } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDataList, TuiDropdown, TuiButton, TuiHint, TuiFallbackSrcPipe, TuiAppearance } from '@taiga-ui/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LocalizationKeyComponent } from 'src/app/localization/localization-key/localization-key.component';
@@ -23,11 +23,9 @@ import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
     TranslateModule,
     TuiButton,
     TuiHint,
-    TuiLoader,
     TuiAvatar,
     TuiDropdown,
     TuiDataList,
-    TuiIcon,
     TuiActiveZone,
     LocalizationKeyComponent,
     GamedataValuesComponent,
