@@ -1,5 +1,5 @@
 import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -13,34 +13,35 @@ import { CommonWordTableCellEditableComponent } from './common-word-table-cell-e
 import { AutoFocusDirective } from 'src/app/core/directives/auto-focus.directive';
 
 @Component({
-    selector: 'app-common-word-table',
-    templateUrl: './common-word-table.component.html',
-    styleUrl: './common-word-table.component.scss',
-    imports: [
-        FormsModule,
-        AsyncPipe,
-        CdkVirtualScrollViewport,
-        CdkFixedSizeVirtualScroll,
-        CdkVirtualForOf,
-        TranslateModule,
-        TuiScrollable,
-        TuiScrollbar,
-        TuiTable,
-        TuiInputModule,
-        TuiTextfield,
-        TuiTextfieldControllerModule,
-        TuiLoader,
-        TuiButton,
-        TuiButtonLoading,
-        CommonWordTableCellEditableComponent,
-        AutoFocusDirective,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-common-word-table',
+  templateUrl: './common-word-table.component.html',
+  styleUrl: './common-word-table.component.scss',
+  imports: [
+    NgTemplateOutlet,
+    FormsModule,
+    AsyncPipe,
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+    TranslateModule,
+    TuiScrollable,
+    TuiScrollbar,
+    TuiTable,
+    TuiInputModule,
+    TuiTextfield,
+    TuiTextfieldControllerModule,
+    TuiLoader,
+    TuiButton,
+    TuiButtonLoading,
+    CommonWordTableCellEditableComponent,
+    AutoFocusDirective,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommonWordTableComponent {
   protected readonly breakpointService$ = inject(TuiBreakpointService);
   public commonWords = inject(CommonWordsService);
-  
+
   public columns = ['Original', 'Translation', 'actions', 'confirmDelete'];
 
   public trackByItemId(index: number, item: ICommonWord): string {

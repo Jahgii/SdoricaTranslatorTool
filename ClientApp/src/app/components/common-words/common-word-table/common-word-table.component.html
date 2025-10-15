@@ -56,17 +56,23 @@
                         </div>
                     </td>
                     @if (word.confirm | async) {
-                    <td *tuiCell="'confirmDelete'" class="confirm-delete-column fade enter">
-                        <p class="text">{{'confirm-text-delete-word' | translate}}</p>
-                        <button tuiButton size="xs" class="tui-space_left-2" (click)="commonWords.delete(word, i)"
-                            [loading]="(commonWords.deleting$ | async) ?? false" appearance="accent">
-                            {{'confirm-frienly' | translate}}
-                        </button>
-                        <button tuiButton size="xs" class="tui-space_left-2" (click)="commonWords.cancelDelete(word)"
-                            [loading]="(commonWords.deleting$ | async) ?? false" appearance="flat">
-                            {{'unconfirm-frienly' | translate}}
-                        </button>
-                    </td>
+                    <ng-container [ngTemplateOutlet]="confirmDelete"
+                        [ngTemplateOutletContext]="{$implicit: word, i: i}" />
+
+                    <ng-template #confirmDelete let-word let-i="i">
+                        <td *tuiCell="'confirmDelete'" class="confirm-delete-column fade enter">
+                            <p class="text">{{'confirm-text-delete-word' | translate}}</p>
+                            <button tuiButton size="xs" class="tui-space_left-2" (click)="commonWords.delete(word, i)"
+                                [loading]="(commonWords.deleting$ | async) ?? false" appearance="accent">
+                                {{'confirm-frienly' | translate}}
+                            </button>
+                            <button tuiButton size="xs" class="tui-space_left-2"
+                                (click)="commonWords.cancelDelete(word)"
+                                [loading]="(commonWords.deleting$ | async) ?? false" appearance="flat">
+                                {{'unconfirm-frienly' | translate}}
+                            </button>
+                        </td>
+                    </ng-template>
                     }
                 </tr>
 

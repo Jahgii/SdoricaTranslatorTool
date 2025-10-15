@@ -276,19 +276,24 @@
                             </div>
                         </td>
                         @if ((v.confirm | async) ?? false) {
-                        <td *tuiCell="'confirmDelete'" class="confirm-delete-column fade enter">
-                            <p class="text">{{'confirm-text-delete-gamevalue' | translate}}</p>
-                            <button tuiButton size="xs" class="tui-space_left-2"
-                                (click)="gamedataService.onDelete(v, i)"
-                                [loading]="(gamedataService.deleting$ | async) ?? false" appearance="accent">
-                                {{'confirm-frienly' | translate}}
-                            </button>
-                            <button tuiButton size="xs" class="tui-space_left-2"
-                                (click)="gamedataService.cancelDelete(v)"
-                                [loading]="(gamedataService.deleting$ | async) ?? false" appearance="flat">
-                                {{'unconfirm-frienly' | translate}}
-                            </button>
-                        </td>
+                        <ng-container [ngTemplateOutlet]="confirmDelete"
+                            [ngTemplateOutletContext]="{$implicit: v, i: i}" />
+
+                        <ng-template #confirmDelete let-v let-i="i">
+                            <td *tuiCell="'confirmDelete'" class="confirm-delete-column fade enter">
+                                <p class="text">{{'confirm-text-delete-gamevalue' | translate}}</p>
+                                <button tuiButton size="xs" class="tui-space_left-2"
+                                    (click)="gamedataService.onDelete(v, i)"
+                                    [loading]="(gamedataService.deleting$ | async) ?? false" appearance="accent">
+                                    {{'confirm-frienly' | translate}}
+                                </button>
+                                <button tuiButton size="xs" class="tui-space_left-2"
+                                    (click)="gamedataService.cancelDelete(v)"
+                                    [loading]="(gamedataService.deleting$ | async) ?? false" appearance="flat">
+                                    {{'unconfirm-frienly' | translate}}
+                                </button>
+                            </td>
+                        </ng-template>
                         }
                     </tr>
                 </tbody>
