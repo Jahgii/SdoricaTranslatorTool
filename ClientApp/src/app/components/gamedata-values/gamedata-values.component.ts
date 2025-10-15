@@ -5,10 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiButton, TuiHint, TuiTextfield, TuiScrollable } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
-import { popinAnimation } from 'src/app/core/animations/popin';
 import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
 import { GamedataService } from 'src/app/core/services/gamedata.service';
-import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { TuiCheckbox, TuiBlock, TuiButtonLoading } from '@taiga-ui/kit';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
@@ -24,10 +22,6 @@ import { CommonWordTableCellEditableComponent } from "../common-words/common-wor
   selector: 'app-gamedata-values',
   templateUrl: './gamedata-values.component.html',
   styleUrls: ['./gamedata-values.component.scss'],
-  animations: [
-    popinAnimation,
-    fadeinAnimation
-  ],
   imports: [
     NgStyle,
     AsyncPipe,

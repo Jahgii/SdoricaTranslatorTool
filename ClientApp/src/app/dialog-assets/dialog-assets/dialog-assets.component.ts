@@ -4,7 +4,6 @@ import { TuiActiveZone, TuiItem } from "@taiga-ui/cdk";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint } from '@taiga-ui/core';
-import { popinAnimation } from 'src/app/core/animations/popin';
 import { IDialog, IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { TranslateModule } from '@ngx-translate/core';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
@@ -17,37 +16,34 @@ import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-single.component";
 
 @Component({
-    selector: 'app-dialog-assets',
-    templateUrl: './dialog-assets.component.html',
-    styleUrls: ['./dialog-assets.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        popinAnimation
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        TranslateModule,
-        CdkVirtualScrollViewport,
-        CdkFixedSizeVirtualScroll,
-        CdkVirtualForOf,
-        DialogAssetSingleComponent,
-        TuiTabs,
-        TuiItem,
-        TuiIcon,
-        TuiSwitch,
-        TuiButton,
-        TuiHint,
-        TuiLoader,
-        TuiTable,
-        TuiDropdown,
-        TuiBlockStatus,
-        TuiActiveZone,
-    ],
-    providers: [
-        DialogAssetService,
-        ElementBreakpointService
-    ]
+  selector: 'app-dialog-assets',
+  templateUrl: './dialog-assets.component.html',
+  styleUrls: ['./dialog-assets.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+    DialogAssetSingleComponent,
+    TuiTabs,
+    TuiItem,
+    TuiIcon,
+    TuiSwitch,
+    TuiButton,
+    TuiHint,
+    TuiLoader,
+    TuiTable,
+    TuiDropdown,
+    TuiBlockStatus,
+    TuiActiveZone,
+  ],
+  providers: [
+    DialogAssetService,
+    ElementBreakpointService
+  ]
 })
 export class DialogAssetsComponent implements OnDestroy {
   public openOption: boolean = false;

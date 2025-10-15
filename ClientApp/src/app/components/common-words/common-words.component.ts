@@ -6,8 +6,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestro
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiButton, TuiHint } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
-import { fadeinAnimation } from 'src/app/core/animations/fadein';
-import { popinAnimation } from 'src/app/core/animations/popin';
 import { ICommonWord } from 'src/app/core/interfaces/i-common-word';
 import { CommonWordsService } from 'src/app/core/services/common-words.service';
 import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
@@ -23,10 +21,6 @@ import { CommonWordTableComponent } from "./common-word-table/common-word-table.
   templateUrl: './common-words.component.html',
   styleUrls: ['./common-words.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    popinAnimation,
-    fadeinAnimation
-  ],
   imports: [
     NgIf,
     NgStyle,

@@ -7,7 +7,6 @@ import { TuiTable } from '@taiga-ui/addon-table';
 import { TuiBreakpointService, TuiButton, TuiLoader, TuiScrollable, TuiScrollbar, TuiTextfield } from '@taiga-ui/core';
 import { TuiButtonLoading } from '@taiga-ui/kit';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { fadeinAnimation } from 'src/app/core/animations/fadein';
 import { ICommonWord } from 'src/app/core/interfaces/i-common-word';
 import { CommonWordsService } from 'src/app/core/services/common-words.service';
 import { CommonWordTableCellEditableComponent } from './common-word-table-cell-editable/common-word-table-cell-editable.component';
@@ -17,9 +16,6 @@ import { AutoFocusDirective } from 'src/app/core/directives/auto-focus.directive
     selector: 'app-common-word-table',
     templateUrl: './common-word-table.component.html',
     styleUrl: './common-word-table.component.scss',
-    animations: [
-        fadeinAnimation
-    ],
     imports: [
         FormsModule,
         AsyncPipe,

@@ -1,9 +1,8 @@
 import { TuiBlockStatus } from "@taiga-ui/layout";
-import { TuiPrimitiveTextfieldModule, TuiTextfieldControllerModule, TuiComboBoxModule, TuiInputModule } from "@taiga-ui/legacy";
+import { TuiTextfieldControllerModule, TuiComboBoxModule, TuiInputModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { TuiDataList, TuiScrollbar, TuiDropdown, TuiButton, TuiHint } from '@taiga-ui/core';
+import { TuiDataList, TuiDropdown, TuiButton, TuiHint } from '@taiga-ui/core';
 import { firstValueFrom } from 'rxjs';
-import { popinAnimation } from 'src/app/core/animations/popin';
 import { ILocalizationCategory } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
@@ -13,21 +12,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LocalizationTableComponent } from './localization-table/localization-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiDataListWrapper, TuiFilterByInputPipe } from '@taiga-ui/kit';
-import { LocalizationKeyComponent } from './localization-key/localization-key.component';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-localization',
-    templateUrl: './localization.component.html',
-    styleUrls: ['./localization.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        LocalizationService
-    ],
-    animations: [
-        popinAnimation
-    ],
-    imports: [
+  selector: 'app-localization',
+  templateUrl: './localization.component.html',
+  styleUrls: ['./localization.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    LocalizationService
+  ],
+  imports: [
     AsyncPipe,
     FormsModule,
     ReactiveFormsModule,
@@ -43,7 +38,7 @@ import { AsyncPipe } from '@angular/common';
     TuiBlockStatus,
     TuiFilterByInputPipe,
     LocalizationTableComponent
-]
+  ]
 })
 export class LocalizationComponent implements OnInit {
   viewIndex: number = -1;

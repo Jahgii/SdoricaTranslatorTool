@@ -1,11 +1,9 @@
 import { provideEventPlugins } from "@taiga-ui/event-plugins";
 import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
-
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { provideTranslateService } from '@ngx-translate/core';
 import { withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app/app-routing.module';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { TUI_LANGUAGE, TUI_ENGLISH_LANGUAGE, TUI_SPANISH_LANGUAGE, TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
@@ -49,7 +47,6 @@ bootstrapApplication(AppComponent, {
                 }
             })
         ),
-        provideAnimations(),
         provideHttpClient(
             withInterceptorsFromDi(),
             withInterceptors([ApiKeyInterceptor]),

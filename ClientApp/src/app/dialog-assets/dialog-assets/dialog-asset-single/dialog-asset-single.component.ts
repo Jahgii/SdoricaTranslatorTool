@@ -9,12 +9,11 @@ import { TuiHint, TuiIcon, TuiScrollbar } from '@taiga-ui/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiBlockStatus } from '@taiga-ui/layout';
-import { popinAnimation } from 'src/app/core/animations/popin';
 import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictionary.directive';
 
 @Component({
-    selector: 'app-dialog-asset-single',
-    imports: [
+  selector: 'app-dialog-asset-single',
+  imports: [
     FormsModule,
     AsyncPipe,
     NgStyle,
@@ -25,10 +24,9 @@ import { CommonDictionaryDirective } from 'src/app/core/directives/common-dictio
     TuiIcon,
     TuiScrollbar,
     TuiBlockStatus
-],
-    animations: [popinAnimation],
-    templateUrl: './dialog-asset-single.component.html',
-    styleUrl: './dialog-asset-single.component.scss'
+  ],
+  templateUrl: './dialog-asset-single.component.html',
+  styleUrl: './dialog-asset-single.component.scss'
 })
 export class DialogAssetSingleComponent implements OnChanges {
   @Input() data!: IDialogAsset[];

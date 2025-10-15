@@ -28,8 +28,6 @@ import {
   TuiScrollbar,
 } from "@taiga-ui/core";
 import { BehaviorSubject, Observable, pairwise, Subscription } from "rxjs";
-import { fadeinAnimation } from "src/app/core/animations/fadein";
-import { popinAnimation } from "src/app/core/animations/popin";
 import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
 import { ILocalizationKey } from "src/app/core/interfaces/i-localizations";
 import { GamedataService } from "src/app/core/services/gamedata.service";
@@ -52,45 +50,41 @@ import { AsyncPipe, KeyValuePipe, NgTemplateOutlet } from "@angular/common";
 const ESPECIAL_CHARACTER = "@";
 
 @Component({
-    selector: "app-localization-table",
-    templateUrl: "./localization-table.component.html",
-    styleUrls: ["./localization-table.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        ElementBreakpointService,
-    ],
-    animations: [
-        popinAnimation,
-        fadeinAnimation,
-    ],
-    imports: [
-        KeyValuePipe,
-        AsyncPipe,
-        NgTemplateOutlet,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        CdkVirtualScrollViewport,
-        CdkFixedSizeVirtualScroll,
-        CdkVirtualForOf,
-        TuiTableFilters,
-        TuiScrollbar,
-        TuiTable,
-        TuiSwitch,
-        TuiIcon,
-        TuiInputModule,
-        TuiTextfieldControllerModule,
-        TuiCheckbox,
-        TuiHint,
-        TuiTextareaModule,
-        TuiDropdown,
-        TuiDataList,
-        TuiBlockStatus,
-        TuiAppBar,
-        TuiLoader,
-        CommonDictionaryDirective,
-        TuiAppearance,
-    ]
+  selector: "app-localization-table",
+  templateUrl: "./localization-table.component.html",
+  styleUrls: ["./localization-table.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    ElementBreakpointService,
+  ],
+  imports: [
+    KeyValuePipe,
+    AsyncPipe,
+    NgTemplateOutlet,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+    TuiTableFilters,
+    TuiScrollbar,
+    TuiTable,
+    TuiSwitch,
+    TuiIcon,
+    TuiInputModule,
+    TuiTextfieldControllerModule,
+    TuiCheckbox,
+    TuiHint,
+    TuiTextareaModule,
+    TuiDropdown,
+    TuiDataList,
+    TuiBlockStatus,
+    TuiAppBar,
+    TuiLoader,
+    CommonDictionaryDirective,
+    TuiAppearance,
+  ]
 })
 export class LocalizationTableComponent implements OnInit, OnDestroy {
   @ViewChildren(TuiOption, { read: ElementRef })

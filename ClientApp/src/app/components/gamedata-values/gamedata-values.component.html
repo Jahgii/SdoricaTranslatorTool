@@ -154,7 +154,7 @@
     <tui-scrollbar class="viewport" [class.viewport-dialog]="(breakpointService$| async) === 'mobile'">
         <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport-2 tui-zero-scrollbar" [itemSize]="33"
             [maxBufferPx]="500" [minBufferPx]="400">
-            <table class="tui-table" style="table-layout: fixed;" tuiTable [size]="'s'" [columns]="columns" [@popIn]>
+            <table class="tui-table popin enter" style="table-layout: fixed;" tuiTable [size]="'s'" [columns]="columns">
                 <thead>
                     <tr tuiThGroup>
                         <th tuiTh *tuiHead="'id'" [sticky]="true"
@@ -276,7 +276,7 @@
                             </div>
                         </td>
                         @if ((v.confirm | async) ?? false) {
-                        <td *tuiCell="'confirmDelete'" class="confirm-delete-column" [@fadeIn]>
+                        <td *tuiCell="'confirmDelete'" class="confirm-delete-column fade enter">
                             <p class="text">{{'confirm-text-delete-gamevalue' | translate}}</p>
                             <button tuiButton size="xs" class="tui-space_left-2"
                                 (click)="gamedataService.onDelete(v, i)"

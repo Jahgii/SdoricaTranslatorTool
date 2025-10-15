@@ -27,8 +27,8 @@
             <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="105"
                 [maxBufferPx]="500" [minBufferPx]="400" (scrolledIndexChange)="loseFocus()">
 
-                <table class="tui-table" style="table-layout: fixed;" tuiTable
-                    [columns]="['Language', 'Translation', 'Translated']" [@popIn]>
+                <table class="tui-table popin enter" style="table-layout: fixed;" tuiTable
+                    [columns]="['Language', 'Translation', 'Translated']">
                     <thead>
                         <tr tuiThGroup #columnsHeader>
                             <th tuiTh *tuiHead="'Language'" [sticky]=" true" style="transform: translate(0);"
@@ -61,7 +61,7 @@
                                 style="transform: translate(0); width: 32px;"
                                 [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
                                 <div class="translated-checkbox-container align-center">
-                                    <tui-icon icon="@tui.circle-check" tuiTextfieldSize="s"></tui-icon>
+                                    <tui-icon icon="circle-check" tuiTextfieldSize="s"></tui-icon>
                                 </div>
                             </th>
                         </tr>
@@ -71,7 +71,7 @@
                                 <tui-input tuiTableFilter="Original"
                                     [formControl]="localization.filterForm.controls['original']"
                                     [tuiGenericFilter]="localization.filterOriginalColumn" [tuiTextfieldSize]="'m'"
-                                    [tuiTextfieldIconLeft]="'@tui.filter'">
+                                    [tuiTextfieldIconLeft]="'filter'">
                                     {{'search-by-original-column' | translate}}
                                 </tui-input>
                             </th>
@@ -81,7 +81,7 @@
                                 <tui-input tuiTableFilter="Translations"
                                     [formControl]="localization.filterForm.controls['translation']"
                                     [tuiGenericFilter]="localization.filterTranslationColumn" [tuiTextfieldSize]="'m'"
-                                    [tuiTextfieldIconLeft]="'@tui.filter'">
+                                    [tuiTextfieldIconLeft]="'filter'">
                                     {{'search-by-translation-column' | translate}}
                                 </tui-input>
                             </th>
@@ -112,7 +112,7 @@
                                             <ul>
                                                 <li class="tooltip-important-text tui-text_body-xs tui-space_bottom-2"
                                                     style="text-align: right;">
-                                                    <tui-icon icon="@tui.key" style="font: inherit;"></tui-icon>
+                                                    <tui-icon icon="key" style="font: inherit;"></tui-icon>
                                                     {{item.Name}}
                                                 </li>
                                                 @for (key of item.Original | keyvalue; track $index) {
@@ -126,7 +126,7 @@
                                             </ul>
                                         </tui-scrollbar>
                                         @if (showTooltipArrow$ | async) {
-                                        <tui-icon class="tooltip-arrow" icon="@tui.move-down" [@popIn] />
+                                        <tui-icon class="tooltip-arrow popin enter" icon="move-down" />
                                         }
                                     </ng-template>
                                     @if (localization.focusRow === item.Id) {
@@ -145,11 +145,11 @@
                                         class="tooltip-span-name-cell tooltip-important-text-colored tui-text_body-xs">
                                         @if (localization.selectedCategory.Name == 'SEARCH') {
                                         <div>
-                                            <tui-icon icon="@tui.inbox" style="font: inherit;" />
+                                            <tui-icon icon="inbox" style="font: inherit;" />
                                             {{item.Category}}
                                         </div>
                                         }
-                                        <tui-icon icon="@tui.key" style="font: inherit;" />
+                                        <tui-icon icon="key" style="font: inherit;" />
                                         {{item.Name}}
                                     </span>
                                     }
@@ -206,7 +206,7 @@
             <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="213"
                 [maxBufferPx]="500" [minBufferPx]="400" (scrolledIndexChange)="loseFocus()">
 
-                <table class="tui-table" style="table-layout: fixed;" tuiTable [columns]="['Language']" [@popIn]>
+                <table class="tui-table popin enter" style="table-layout: fixed;" tuiTable [columns]="['Language']">
                     <thead>
                         <tr tuiThGroup #filterHeader>
                             <th tuiTh *tuiHead="'Language'" [sticky]="true" class="header-content-cell"
@@ -215,13 +215,13 @@
                                     <tui-input tuiTableFilter="Original" style="transform: translate(0); flex: 1;"
                                         [formControl]="localization.filterForm.controls['original']"
                                         [tuiGenericFilter]="localization.filterOriginalColumn" [tuiTextfieldSize]="'m'"
-                                        [tuiTextfieldIconLeft]="'@tui.filter'">
+                                        [tuiTextfieldIconLeft]="'filter'">
                                         {{'search-by-original-column-short' | translate}}
                                     </tui-input>
                                     <tui-input tuiTableFilter="Translations" style="transform: translate(0); flex: 1;"
                                         [formControl]="localization.filterForm.controls['translation']"
                                         [tuiGenericFilter]="localization.filterTranslationColumn"
-                                        [tuiTextfieldSize]="'m'" [tuiTextfieldIconLeft]="'@tui.filter'">
+                                        [tuiTextfieldSize]="'m'" [tuiTextfieldIconLeft]="'filter'">
                                         {{'search-by-translation-column-short' | translate}}
                                     </tui-input>
                                     <input tuiCheckbox type="checkbox" style="padding-left: 0.75rem;"
@@ -258,11 +258,11 @@
                                                 class="tooltip-span-name-cell tooltip-important-text-colored tui-text_body-xs">
                                                 @if (localization.selectedCategory.Name == 'SEARCH') {
                                                 <div>
-                                                    <tui-icon icon="@tui.inbox" style="font: inherit;" />
+                                                    <tui-icon icon="inbox" style="font: inherit;" />
                                                     {{item.Category}}
                                                 </div>
                                                 }
-                                                <tui-icon icon="@tui.key" style="font: inherit;" />
+                                                <tui-icon icon="key" style="font: inherit;" />
                                                 {{item.Name}}
                                             </span>
                                             }
@@ -281,7 +281,7 @@
                                                 <ul>
                                                     <li class="tooltip-important-text tui-text_body-xs tui-space_bottom-2"
                                                         style="text-align: right;">
-                                                        <tui-icon icon="@tui.key" style="font: inherit;"></tui-icon>
+                                                        <tui-icon icon="key" style="font: inherit;"></tui-icon>
                                                         {{item.Name}}
                                                     </li>
                                                     @for (key of item.Original | keyvalue; track $index) {
@@ -296,7 +296,7 @@
                                                 </ul>
                                             </tui-scrollbar>
                                             @if (showTooltipArrow$ | async) {
-                                            <tui-icon class="tooltip-arrow" icon="@tui.move-down" [@popIn] />
+                                            <tui-icon class="tooltip-arrow popin enter" icon="move-down" />
                                             }
                                         </ng-template>
                                     </div>
@@ -351,7 +351,7 @@
 
 <ng-template #loading>
     <tui-block-status>
-        <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" [@popIn]>
+        <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'" class="popin enter">
             <h4 style="margin-top: revert; margin-bottom: revert;">
                 {{'loading-3-dots' | translate}}
             </h4>
