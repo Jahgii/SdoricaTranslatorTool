@@ -45,7 +45,6 @@
     "@taiga-ui/legacy": "4.49.0",
     "@taiga-ui/styles": "^4.49.0",
     "dompurify": "2.2.9",
-    "dotenv": "^16.4.5",
     "electron-store": "^8.2.0",
     "jszip": "^3.10.1",
     "ngx-device-detector": "^10.1.0",
@@ -55,7 +54,6 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^20.0.0",
     "@angular-builders/dev-server": "^7.3.1",
     "@angular/build": "^20.3.5",
     "@angular/cli": "^20.3.5",
