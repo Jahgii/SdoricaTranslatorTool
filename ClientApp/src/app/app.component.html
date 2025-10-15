@@ -1,8 +1,21 @@
 <tui-root style="height: 100%;" [attr.tuiTheme]="theme.darkMode() ? 'dark' : null">
   <main class="main-grid">
     @if (app.initialized$()) {
+
+    @defer (on viewport) {
     <app-sidebar style="grid-area: sidebar;"></app-sidebar>
-    <app-nav-menu style="grid-area: header;"></app-nav-menu>
+    }
+    @placeholder {
+    <div></div>
+    }
+
+    @defer (on viewport) {
+    <app-header-menu style="grid-area: header;"></app-header-menu>
+    }
+    @placeholder {
+    <div [tuiSkeleton]="true"></div>
+    }
+
     }
     <div style="grid-area: content;">
       <router-outlet></router-outlet>

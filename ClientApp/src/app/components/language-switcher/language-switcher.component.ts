@@ -1,31 +1,30 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TUI_DOC_ICONS } from '@taiga-ui/addon-doc/tokens';
 import { TuiButton, TuiDataList, TuiFlagPipe, TuiTextfield } from '@taiga-ui/core';
 import { TuiLanguageSwitcherService } from '@taiga-ui/i18n';
 import { TuiBadge, TuiBadgedContent, TuiButtonSelect } from '@taiga-ui/kit';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import type { TuiCountryIsoCode, TuiLanguageName } from '@taiga-ui/i18n/types';
 import { LangService } from 'src/app/core/services/lang.service';
+import type { TuiCountryIsoCode, TuiLanguageName } from '@taiga-ui/i18n/types';
 
 @Component({
-    selector: 'app-language-switcher',
-    imports: [
-        ReactiveFormsModule,
-        TitleCasePipe,
-        TranslateModule,
-        TuiBadge,
-        TuiBadgedContent,
-        TuiButton,
-        TuiButtonSelect,
-        TuiDataList,
-        TuiFlagPipe,
-        TuiTextfield,
-    ],
-    templateUrl: './language-switcher.component.html',
-    styleUrl: './language-switcher.component.scss'
+  selector: 'app-language-switcher',
+  imports: [
+    ReactiveFormsModule,
+    TitleCasePipe,
+    TranslateModule,
+    TuiBadge,
+    TuiBadgedContent,
+    TuiButton,
+    TuiButtonSelect,
+    TuiDataList,
+    TuiFlagPipe,
+    TuiTextfield,
+  ],
+  templateUrl: './language-switcher.component.html',
+  styleUrl: './language-switcher.component.scss'
 })
 export class LanguageSwitcherComponent {
   protected readonly langService = inject(LangService);

@@ -10,8 +10,8 @@ export class ApiService {
   private baseUrl = new BehaviorSubject('');
 
   constructor(
-    private http: HttpClient,
-    private lStorage: LocalStorageService
+    private readonly http: HttpClient,
+    private readonly lStorage: LocalStorageService
   ) { this.initApi(); }
 
   private initApi() {

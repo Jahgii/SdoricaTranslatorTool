@@ -6,6 +6,7 @@ import { TuiRoot } from '@taiga-ui/core';
 import { SidebarComponent } from './mainlayout/sidebar/sidebar.component';
 import { AppStateService } from './core/services/app-state.service';
 import { LangService } from './core/services/lang.service';
+import { TuiSkeleton } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { LangService } from './core/services/lang.service';
   imports: [
     RouterOutlet,
     TuiRoot,
+    TuiSkeleton,
     SidebarComponent,
     HeaderMenuComponent,
   ],
