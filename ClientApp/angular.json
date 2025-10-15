@@ -21,7 +21,6 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
               "oidc-client"
@@ -84,8 +83,7 @@
               "buildTarget": "SdoricaTranslatorTool:build:production"
             },
             "development": {
-              "buildTarget": "SdoricaTranslatorTool:build:development",
-              "disableHostCheck": true
+              "buildTarget": "SdoricaTranslatorTool:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -100,7 +98,6 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [

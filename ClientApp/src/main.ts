@@ -39,7 +39,7 @@ bootstrapApplication(AppComponent, {
             JwtModule.forRoot({
                 config: {
                     tokenGetter: () => localStorage.getItem("token"),
-                    allowedDomains: [environment.allowedDomains],
+                    // allowedDomains: [environment.allowedDomains],
                 }
             })
         ),
