@@ -12,10 +12,6 @@ import { ApiKeyInterceptor } from './app/core/interceptors/api-key-interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { of } from 'rxjs';
 
-export function getBaseUrl() {
-    return document.getElementsByTagName('base')[0].href;
-}
-
 if (environment.production) {
     enableProdMode();
 }

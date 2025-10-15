@@ -51,10 +51,12 @@
         }
     </div>
     <tui-expand class="tui-space_left-6" [expanded]="node.expanded ?? false">
-        @for (childNode of node.children; track childNode.Id) {
-        @defer {
-        <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: childNode}" />
-        }
-        }
+        <tui-elastic-container *tuiItem>
+            @for (childNode of node.children; track childNode.Id) {
+            @defer {
+            <ng-container [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{$implicit: childNode}" />
+            }
+            }
+        </tui-elastic-container>
     </tui-expand>
 </ng-template>

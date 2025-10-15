@@ -6,30 +6,33 @@ import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { debounceTime, take, takeWhile, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiExpand, TuiLoader, TuiScrollbar, TuiIcon } from '@taiga-ui/core';
+import { TuiLoader, TuiScrollbar, TuiIcon } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 import { DGroupsService, TreeNode } from './d-groups.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { ViewersService } from 'src/app/core/services/viewers.service';
+import { TuiExpand } from '@taiga-ui/experimental';
+import { TuiItem } from '@taiga-ui/cdk';
 
 @Component({
-    selector: 'app-dialog-selection',
-    imports: [
-        CommonModule,
-        FormsModule,
-        TranslateModule,
-        TuiScrollbar,
-        TuiIcon,
-        TuiElasticContainer,
-        TuiExpand,
-        TuiInputInline,
-        TuiProgress,
-        TuiLoader,
-    ],
-    templateUrl: './dialog-selection.component.html',
-    styleUrl: './dialog-selection.component.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-dialog-selection',
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    TuiScrollbar,
+    TuiIcon,
+    TuiElasticContainer,
+    TuiExpand,
+    TuiItem,
+    TuiInputInline,
+    TuiProgress,
+    TuiLoader,
+  ],
+  templateUrl: './dialog-selection.component.html',
+  styleUrl: './dialog-selection.component.scss',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogSelectionComponent implements OnInit, OnDestroy {
   @Input() dialogs!: DialogAssetsComponent;
