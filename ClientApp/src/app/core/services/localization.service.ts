@@ -36,6 +36,7 @@ export class LocalizationService implements OnDestroy {
   };
 
   readonly filterTranslatedColumn = (item: { [language: string]: boolean }, value: boolean): boolean => {
+    console.log(item);
     if (value === null) return true;
     return item[this.languageOrigin.localizationLang] === value;
   };
@@ -56,7 +57,7 @@ export class LocalizationService implements OnDestroy {
   public language: string = '';
   public focusRow: string = '';
   public searchTotalTranslated = 0;
-  private controlCheckbox = 1;
+  public controlCheckbox = 1;
   private autoLoadCategoryId: string | undefined = undefined;
 
   public search: FormControl = new FormControl('');
@@ -127,10 +128,8 @@ export class LocalizationService implements OnDestroy {
   private initLastCategorySelected() {
     if (this.viewIndex === -1) return;
 
-    if (this.autoLoadCategoryId === undefined) {
-      this.autoLoadCategoryId = this.lStorage
-        .getCategory(this.viewIndex);
-    };
+    this.autoLoadCategoryId ??= this.lStorage
+      .getCategory(this.viewIndex);;
 
     let categories = this.lCS.getData();
     let category = categories.find(e => String(e.Id) === this.autoLoadCategoryId);
@@ -300,7 +299,7 @@ export class LocalizationService implements OnDestroy {
     this.subsTranslatedColumn$ = this.filterForm
       .controls['translated']
       .valueChanges
-      .subscribe(v => {
+      .subscribe(_ => {
         if (this.controlCheckbox >= 2) this.controlCheckbox = -1;
         this.controlCheckbox += 1;
 
@@ -309,7 +308,7 @@ export class LocalizationService implements OnDestroy {
             this.filterForm.patchValue({ translated: false }, { emitEvent: false })
             break;
           case 1:
-            this.filterForm.patchValue({ translated: null }, { emitEvent: false })
+            this.filterForm.patchValue({ translated: null }, { emitEvent: false });
             break;
           case 2:
             this.filterForm.patchValue({ translated: true }, { emitEvent: false })

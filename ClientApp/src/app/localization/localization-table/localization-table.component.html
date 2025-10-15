@@ -90,11 +90,10 @@
                                 style="width: 32px; transform: translate(0);">
                                 <div class="translated-checkbox-container align-center">
                                     <input tuiCheckbox type="checkbox"
-                                        [formControl]="localization.filterForm.controls['translated']"
+                                        [indeterminate]="localization.controlCheckbox === 1" size="s"
                                         tuiTableFilter="Translated"
-                                        [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right"
-                                        size="s" aria-label="Translated Filter" />
-
+                                        [tuiGenericFilter]="localization.filterTranslatedColumn"
+                                        [formControl]="localization.filterForm.controls['translated']" />
                                 </div>
                             </th>
                         </tr>
