@@ -84,9 +84,9 @@ export class ViewersService {
   private resizeViewers() {
     let width: number = 100 / this.views.length;
 
-    this.views.forEach(v => {
+    for (const v of this.views) {
       v.instance.widthPercentage = `${width}%`
-    });
+    }
   }
 
   public splitMode() {
@@ -107,7 +107,7 @@ export class ViewersService {
       this.onChangeActiveView(this.views[0]);
     }
 
-    this.notifier.set(true);
+    this.notifier.set(!this.notifier());
   }
 
   public loadComponent(viewerKey: AppViews, component: Type<any>, args: { [arg: string]: any }) {
@@ -153,7 +153,7 @@ export class ViewersService {
   }
 
   private onChangeActiveView(view: ComponentRef<ViewerComponent>) {
-    this.views.forEach(v => v.instance.active = false);
+    for (const v of this.views) v.instance.active = false;
     view.instance.active = true;
     this.activeView = view;
   }

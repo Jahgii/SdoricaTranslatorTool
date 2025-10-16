@@ -36,7 +36,6 @@ export class LocalizationService implements OnDestroy {
   };
 
   readonly filterTranslatedColumn = (item: { [language: string]: boolean }, value: boolean): boolean => {
-    console.log(item);
     if (value === null) return true;
     return item[this.languageOrigin.localizationLang] === value;
   };
