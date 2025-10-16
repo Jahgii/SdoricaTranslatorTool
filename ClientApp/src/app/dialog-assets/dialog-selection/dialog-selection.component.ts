@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiElasticContainer, TuiInputInline, TuiProgress } from '@taiga-ui/kit';
 import { DialogAssetsComponent } from '../dialog-assets/dialog-assets.component';
@@ -10,7 +10,6 @@ import { TuiLoader, TuiScrollbar, TuiIcon } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 import { DGroupsService, TreeNode } from './d-groups.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { ViewersService } from 'src/app/core/services/viewers.service';
 import { TuiExpand } from '@taiga-ui/experimental';
 import { TuiItem } from '@taiga-ui/cdk';
 
@@ -48,10 +47,8 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   private autoLoadGroupId: string | undefined;
 
   constructor(
-    private ref: ChangeDetectorRef,
-    private groupService: DGroupsService,
-    private lStorage: LocalStorageService,
-    private viewers: ViewersService,
+    private readonly groupService: DGroupsService,
+    private readonly lStorage: LocalStorageService,
   ) {
 
   }
@@ -66,6 +63,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
         .loadingStore$
         .pipe(takeWhile(_ => !this.treeNodes$))
         .subscribe(_ => {
+          if (_) return;
           this.treeNodes$ = this.groupService.store$;
           this.initLastGroupSelected();
         });
@@ -83,9 +81,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   }
 
   private initLastGroupSelected() {
-    if (this.autoLoadGroupId === undefined) {
-      this.autoLoadGroupId = this.lStorage.getGroup(this.viewIndex);
-    };
+    this.autoLoadGroupId ??= this.lStorage.getGroup(this.viewIndex);
 
     let groups = this.groupService.getData();
 
@@ -94,11 +90,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
       ?.children
       ?.find(e => e.Id?.toString() === this.autoLoadGroupId);
 
-    if (group) {
-      this.onSelectGroup(group);
-      this.ref.markForCheck();
-    }
-
+    if (group) this.onSelectGroup(group);
   }
 
   ngOnDestroy(): void {

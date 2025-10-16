@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of, tap } from 'rxjs';
+import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
-import { IDialogAsset, IDialogAssetExport, PlainDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
+import { IDialogAsset, IDialogAssetExport } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
@@ -30,7 +30,7 @@ export class DialogAssetService {
   public tempId!: string;
   public tempNumber!: number;
 
-  public dialogAssets$!: Observable<IDialogAsset[]>;
+  public dialogAssets$: WritableSignal<IDialogAsset[] | undefined> = signal(undefined);
   public dialogAssetsChange$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public activeItemIndex: number = 0;
   public changes$: BehaviorSubject<IDialogAsset | undefined> = new BehaviorSubject<IDialogAsset | undefined>(undefined);
@@ -52,6 +52,8 @@ export class DialogAssetService {
   }
 
   public onSelectGroup(node: IGroup) {
+    this.dialogAssetsChange$.next(false);
+
     if (this.subsLanguage) this.subsChanges.unsubscribe();
     if (this.subsChanges) this.subsChanges.unsubscribe();
 
@@ -78,11 +80,11 @@ export class DialogAssetService {
             });
         }
 
-        if (dialogs$ === undefined) dialogs$ = of([]);
-
-        this.dialogAssets$ = dialogs$;
-
-        this.dialogAssetsChange$.next(true);
+        dialogs$ ??= of([]);
+        firstValueFrom(dialogs$).then(d => {
+          this.dialogAssets$.set(d);
+          this.dialogAssetsChange$.next(true);
+        })
       });
 
     this.subsChanges = this.changes$
@@ -125,7 +127,7 @@ export class DialogAssetService {
             ?.Model
             .$content
             .findIndex(e => e.ID == id) ?? -1;
-          
+
           if (index === -1) return languageText;
 
           dialogs.forEach(r => {
@@ -159,9 +161,9 @@ export class DialogAssetService {
 
   public onSpeakerNameChange(name: string, data: IDialogAsset[]) {
     if (this.propagateTranslation)
-      data[this.activeItemIndex].Model.$content.forEach(e => {
+      for (const e of data[this.activeItemIndex].Model.$content)
         if (e.SpeakerName == this.previousPropagationValue) e.SpeakerName = name;
-      });
+
     this.previousPropagationValue = name;
     this.pendingChanges$.next(true);
     this.changes$.next(data[this.activeItemIndex]);
