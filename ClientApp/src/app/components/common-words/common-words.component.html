@@ -19,9 +19,9 @@
     </tui-data-list>
 </ng-template>
 
-<main class="main-form" #draggableElement *ngIf="!dialogState.isHidden"
-    [ngStyle]="{'z-index': dialogState.zIndex$ | async}" (mousedown)="changeIndex(dialogState)"
-    (touchstart)="changeIndex(dialogState)">
+@if (dialogState.isHidden) {
+<main class="main-form" #draggableElement [ngStyle]="{'z-index': dialogState.zIndex$ | async}"
+    (mousedown)="changeIndex(dialogState)" (touchstart)="changeIndex(dialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
         [draggableElementState]="dialogState" [elementAnchorRef]="anchor">
         <p>{{'common-word-form' | translate}}</p>
@@ -56,23 +56,23 @@
         </form>
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
-            <ng-container *ngIf="!(commonWords.createOther$ | async); else createOther">
-                <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
-                    [loading]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
-                    [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined"
-                    tuiHintAppearance="error" appearance="outline">
-                    {{'create' | translate}}
-                </button>
-            </ng-container>
-            <ng-template #createOther>
-                <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m"
-                    appearance="outline">
-                    {{'created-other' | translate}}
-                </button>
-            </ng-template>
+            @if (!(commonWords.createOther$ | async)) {
+            <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
+                [loading]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
+                [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined" tuiHintAppearance="error"
+                appearance="outline">
+                {{'create' | translate}}
+            </button>
+            }
+            @else{
+            <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m" appearance="outline">
+                {{'created-other' | translate}}
+            </button>
+            }
         </div>
     </tui-scrollbar>
 </main>
+}
 
 <ng-template #createTemplate>
     <tui-scrollbar class="main-form-content">
@@ -101,27 +101,27 @@
         </form>
 
         <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
-            <ng-container *ngIf="!(commonWords.createOther$ | async); else createOther">
-                <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
-                    [loading]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
-                    [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined"
-                    tuiHintAppearance="error" appearance="outline">
-                    {{'create' | translate}}
-                </button>
-            </ng-container>
-            <ng-template #createOther>
-                <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m"
-                    appearance="outline">
-                    {{'created-other' | translate}}
-                </button>
-            </ng-template>
+            @if (!(commonWords.createOther$ | async)) {
+            <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
+                [loading]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
+                [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined" tuiHintAppearance="error"
+                appearance="outline">
+                {{'create' | translate}}
+            </button>
+            }
+            @else {
+            <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m" appearance="outline">
+                {{'created-other' | translate}}
+            </button>
+            }
         </div>
     </tui-scrollbar>
 </ng-template>
 
-<main class="main-list" #draggableListElement *ngIf="!listDialogState.isHidden"
-    [ngStyle]="{'z-index': listDialogState.zIndex$ | async}" (mousedown)="changeIndex(listDialogState)"
-    (touchstart)="changeIndex(listDialogState)">
+
+@if (!listDialogState.isHidden) {
+<main class="main-list" #draggableListElement [ngStyle]="{'z-index': listDialogState.zIndex$ | async}"
+    (mousedown)="changeIndex(listDialogState)" (touchstart)="changeIndex(listDialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableListElement"
         [draggableElementState]="listDialogState" [elementAnchorRef]="anchor">
         <p>{{'dictionary' | translate}}</p>
@@ -133,6 +133,7 @@
 
     <ng-container [ngTemplateOutlet]="listTemplate"></ng-container>
 </main>
+}
 
 <ng-template #listTemplate>
     <h4 class="tui-space_horizontal-3">{{'dictionary-description' | translate}}</h4>

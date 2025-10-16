@@ -11,7 +11,7 @@ import { CommonWordsService } from 'src/app/core/services/common-words.service';
 import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
-import { NgIf, AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 import { CommonWordTableComponent } from "./common-word-table/common-word-table.component";
@@ -22,7 +22,6 @@ import { CommonWordTableComponent } from "./common-word-table/common-word-table.
   styleUrls: ['./common-words.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     NgStyle,
     AsyncPipe,
     NgTemplateOutlet,
