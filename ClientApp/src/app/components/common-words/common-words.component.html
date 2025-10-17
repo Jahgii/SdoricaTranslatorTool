@@ -19,7 +19,7 @@
     </tui-data-list>
 </ng-template>
 
-@if (dialogState.isHidden) {
+@if (!dialogState.isHidden) {
 <main class="main-form" #draggableElement [ngStyle]="{'z-index': dialogState.zIndex$ | async}"
     (mousedown)="changeIndex(dialogState)" (touchstart)="changeIndex(dialogState)">
     <div class="main-form-header" appDraggableElement [elementRef]="draggableElement"
