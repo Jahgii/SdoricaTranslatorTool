@@ -59,9 +59,10 @@ export class TourService {
     this.tour = new Shepherd.Tour({
       useModalOverlay: true,
       confirmCancel: false,
+      keyboardNavigation: false,
       modalContainer: (document.querySelector("tui-root") as HTMLElement),
       defaultStepOptions: tour.defaultStepOptions,
-      steps: tour.defaultSteps
+      steps: tour.defaultSteps,
     });
 
     this.tour.on('complete', this.onTourFinish.bind(this));
