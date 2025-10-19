@@ -155,7 +155,7 @@ export class FileReaderGamedataService {
     let encodeResult = encode(result) as any;
 
     const blob = new Blob([encodeResult], {
-      type: ''
+      type: 'application/octet-stream'
     });
 
     const url = window.URL.createObjectURL(blob)

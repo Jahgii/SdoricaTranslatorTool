@@ -308,7 +308,7 @@ async function onCreate(completeMessage: IOnMessage, message: ExportPostMessage,
   let encodeResult = encode(values) as any;
 
   const blob = new Blob([encodeResult], {
-    type: ''
+    type: 'application/octet-stream'
   });
 
   completeMessage.pgState = ProgressStatus.finish;

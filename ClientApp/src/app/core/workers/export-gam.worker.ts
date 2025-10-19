@@ -133,7 +133,7 @@ async function onCreateNewGam(completeMessage: IOnMessage, message: ExportPostMe
   let encodeResult = encode(decodeResult) as any;
 
   const blob = new Blob([encodeResult], {
-    type: ''
+    type: 'application/octet-stream'
   });
 
   completeMessage.pgState = ProgressStatus.finish;
