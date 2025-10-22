@@ -429,6 +429,24 @@ export class TourService {
         ]
       },
       {
+        id: 'settings-sidebar-gemini',
+        title: this.translate.instant('tour-settings-gemini-title'),
+        text: this.translate.instant('tour-settings-gemini'),
+        canClickTarget: false,
+        attachTo: {
+          element: '#appGeminiSetting',
+          on: mobile ? 'top' : 'left'
+        },
+        buttons: [
+          {
+            action() {
+              return this.next();
+            },
+            text: nextTranslateText
+          }
+        ]
+      },
+      {
         id: 'settings-sidebar-apprestart',
         title: this.translate.instant('tour-settings-apprestart-title'),
         text: this.translate.instant('tour-settings-apprestart'),
