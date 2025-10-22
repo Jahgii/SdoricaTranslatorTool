@@ -54,25 +54,23 @@ export class LibreTranslateService {
   public async isAlive() {
     this.testing$.next(true);
     await firstValueFrom(this.http.get<ILibreTranslateLanguages[]>(`${this.url}languages`, undefined))
-      .then(
-        r => {
-          this.serverAlive$.next(false);
+      .then(r => {
+        this.serverAlive$.next(false);
 
-          if (!r) this.errors$.next('emptyresponse');
-          else if (r.length === 0) this.errors$.next('emptyarray');
-          else if (r[0].code && r[0].name && r[0].targets) {
-            this.errors$.next(undefined);
-            this.serverAlive$.next(true);
-            this.languages = r;
-            if (this.source) this.onSourceChange(this.source);
-          }
-          else this.errors$.next('invalid');
-        },
-        (error: HttpErrorResponse) => {
-          this.errors$.next('servererror');
-          this.serverReady$.next(false);
-          this.serverAlive$.next(false);
+        if (!r) this.errors$.next('emptyresponse');
+        else if (r.length === 0) this.errors$.next('emptyarray');
+        else if (r[0].code && r[0].name && r[0].targets) {
+          this.errors$.next(undefined);
+          this.serverAlive$.next(true);
+          this.languages = r;
+          if (this.source) this.onSourceChange(this.source);
         }
+        else this.errors$.next('invalid');
+      }, (_: HttpErrorResponse) => {
+        this.errors$.next('servererror');
+        this.serverReady$.next(false);
+        this.serverAlive$.next(false);
+      }
       );
     this.testing$.next(false);
   }
@@ -84,15 +82,13 @@ export class LibreTranslateService {
     this.errorServer$.next('');
     let body = this.getTranslationBody(`I'm alive`);
     await firstValueFrom(this.http.post<ILibreTranslateResponse>(`${this.url}translate`, body))
-      .then(
-        r => {
-          if (r.translatedText) this.serverReady$.next(true);
-        },
-        (r: HttpErrorResponse) => {
-          if (r.error && r.error.error) this.errorServer$.next(r.error.error);
-          else this.errorServer$.next("Unknow Error");
-          this.serverReady$.next(false);
-        }
+      .then(r => {
+        if (r.translatedText) this.serverReady$.next(true);
+      }, (r: HttpErrorResponse) => {
+        if (r.error && r.error.error) this.errorServer$.next(r.error.error);
+        else this.errorServer$.next("Unknow Error");
+        this.serverReady$.next(false);
+      }
       );
     this.testing$.next(false);
   }
@@ -114,18 +110,18 @@ export class LibreTranslateService {
 
   public async onTranslateDialogs(dialogs: IDialog[]) {
     this.translating$.next(true);
-    for (let index = 0; index < dialogs.length; index++) {
-      let translatedText = await this.onTranslate(dialogs[index].OriginalText);
-      if (translatedText) dialogs[index].Text = translatedText;
+    for (const element of dialogs) {
+      let translatedText = await this.onTranslate(element.OriginalText);
+      if (translatedText) element.Text = translatedText;
     }
     this.translating$.next(false);
   }
 
   public async onTranslateKeys(keys: ILocalizationKey[], currentLang: string) {
     this.translating$.next(true);
-    for (let index = 0; index < keys.length; index++) {
-      let translatedText = await this.onTranslate(keys[index].Original[currentLang]);
-      if (translatedText) keys[index].Translations[currentLang] = translatedText;
+    for (const element of keys) {
+      let translatedText = await this.onTranslate(element.Original[currentLang]);
+      if (translatedText) element.Translations[currentLang] = translatedText;
     }
     this.translating$.next(false);
   }
@@ -133,14 +129,12 @@ export class LibreTranslateService {
   public async onTranslate(text: string) {
     let body = this.getTranslationBody(text);
     return await firstValueFrom(this.http.post<ILibreTranslateResponse>(`${this.url}translate`, body))
-      .then(
-        r => {
-          if (r.translatedText) return r.translatedText;
-          return undefined;
-        },
-        (r: HttpErrorResponse) => {
-          return undefined;
-        }
+      .then(r => {
+        if (r.translatedText) return r.translatedText;
+        return undefined;
+      }, (_: HttpErrorResponse) => {
+        return undefined;
+      }
       );
   }
 

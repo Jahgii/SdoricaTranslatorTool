@@ -84,6 +84,10 @@
     "libretranslate-ready": "Activo y Listo",
     "libretranslate-origin-target": "Lenguaje Origen & Objetivo",
     "libretranslate-translation-status": "Estatus de Traducción",
+    "gemini-configuration": "Configuración de Gemini",
+    "gemini-testserver": "Guardar Configuración",
+    "gemini-apikey": "Api Key",
+    "gemini-model": "Modelo",
     "language": "Lenguaje",
     "english-i18n": "English",
     "spanish-i18n": "Español",
@@ -104,6 +108,8 @@
     "download-dialog-file": "Descargar Dialogo",
     "libretranslate-button-ready": "Traducir todos los textos con LibreTranslate",
     "libretranslate-button-disabled": "LibreTranslate no esta configurado o el servidor no esta activo, sí quieres utilizar LibreTranslate puedes configurarlo en el icono de tuerca(esquina-superior-derecha).",
+    "gemini-button-ready": "Traducir todos los textos con Gemini",
+    "gemini-button-disabled": "Gemini no esta configurado, sí quieres utilizar Gemini puedes configurarlo en el icono de tuerca(esquina-superior-derecha).",
     "original": "Original",
     "propagation-dialog-description-0": "Al editar, propaga todos los cambios hechos a los",
     "propagation-dialog-description-1": "Dialogos",
@@ -367,5 +373,7 @@
     "app-restart": "Reiniciar App",
     "app-restart-title": "Operacion Irréversible",
     "app-restart-description": "Toda la información se eliminará, se recomienda exportar su información a un archivo antes de proceder.",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "alert-gemini-activated": "Guardado",
+    "alert-gemini-activated-description": "Configuración Gaurdada"
 }

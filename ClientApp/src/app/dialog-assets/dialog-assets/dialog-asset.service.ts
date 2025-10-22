@@ -11,6 +11,7 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 import { TranslateService } from '@ngx-translate/core';
+import { GeminiApiService } from 'src/app/core/services/gemini-api.service';
 
 @Injectable()
 export class DialogAssetService {
@@ -41,6 +42,7 @@ export class DialogAssetService {
     private readonly indexedDB: IndexDBService,
     private readonly lStorage: LocalStorageService,
     private readonly translate: TranslateService,
+    public readonly gemini: GeminiApiService,
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
@@ -182,15 +184,35 @@ export class DialogAssetService {
     this.changes$.next(data[this.activeItemIndex]);
   }
 
+  public async onGeminiTranslate(data: IDialogAsset[]) {
+    const content = this.onCreateSimpleConversation(data[this.activeItemIndex]);
+    const response = await this.gemini.get(content);
+    const conversation: { [dialogID: string]: string } = this.tryParseJson(response);
+
+    if (!conversation) {
+      this.alerts
+        .open(undefined, {
+          label: this.translate.instant('invalid-gemini-response')
+          , appearance: 'warning'
+          , autoClose: 3000
+        })
+        .subscribe();
+
+      return;
+    }
+
+    for (const element of data[this.activeItemIndex].Model.$content) {
+      let d = element;
+      if (!conversation[d.ID]) continue;
+      d.Text = conversation[d.ID];
+    }
+
+    this.pendingChanges$.next(true);
+    this.changes$.next(data[this.activeItemIndex]);
+  }
+
   public onCopySimpleConversation(dialogAsset: IDialogAsset) {
-    let dialog = JSON.parse(JSON.stringify(dialogAsset)) as IDialogAssetExport;
-    let conversation: { [dialogID: string]: string } = {};
-
-    dialog.Model.$content.forEach(d => {
-      conversation[d.ID] = d.OriginalText;
-    });
-
-    let exportConversation = JSON.stringify(conversation);
+    let exportConversation = this.onCreateSimpleConversation(dialogAsset);
 
     navigator
       .clipboard
@@ -206,6 +228,16 @@ export class DialogAssetService {
       });
   }
 
+  private onCreateSimpleConversation(dialogAsset: IDialogAsset) {
+    let dialog = structuredClone(dialogAsset);
+    let conversation: { [dialogID: string]: string } = {};
+
+    for (const d of dialog.Model.$content)
+      conversation[d.ID] = d.OriginalText;
+
+    return JSON.stringify(conversation);
+  }
+
   public async onPasteSimpleConversation(dialogAsset: IDialogAsset) {
     return await navigator
       .clipboard
@@ -218,22 +250,21 @@ export class DialogAssetService {
             .open(undefined, {
               label: this.translate.instant('invalid-json')
               , appearance: 'warning'
-              , autoClose: 3_000
+              , autoClose: 3000
             })
             .subscribe();
 
           return;
         }
 
-
-        for (let i = 0; i < dialogAsset.Model.$content.length; i++) {
-          let d = dialogAsset.Model.$content[i];
+        for (const element of dialogAsset.Model.$content) {
+          let d = element;
           if (!conversation[d.ID]) continue;
           d.Text = conversation[d.ID];
         }
 
         this.alerts
-          .open(undefined, { label: this.translate.instant('paste-correctly'), appearance: 'success', autoClose: 3_000 })
+          .open(undefined, { label: this.translate.instant('paste-correctly'), appearance: 'success', autoClose: 3000 })
           .subscribe();
 
         return true;

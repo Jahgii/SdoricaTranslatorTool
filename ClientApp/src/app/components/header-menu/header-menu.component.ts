@@ -20,6 +20,7 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
 import { LanguageSwitcherComponent } from "../language-switcher/language-switcher.component";
 import { IndexDBService } from "src/app/core/services/index-db.service";
 import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
+import { GeminiApiService } from "src/app/core/services/gemini-api.service";
 
 @Component({
   selector: 'app-header-menu',
@@ -70,15 +71,16 @@ export class HeaderMenuComponent {
   public count = 0;
 
   constructor(
-    readonly languageOrigin: LanguageOriginService,
-    public libreTranslate: LibreTranslateService,
-    public portraitsService: PortraitsService,
-    readonly translate: TranslateService,
-    public authService: AuthService,
-    private viewers: ViewersService,
-    public theme: ThemeService,
-    public appState: AppStateService,
-    public indexDB: IndexDBService,
+    public readonly languageOrigin: LanguageOriginService,
+    public readonly libreTranslate: LibreTranslateService,
+    public readonly geminiApi: GeminiApiService,
+    public readonly portraitsService: PortraitsService,
+    public readonly translate: TranslateService,
+    public readonly authService: AuthService,
+    private readonly viewers: ViewersService,
+    public readonly theme: ThemeService,
+    public readonly appState: AppStateService,
+    public readonly indexDB: IndexDBService,
     @Inject(TuiLanguageSwitcherService) readonly switcher: TuiLanguageSwitcherService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) {

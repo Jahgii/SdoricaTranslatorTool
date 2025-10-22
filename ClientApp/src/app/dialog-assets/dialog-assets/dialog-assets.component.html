@@ -75,14 +75,19 @@
         (click)="onPasteClipboard(data[dAS.activeItemIndex])" iconStart="@tui.clipboard" size="xs"
         aria-label="Paste Json">
       </button>
-      <tui-loader [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false" [inheritColor]="true"
-        [overlay]="true">
+      <tui-loader class="tui-space_right-4" [showLoader]="(dAS.libreTranslate.translating$ | async) ?? false"
+        [inheritColor]="true" [overlay]="true">
         <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="@tui.box" [tuiHint]="((dAS.libreTranslate.serverReady$ | async)) ?
                         ('libretranslate-button-ready' | translate):
-                        ('libretranslate-button-disabled' | translate)"
-          [tuiHintAppearance]="((dAS.libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-          (click)="onMachineTranslate(data)" [disabled]="!(dAS.libreTranslate.serverReady$ | async)" size="xs"
-          aria-label="Libre Translate Button">
+                        ('libretranslate-button-disabled' | translate)" (click)="onMachineTranslate(data)"
+          [disabled]="!(dAS.libreTranslate.serverReady$ | async)" size="xs" aria-label="Libre Translate Button">
+        </button>
+      </tui-loader>
+      <tui-loader [showLoader]="dAS.gemini.waiting$()" [inheritColor]="true" [overlay]="true">
+        <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="dAS.gemini.ready$() ?
+                        ('gemini-button-ready' | translate):
+                        ('gemini-button-disabled' | translate)" (click)="onGeminiTranslate(data)"
+          [disabled]="!dAS.gemini.ready$()" size="xs" aria-label="Gemini Button">
         </button>
       </tui-loader>
       }

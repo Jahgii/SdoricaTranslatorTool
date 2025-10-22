@@ -84,6 +84,10 @@
     "libretranslate-ready": "All Ready",
     "libretranslate-origin-target": "Origen & Target Language",
     "libretranslate-translation-status": "Translate Status",
+    "gemini-configuration": "Gemini Configuration",
+    "gemini-testserver": "Save Configuration",
+    "gemini-apikey": "Api Key",
+    "gemini-model": "Model",
     "language": "Language",
     "english-i18n": "English",
     "spanish-i18n": "Español",
@@ -104,6 +108,8 @@
     "download-dialog-file": "Download Dialog File",
     "libretranslate-button-ready": "Translate all dialog with Libre Translate",
     "libretranslate-button-disabled": "LibreTranslate its not configure or the server its not active, if you want use LibreTranslate click on gear icon(upper-right-corner) to configure.",
+    "gemini-button-ready": "Translate all dialog with Gemini",
+    "gemini-button-disabled": "Gemini its not configure, if you want use Gemini click on gear icon(upper-right-corner) to configure.",
     "original": "Original",
     "propagation-dialog-description-0": "When editing, propagates the changes made to all",
     "propagation-dialog-description-1": "Dialogs",
@@ -367,5 +373,7 @@
     "app-restart": "Restart App",
     "app-restart-title": "Irreversible Operation",
     "app-restart-description": "All information will be deleted, it is recommended to export your information to a file before proceeding.",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "alert-gemini-activated": "Saved",
+    "alert-gemini-activated-description": "Configuration Saved"
 }

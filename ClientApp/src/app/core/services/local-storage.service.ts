@@ -162,4 +162,20 @@ export class LocalStorageService {
   setPortraitFallbackPath(path: string) {
     localStorage.setItem('PortraitPath', path);
   }
+
+  getGeminiApiKey() {
+    return localStorage.getItem('GAK') ?? undefined;
+  }
+
+  setGeminiApiKey(gak: string) {
+    localStorage.setItem('GAK', gak);
+  }
+
+  getGeminiModel() {
+    return localStorage.getItem('GM') ?? undefined;
+  }
+
+  setGeminiModel(model: string) {
+    localStorage.setItem('GM', model);
+  }
 }
