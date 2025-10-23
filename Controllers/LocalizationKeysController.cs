@@ -119,19 +119,19 @@ public class LocalizationKeysController(ICustomMongoClient cMongoClient) : Contr
 
         for (int i = 0; i < keys.Count; i++)
         {
-            var key = await _cMongoClient
+            var keyOnDB = await _cMongoClient
                 .GetCollection<LocalizationKey>()
                 .Aggregate()
                 .Match(e => e.Category == keys[i].Category && e.Name == keys[i].Name)
                 .FirstOrDefaultAsync();
 
-            if (key == null)
+            if (keyOnDB == null)
             {
                 newKeys.Add(keys[i]);
                 continue;
             }
 
-            keysOnDB.Add(key);
+            keysOnDB.Add(keyOnDB);
         }
 
         var updates = new List<WriteModel<LocalizationKey>>();
@@ -147,7 +147,7 @@ public class LocalizationKeysController(ICustomMongoClient cMongoClient) : Contr
         }
 
         if (newKeys.Count > 0)
-            await _cMongoClient.Create<LocalizationKey>(session, newKeys);
+            await _cMongoClient.Create(session, newKeys.Where(k => !string.IsNullOrWhiteSpace(k.Name)));
 
         if (updates.Count > 0)
             await _cMongoClient

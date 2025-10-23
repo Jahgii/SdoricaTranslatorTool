@@ -377,5 +377,6 @@
     "app-restart-description": "All information will be deleted, it is recommended to export your information to a file before proceeding.",
     "confirm": "Confirm",
     "alert-gemini-activated": "Saved",
-    "alert-gemini-activated-description": "Configuration Saved"
+    "alert-gemini-activated-description": "Configuration Saved",
+    "reset-categories-count": "Recalculate totals"
 }

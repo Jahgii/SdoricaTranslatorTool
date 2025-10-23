@@ -41,6 +41,11 @@ public class CustomMongoClient : ICustomMongoClient
         await GetCollection<T>().DeleteOneAsync(session, predicate);
     }
 
+    public async Task DeleteMany<T>(IClientSessionHandle session, Expression<Func<T, bool>> predicate)
+    {
+        await GetCollection<T>().DeleteManyAsync(session, predicate);
+    }
+
     public async Task<IClientSessionHandle> StartSessionAsync()
     {
         return await _mongoDB.Client.StartSessionAsync();
@@ -60,6 +65,7 @@ public interface ICustomMongoClient
     public Task Update<T>(IClientSessionHandle session, Expression<Func<T, bool>> filter, UpdateDefinition<T> collectionData);
     public Task Replace<T>(IClientSessionHandle session, Expression<Func<T, bool>> predicate, T collectionData);
     public Task Delete<T>(IClientSessionHandle session, Expression<Func<T, bool>> predicate);
+    public Task DeleteMany<T>(IClientSessionHandle session, Expression<Func<T, bool>> predicate);
     public Task<IClientSessionHandle> StartSessionAsync();
     public IMongoCollection<T> GetCollection<T>();
 

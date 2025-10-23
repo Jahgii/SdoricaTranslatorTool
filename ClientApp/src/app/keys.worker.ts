@@ -6,7 +6,7 @@ addEventListener('message', async ({ data }) => {
 
   while (data.keys.length > 0) {
     let keysSet = data.keys.splice(0, data.uploadStackSize);
-    var promise = fetch(`api/${data.url}`, {
+    const promise = fetch(`api/${data.url}`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -25,8 +25,8 @@ addEventListener('message', async ({ data }) => {
           }
         }
 
-        var message = { finish: false, keysUploaded: 0, keysReplaced: undefined, i: data.threadIndex };
-        var replacedKeys = await r.json() as string[];
+        const message = { finish: false, keysUploaded: 0, keysReplaced: undefined, i: data.threadIndex };
+        const replacedKeys = await r.json() as string[];
         message.keysUploaded = keysSet.length;
         message.keysReplaced = replacedKeys as any;
         postMessage(message);
@@ -34,6 +34,6 @@ addEventListener('message', async ({ data }) => {
     );
   }
 
-  var message = { finish: true, i: data.threadIndex };
+  const message = { finish: true, i: data.threadIndex };
   postMessage(message);
 });

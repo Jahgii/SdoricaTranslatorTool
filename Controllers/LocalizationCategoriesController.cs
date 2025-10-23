@@ -67,11 +67,11 @@ public class LocalizationCategoriesController(ICustomMongoClient cMongoClient) :
         using var session = await _cMongoClient.StartSessionAsync();
         session.StartTransaction();
 
-        await _cMongoClient.Delete<LocalizationKey>(session, e => e.Name == "");
+        await _cMongoClient.DeleteMany<LocalizationKey>(session, e => string.IsNullOrWhiteSpace(e.Name));
 
         foreach (var c in categories)
         {
-            await _cMongoClient.Replace<LocalizationCategory>(session, e => e.Id == c.Id, c);
+            await _cMongoClient.Replace(session, e => e.Id == c.Id, c);
         }
 
         await session.CommitTransactionAsync();

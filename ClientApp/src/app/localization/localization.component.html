@@ -1,75 +1,77 @@
-<!-- <button tuiButton appearance="outline" (click)="onResetCategories()"> RESET </button> -->
-
 @if (localization.loadingCategories$ | async) {
-  <ng-template #loadingCategories>
-    <tui-block-status>
-      <h4>{{'loading-categories' | translate}}</h4>
-    </tui-block-status>
-  </ng-template>
+<ng-template #loadingCategories>
+  <tui-block-status>
+    <h4>{{'loading-categories' | translate}}</h4>
+  </tui-block-status>
+</ng-template>
 }
 @else{
 @if (localization.categories$ | async; as categories) {
-  <div class="localization-container">
-    <div class="localization-data-actions tui-space_bottom-2">
-      <tui-combo-box class="category-input" [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'s'"
-        [valueContent]="categoryInputContent" [stringify]="stringify"
-        (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
-        {{'categories' | translate}}
-        <input placeholder="{{'type-name' | translate}}" tuiTextfieldLegacy />
-        <tui-data-list-wrapper *tuiDataList [itemContent]="categoryInputContent"
+<div class="localization-container">
+  <div class="localization-data-actions tui-space_bottom-4">
+    <tui-combo-box class="category-input" [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'s'"
+      [valueContent]="categoryInputContent" [stringify]="stringify"
+      (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
+      {{'categories' | translate}}
+      <input placeholder="{{'type-name' | translate}}" tuiTextfieldLegacy />
+      <tui-data-list-wrapper *tuiDataList [itemContent]="categoryInputContent"
         [items]="categories | tuiFilterByInput"></tui-data-list-wrapper>
-      </tui-combo-box>
-      <ng-template #categoryInputContent let-data>
-        <div>
-          {{data.Name}} [{{data.KeysTranslated[localization.language]}}/{{data.Keys[localization.language]}}]
+    </tui-combo-box>
+    <ng-template #categoryInputContent let-data>
+      <div>
+        {{data.Name}} [{{data.KeysTranslated[localization.language]}}/{{data.Keys[localization.language]}}]
+      </div>
+    </ng-template>
+    @if (localization.keys$) {
+    <div style="display: flex;">
+      <button tuiIconButton appearance="icon" iconStart="list-restart" (click)="onResetCategories()"
+        [loading]="reset$()" size="s" [tuiHint]="'reset-categories-count' | translate"></button>
+      @if (localization.searchCategory$ | async) {
+      <div tuiDropdownOpen bottomRight [tuiDropdown]="content" class="tui-space_left-4">
+        <button tuiButton appearance="flat" type="button" iconStart="@tui.filter" size="s"
+          attr.aria-label="{{'filters' | translate}}">
+          <span>{{'results' | translate}}:</span>
+          {{localization.searchTotalTranslated}}/{{localization.keys?.length ?? 0}}
+        </button>
+      </div>
+      <ng-template #content>
+        <div class="filter-container">
+          <p class="limit-width tui-space_bottom-6">
+            {{'filters-localization-description' | translate}}
+          </p>
+          <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.search" [tuiTextfieldSize]="'s'"
+            [tuiTextfieldIcon]="'@tui.scan-search'">
+            {{'search-by-text' | translate}}
+            <input tuiTextfieldLegacy type="text" aria-label="text search" />
+          </tui-input>
+          <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.searchTranslation"
+            [tuiTextfieldSize]="'s'" [tuiTextfieldIcon]="'@tui.scan-search'">
+            {{'search-by-translation' | translate}}
+            <input tuiTextfieldLegacy type="text" aria-label="translation text search" />
+          </tui-input>
+          <tui-input class="limit-width" [formControl]="localization.searchKey" [tuiTextfieldSize]="'s'"
+            [tuiTextfieldIcon]="'@tui.scan-search'">
+            {{'search-by-key' | translate}}
+            <input tuiTextfieldLegacy type="text" aria-label="key text search" />
+          </tui-input>
         </div>
       </ng-template>
-      @if (localization.keys$) {
-        @if (localization.searchCategory$ | async) {
-          <div tuiDropdownOpen bottomRight [tuiDropdown]="content">
-            <button tuiButton appearance="flat" type="button" iconStart="@tui.filter" size="s"
-              attr.aria-label="{{'filters' | translate}}">
-              <span>{{'results' | translate}}:</span>
-              {{localization.searchTotalTranslated}}/{{localization.keys?.length ?? 0}}
-            </button>
-          </div>
-          <ng-template #content>
-            <div class="filter-container">
-              <p class="limit-width tui-space_bottom-6">
-                {{'filters-localization-description' | translate}}
-              </p>
-              <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.search"
-                [tuiTextfieldSize]="'s'" [tuiTextfieldIcon]="'@tui.scan-search'">
-                {{'search-by-text' | translate}}
-                <input tuiTextfieldLegacy type="text" aria-label="text search" />
-              </tui-input>
-              <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.searchTranslation"
-                [tuiTextfieldSize]="'s'" [tuiTextfieldIcon]="'@tui.scan-search'">
-                {{'search-by-translation' | translate}}
-                <input tuiTextfieldLegacy type="text" aria-label="translation text search" />
-              </tui-input>
-              <tui-input class="limit-width" [formControl]="localization.searchKey" [tuiTextfieldSize]="'s'"
-                [tuiTextfieldIcon]="'@tui.scan-search'">
-                {{'search-by-key' | translate}}
-                <input tuiTextfieldLegacy type="text" aria-label="key text search" />
-              </tui-input>
-            </div>
-          </ng-template>
-        } @else {
-          <!-- <button tuiButton type="button" appearance="flat" size="s" icon="@tui.box"
-                    [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
-                                ('libretranslate-button-ready' | translate):
-                                ('libretranslate-button-disabled' | translate)"
-          [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
-          tuiHintDirection="right" (click)="localization.onMachineTranslate()"
-          [disabled]="!(libreTranslate.serverReady$ | async)"
-          [showLoader]="(libreTranslate.translating$ | async) ?? false">
-          {{'translate-all-keys' | translate}}
-        </button> -->
+      } @else {
+      <!-- <button tuiButton type="button" appearance="flat" size="s" icon="@tui.box"
+                      [tuiHint]="((libreTranslate.serverReady$ | async)) ? 
+                                  ('libretranslate-button-ready' | translate):
+                                  ('libretranslate-button-disabled' | translate)"
+            [tuiHintAppearance]="((libreTranslate.serverReady$ | async)) ? 'onDark' : 'error'"
+            tuiHintDirection="right" (click)="localization.onMachineTranslate()"
+            [disabled]="!(libreTranslate.serverReady$ | async)"
+            [showLoader]="(libreTranslate.translating$ | async) ?? false">
+            {{'translate-all-keys' | translate}}
+          </button> -->
       }
+    </div>
     }
   </div>
-  <app-localization-table class="localization-keys"></app-localization-table>
+  <app-localization-table class="localization-keys" />
 </div>
 }
 }

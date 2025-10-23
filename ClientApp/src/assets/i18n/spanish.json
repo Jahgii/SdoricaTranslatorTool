@@ -377,5 +377,6 @@
     "app-restart-description": "Toda la información se eliminará, se recomienda exportar su información a un archivo antes de proceder.",
     "confirm": "Confirmar",
     "alert-gemini-activated": "Guardado",
-    "alert-gemini-activated-description": "Configuración Gaurdada"
+    "alert-gemini-activated-description": "Configuración Gaurdada",
+    "reset-categories-count": "Recalcular totales"
 }

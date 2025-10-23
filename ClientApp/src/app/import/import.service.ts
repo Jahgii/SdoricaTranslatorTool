@@ -674,7 +674,7 @@ export class ImportService {
 
       while (this.localizationKeys.length > 0) {
         let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
-        let flowsLK = this.iDB.postMany(ObjectStoreNames.LocalizationKey, keysSet)
+        let flowsLK = this.iDB.postMany(ObjectStoreNames.LocalizationKey, keysSet);
         flowsLK.success$.subscribe(_ => {
         }, _ => undefined
           , () => undefined
@@ -697,7 +697,21 @@ export class ImportService {
           }
         );
 
-      if (typeof Worker !== 'undefined') {
+      if (typeof Worker === 'undefined') {
+        while (this.localizationKeys.length > 0) {
+          let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
+          await firstValueFrom(this.api.post<string[]>(this.uploadKeysUrl, keysSet))
+            .then(
+              (result) => {
+                // this.fileProgressBar$.next(this.fileProgressBar$.value + this.uploadStackSize);
+                // if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
+              },
+              (error) => {
+              }
+            );
+        }
+      }
+      else {
         let spliceCount = Math.ceil(this.localizationKeys.length / this.maxThreads);
         let workers: Worker[] = [];
         for (let threadIndex = 0; threadIndex < this.maxThreads; threadIndex++) {
@@ -713,19 +727,6 @@ export class ImportService {
           workers[threadIndex].postMessage({ keys, uploadStackSize, url, threadIndex, token: this.lStorage.getToken() });
         }
       }
-      else
-        while (this.localizationKeys.length > 0) {
-          let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
-          await firstValueFrom(this.api.post<string[]>(this.uploadKeysUrl, keysSet))
-            .then(
-              (result) => {
-                // this.fileProgressBar$.next(this.fileProgressBar$.value + this.uploadStackSize);
-                // if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
-              },
-              (error) => {
-              }
-            );
-        }
     }
   }
 
