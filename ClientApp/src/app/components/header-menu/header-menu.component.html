@@ -6,15 +6,15 @@
   <div class="right-buttons">
     @switch (currentMode) {
     @case (modes.Offline) {
-    <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="computer"
-      (click)="onSwitchAppMode(modes.Online)" [tuiHint]="'switch-to-online' | translate" size="xs"
-      aria-label="offline button">
+    <button id="modeButton" tuiButton type="button" iconEnd="computer" (click)="onSwitchAppMode(modes.Online)"
+      [tuiHint]="'switch-to-online' | translate" size="xs" aria-label="offline button">
+      Offline
     </button>
     }
     @case (modes.Online) {
-    <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="server"
-      (click)="onSwitchAppMode(modes.Offline)" [tuiHint]="'switch-to-offline' | translate" size="xs"
-      aria-label="offline button">
+    <button id="modeButton" tuiButton type="button" iconEnd="server" (click)="onSwitchAppMode(modes.Offline)"
+      [tuiHint]="'switch-to-offline' | translate" size="xs" aria-label="online button">
+      Online
     </button>
     }
     }

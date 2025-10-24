@@ -326,6 +326,46 @@ export class TourService {
         }
       },
       {
+        id: 'mode-button',
+        title: this.translate.instant('tour-mode-button-title'),
+        text: this.translate.instant('tour-mode-button'),
+        canClickTarget: false,
+        classes: 'stt-custom-shapherd-header-arrow',
+        modalOverlayOpeningRadius: 8,
+        attachTo: {
+          element: '#modeButton',
+          on: 'bottom'
+        },
+        buttons: [
+          {
+            action() {
+              return this.next();
+            },
+            text: nextTranslateText
+          }
+        ]
+      },
+      {
+        id: 'tour-button',
+        title: this.translate.instant('tour-tour-button-title'),
+        text: this.translate.instant('tour-tour-button'),
+        canClickTarget: false,
+        classes: 'stt-custom-shapherd-header-arrow',
+        modalOverlayOpeningRadius: 8,
+        attachTo: {
+          element: '#tourButton',
+          on: 'bottom'
+        },
+        buttons: [
+          {
+            action() {
+              return this.next();
+            },
+            text: nextTranslateText
+          }
+        ]
+      },
+      {
         id: 'theme-button',
         title: this.translate.instant('tour-theme-button-title'),
         text: this.translate.instant('tour-theme-button'),
