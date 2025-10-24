@@ -4,14 +4,31 @@
   </button>
   <div class="margin-auto-r"></div>
   <div class="right-buttons">
+    @switch (currentMode) {
+    @case (modes.Offline) {
+    <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="computer"
+      (click)="onSwitchAppMode(modes.Online)" [tuiHint]="'switch-to-online' | translate" size="xs"
+      aria-label="offline button">
+    </button>
+    }
+    @case (modes.Online) {
+    <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="server"
+      (click)="onSwitchAppMode(modes.Offline)" [tuiHint]="'switch-to-offline' | translate" size="xs"
+      aria-label="offline button">
+    </button>
+    }
+    }
+
     <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="@tui.circle-help"
       (click)="onMainTour()" [tuiHint]="'tour-mode' | translate" size="xs" aria-label="tour button">
     </button>
+
     <button id="themeButton" aria-label="toogle night mode" type="button" tuiIconButton appearance="icon"
       [iconStart]="theme.darkMode() ? '@tui.sun' : '@tui.moon'" (click)="theme.switchTheme($event)"
       [tuiHint]="(theme.darkMode() ? 'toogle-lightmode' : 'toogle-nightmode') | translate" size="xs"
       aria-label="switch theme button">
     </button>
+
     <button id="settingsButton" type="button" aria-label="open settings" tuiIconButton appearance="icon"
       [iconStart]="'@tui.settings'" (click)="onOpenSettings($event, !openSetting())" size="xs"
       aria-label="settings button">

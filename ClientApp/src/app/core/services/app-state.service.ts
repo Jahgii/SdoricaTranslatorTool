@@ -39,8 +39,6 @@ export class AppStateService {
   public async initializeApp() {
     let languagesRetrive = await this.langService.onRetriveLanguages();
 
-    console.log(languagesRetrive);
-
     if (!languagesRetrive && this.lStorage.getAppMode() === AppModes.Online) {
       this.vS.loadComponent(AppViews.login, await viewers.login, {});
       return;

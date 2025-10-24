@@ -382,5 +382,6 @@
     "user": "User",
     "password": "Password",
     "login": "Login",
-    "switch-to-offline": "Switch Offline"
+    "switch-to-offline": "Switch Offline",
+    "switch-to-online": "Switch Online"
 }

@@ -21,6 +21,8 @@ import { LanguageSwitcherComponent } from "../language-switcher/language-switche
 import { IndexDBService } from "src/app/core/services/index-db.service";
 import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
 import { GeminiApiService } from "src/app/core/services/gemini-api.service";
+import { AppModes } from "src/app/core/enums/app-modes";
+import { LocalStorageService } from "src/app/core/services/local-storage.service";
 
 @Component({
   selector: 'app-header-menu',
@@ -57,18 +59,20 @@ export class HeaderMenuComponent {
 
   private readonly alerts = inject(TuiAlertService);
 
-  public openMenu: boolean = false;
-  public openSetting = signal(false);
+  protected openMenu: boolean = false;
+  protected openSetting = signal(false);
+  protected modes = AppModes;
+  protected currentMode;
 
-  public langControl: FormControl = new FormControl();
+  protected langControl: FormControl = new FormControl();
 
-  public langs: { lang: string; value: string; }[] = [
+  protected langs: { lang: string; value: string; }[] = [
     { lang: 'en', value: 'en' },
     { lang: 'es', value: 'es' }
   ];
 
-  public img$ = new BehaviorSubject<string>("");
-  public count = 0;
+  protected img$ = new BehaviorSubject<string>("");
+  protected count = 0;
 
   constructor(
     public readonly languageOrigin: LanguageOriginService,
@@ -81,12 +85,14 @@ export class HeaderMenuComponent {
     public readonly theme: ThemeService,
     public readonly appState: AppStateService,
     public readonly indexDB: IndexDBService,
+    private readonly lStorage: LocalStorageService,
     @Inject(TuiLanguageSwitcherService) readonly switcher: TuiLanguageSwitcherService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) {
+    this.currentMode = this.lStorage.getAppMode() ?? AppModes.Offline;
   }
 
-  public onToogleSettings() {
+  protected onToogleSettings() {
     let button = document.getElementById('settingsButton');
     button?.click();
     button?.click();
@@ -96,12 +102,17 @@ export class HeaderMenuComponent {
     this.onTourOnGoing();
   }
 
-  public onSplitModeToggle(event: MouseEvent) {
+  protected onSplitModeToggle(event: MouseEvent) {
     if (event.isTrusted)
       this.viewers.splitMode();
   }
 
-  public onMainTour() {
+  protected onSwitchAppMode(mode: AppModes) {
+    this.lStorage.setAppMode(mode);
+    window.location.reload();
+  }
+
+  protected onMainTour() {
     this.openSetting.set(false);
     this.appState.tour.start();
   }

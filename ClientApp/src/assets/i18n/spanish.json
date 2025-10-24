@@ -382,5 +382,6 @@
     "user": "Usuario",
     "password": "Contraseña",
     "login": "Iniciar Sesión",
-    "switch-to-offline": "Cambiar a Offline"
+    "switch-to-offline": "Cambiar a Offline",
+    "switch-to-online": "Cambiar a Online"
 }
