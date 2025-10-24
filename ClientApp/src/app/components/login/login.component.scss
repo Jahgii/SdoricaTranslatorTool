@@ -2,13 +2,14 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     height: calc(100svh - 2px);
 }
 
-form{
+form {
     width: clamp(min(400px, 100svw), 400px, 400px);
 }
 
-button{
+.button-login {
     float: right;
 }

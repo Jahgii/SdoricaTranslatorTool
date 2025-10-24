@@ -378,5 +378,9 @@
     "confirm": "Confirmar",
     "alert-gemini-activated": "Guardado",
     "alert-gemini-activated-description": "Configuración Gaurdada",
-    "reset-categories-count": "Recalcular totales"
+    "reset-categories-count": "Recalcular totales",
+    "user": "Usuario",
+    "password": "Contraseña",
+    "login": "Iniciar Sesión",
+    "switch-to-offline": "Cambiar a Offline"
 }

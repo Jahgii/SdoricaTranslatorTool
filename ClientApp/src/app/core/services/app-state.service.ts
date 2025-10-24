@@ -6,6 +6,7 @@ import { AppViews, viewers } from '../viewers';
 import { IndexDBService } from './index-db.service';
 import { LanguageOriginService } from './language-origin.service';
 import { TourService } from './tour.service';
+import { AppModes } from '../enums/app-modes';
 
 @Injectable({
   providedIn: 'root'
@@ -38,8 +39,15 @@ export class AppStateService {
   public async initializeApp() {
     let languagesRetrive = await this.langService.onRetriveLanguages();
 
-    if (!languagesRetrive) {
+    console.log(languagesRetrive);
+
+    if (!languagesRetrive && this.lStorage.getAppMode() === AppModes.Online) {
       this.vS.loadComponent(AppViews.login, await viewers.login, {});
+      return;
+    }
+
+    if (!languagesRetrive && this.lStorage.getAppMode() === AppModes.Offline) {
+      this.vS.loadComponent(AppViews.wizard, await viewers.wizard, {});
       return;
     }
 

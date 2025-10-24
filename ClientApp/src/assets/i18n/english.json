@@ -378,5 +378,9 @@
     "confirm": "Confirm",
     "alert-gemini-activated": "Saved",
     "alert-gemini-activated-description": "Configuration Saved",
-    "reset-categories-count": "Recalculate totals"
+    "reset-categories-count": "Recalculate totals",
+    "user": "User",
+    "password": "Password",
+    "login": "Login",
+    "switch-to-offline": "Switch Offline"
 }
