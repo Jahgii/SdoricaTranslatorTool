@@ -32,7 +32,6 @@ function onErrorOpenDB(event: Event) {
 }
 
 function onError(event: Event) {
-  // console.log(`Database error: ${(event.target as IDBRequest).error?.message}`);
 }
 
 function onSuccessOpenDB(event: Event, completeMessage: IOnMessage, message: ExportPostMessage) {

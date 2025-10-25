@@ -110,7 +110,6 @@ export class LocalizationService implements OnDestroy {
 
     this.autoSearch();
     this.onTranslatedColumnCheckboxChange();
-    // this.onLoadLastSearch();
   }
 
   public loadStore() {

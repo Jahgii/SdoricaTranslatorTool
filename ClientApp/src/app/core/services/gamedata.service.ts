@@ -43,7 +43,6 @@ export class GamedataService {
 
   public store!: StoreService<IGamedataValue>;
 
-  // get store$() { return this.store.store$ }
   get getData() { return this.store.getData() }
 
   constructor(
