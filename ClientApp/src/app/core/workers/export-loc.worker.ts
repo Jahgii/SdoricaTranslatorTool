@@ -103,6 +103,7 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   );
 
   await onCreateNewLoc(completeMessage, message, keys);
+  postMessage(completeMessage);
 }
 
 async function onCreateNewLoc(completeMessage: IOnMessage, message: ExportPostMessage, keys: ILocalizationKey[]) {

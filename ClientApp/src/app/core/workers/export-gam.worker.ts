@@ -100,6 +100,7 @@ async function onExportOnline(completeMessage: IOnMessage, message: ExportPostMe
   );
 
   await onCreateNewGam(completeMessage, message, values);
+  postMessage(completeMessage);
 }
 
 async function onCreateNewGam(completeMessage: IOnMessage, message: ExportPostMessage, values: IGamedataValue[]) {
