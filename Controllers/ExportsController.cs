@@ -47,11 +47,4 @@ public class ExportsController(ICustomMongoClient cMongoClient) : ControllerBase
 
         return Ok(new { Dialogs = dialogsPercentage, Keys = keysPercentage });
     }
-
-    [HttpGet("Translation")]
-    public async Task<ActionResult> GetTranslations([FromHeader] string lang)
-    {
-    
-        return Ok();
-    }
 }

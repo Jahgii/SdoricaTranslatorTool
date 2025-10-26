@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
 using SdoricaTranslatorTool.Services;
@@ -8,9 +9,11 @@ namespace SdoricaTranslatorTool.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GamedataValues(ICustomMongoClient cMongoClient) : ControllerBase
+public class GamedataValues(ICustomMongoClient cMongoClient, IMemoryCache cache) : ControllerBase
 {
     readonly ICustomMongoClient _cMongoClient = cMongoClient;
+    readonly IMemoryCache _cache = cache;
+    readonly string CacheKey = "Export_GameData";
 
     [HttpGet]
     public async Task<ActionResult> Get([FromHeader] string category)
@@ -35,8 +38,15 @@ public class GamedataValues(ICustomMongoClient cMongoClient) : ControllerBase
     [HttpGet("export")]
     public async Task<ActionResult> GetExport()
     {
-        var cursor = await _cMongoClient.GetCollection<GamedataValue>().FindAsync(e => e.Custom == true);
-        var data = await cursor.ToListAsync();
+        if (!_cache.TryGetValue(CacheKey, out List<GamedataValue>? data))
+        {
+            var cursor = await _cMongoClient.GetCollection<GamedataValue>()
+                .FindAsync(e => e.Custom == true);
+            data = await cursor.ToListAsync();
+
+            _cache.Set(CacheKey, data, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.MaxValue));
+        }
+
         return Ok(data);
     }
 
@@ -51,6 +61,8 @@ public class GamedataValues(ICustomMongoClient cMongoClient) : ControllerBase
         await _cMongoClient.Create(session, value);
 
         await session.CommitTransactionAsync();
+
+        _cache.Remove(CacheKey);
 
         return Ok(value);
     }
@@ -79,6 +91,8 @@ public class GamedataValues(ICustomMongoClient cMongoClient) : ControllerBase
 
         await session.CommitTransactionAsync();
 
+        _cache.Remove(CacheKey);
+
         return Ok(KeysToReplaced);
     }
 
@@ -92,6 +106,8 @@ public class GamedataValues(ICustomMongoClient cMongoClient) : ControllerBase
 
         await session.CommitTransactionAsync();
 
+        _cache.Remove(CacheKey);
+
         return Ok(value);
     }
 
@@ -104,6 +120,8 @@ public class GamedataValues(ICustomMongoClient cMongoClient) : ControllerBase
         await _cMongoClient.Delete<GamedataValue>(session, e => e.Id == value.Id);
 
         await session.CommitTransactionAsync();
+
+        _cache.Remove(CacheKey);
 
         return Ok();
     }

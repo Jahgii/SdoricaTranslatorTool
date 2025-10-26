@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
 using SdoricaTranslatorTool.Services;
@@ -7,9 +8,11 @@ namespace SdoricaTranslatorTool.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class LocalizationKeysController(ICustomMongoClient cMongoClient) : ControllerBase
+public class LocalizationKeysController(ICustomMongoClient cMongoClient, IMemoryCache cache) : ControllerBase
 {
     readonly ICustomMongoClient _cMongoClient = cMongoClient;
+    readonly IMemoryCache _cache = cache;
+    readonly string CacheKey = "Export_Keys";
 
     [HttpGet]
     public async Task<ActionResult> Get([FromHeader] string category)
@@ -64,8 +67,15 @@ public class LocalizationKeysController(ICustomMongoClient cMongoClient) : Contr
     [HttpGet("export")]
     public async Task<ActionResult> GetExport([FromHeader] string language)
     {
-        var cursor = await _cMongoClient.GetCollection<LocalizationKey>().FindAsync(e => e.Translated[language] == true);
-        var data = await cursor.ToListAsync();
+        if (!_cache.TryGetValue(CacheKey, out List<LocalizationKey>? data))
+        {
+            var cursor = _cMongoClient.GetCollection<LocalizationKey>()
+                .Find(e => e.Translated[language]);
+            data = await cursor.ToListAsync();
+
+            _cache.Set(CacheKey, data, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.MaxValue));
+        }
+
         return Ok(data);
     }
 
@@ -156,6 +166,8 @@ public class LocalizationKeysController(ICustomMongoClient cMongoClient) : Contr
 
         await session.CommitTransactionAsync();
 
+        _cache.Remove(CacheKey);
+
         return Ok(KeysToReplaced);
     }
 
@@ -190,6 +202,8 @@ public class LocalizationKeysController(ICustomMongoClient cMongoClient) : Contr
         if (oldKey.Translated != key.Translated)
         {
             category.KeysTranslated[language] += key.Translated[language] ? 1 : -1;
+
+            if (key.Translated[language]) _cache.Remove(CacheKey);
         }
 
         var updateKeyTranslated = Builders<LocalizationCategory>.Update.Set(e => e.KeysTranslated, category.KeysTranslated);

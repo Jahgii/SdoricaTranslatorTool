@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 using SdoricaTranslatorTool.Entities;
 using SdoricaTranslatorTool.Services;
@@ -7,9 +8,11 @@ namespace SdoricaTranslatorTool.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DialogAssetsController(ICustomMongoClient cMongoClient) : ControllerBase
+public class DialogAssetsController(ICustomMongoClient cMongoClient, IMemoryCache cache) : ControllerBase
 {
     readonly ICustomMongoClient _cMongoClient = cMongoClient;
+    readonly IMemoryCache _cache = cache;
+    readonly string CacheKey = "Export_Dialogs";
 
     [HttpGet]
     public async Task<ActionResult> Get([FromHeader] string language, [FromHeader] string mainGroup, [FromHeader] string group)
@@ -74,9 +77,14 @@ public class DialogAssetsController(ICustomMongoClient cMongoClient) : Controlle
     [HttpGet("export")]
     public async Task<ActionResult> GetTranslated()
     {
-        var cursor = _cMongoClient.GetCollection<DialogAsset>()
-            .Find(e => e.Translated);
-        var data = await cursor.ToListAsync();
+        if (!_cache.TryGetValue(CacheKey, out List<DialogAsset>? data))
+        {
+            var cursor = _cMongoClient.GetCollection<DialogAsset>()
+                .Find(e => e.Translated);
+            data = await cursor.ToListAsync();
+
+            _cache.Set(CacheKey, data, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.MaxValue));
+        }
 
         return Ok(data);
     }
@@ -122,6 +130,8 @@ public class DialogAssetsController(ICustomMongoClient cMongoClient) : Controlle
         {
             mainGroup.TranslatedFiles += dialogAsset.Translated ? 1 : -1;
             group.TranslatedFiles += dialogAsset.Translated ? 1 : -1;
+
+            if (dialogAsset.Translated) _cache.Remove(CacheKey);
         }
 
         var updateGroupTranslated = Builders<Group>
