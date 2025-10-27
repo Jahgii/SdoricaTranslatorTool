@@ -2,7 +2,6 @@ import { inject, Injectable, signal } from '@angular/core';
 import { ApiError, GoogleGenAI } from "@google/genai";
 import { LocalStorageService } from './local-storage.service';
 import { AlertService } from './alert.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +14,12 @@ export class GeminiApiService {
   public readonly waiting$ = signal(false);
   public key: string | undefined;
   public model: string = 'gemini-2.5-flash';
+  public lang: string = this.lStorage.getGeminiTranslateLang() ?? "english";
+  public prompt: string = `
+    translate the next values of this json to {0},
+    and return only the json, because the response
+    will be use in other system that only work with json content, please.
+  `;
   private ai?: GoogleGenAI;
 
   constructor() {
@@ -22,6 +27,8 @@ export class GeminiApiService {
   }
 
   private onInit() {
+    this.lang = this.lStorage.getGeminiTranslateLang() ?? "english";
+
     this.key = this.lStorage.getGeminiApiKey();
     if (!this.key) return;
 
@@ -33,6 +40,7 @@ export class GeminiApiService {
   public onChange() {
     if (!this.key || !this.model) return;
     this.lStorage.setGeminiApiKey(this.key);
+    this.lStorage.setGeminiTranslateLang(this.lang);
     this.lStorage.setGeminiModel(this.model);
     this.alert.showAlert('alert-gemini-activated', 'alert-gemini-activated-description', 'info');
     this.onInit();
@@ -43,9 +51,7 @@ export class GeminiApiService {
     const response = await this.ai?.models.generateContent({
       model: this.model ?? 'gemini-2.5-flash',
       contents: `
-      translate the next values of this json to spanish,
-      and return me only the json, because the response
-      will be use in other system that only work with json content, please.
+      ${this.prompt.replace('{0}', this.lang)}
 
       ${content}
       `

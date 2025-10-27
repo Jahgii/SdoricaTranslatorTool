@@ -178,4 +178,12 @@ export class LocalStorageService {
   setGeminiModel(model: string) {
     localStorage.setItem('GM', model);
   }
+
+  getGeminiTranslateLang() {
+    return localStorage.getItem('GTL') ?? undefined;
+  }
+
+  setGeminiTranslateLang(lang: string) {
+    localStorage.setItem('GTL', lang);
+  }
 }
