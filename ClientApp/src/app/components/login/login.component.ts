@@ -11,6 +11,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { IndexDBService } from "src/app/core/services/index-db.service";
 import { ObjectStoreNames } from "src/app/core/interfaces/i-indexed-db";
 import { AppModes } from "src/app/core/enums/app-modes";
+import { AlertService } from "src/app/core/services/alert.service";
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,7 @@ export class LoginComponent {
   private readonly api = inject(ApiService);
   private readonly lStorage = inject(LocalStorageService);
   private readonly appState = inject(AppStateService);
-  private readonly indexedDB = inject(IndexDBService);
+  private readonly alert = inject(AlertService);
 
   public loginForm = this.fB.group({
     user: ['', [Validators.required]],
@@ -48,8 +49,8 @@ export class LoginComponent {
         user => {
           this.lStorage.setToken(user.Token);
           this.appState.initializeApp();
-        }, error => {
-
+        }, _ => {
+          this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
         }
       );
   }
