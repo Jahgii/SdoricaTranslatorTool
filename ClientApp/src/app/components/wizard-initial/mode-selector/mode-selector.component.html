@@ -40,10 +40,11 @@
         </div>
 
         <div>
-            <label tuiLabel>
+            <label tuiLabel appPasswordHideText>
                 {{'api-key' | translate}}
                 <tui-textfield class="tui-space_bottom-3" tuiTextfieldSize="s">
-                    <input tuiTextfield formControlName="apiKey" />
+                    <input tuiTextfield type="password" placeholder="..." formControlName="apiKey" />
+                    <tui-icon tuiPassword />
                 </tui-textfield>
             </label>
         </div>

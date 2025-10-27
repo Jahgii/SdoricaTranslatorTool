@@ -1,17 +1,18 @@
 import { TuiAlertService, TuiButton, TuiIcon, TuiLoader, TuiTextfield } from "@taiga-ui/core";
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TuiBlock, TuiRadio } from '@taiga-ui/kit';
+import { TuiBlock, TuiPassword, TuiRadio } from '@taiga-ui/kit';
 import { WizardService } from '../wizard.service';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { ApiService } from 'src/app/core/services/api.service';
-import { IUser } from 'src/app/core/interfaces/i-user';
 import { LanguageSwitcherComponent } from "../../language-switcher/language-switcher.component";
 import { ViewersService } from "src/app/core/services/viewers.service";
 import { AppViews, viewers } from "src/app/core/viewers";
+import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
+import { PasswordHideTextDirective } from "src/app/core/directives/password-hide-text.directive";
 
 @Component({
   selector: 'app-mode-selector',
@@ -24,9 +25,13 @@ import { AppViews, viewers } from "src/app/core/viewers";
     TuiRadio,
     TuiIcon,
     TuiTextfield,
+    TuiPassword,
     TuiLoader,
     TuiButton,
     LanguageSwitcherComponent,
+    TuiTextfieldControllerModule,
+
+    PasswordHideTextDirective,
   ],
   templateUrl: './mode-selector.component.html',
   styleUrl: './mode-selector.component.scss'

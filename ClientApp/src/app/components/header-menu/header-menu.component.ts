@@ -3,8 +3,8 @@ import { TuiTextfieldControllerModule, TuiInputModule, TuiSelectModule } from "@
 import { ChangeDetectionStrategy, Component, inject, Inject, signal, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { tuiPure, TuiStringHandler, TuiContext, TuiLet } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiDataList, TuiGroup, TuiButton, TuiHint, TuiTextfield, TuiPopup, TuiAlertService, TuiAlertContext } from '@taiga-ui/core';
+import { tuiPure, TuiStringHandler, TuiContext } from '@taiga-ui/cdk';
+import { TuiBreakpointService, TuiDataList, TuiGroup, TuiButton, TuiHint, TuiTextfield, TuiPopup, TuiAlertService, TuiAlertContext, TuiIcon } from '@taiga-ui/core';
 import { TuiLanguageSwitcherService } from '@taiga-ui/i18n';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -12,7 +12,7 @@ import { LanguageOriginService } from 'src/app/core/services/language-origin.ser
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { ViewersService } from 'src/app/core/services/viewers.service';
-import { TuiDataListWrapper, TuiBadge, TuiBlock, TuiRadio, TuiDrawer } from '@taiga-ui/kit';
+import { TuiDataListWrapper, TuiBadge, TuiRadio, TuiDrawer, TuiPassword } from '@taiga-ui/kit';
 import { AsyncPipe } from '@angular/common';
 import { BehaviorSubject, skip, takeWhile } from 'rxjs';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
@@ -23,6 +23,7 @@ import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
 import { GeminiApiService } from "src/app/core/services/gemini-api.service";
 import { AppModes } from "src/app/core/enums/app-modes";
 import { LocalStorageService } from "src/app/core/services/local-storage.service";
+import { PasswordHideTextDirective } from "src/app/core/directives/password-hide-text.directive";
 
 @Component({
   selector: 'app-header-menu',
@@ -48,9 +49,11 @@ import { LocalStorageService } from "src/app/core/services/local-storage.service
     TuiDataListWrapper,
     TuiInputModule,
     TuiBadge,
-    TuiLet,
     TuiHint,
-    LanguageSwitcherComponent
+    TuiPassword,
+    TuiIcon,
+    LanguageSwitcherComponent,
+    PasswordHideTextDirective,
   ]
 })
 export class HeaderMenuComponent {

@@ -87,11 +87,13 @@
             aria-label="libre translate url" />
         </tui-input>
         <h4>{{'libretranslate-apikey' | translate}}</h4>
-        <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.apiKey" tuiTextfieldSize="s">
+        <label tuiLabel appPasswordHideText>
           {{'libretranslate-apikey' | translate}}
-          <input tuiTextfieldLegacy attr.aria-label="{{'libretranslate-apikey' | translate}}"
-            aria-label="libre translate api key" />
-        </tui-input>
+          <tui-textfield class="tui-space_top-2" tuiTextfieldSize="s">
+            <input tuiTextfield type="password" placeholder="..." [(ngModel)]="libreTranslate.apiKey" />
+            <tui-icon tuiPassword />
+          </tui-textfield>
+        </label>
         <h4>{{'libretranslate-status' | translate}}</h4>
         <button appearance="outline" class="w-100" tuiButton [iconStart]="'@tui.activity'" size="xs"
           (click)="libreTranslate.isAlive()"
@@ -175,10 +177,13 @@
       <h3 class="tui-space_top-9">{{'gemini-configuration' | translate}}</h3>
       <div id="appGeminiSetting">
         <h4>{{'gemini-apikey' | translate}}</h4>
-        <tui-input class="tui-space_top-2" [(ngModel)]="geminiApi.key" tuiTextfieldSize="s">
+        <label tuiLabel appPasswordHideText>
           {{'gemini-apikey' | translate}}
-          <input tuiTextfieldLegacy attr.aria-label="{{'gemini-apikey' | translate}}" aria-label="gemini api key" />
-        </tui-input>
+          <tui-textfield class="tui-space_top-2" tuiTextfieldSize="s">
+            <input tuiTextfield type="password" placeholder="..." [(ngModel)]="geminiApi.key" />
+            <tui-icon tuiPassword />
+          </tui-textfield>
+        </label>
         <h4>{{'gemini-model' | translate}}</h4>
         <tui-input class="tui-space_top-2 tui-space_bottom-8" [(ngModel)]="geminiApi.model" tuiTextfieldSize="s">
           {{'gemini-model' | translate}}
