@@ -102,7 +102,7 @@ export class DialogAssetSingleComponent implements OnChanges {
   }
 
   protected toggleItem(item: IDialog) {
-    this.portraitSearch = item.IconName.split('_')[0];
+    this.portraitSearch = item.SpeakerAssetName.split('/').at(-1) ?? item.IconName.split('_')[0] ?? "";
     this.currentSelectedItem = item;
     this.open = !this.open;
   }
