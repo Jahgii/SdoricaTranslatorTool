@@ -391,5 +391,7 @@
     "switch-to-online": "Cambiar a Online",
     "show-api-key": "Mostrar Api Key",
     "hide-api-key": "Ocultar Api Key",
-    "search-by-file-name": "Buscar por Nombre de Archivo"
+    "search-by-file-name": "Buscar por Nombre de Archivo",
+    "empty-portraits": "Sin Retratos",
+    "empty-portraits-filter": "Sin Retratos para el filtro -> {{filter}}"
 }
