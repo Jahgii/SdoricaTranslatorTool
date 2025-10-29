@@ -1,5 +1,5 @@
 import { TuiStepper } from "@taiga-ui/kit";
-import { Component, inject, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
 import { WizardService } from './wizard.service';
@@ -8,19 +8,20 @@ import { ImportMainComponent } from 'src/app/import/import-main/import-main.comp
 import { AppStateService } from 'src/app/core/services/app-state.service';
 
 @Component({
-    selector: 'app-wizard-initial',
-    imports: [
-        AsyncPipe,
-        TranslateModule,
-        TuiStepper,
-        ModeSelectorComponent,
-        ImportMainComponent,
-    ],
-    providers: [
-        WizardService
-    ],
-    templateUrl: './wizard-initial.component.html',
-    styleUrl: './wizard-initial.component.scss'
+  selector: 'app-wizard-initial',
+  imports: [
+    AsyncPipe,
+    TranslateModule,
+    TuiStepper,
+    ModeSelectorComponent,
+    ImportMainComponent,
+  ],
+  providers: [
+    WizardService
+  ],
+  templateUrl: './wizard-initial.component.html',
+  styleUrl: './wizard-initial.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WizardInitialComponent {
   protected readonly app = inject(AppStateService);

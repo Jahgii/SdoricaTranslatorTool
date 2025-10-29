@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TUI_DOC_ICONS } from '@taiga-ui/addon-doc/tokens';
@@ -24,7 +24,8 @@ import type { TuiCountryIsoCode, TuiLanguageName } from '@taiga-ui/i18n/types';
     TuiTextfield,
   ],
   templateUrl: './language-switcher.component.html',
-  styleUrl: './language-switcher.component.scss'
+  styleUrl: './language-switcher.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LanguageSwitcherComponent {
   protected readonly langService = inject(LangService);

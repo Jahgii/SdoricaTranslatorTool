@@ -1,23 +1,24 @@
 import { TuiBlockStatus } from "@taiga-ui/layout";
 import { TuiIcon, TuiScrollbar } from "@taiga-ui/core";
-import { ChangeDetectorRef, Component, ComponentRef, HostBinding, HostListener, OnInit, Type, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, HostBinding, HostListener, OnInit, Type, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-viewer',
-    imports: [
-        CommonModule,
-        TranslateModule,
-        //Taiga
-        TuiScrollbar,
-        TuiBlockStatus,
-        TuiIcon,
-        AdHostDirective
-    ],
-    templateUrl: './viewer.component.html',
-    styleUrls: ['./viewer.component.scss']
+  selector: 'app-viewer',
+  imports: [
+    CommonModule,
+    TranslateModule,
+    //Taiga
+    TuiScrollbar,
+    TuiBlockStatus,
+    TuiIcon,
+    AdHostDirective
+  ],
+  templateUrl: './viewer.component.html',
+  styleUrls: ['./viewer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewerComponent implements OnInit {
   @ViewChild(AdHostDirective, { static: true })

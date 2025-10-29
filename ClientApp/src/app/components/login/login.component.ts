@@ -1,5 +1,5 @@
 import { TuiButton, TuiIcon, TuiTextfield } from "@taiga-ui/core";
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { IUser } from 'src/app/core/interfaces/i-user';
@@ -8,8 +8,6 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { TuiPassword } from "@taiga-ui/kit";
 import { TranslateModule } from "@ngx-translate/core";
-import { IndexDBService } from "src/app/core/services/index-db.service";
-import { ObjectStoreNames } from "src/app/core/interfaces/i-indexed-db";
 import { AppModes } from "src/app/core/enums/app-modes";
 import { AlertService } from "src/app/core/services/alert.service";
 
@@ -26,7 +24,8 @@ import { AlertService } from "src/app/core/services/alert.service";
     TuiIcon,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
   private readonly fB = inject(FormBuilder);
