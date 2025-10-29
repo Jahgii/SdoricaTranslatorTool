@@ -65,8 +65,10 @@ export interface PlainDialogAsset {
 
 export interface IDialog {
     ID: string;
+    OriginalSpeakerName: string;
     SpeakerName: string;
     SpeakerAssetName: string;
+    OriginalIconName: string;
     IconName: string;
     IconLocate: number;
     OriginalText: string;

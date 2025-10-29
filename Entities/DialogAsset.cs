@@ -41,8 +41,10 @@ public class DialogAssetArray
 public class Dialog
 {
     public required string ID { get; set; }
+    public required string OriginalSpeakerName { get; set; }
     public required string SpeakerName { get; set; }
     public required string SpeakerAssetName { get; set; }
+    public required string OriginalIconName { get; set; }
     public required string IconName { get; set; }
     public int IconLocate { get; set; }
     public required string OriginalText { get; set; }

@@ -26,9 +26,11 @@ export function onReadFileDialogFromObb(
 export function onSetDialogAsset(fileNameSplit: string[], fileName: string, fileContent: string) {
     let dialogAsset: IDialogAsset = JSON.parse(onFixDialogAssetJsonParse(fileContent));
 
-    dialogAsset.Model.$content.forEach(dialog => {
+    for (const dialog of dialogAsset.Model.$content) {
         dialog.OriginalText = dialog.Text;
-    });
+        dialog.OriginalSpeakerName = dialog.SpeakerName;
+        dialog.OriginalIconName = dialog.IconName;
+    }
 
     if (fileNameSplit.length == 5) {
         dialogAsset.OriginalFilename = fileName;
