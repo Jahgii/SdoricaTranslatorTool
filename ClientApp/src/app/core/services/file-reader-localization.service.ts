@@ -26,9 +26,9 @@ export class FileReaderLocalizationService {
   private maxThreads = 5;
 
   constructor(
-    private api: ApiService,
-    private languageOrigin: LanguageOriginService,
-    private local: LocalStorageService
+    private readonly api: ApiService,
+    private readonly languageOrigin: LanguageOriginService,
+    private readonly local: LocalStorageService
   ) {
     this.switchUploadKeysUrl();
   }
@@ -61,16 +61,16 @@ export class FileReaderLocalizationService {
         KeysTranslated: {}
       }
 
-      decodeResult.C[categoryName].K.forEach(k => {
+      for (const k of decodeResult.C[categoryName].K) {
         new_category.Keys[k] = decodeResult.C[categoryName].D.length
         new_category.KeysTranslated[k] = 0
-      });
+      }
 
       this.localizationCategories.push(new_category);
 
       let langName;
-      let keyIndex = decodeResult.C[categoryName].K.findIndex(e => e === 'Key');
-      let versionIndex = decodeResult.C[categoryName].K.findIndex(e => e === '_version');
+      let keyIndex = decodeResult.C[categoryName].K.indexOf('Key');
+      let versionIndex = decodeResult.C[categoryName].K.indexOf('_version');
 
       for (const dC of decodeResult.C[categoryName].D) {
         let new_key: ILocalizationKey | undefined = undefined;
@@ -129,23 +129,20 @@ export class FileReaderLocalizationService {
     this.fileExportProgressState$.next('replacing-content');
 
     for (let serverKey of this.localizationKeys) {
-      let keyIndexPosition = decodeResult.C[serverKey.Category].K.findIndex(e => e === 'Key');
-      let versionIndexPosition = decodeResult.C[serverKey.Category].K.findIndex(e => e === '_version');
+      let keyIndexPosition = decodeResult.C[serverKey.Category].K.indexOf('Key');
+      // let versionIndexPosition = decodeResult.C[serverKey.Category].K.indexOf('_version');
       let keyIndex = decodeResult.C[serverKey.Category].D.findIndex(e => e[keyIndexPosition] === serverKey.Name);
 
       //Not need to use because the file already have the version
-      let versionIndex = decodeResult.C[serverKey.Category].D.findIndex(e => e[versionIndexPosition] === serverKey.Name);
-
+      // let versionIndex = decodeResult.C[serverKey.Category].D.findIndex(e => e[versionIndexPosition] === serverKey.Name);
 
       if (keyIndex == -1) {
         let customLocalizationKey: string[] = [];
 
-        decodeResult.C[serverKey.Category].K.forEach((keys, index) => {
-          if (index != keyIndexPosition)
-            customLocalizationKey.push(serverKey.Translations[keys]);
-          else
-            customLocalizationKey.push(serverKey.Name);
-        });
+        for (const [index, keys] of decodeResult.C[serverKey.Category].K.entries()) {
+          if (index == keyIndexPosition) { customLocalizationKey.push(serverKey.Name); }
+          else { customLocalizationKey.push(serverKey.Translations[keys]); }
+        }
 
         decodeResult.C[serverKey.Category].D.push(customLocalizationKey);
         keyIndex = decodeResult.C[serverKey.Category].D.length - 1;
@@ -177,27 +174,7 @@ export class FileReaderLocalizationService {
     this.fileProgressState$.next('uploading keys');
     this.fileProgressBarMax$.next(this.localizationKeys.length);
 
-    if (typeof Worker !== 'undefined') {
-      var spliceCount = Math.ceil(this.localizationKeys.length / this.maxThreads);
-      var workers: Worker[] = [];
-      for (var threadIndex = 0; threadIndex < this.maxThreads; threadIndex++) {
-        workers.push(new Worker(new URL('../../keys.worker', import.meta.url)));
-        workers[threadIndex].onmessage = ({ data }) => {
-          if (data.finish) {
-            workers[data.i].terminate();
-            return;
-          }
-          this.fileProgressBar$.next(this.fileProgressBar$.value + data.keysUploaded);
-          if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
-        };
-
-        var keys = this.localizationKeys.splice(0, spliceCount);
-        var uploadStackSize = this.uploadStackSize;
-        var url = this.uploadKeysUrl;
-        workers[threadIndex].postMessage({ keys, uploadStackSize, url, threadIndex, token: this.local.getToken() });
-      }
-    }
-    else
+    if (typeof Worker === 'undefined') {
       while (this.localizationKeys.length > 0) {
         let keysSet = this.localizationKeys.splice(0, this.uploadStackSize);
         await firstValueFrom(this.api.post<string[]>(this.uploadKeysUrl, keysSet))
@@ -210,16 +187,37 @@ export class FileReaderLocalizationService {
             }
           );
       }
+    }
+    else {
+      let spliceCount = Math.ceil(this.localizationKeys.length / this.maxThreads);
+      let workers: Worker[] = [];
+      for (let threadIndex = 0; threadIndex < this.maxThreads; threadIndex++) {
+        workers.push(new Worker(new URL('../../keys.worker', import.meta.url)));
+        workers[threadIndex].onmessage = ({ data }) => {
+          if (data.finish) {
+            workers[data.i].terminate();
+            return;
+          }
+          this.fileProgressBar$.next(this.fileProgressBar$.value + data.keysUploaded);
+          if (this.fileProgressBar$.value >= this.fileProgressBarMax$.value) this.fileProgressState$.next('finish');
+        };
+
+        let keys = this.localizationKeys.splice(0, spliceCount);
+        let uploadStackSize = this.uploadStackSize;
+        let url = this.uploadKeysUrl;
+        workers[threadIndex].postMessage({ keys, uploadStackSize, url, threadIndex, token: this.local.getToken() });
+      }
+    }
   }
 
   public async onDownloadLocalization(result: ILocalization, fileName: string) {
-    var encodeResult = encode(result) as any;
+    let encodeResult = encode(result) as any;
 
     const blob = new Blob([encodeResult], {
       type: 'application/octet-stream'
     });
 
-    const url = window.URL.createObjectURL(blob)
+    const url = globalThis.URL.createObjectURL(blob)
 
     this.url = url;
 

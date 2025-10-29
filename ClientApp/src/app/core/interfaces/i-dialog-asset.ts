@@ -39,7 +39,7 @@ export interface IDialogAssetExport {
     Language?: string;
     Translated?: boolean;
     Model: {
-        $content: IDialog[]
+        $content: IDialogExport[]
     }
     ReferenceAavatarImage: {
         $content: string[]
@@ -72,6 +72,20 @@ export interface IDialog {
     IconName: string;
     IconLocate: number;
     OriginalText: string;
+    Text: string;
+    sfxName: string;
+    sfxVolume: number;
+}
+
+export interface IDialogExport {
+    ID: string;
+    OriginalSpeakerName?: string;
+    SpeakerName: string;
+    SpeakerAssetName: string;
+    OriginalIconName?: string;
+    IconName: string;
+    IconLocate: number;
+    OriginalText?: string;
     Text: string;
     sfxName: string;
     sfxVolume: number;

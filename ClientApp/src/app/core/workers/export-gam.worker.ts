@@ -116,14 +116,14 @@ async function onCreateNewGam(completeMessage: IOnMessage, message: ExportPostMe
   let category = 'BuffInfo';
   let decodeResult = message.decodeResult as IGamedata;
 
-  values.forEach(v => {
+  for (const v of values) {
     let finalExportValue: any[] = [];
     for (const element of decodeResult.C[category].K) {
       let keyName = element;
       finalExportValue.push(v.Content[keyName]);
     }
-    decodeResult.C[category].D.push(finalExportValue);
-  });
+    decodeResult.C[category].D.push(finalExportValue);  
+  }
 
   completeMessage.pgState = ProgressStatus.generatingNewFile;
   completeMessage.maxPg = 100;

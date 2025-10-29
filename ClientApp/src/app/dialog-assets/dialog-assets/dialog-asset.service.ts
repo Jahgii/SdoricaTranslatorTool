@@ -132,10 +132,10 @@ export class DialogAssetService {
 
           if (index === -1) return languageText;
 
-          dialogs.forEach(r => {
+          for (const r of dialogs) {
             let originalText = r.Model.$content[index].OriginalText ?? "";
             languageText[r.Language] = originalText;
-          });
+          }
 
           return languageText;
         })
@@ -290,7 +290,7 @@ export class DialogAssetService {
   }
 
   public onDownload(dialogAsset: IDialogAsset) {
-    let dialog = JSON.parse(JSON.stringify(dialogAsset)) as IDialogAssetExport;
+    let dialog = structuredClone(dialogAsset) as IDialogAssetExport;
     let dialogFileName = dialog.OriginalFilename;
 
     delete (dialog.Id);
@@ -302,7 +302,11 @@ export class DialogAssetService {
     delete (dialog.Language);
     delete (dialog.Translated);
 
-    (dialog.Model.$content as any[]).forEach(e => delete (e.OriginalText));
+    for (const e of dialog.Model.$content) {
+      delete (e.OriginalSpeakerName);
+      delete (e.OriginalIconName);
+      delete (e.OriginalText);
+    }
 
     let exportDialog = JSON.stringify(dialog);
 

@@ -20,7 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewerComponent implements OnInit {
+export class ViewerComponent {
   @ViewChild(AdHostDirective, { static: true })
   adHost!: AdHostDirective;
   @HostListener('click')
@@ -36,9 +36,6 @@ export class ViewerComponent implements OnInit {
   constructor(
     private ref: ChangeDetectorRef
   ) { }
-
-  ngOnInit(): void {
-  }
 
   public changeWidth(width: number) {
     this.widthPercentage = `${width}%`;
@@ -56,10 +53,8 @@ export class ViewerComponent implements OnInit {
 
     this.componentLoaded.instance.viewIndex = this.viewIndex;
 
-    Object.keys(args).forEach(k => {
-      if (this.componentLoaded)
-        this.componentLoaded.instance[k] = args[k];
-    });
+    for (const k of Object.keys(args))
+      if (this.componentLoaded) this.componentLoaded.instance[k] = args[k];
 
     this.ref.markForCheck();
   }

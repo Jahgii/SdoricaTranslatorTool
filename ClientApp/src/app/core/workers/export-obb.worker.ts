@@ -152,7 +152,11 @@ function OnCreateNewObbGameFile(completeMessage: IOnMessage, message: ExportPost
       delete (dialog.Language);
       delete (dialog.Translated);
 
-      (dialog.Model.$content as any[]).forEach(e => delete (e.OriginalText));
+      for (const e of dialog.Model.$content) {
+        delete (e.OriginalSpeakerName);
+        delete (e.OriginalIconName);
+        delete (e.OriginalText);
+      }
 
       zip.file(`assets/DialogAssets/${dialogFileName}`, JSON.stringify(dialog));
       completeMessage.pg = ((index + 1) * 100) / dialogs.length;
@@ -196,7 +200,11 @@ function OnCreateNewObbFile(completeMessage: IOnMessage, message: ExportPostMess
     delete (dialog.Language);
     delete (dialog.Translated);
 
-    (dialog.Model.$content as any[]).forEach(e => delete (e.OriginalText));
+    for (const e of dialog.Model.$content) {
+      delete (e.OriginalSpeakerName);
+      delete (e.OriginalIconName);
+      delete (e.OriginalText);
+    }
 
     zip.file(`assets/DialogAssets/${dialogFileName}`, JSON.stringify(dialog));
     completeMessage.pg = ((index + 1) * 100) / dialogs.length;

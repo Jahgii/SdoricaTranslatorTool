@@ -213,7 +213,7 @@ export class IndexDBService {
     const objectStore = transaction.objectStore(storeName);
 
     dataLength = data.length;
-    data.forEach((d) => {
+    for (const d of data) {
       const request = objectStore.add(d);
       request.onsuccess = (event) => {
         operationCompleted += 1;
@@ -251,7 +251,7 @@ export class IndexDBService {
 
         error$.next(error);
       };
-    });
+    }
 
     return { success$, error$ };
   }

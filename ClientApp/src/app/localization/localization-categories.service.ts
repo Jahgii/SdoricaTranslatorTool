@@ -100,14 +100,11 @@ export class LocalizationCategoriesService extends StoreService<ILocalizationCat
     let index = categories.findIndex(e => e.Name === key.Category);
     let category = categories[index];
 
-    Object.keys(category.Keys).forEach(k => {
+    for (const k of Object.keys(category.Keys))
       category.Keys[k] += 1;
-    });
 
-    Object.keys(searchCategory.Keys).forEach(k => {
+    for (const k of Object.keys(searchCategory.Keys))
       searchCategory.Keys[k] += 1;
-    });
-
 
     this.update(category, index);
     this.update(searchCategory, 0);

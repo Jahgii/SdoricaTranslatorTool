@@ -14,9 +14,8 @@ export class DialogstateService {
   }
 
   public onChangeIndex(state: DialogState) {
-    Object.keys(this.dialogStates).forEach(k => {
+    for (const k of Object.keys(this.dialogStates))
       this.dialogStates[k].zIndex$.next(1);
-    });
 
     state.zIndex$.next(2);
   }

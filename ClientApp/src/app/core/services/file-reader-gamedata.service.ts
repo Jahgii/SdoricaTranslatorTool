@@ -43,34 +43,31 @@ export class FileReaderGamedataService {
   }
 
   private addKnowCategory(decodeResult: IGamedata, category: string) {
-    var new_category: IGamedataCategory = {
+    let new_category: IGamedataCategory = {
       Name: category,
       Keys: {}
     }
 
-    decodeResult.C[category].K.forEach(k => {
-      new_category.Keys[k] = decodeResult.C[category].D.length
-    });
+    for (const k of decodeResult.C[category].K)
+      new_category.Keys[k] = decodeResult.C[category].D.length;
 
     this.gamedataCategories.push(new_category);
 
     let keyName;
     let idIndex = decodeResult.C[category].K.findIndex(e => e === 'id');
 
-    for (let dataIndex = 0; dataIndex < decodeResult.C[category].D.length; dataIndex++) {
+    for (const element of decodeResult.C[category].D) {
       let new_value: IGamedataValue | undefined = undefined;
       for (let keyIndex = 0; keyIndex < decodeResult.C[category].K.length; keyIndex++) {
-        let gameDataValueName = decodeResult.C[category].D[dataIndex][idIndex]
+        let gameDataValueName = element[idIndex]
         keyName = decodeResult.C[category].K[keyIndex];
-        let content = decodeResult.C[category].D[dataIndex][keyIndex];
+        let content = element[keyIndex];
 
-        if (!new_value) {
-          new_value = {
-            Category: category,
-            Name: gameDataValueName,
-            Content: {}
-          }
-        }
+        new_value ??= {
+          Category: category,
+          Name: gameDataValueName,
+          Content: {}
+        };
 
         new_value.Content[keyName] = content;
       }
@@ -110,14 +107,14 @@ export class FileReaderGamedataService {
   }
 
   private addValuesToKnowCategory(decodeResult: IGamedata, category: string, values: IGamedataValue[]) {
-    values.forEach(v => {
+    for (const v of values) {
       let finalExportValue: any[] = [];
-      for (let keyIndex = 0; keyIndex < decodeResult.C[category].K.length; keyIndex++) {
-        let keyName = decodeResult.C[category].K[keyIndex];
+      for (const element of decodeResult.C[category].K) {
+        let keyName = element;
         finalExportValue.push(v.Content[keyName]);
       }
       decodeResult.C[category].D.push(finalExportValue);
-    });
+    }
   }
 
   public async onUploadGamedata() {

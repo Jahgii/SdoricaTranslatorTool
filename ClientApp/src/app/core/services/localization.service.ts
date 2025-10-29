@@ -230,9 +230,8 @@ export class LocalizationService implements OnDestroy {
   public onTranslationChange(translation: string, keys: ILocalizationKey[], key: ILocalizationKey) {
     if (!this.propagateTranslation) return;
 
-    this.getPropagateKeys(keys, key).forEach(key => {
-      key.Translations[this.languageOrigin.localizationLang] = translation;
-    });
+    for (const _key of this.getPropagateKeys(keys, key))
+      _key.Translations[this.languageOrigin.localizationLang] = translation;
   }
 
   private getPropagateKeys(keys: ILocalizationKey[], key: ILocalizationKey) {

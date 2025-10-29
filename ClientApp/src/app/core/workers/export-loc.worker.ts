@@ -124,12 +124,12 @@ async function onCreateNewLoc(completeMessage: IOnMessage, message: ExportPostMe
     if (keyIndex == -1) {
       let customLocalizationKey: string[] = [];
 
-      decodeResult.C[key.Category].K.forEach((keys, index) => {
-        if (index != keyIndexPosition)
-          customLocalizationKey.push(key.Translations[keys]);
-        else
+      for (const [index, keys] of decodeResult.C[key.Category].K.entries()) {
+        if (index == keyIndexPosition)
           customLocalizationKey.push(key.Name);
-      });
+        else
+          customLocalizationKey.push(key.Translations[keys]);
+      }
 
       decodeResult.C[key.Category].D.push(customLocalizationKey);
       keyIndex = decodeResult.C[key.Category].D.length - 1;

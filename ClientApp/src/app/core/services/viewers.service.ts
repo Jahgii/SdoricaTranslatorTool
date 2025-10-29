@@ -110,7 +110,7 @@ export class ViewersService {
     this.notifier.set(!this.notifier());
   }
 
-  public loadComponent(viewerKey: AppViews, component: Type<any>, args: { [arg: string]: any }) {
+  public async loadComponent(viewerKey: AppViews, component: Type<any>, args: { [arg: string]: any }) {
     if (this.activeView.instance.componentLoadedName === viewerKey) return;
 
     this.removeActiveViewComponentOpen();
@@ -119,7 +119,7 @@ export class ViewersService {
     this.activeView.instance.loadComponent(component, args);
     this.activeView.instance.componentLoadedName = viewerKey;
 
-    Object.keys(viewers).forEach(async k => {
+    for (const k of Object.keys(viewers)) {
       if (k === AppViews.login || k === AppViews.loading) return;
       if (await viewers[k] === component) {
         if (this.activeView == this.views[0])
@@ -127,7 +127,7 @@ export class ViewersService {
         else if (this.views[1] && this.activeView == this.views[1])
           this.lStorage.setC2(k);
       }
-    });
+    }
   }
 
   private removeActiveViewComponentOpen() {

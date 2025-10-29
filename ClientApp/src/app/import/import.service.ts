@@ -738,16 +738,16 @@ export class ImportService {
         KeysTranslated: {}
       }
 
-      this.dataLoc.C[categoryName].K.forEach(k => {
+      for (const k of this.dataLoc.C[categoryName].K) {
         new_category.Keys[k] = this.dataLoc.C[categoryName].D.length
         new_category.KeysTranslated[k] = 0
-      });
+      }
 
       this.localizationCategories.push(new_category);
 
       let langName;
-      let keyIndex = this.dataLoc.C[categoryName].K.findIndex(e => e === 'Key');
-      let versionIndex = this.dataLoc.C[categoryName].K.findIndex(e => e === '_version');
+      let keyIndex = this.dataLoc.C[categoryName].K.indexOf('Key');
+      let versionIndex = this.dataLoc.C[categoryName].K.indexOf('_version');
 
       for (const dC of this.dataLoc.C[categoryName].D) {
         let new_key: ILocalizationKey | undefined = undefined;
@@ -850,14 +850,13 @@ export class ImportService {
       Keys: {}
     }
 
-    decodeResult.C[category].K.forEach(k => {
-      new_category.Keys[k] = decodeResult.C[category].D.length
-    });
+    for (const k of decodeResult.C[category].K)
+      new_category.Keys[k] = decodeResult.C[category].D.length;
 
     this.gamedataCategories.push(new_category);
 
     let keyName;
-    let idIndex = decodeResult.C[category].K.findIndex(e => e === 'id');
+    let idIndex = decodeResult.C[category].K.indexOf('id');
 
     for (const element of decodeResult.C[category].D) {
       let new_value: IGamedataValue | undefined = undefined;
@@ -866,13 +865,11 @@ export class ImportService {
         keyName = decodeResult.C[category].K[keyIndex];
         let content = element[keyIndex];
 
-        if (!new_value) {
-          new_value = {
-            Category: category,
-            Name: gameDataValueName,
-            Content: {}
-          }
-        }
+        new_value ??= {
+          Category: category,
+          Name: gameDataValueName,
+          Content: {}
+        };
 
         new_value.Content[keyName] = content;
       }

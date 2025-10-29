@@ -69,7 +69,7 @@ function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage
 
   const objectStore = transaction.objectStore(ObjectStoreNames.DialogAsset);
 
-  dialogAssetsLang.forEach((d) => {
+  for (const d of dialogAssetsLang) {
     const request = objectStore.add(d);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -103,7 +103,7 @@ function onUploadDialogAssetsOffline(db: IDBDatabase, message: ImportPostMessage
 
       postMessage(error);
     };
-  });
+  }
 }
 
 function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, transaction: IDBTransaction) {
@@ -113,7 +113,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
   const oSMainGroup = transaction.objectStore(ObjectStoreNames.MainGroup);
   const oSGroup = transaction.objectStore(ObjectStoreNames.Group);
 
-  parse.languages.forEach((l) => {
+  for (const l of parse.languages) {
     const request = oSLang.add(l);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -147,9 +147,9 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
 
       postMessage(error);
     };
-  });
+  }
 
-  parse.mainGroups.forEach((mG) => {
+  for (const mG of parse.mainGroups) {
     const request = oSMainGroup.add(mG);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -183,9 +183,9 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
 
       postMessage(error);
     };
-  });
+  }
 
-  parse.groups.forEach((g) => {
+  for (const g of parse.groups) {
     const request = oSGroup.add(g);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -219,8 +219,7 @@ function onUploadGroupsOffline(db: IDBDatabase, message: ImportPostMessage, tran
 
       postMessage(error);
     };
-  });
-
+  }
 }
 
 function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage) {
@@ -242,7 +241,7 @@ function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage
   const oSLC = transaction.objectStore(ObjectStoreNames.LocalizationCategory);
   const oSLK = transaction.objectStore(ObjectStoreNames.LocalizationKey);
 
-  message.localizationCategories.forEach((c) => {
+  for (const c of message.localizationCategories) {
     const request = oSLC.add(c);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -276,9 +275,9 @@ function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage
 
       postMessage(error);
     };
-  });
+  }
 
-  message.localizationKeys.forEach((k) => {
+  for (const k of message.localizationKeys) {
     const request = oSLK.add(k);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -336,7 +335,7 @@ function onUploadLocalizationOffline(db: IDBDatabase, message: ImportPostMessage
         postMessage(resMessage);
       }
     };
-  });
+  }
 }
 
 function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
@@ -358,7 +357,7 @@ function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
   const oSGC = transaction.objectStore(ObjectStoreNames.GamedataCategory);
   const oSGV = transaction.objectStore(ObjectStoreNames.GamedataValue);
 
-  message.gamedataCategories.forEach((gC) => {
+  for (const gC of message.gamedataCategories) {
     const request = oSGC.add(gC);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -392,9 +391,9 @@ function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
 
       postMessage(error);
     };
-  });
+  }
 
-  message.gamedataValues.forEach((gV) => {
+  for (const gV of message.gamedataValues) {
     const request = oSGV.add(gV);
     request.onsuccess = (event) => {
       // SEND SUCCESS MESSAGE
@@ -428,7 +427,7 @@ function onUploadGamedataOffline(db: IDBDatabase, message: ImportPostMessage) {
 
       postMessage(error);
     };
-  });
+  }
 }
 
 //#endregion
