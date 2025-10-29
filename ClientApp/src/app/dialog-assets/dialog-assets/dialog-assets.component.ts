@@ -3,7 +3,7 @@ import { TuiTable } from "@taiga-ui/addon-table";
 import { TuiActiveZone, TuiItem, TuiStringHandler } from "@taiga-ui/cdk";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, SkipSelf } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TUI_ICON_RESOLVER, TuiScrollable } from '@taiga-ui/core';
+import { TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TUI_ICON_RESOLVER, TuiScrollable, TuiScrollbar } from '@taiga-ui/core';
 import { IDialog, IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { TranslateModule } from '@ngx-translate/core';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
@@ -41,7 +41,8 @@ import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-s
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
-    DialogAssetSingleComponent,
+    
+    TuiScrollbar,
     TuiScrollable,
     TuiTabs,
     TuiItem,
@@ -54,6 +55,8 @@ import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-s
     TuiDropdown,
     TuiBlockStatus,
     TuiActiveZone,
+
+    DialogAssetSingleComponent,
   ],
 })
 export class DialogAssetsComponent implements OnDestroy {
