@@ -390,5 +390,6 @@
     "switch-to-offline": "Switch Offline",
     "switch-to-online": "Switch Online",
     "show-api-key": "Show Api Key",
-    "hide-api-key": "Hide Api Key"
+    "hide-api-key": "Hide Api Key",
+    "search-by-file-name": "Search by File Name"
 }

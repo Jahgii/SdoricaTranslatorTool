@@ -68,6 +68,21 @@
     position: relative;
     left: -6px;
 
+    .portrait-select {
+        width: calc(128px * var(--scale));
+        height: calc(128px * var(--scale));
+        position: absolute;
+        bottom: calc(24px * var(--scale));
+        left: calc(24px * var(--scale));
+        z-index: 1;
+        transition: all 0.5s;
+
+        &:hover {
+            background: var(--tui-background-neutral-1-hover);
+            cursor: pointer;
+        }
+    }
+
     .dialog-translation-portrait {
         width: calc(128px * var(--scale));
         height: calc(128px * var(--scale));
@@ -131,6 +146,17 @@
     left: -1px;
     bottom: 4px;
     color: var(--tui-text-invert);
+}
+
+.portrait {
+    transform: perspective(1500px) rotateY(15deg);
+    transition: all 0.5s;
+
+    &:hover {
+        background: var(--tui-background-neutral-1-hover);
+        cursor: pointer;
+        transform: perspective(3000px) rotateY(5deg);
+    }
 }
 
 hr {
