@@ -39,7 +39,8 @@ $border-height: 2px;
     }
 
     .tabs {
-        justify-content: flex-end;
+        flex: 1;
+        justify-content: flex-start;
         box-shadow: none;
     }
 }

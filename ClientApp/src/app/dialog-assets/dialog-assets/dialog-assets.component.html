@@ -24,16 +24,18 @@
 
 <ng-template #simpleUI let-data>
   <div class="top-main-options">
-    <div class="option-child">
-      <span class="tui-text_body-s tui-space_right-4 text-bold">{{'file-number' | translate}}:</span>
+    <div class="option-child" style="flex: 1;">
+      <span class="tui-text_body-s tui-space_right-4 text-bold">
+        {{'file-number' |translate}}:
+      </span>
       @if (dAS.dialogAssetsChange$ | async) {
       <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="dAS.activeItemIndex" class="tabs"
         [moreContent]="moreContentIcon" size="m">
-        @for (item of data; track item) {
+        @for (item of data; track item.Id) {
         <button *tuiItem tuiTab>
           {{item.Number}}
           @if (item.Translated) {
-          <tui-icon class="tui-space_left-3" icon="@tui.circle-check"></tui-icon>
+          <tui-icon class="tui-space_left-3" icon="@tui.circle-check" [style.font-size.rem]="1" />
           }
         </button>
         }
