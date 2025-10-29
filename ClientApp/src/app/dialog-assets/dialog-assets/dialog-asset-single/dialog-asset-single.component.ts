@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { DialogAssetService } from '../dialog-asset.service';
-import { IDialog, IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
+import { IDialog, IDialogAsset, TriggerChange } from 'src/app/core/interfaces/i-dialog-asset';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, KeyValue, KeyValuePipe, NgStyle } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
@@ -58,6 +58,7 @@ export class DialogAssetSingleComponent implements OnChanges {
     fullscreen: false,
   };
 
+  protected triggerChange$ = signal(1);
   protected focus: WritableSignal<boolean> = signal(false);
   protected otherText$!: Observable<any>;
   protected showTooltipArrow$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -69,8 +70,14 @@ export class DialogAssetSingleComponent implements OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.item.currentValue)
-      this.otherText$ = this.dAS.onGetOtherOriginalText(this.data[this.dAS.activeItemIndex].Number, changes.item.currentValue.ID);
+    if (changes.item.currentValue) {
+      this.item[TriggerChange] = this.triggerChange$;
+
+      this.otherText$ = this.dAS.onGetOtherOriginalText(
+        this.data[this.dAS.activeItemIndex].Number,
+        changes.item.currentValue.ID
+      );
+    }
   }
 
   protected onTextChange(dialogAsset: IDialogAsset) {

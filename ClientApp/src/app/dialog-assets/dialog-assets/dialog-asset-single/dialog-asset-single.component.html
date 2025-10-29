@@ -4,7 +4,7 @@
         breakpointService.x() > 768 ? breakpointService.x() / 1320 :
         breakpointService.x() > 320 ? breakpointService.x() / 660 :
         320 / 660
-}">
+}" [attr.c]="triggerChange$()">
   <div class="dialog" [tuiHint]="otherLanguages" [tuiHintContext]="{$implicit: (otherText$ | async)}">
     <div class="dialog-translation-container">
       <img class="dialog-translation-background" src="assets/images/dialog_paper.png" alt="dialot_paper">
@@ -21,7 +21,9 @@
     </div>
     }
     <div class="dialog-translation-speaker">
-      <span class="dialog-speaker-name disabled">{{item.SpeakerName}}</span>
+      <span class="dialog-speaker-name disabled">
+        {{item.SpeakerName}}
+      </span>
     </div>
     <div class="dialog-translation-input">
       @if (focus()) {

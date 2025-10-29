@@ -2,7 +2,7 @@ import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
-import { IDialogAsset, IDialogAssetExport } from 'src/app/core/interfaces/i-dialog-asset';
+import { IDialogAsset, IDialogAssetExport, TriggerChange } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
@@ -164,7 +164,10 @@ export class DialogAssetService {
   public onSpeakerNameChange(name: string, data: IDialogAsset[]) {
     if (this.propagateTranslation)
       for (const e of data[this.activeItemIndex].Model.$content)
-        if (e.SpeakerName == this.previousPropagationValue) e.SpeakerName = name;
+        if (e.SpeakerName == this.previousPropagationValue) {
+          e.SpeakerName = name;
+          e[TriggerChange]?.set(e[TriggerChange]() + 1);
+        }
 
     this.previousPropagationValue = name;
     this.pendingChanges$.next(true);
@@ -185,7 +188,8 @@ export class DialogAssetService {
   }
 
   public async onGeminiTranslate(data: IDialogAsset[]) {
-    const content = this.onCreateSimpleConversation(data[this.activeItemIndex]);
+    const dialog = data[this.activeItemIndex];
+    const content = this.onCreateSimpleConversation(dialog);
     const response = await this.gemini.get(content);
     const conversation: { [dialogID: string]: string } = this.tryParseJson(response);
 
@@ -201,14 +205,14 @@ export class DialogAssetService {
       return;
     }
 
-    for (const element of data[this.activeItemIndex].Model.$content) {
-      let d = element;
+    for (const d of dialog.Model.$content) {
       if (!conversation[d.ID]) continue;
       d.Text = conversation[d.ID];
+      d[TriggerChange]?.set(d[TriggerChange]() + 1);
     }
 
     this.pendingChanges$.next(true);
-    this.changes$.next(data[this.activeItemIndex]);
+    this.changes$.next(dialog);
   }
 
   public onCopySimpleConversation(dialogAsset: IDialogAsset) {
@@ -229,10 +233,9 @@ export class DialogAssetService {
   }
 
   private onCreateSimpleConversation(dialogAsset: IDialogAsset) {
-    let dialog = structuredClone(dialogAsset);
     let conversation: { [dialogID: string]: string } = {};
 
-    for (const d of dialog.Model.$content)
+    for (const d of dialogAsset.Model.$content)
       conversation[d.ID] = d.OriginalText;
 
     return JSON.stringify(conversation);

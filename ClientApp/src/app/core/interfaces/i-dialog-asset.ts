@@ -1,3 +1,5 @@
+export const TriggerChange = Symbol("triggerChange$");
+
 export interface IDialogAsset {
     Id: string;
     OriginalFilename: string;
@@ -71,4 +73,12 @@ export interface IDialog {
     Text: string;
     sfxName: string;
     sfxVolume: number;
+}
+
+/**
+ * props only available on 
+ * ui context
+ */
+export interface IDialog {
+    [TriggerChange]: any;
 }
