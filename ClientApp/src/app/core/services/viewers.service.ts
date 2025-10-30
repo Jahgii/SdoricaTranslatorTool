@@ -61,7 +61,7 @@ export class ViewersService {
         .viewContainerRef
         .createComponent<ViewerResizerComponent>(ViewerResizerComponent);
 
-      resizer.instance.views = [this.views[this.views.length - 1].instance];
+      resizer.instance.views = [this.views.at(-1)!.instance];
     }
 
     let view = this.adHost
@@ -76,17 +76,13 @@ export class ViewersService {
     this.activeView.instance.viewIndex = this.views.length - 1;
     this.activeView.instance.setActiveViewer = () => this.onChangeActiveView(view);
 
-    if (resizer) {
-      resizer.instance.views.push(view.instance);
-    }
+    if (resizer) resizer.instance.views.push(view.instance);
   }
 
   private resizeViewers() {
     let width: number = 100 / this.views.length;
 
-    for (const v of this.views) {
-      v.instance.widthPercentage = `${width}%`
-    }
+    for (const v of this.views) v.instance.widthPercentage = `${width}%`
   }
 
   public splitMode() {

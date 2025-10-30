@@ -1,9 +1,10 @@
 import { TuiBlockStatus } from "@taiga-ui/layout";
 import { TuiIcon, TuiScrollbar } from "@taiga-ui/core";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, HostBinding, HostListener, OnInit, Type, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, effect, HostBinding, HostListener, OnInit, Type, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { TranslateModule } from '@ngx-translate/core';
+import { ViewersService } from "src/app/core/services/viewers.service";
 
 @Component({
   selector: 'app-viewer',
@@ -34,12 +35,18 @@ export class ViewerComponent {
   public viewIndex = -1;
 
   constructor(
-    private ref: ChangeDetectorRef
-  ) { }
+    private readonly cd: ChangeDetectorRef,
+    private readonly viewers: ViewersService,
+  ) {
+    effect(() => {
+      this.viewers.notifier();
+      this.cd.markForCheck();
+    });
+  }
 
   public changeWidth(width: number) {
     this.widthPercentage = `${width}%`;
-    this.ref.markForCheck();
+    this.cd.markForCheck();
   }
 
   public loadComponent(component: Type<any>, args: { [arg: string]: any }) {
@@ -56,13 +63,13 @@ export class ViewerComponent {
     for (const k of Object.keys(args))
       if (this.componentLoaded) this.componentLoaded.instance[k] = args[k];
 
-    this.ref.markForCheck();
+    this.cd.markForCheck();
   }
 
   public onClearComponent() {
     this.adHost.viewContainerRef.clear();
     this.componentLoadedName = undefined;
     this.componentLoaded = undefined;
-    this.ref.markForCheck();
+    this.cd.markForCheck();
   }
 }

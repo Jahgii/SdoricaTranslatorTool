@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { ViewersService } from 'src/app/core/services/viewers.service';
@@ -20,15 +20,9 @@ export class ViewerMainComponent implements OnInit {
   private adHost!: AdHostDirective;
 
   constructor(
-    private readonly viewers: ViewersService,
-    private readonly app: AppStateService,
-    private readonly cd: ChangeDetectorRef
-  ) {
-    effect(() => {
-      this.viewers.notifier();
-      this.cd.markForCheck();
-    });
-  }
+    protected readonly viewers: ViewersService,
+    private readonly app: AppStateService
+  ) { }
 
   ngOnInit() {
     this.viewers.init(this.adHost);

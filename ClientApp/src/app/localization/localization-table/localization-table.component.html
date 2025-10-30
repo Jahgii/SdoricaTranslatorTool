@@ -22,21 +22,21 @@
 
 <ng-template #desktopTable>
     <ng-container tuiTableFilters>
+        @if (localization.keys) {
         <tui-scrollbar>
-            @if (localization.keys) {
             <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="129"
                 [maxBufferPx]="500" [minBufferPx]="400">
 
-                <table class="tui-table popin enter" style="table-layout: fixed;" tuiTable
+                <table class="tui-table" style="table-layout: fixed;" tuiTable
                     [columns]="['Language', 'Translation', 'Translated']">
                     <thead>
                         <tr tuiThGroup #columnsHeader>
                             <th tuiTh *tuiHead="'Language'" [sticky]=" true" style="transform: translate(0);"
-                                [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)" [sorter]="null">
                                 {{'original' | translate}}
                             </th>
                             <th tuiTh *tuiHead="'Translation'" [sticky]="true" style="transform: translate(0);"
-                                [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null"
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)" [sorter]="null"
                                 style="width: 60%; max-width: 60%; ">
                                 <div style="display: flex; align-items: center; justify-content: space-between;">
                                     <span>{{'translation' | translate}}</span>
@@ -59,7 +59,7 @@
                             </th>
                             <th tuiTh *tuiHead="'Translated'" [sticky]="true"
                                 style="transform: translate(0); width: 32px;"
-                                [style.top.px]="-viewport['_renderedContentOffset']" [sorter]="null">
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)" [sorter]="null">
                                 <div class="translated-checkbox-container align-center">
                                     <tui-icon icon="circle-check" tuiTextfieldSize="s"></tui-icon>
                                 </div>
@@ -67,7 +67,7 @@
                         </tr>
                         <tr tuiThGroup #filterHeader>
                             <th tuiTh *tuiHead="'Language'" [sticky]="true" style="transform: translate(0);"
-                                [style.top.px]="-viewport['_renderedContentOffset'] + 44" [sorter]="null">
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44" [sorter]="null">
                                 <tui-input tuiTableFilter="Original"
                                     [formControl]="localization.filterForm.controls['original']"
                                     [tuiGenericFilter]="localization.filterOriginalColumn" [tuiTextfieldSize]="'m'"
@@ -76,7 +76,7 @@
                                 </tui-input>
                             </th>
                             <th tuiTh *tuiHead="'Translation'" [sticky]="true"
-                                [style.top.px]="-viewport['_renderedContentOffset'] + 44" [sorter]="null"
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44" [sorter]="null"
                                 style="width: 60%; max-width: 60%; transform: translate(0);">
                                 <tui-input tuiTableFilter="Translations"
                                     [formControl]="localization.filterForm.controls['translation']"
@@ -86,7 +86,7 @@
                                 </tui-input>
                             </th>
                             <th tuiTh *tuiHead="'Translated'" [sticky]="true"
-                                [style.top.px]="-viewport['_renderedContentOffset'] + 44" [sorter]="null"
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44" [sorter]="null"
                                 style="width: 32px; transform: translate(0);">
                                 <div class="translated-checkbox-container align-center">
                                     <input tuiCheckbox type="checkbox"
@@ -100,7 +100,7 @@
                     </thead>
                     <tbody tuiTbody>
                         <tr tuiTr
-                            *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i; trackBy: trackByItemId">
+                            *cdkVirtualFor="let item of localization.keys | tuiTableFilters; index as i; trackBy: trackByItemId">
                             <ng-container [ngTemplateOutlet]="rowTemplate"
                                 [ngTemplateOutletContext]="{$implicit: item}" />
 
@@ -197,8 +197,8 @@
                     </tbody>
                 </table>
             </cdk-virtual-scroll-viewport>
-            }
         </tui-scrollbar>
+        }
     </ng-container>
 </ng-template>
 
@@ -213,7 +213,7 @@
                     <thead>
                         <tr tuiThGroup #filterHeader>
                             <th tuiTh *tuiHead="'Language'" [sticky]="true" class="header-content-cell"
-                                [style.top.px]="-viewport['_renderedContentOffset'] + 1" [sorter]="null">
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 1" [sorter]="null">
                                 <div class="header-content">
                                     <tui-input tuiTableFilter="Original" style="transform: translate(0); flex: 1;"
                                         [formControl]="localization.filterForm.controls['original']"
