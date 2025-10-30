@@ -15,7 +15,7 @@ import { TuiButtonLoading, TuiDataListWrapper, TuiFilterByInputPipe } from '@tai
 import { AsyncPipe } from '@angular/common';
 import { LocalStorageService } from "../core/services/local-storage.service";
 import { AppModes } from "../core/enums/app-modes";
-import { LanguageType, LanguageTypeReverse } from "../core/enums/languages";
+import { LanguageType } from "../core/enums/languages";
 import { IndexDBService } from "../core/services/index-db.service";
 import { IGroup, IMainGroup } from "../core/interfaces/i-dialog-group";
 import { ObjectStoreNames } from "../core/interfaces/i-indexed-db";

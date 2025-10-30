@@ -99,9 +99,12 @@
                         </tr>
                     </thead>
                     <tbody tuiTbody>
-                        <ng-container
-                            *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i;">
-                            <tr tuiTr>
+                        <tr tuiTr
+                            *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i; trackBy: trackByItemId">
+                            <ng-container [ngTemplateOutlet]="rowTemplate"
+                                [ngTemplateOutletContext]="{$implicit: item}" />
+
+                            <ng-template #rowTemplate let-item>
                                 <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintShowDelay]="200"
                                     class="tooltip-name-cell">
                                     <ng-template #tooltip>
@@ -157,7 +160,7 @@
                                     <tui-textarea #tranlationTextArea
                                         [(ngModel)]="item.Translations[localization.language]" [expandable]="true"
                                         (focusedChange)="localization.focusRow = item.Id" [tuiTextfieldSize]="'m'"
-                                        (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
+                                        (ngModelChange)="localization.onTranslationChange($event, localization.keys!, item)"
                                         [rows]="4" tuiDropdownSelectionPosition="word" [tuiDropdown]="buffSelection"
                                         [tuiDropdownSelection]="predicate"
                                         (keydown.arrowDown)="onArrow($event, 'first')"
@@ -167,7 +170,8 @@
                                         @if (tranlationTextArea.nativeFocusableElement) {
                                         <tui-data-list size="s" class="menu"
                                             (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
-                                            @for (buff of filterItems(tranlationTextArea.nativeFocusableElement); track
+                                            @for (buff of filterItems(tranlationTextArea.nativeFocusableElement);
+                                            track
                                             $index) {
                                             <button tuiOption new
                                                 (click)="onClick(item, buff.Name, tranlationTextArea.nativeFocusableElement)">
@@ -184,12 +188,12 @@
                                         <input tuiCheckbox type="checkbox"
                                             [disabled]="(localization.saving$ | async) ?? false"
                                             [(ngModel)]="item.Translated[localization.language]"
-                                            (ngModelChange)="localization.onTranslatedCheck($event, localization.keys, item)"
+                                            (ngModelChange)="localization.onTranslatedCheck($event, localization.keys!, item)"
                                             size="s" aria-label="Translated Checkbox" />
                                     </div>
                                 </td>
-                            </tr>
-                        </ng-container>
+                            </ng-template>
+                        </tr>
                     </tbody>
                 </table>
             </cdk-virtual-scroll-viewport>
@@ -234,7 +238,8 @@
                         </tr>
                     </thead>
                     <tbody tuiTbody>
-                        <tr *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i" tuiTr>
+                        <tr *cdkVirtualFor="let item of localization.keys | tuiTableFilters | async; index as i; trackBy: trackByItemId"
+                            tuiTr>
                             <td *tuiCell="'Language'" tuiTd class="tooltip-name-cell">
                                 <div class="cell-content">
                                     <div #parent class="cell-content-original" [tuiHint]="tooltip"

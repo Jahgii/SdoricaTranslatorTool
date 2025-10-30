@@ -25,6 +25,7 @@ import {
   TuiIcon,
   TuiLoader,
   TuiOption,
+  TuiScrollable,
   TuiScrollbar,
 } from "@taiga-ui/core";
 import { BehaviorSubject, Observable, pairwise, Subscription } from "rxjs";
@@ -69,6 +70,7 @@ const ESPECIAL_CHARACTER = "@";
     CdkVirtualForOf,
     TuiTableFilters,
     TuiScrollbar,
+    TuiScrollable,
     TuiTable,
     TuiSwitch,
     TuiIcon,
@@ -222,4 +224,9 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
     );
   }
   //#endregion
+
+  public trackByItemId(index: number, item: ILocalizationKey): string {
+    return String(item.Id);
+  }
+
 }
