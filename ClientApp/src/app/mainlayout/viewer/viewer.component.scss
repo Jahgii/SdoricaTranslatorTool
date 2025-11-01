@@ -4,7 +4,7 @@ $border-color: var(--tui-border-normal);
 $border-active-color: var(--tui-background-accent-opposite);
 
 .viewer-container {
-    height: calc(100vh - var(--header-height) - $border-height);
+    height: calc(100svh - var(--header-height) - $border-height);
     min-width: var(--min-width-viewer);
     background-color: var(--tui-background-base);
     padding-top: 1px;
