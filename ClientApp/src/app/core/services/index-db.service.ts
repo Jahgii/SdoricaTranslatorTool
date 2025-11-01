@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors } from '../interfaces/i-indexed-db';
+import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors, Indexes } from '../interfaces/i-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -36,91 +36,93 @@ export class IndexDBService {
   private onUpgradeNeededOpenDB(event: Event) {
     this.db = (event.target as any).result;
 
-    const storeC: IDBObjectStore = !this.db.objectStoreNames.contains(ObjectStoreNames.CommonWord) ?
-      this.db.createObjectStore(ObjectStoreNames.CommonWord, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.CommonWord);
+    const storeC: IDBObjectStore = this.db.objectStoreNames.contains(ObjectStoreNames.CommonWord) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.CommonWord) :
+      this.db.createObjectStore(ObjectStoreNames.CommonWord, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeC.indexNames.contains("Original"))
-      storeC.createIndex("Original", "Original", { unique: true });
+    if (!storeC.indexNames.contains(Indexes.CommonWord.Original))
+      storeC.createIndex(Indexes.CommonWord.Original, "Original", { unique: true });
 
-    const storeDA: IDBObjectStore = !this.db.objectStoreNames.contains(ObjectStoreNames.DialogAsset) ?
-      this.db.createObjectStore(ObjectStoreNames.DialogAsset, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.DialogAsset);
+    const storeDA: IDBObjectStore = this.db.objectStoreNames.contains(ObjectStoreNames.DialogAsset) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.DialogAsset) :
+      this.db.createObjectStore(ObjectStoreNames.DialogAsset, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeDA.indexNames.contains("Filename"))
-      storeDA.createIndex("Filename", "Filename", { unique: true });
-    if (!storeDA.indexNames.contains("Group"))
-      storeDA.createIndex("Group", ["Language", "MainGroup", "Group"], { unique: false });
-    if (!storeDA.indexNames.contains("Content"))
-      storeDA.createIndex("Content", ["MainGroup", "Group", "Number"], { unique: false });
-    if (!storeDA.indexNames.contains("Language"))
-      storeDA.createIndex("Language", "Language", { unique: false });
-    if (!storeDA.indexNames.contains("Translated"))
-      storeDA.createIndex("Translated", ["Language", "Translated"], { unique: false });
+    if (!storeDA.indexNames.contains(Indexes.DialogAsset.Filename))
+      storeDA.createIndex(Indexes.DialogAsset.Filename, "Filename", { unique: true });
+    if (!storeDA.indexNames.contains(Indexes.DialogAsset.Group))
+      storeDA.createIndex(Indexes.DialogAsset.Group, ["Language", "MainGroup", "Group"], { unique: false });
+    if (!storeDA.indexNames.contains(Indexes.DialogAsset.Content))
+      storeDA.createIndex(Indexes.DialogAsset.Content, ["MainGroup", "Group", "Number"], { unique: false });
+    if (!storeDA.indexNames.contains(Indexes.DialogAsset.Dialog))
+      storeDA.createIndex(Indexes.DialogAsset.Dialog, ["Language", "MainGroup", "Group", "Number"], { unique: false });
+    if (!storeDA.indexNames.contains(Indexes.DialogAsset.Language))
+      storeDA.createIndex(Indexes.DialogAsset.Language, "Language", { unique: false });
+    if (!storeDA.indexNames.contains(Indexes.DialogAsset.Translated))
+      storeDA.createIndex(Indexes.DialogAsset.Translated, ["Language", "Translated"], { unique: false });
 
-    const storeGC = !this.db.objectStoreNames.contains(ObjectStoreNames.GamedataCategory) ?
-      this.db.createObjectStore(ObjectStoreNames.GamedataCategory, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.GamedataCategory);
+    const storeGC = this.db.objectStoreNames.contains(ObjectStoreNames.GamedataCategory) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.GamedataCategory) :
+      this.db.createObjectStore(ObjectStoreNames.GamedataCategory, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeGC.indexNames.contains("Name"))
-      storeGC.createIndex("Name", "Name", { unique: true });
+    if (!storeGC.indexNames.contains(Indexes.GamedataCategory.Name))
+      storeGC.createIndex(Indexes.GamedataCategory.Name, "Name", { unique: true });
 
-    const storeGV = !this.db.objectStoreNames.contains(ObjectStoreNames.GamedataValue) ?
-      this.db.createObjectStore(ObjectStoreNames.GamedataValue, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.GamedataValue);
+    const storeGV = this.db.objectStoreNames.contains(ObjectStoreNames.GamedataValue) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.GamedataValue) :
+      this.db.createObjectStore(ObjectStoreNames.GamedataValue, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeGV.indexNames.contains("Name"))
-      storeGV.createIndex("Name", ["Category", "Name"], { unique: true });
+    if (!storeGV.indexNames.contains(Indexes.GamedataValue.Name))
+      storeGV.createIndex(Indexes.GamedataValue.Name, ["Category", "Name"], { unique: true });
 
-    const storeG = !this.db.objectStoreNames.contains(ObjectStoreNames.Group) ?
-      this.db.createObjectStore(ObjectStoreNames.Group, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.Group);
+    const storeG = this.db.objectStoreNames.contains(ObjectStoreNames.Group) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.Group) :
+      this.db.createObjectStore(ObjectStoreNames.Group, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeG.indexNames.contains("Name"))
-      storeG.createIndex("Name", ["Language", "MainGroup", "OriginalName"], { unique: true });
-    if (!storeG.indexNames.contains("MainGroup"))
-      storeG.createIndex("MainGroup", ["Language", "MainGroup"], { unique: false });
+    if (!storeG.indexNames.contains(Indexes.Group.Name))
+      storeG.createIndex(Indexes.Group.Name, ["Language", "MainGroup", "OriginalName"], { unique: true });
+    if (!storeG.indexNames.contains(Indexes.Group.MainGroup))
+      storeG.createIndex(Indexes.Group.MainGroup, ["Language", "MainGroup"], { unique: false });
 
-    const storeL = !this.db.objectStoreNames.contains(ObjectStoreNames.Languages) ?
-      this.db.createObjectStore(ObjectStoreNames.Languages, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.Languages);
+    const storeL = this.db.objectStoreNames.contains(ObjectStoreNames.Languages) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.Languages) :
+      this.db.createObjectStore(ObjectStoreNames.Languages, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeL.indexNames.contains("Name"))
-      storeL.createIndex("Name", "Name", { unique: true });
+    if (!storeL.indexNames.contains(Indexes.Languages.Name))
+      storeL.createIndex(Indexes.Languages.Name, "Name", { unique: true });
 
-    const storeLC = !this.db.objectStoreNames.contains(ObjectStoreNames.LocalizationCategory) ?
-      this.db.createObjectStore(ObjectStoreNames.LocalizationCategory, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.LocalizationCategory);
+    const storeLC = this.db.objectStoreNames.contains(ObjectStoreNames.LocalizationCategory) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.LocalizationCategory) :
+      this.db.createObjectStore(ObjectStoreNames.LocalizationCategory, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeLC.indexNames.contains("Name"))
-      storeLC.createIndex("Name", "Name", { unique: true });
+    if (!storeLC.indexNames.contains(Indexes.LocalizationCategory.Name))
+      storeLC.createIndex(Indexes.LocalizationCategory.Name, "Name", { unique: true });
 
-    const storeLK: IDBObjectStore = !this.db.objectStoreNames.contains(ObjectStoreNames.LocalizationKey) ?
-      this.db.createObjectStore(ObjectStoreNames.LocalizationKey, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.LocalizationKey);
+    const storeLK: IDBObjectStore = this.db.objectStoreNames.contains(ObjectStoreNames.LocalizationKey) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.LocalizationKey) :
+      this.db.createObjectStore(ObjectStoreNames.LocalizationKey, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeLK.indexNames.contains("Name"))
-      storeLK.createIndex("Name", ["Category", "Name"], { unique: true });
-    if (!storeLK.indexNames.contains("Category"))
-      storeLK.createIndex("Category", "Category", { unique: false });
-    if (!storeLK.indexNames.contains("Key"))
-      storeLK.createIndex("Key", "Name", { unique: false });
+    if (!storeLK.indexNames.contains(Indexes.LocalizationKey.Name))
+      storeLK.createIndex(Indexes.LocalizationKey.Name, ["Category", "Name"], { unique: true });
+    if (!storeLK.indexNames.contains(Indexes.LocalizationKey.Category))
+      storeLK.createIndex(Indexes.LocalizationKey.Category, "Category", { unique: false });
+    if (!storeLK.indexNames.contains(Indexes.LocalizationKey.Key))
+      storeLK.createIndex(Indexes.LocalizationKey.Key, "Name", { unique: false });
 
-    const storeMG = !this.db.objectStoreNames.contains(ObjectStoreNames.MainGroup) ?
-      this.db.createObjectStore(ObjectStoreNames.MainGroup, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.MainGroup);
+    const storeMG = this.db.objectStoreNames.contains(ObjectStoreNames.MainGroup) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.MainGroup) :
+      this.db.createObjectStore(ObjectStoreNames.MainGroup, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeMG.indexNames.contains("Name"))
-      storeMG.createIndex("Name", ["Language", "OriginalName"], { unique: true });
-    if (!storeMG.indexNames.contains("Language"))
-      storeMG.createIndex("Language", "Language", { unique: false });
+    if (!storeMG.indexNames.contains(Indexes.MainGroup.Name))
+      storeMG.createIndex(Indexes.MainGroup.Name, ["Language", "OriginalName"], { unique: true });
+    if (!storeMG.indexNames.contains(Indexes.MainGroup.Language))
+      storeMG.createIndex(Indexes.MainGroup.Language, "Language", { unique: false });
 
-    const storeP = !this.db.objectStoreNames.contains(ObjectStoreNames.UserDirectories) ?
-      this.db.createObjectStore(ObjectStoreNames.UserDirectories, { keyPath: "Id", autoIncrement: true }) :
-      (event.target as any).transaction.objectStore(ObjectStoreNames.UserDirectories);
+    const storeP = this.db.objectStoreNames.contains(ObjectStoreNames.UserDirectories) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.UserDirectories) :
+      this.db.createObjectStore(ObjectStoreNames.UserDirectories, { keyPath: "Id", autoIncrement: true });
 
-    if (!storeP.indexNames.contains("Name"))
-      storeP.createIndex("Name", "Name", { unique: true });
+    if (!storeP.indexNames.contains(Indexes.UserDirectories.Name))
+      storeP.createIndex(Indexes.UserDirectories.Name, "Name", { unique: true });
   }
 
   private onError(event: Event) {
