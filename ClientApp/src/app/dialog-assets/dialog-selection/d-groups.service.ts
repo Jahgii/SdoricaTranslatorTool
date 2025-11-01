@@ -5,7 +5,7 @@ import { TuiInputInline } from '@taiga-ui/kit';
 import { BehaviorSubject, Observable, Subject, firstValueFrom, map, mergeMap, of, toArray } from 'rxjs';
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { IGroup, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
-import { ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
+import { Indexes, ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 import { ApiService } from 'src/app/core/services/api.service';
 import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
@@ -42,7 +42,11 @@ export class DGroupsService extends StoreService<TreeNode> {
         let mainNodes$: Observable<TreeNode[]> | Subject<TreeNode[]> | undefined;
 
         if (this.lStorage.getAppMode() === AppModes.Offline) {
-          let r = this.indexedDB.getIndex<TreeNode[]>(ObjectStoreNames.MainGroup, "Language", lang);
+          let r = this.indexedDB.getIndex<TreeNode[], ObjectStoreNames.MainGroup>(
+            ObjectStoreNames.MainGroup,
+            Indexes.MainGroup.Language,
+            lang
+          );
           mainNodes$ = r.success$;
         }
         else if (this.lStorage.getAppMode() === AppModes.Online) {
@@ -84,7 +88,11 @@ export class DGroupsService extends StoreService<TreeNode> {
     let groupNodes$: Observable<TreeNode[]> | Subject<TreeNode[]> | undefined;
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
-      let r = this.indexedDB.getIndex<TreeNode[]>(ObjectStoreNames.Group, "MainGroup", [lang, originalName]);
+      let r = this.indexedDB.getIndex<TreeNode[], ObjectStoreNames.Group>(
+        ObjectStoreNames.Group,
+        Indexes.Group.MainGroup,
+        [lang, originalName]
+      );
       groupNodes$ = r.success$;
     }
     else if (this.lStorage.getAppMode() === AppModes.Online) {

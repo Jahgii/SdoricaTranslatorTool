@@ -14,7 +14,7 @@ import { DialogstateService } from 'src/app/core/services/dialogstate.service';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { IndexDBService } from 'src/app/core/services/index-db.service';
-import { ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
+import { Indexes, ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { AlertService } from 'src/app/core/services/alert.service';
 
@@ -203,9 +203,9 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
       let r = this.indexedDB
-        .getIndex<ILocalizationKey[]>(
+        .getIndex<ILocalizationKey[], ObjectStoreNames.LocalizationKey>(
           ObjectStoreNames.LocalizationKey,
-          "Name",
+          Indexes.LocalizationKey.Name,
           [category.Name, key]
         );
       search$ = r.success$;

@@ -18,7 +18,7 @@ import { AppModes } from "../core/enums/app-modes";
 import { LanguageType } from "../core/enums/languages";
 import { IndexDBService } from "../core/services/index-db.service";
 import { IGroup, IMainGroup } from "../core/interfaces/i-dialog-group";
-import { ObjectStoreNames } from "../core/interfaces/i-indexed-db";
+import { Indexes, ObjectStoreNames } from "../core/interfaces/i-indexed-db";
 import { IDialogAsset } from "../core/interfaces/i-dialog-asset";
 
 @Component({
@@ -86,16 +86,28 @@ export class LocalizationComponent implements OnInit {
     let langReverse = this.lStorage.getDefaultLang();
     let lang = (LanguageType as any)[langReverse];
 
-    let mainGroupFecth = this.indexedDB.getIndex<IMainGroup[]>(ObjectStoreNames.MainGroup, "Language", langReverse);
+    let mainGroupFecth = this.indexedDB.getIndex<IMainGroup[], ObjectStoreNames.MainGroup>(
+      ObjectStoreNames.MainGroup,
+      Indexes.MainGroup.Language,
+      langReverse
+    );
     let mgs = await firstValueFrom(mainGroupFecth.success$);
 
     for (const mg of mgs) {
-      let groupFetch = this.indexedDB.getIndex<IGroup[]>(ObjectStoreNames.Group, "MainGroup", [langReverse, mg.OriginalName]);
+      let groupFetch = this.indexedDB.getIndex<IGroup[], ObjectStoreNames.Group>(
+        ObjectStoreNames.Group,
+        Indexes.Group.MainGroup,
+        [langReverse, mg.OriginalName]
+      );
       let groups = await firstValueFrom(groupFetch.success$);
       let dAtranslatedFiles = 0;
 
       for (const group of groups) {
-        let dasFetch = this.indexedDB.getIndex<IDialogAsset[]>(ObjectStoreNames.DialogAsset, "Group", [langReverse, mg.OriginalName, group.OriginalName]);
+        let dasFetch = this.indexedDB.getIndex<IDialogAsset[], ObjectStoreNames.DialogAsset>(
+          ObjectStoreNames.DialogAsset,
+          Indexes.DialogAsset.Group,
+          [langReverse, mg.OriginalName, group.OriginalName]
+        );
         let das = await firstValueFrom(dasFetch.success$);
         let groupTranslatedFiles = 0;
 
@@ -114,7 +126,11 @@ export class LocalizationComponent implements OnInit {
     let categories = await firstValueFrom(categoriesFetch.success$);
 
     for (const category of categories) {
-      let keyFetch = this.indexedDB.getIndex<ILocalizationKey[]>(ObjectStoreNames.LocalizationKey, "Category", category.Name);
+      let keyFetch = this.indexedDB.getIndex<ILocalizationKey[], ObjectStoreNames.LocalizationKey>(
+        ObjectStoreNames.LocalizationKey,
+        Indexes.LocalizationKey.Category,
+        category.Name
+      );
       let keys = await firstValueFrom(keyFetch.success$);
 
       category.Keys[lang] = keys.length;

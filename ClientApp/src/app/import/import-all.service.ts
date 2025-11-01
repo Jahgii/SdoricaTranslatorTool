@@ -8,7 +8,7 @@ import { decode } from '@msgpack/msgpack';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { IExportAll } from '../core/interfaces/i-export-all';
 import { IndexDBService } from '../core/services/index-db.service';
-import { ObjectStoreNames } from '../core/interfaces/i-indexed-db';
+import { Indexes, ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { IDialogAsset } from '../core/interfaces/i-dialog-asset';
 import { ILocalizationCategory, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { IGamedataValue } from '../core/interfaces/i-gamedata';
@@ -136,7 +136,11 @@ export class ImportAllService {
         Data: gv
       };
 
-      let r = this.indexedDB.getIndex(ObjectStoreNames.GamedataValue, "Name", [gv.Category, gv.Name], true);
+      let r = this.indexedDB.getIndex(
+        ObjectStoreNames.GamedataValue,
+        Indexes.GamedataValue.Name,
+        [gv.Category, gv.Name], true
+      );
       let gvExist = await firstValueFrom(r.success$);
 
       if (gvExist) {
@@ -163,7 +167,12 @@ export class ImportAllService {
         Data: da
       };
 
-      let r = this.indexedDB.getIndex<IDialogAsset>(ObjectStoreNames.DialogAsset, "Filename", da.Filename, true);
+      let r = this.indexedDB.getIndex<IDialogAsset, ObjectStoreNames.DialogAsset>(
+        ObjectStoreNames.DialogAsset,
+        Indexes.DialogAsset.Filename,
+        da.Filename,
+        true
+      );
       let daExist = await firstValueFrom(r.success$);
 
       if (daExist?.Translated) {
@@ -193,7 +202,11 @@ export class ImportAllService {
       };
 
       let l = this.data.L;
-      let r = this.indexedDB.getIndex<ILocalizationKey>(ObjectStoreNames.LocalizationKey, "Name", [k.Category, k.Name], true);
+      let r = this.indexedDB.getIndex<ILocalizationKey, ObjectStoreNames.LocalizationKey>(
+        ObjectStoreNames.LocalizationKey,
+        Indexes.LocalizationKey.Name,
+        [k.Category, k.Name], true
+      );
       let kExist = await firstValueFrom(r.success$);
 
       if (kExist?.Translated[l]) {
@@ -220,7 +233,12 @@ export class ImportAllService {
         Data: c
       };
 
-      let r = this.indexedDB.getIndex(ObjectStoreNames.CommonWord, "Original", c.Original, true);
+      let r = this.indexedDB.getIndex(
+        ObjectStoreNames.CommonWord,
+        Indexes.CommonWord.Original,
+        c.Original,
+        true
+      );
       let cExist = await firstValueFrom(r.success$);
 
       if (cExist) {
@@ -258,7 +276,12 @@ export class ImportAllService {
     ]
 
     for (const gv of gvs) {
-      let r = this.indexedDB.getIndex<IGamedataValue>(ObjectStoreNames.GamedataValue, "Name", [gv.Category, gv.Name], true);
+      let r = this.indexedDB.getIndex<IGamedataValue, ObjectStoreNames.GamedataValue>(
+        ObjectStoreNames.GamedataValue,
+        Indexes.GamedataValue.Name,
+        [gv.Category, gv.Name],
+        true
+      );
       let gvExist = await firstValueFrom(r.success$);
 
       if (gvExist) {
@@ -278,7 +301,12 @@ export class ImportAllService {
     ]
 
     for (const da of das) {
-      let r = this.indexedDB.getIndex<IDialogAsset>(ObjectStoreNames.DialogAsset, "Filename", da.Filename, true);
+      let r = this.indexedDB.getIndex<IDialogAsset, ObjectStoreNames.DialogAsset>(
+        ObjectStoreNames.DialogAsset,
+        Indexes.DialogAsset.Filename,
+        da.Filename,
+        true
+      );
       let daExist = await firstValueFrom(r.success$);
 
       if (daExist) {
@@ -301,7 +329,12 @@ export class ImportAllService {
     ]
 
     for (const k of ks) {
-      let r = this.indexedDB.getIndex<ILocalizationKey>(ObjectStoreNames.LocalizationKey, "Name", [k.Category, k.Name], true);
+      let r = this.indexedDB.getIndex<ILocalizationKey, ObjectStoreNames.LocalizationKey>(
+        ObjectStoreNames.LocalizationKey,
+        Indexes.LocalizationKey.Name,
+        [k.Category, k.Name],
+        true
+      );
       let kExist = await firstValueFrom(r.success$);
 
       if (kExist) {
@@ -323,7 +356,12 @@ export class ImportAllService {
     ]
 
     for (const c of cs) {
-      let r = this.indexedDB.getIndex<ICommonWord>(ObjectStoreNames.CommonWord, "Original", c.Original, true);
+      let r = this.indexedDB.getIndex<ICommonWord, ObjectStoreNames.CommonWord>(
+        ObjectStoreNames.CommonWord,
+        Indexes.CommonWord.Original,
+        c.Original,
+        true
+      );
       let cExist = await firstValueFrom(r.success$);
 
       if (cExist) {
@@ -340,16 +378,28 @@ export class ImportAllService {
     let lang = this.data.L;
     let langReverse = LanguageTypeReverse[this.data.L];
 
-    let mainGroupFecth = this.indexedDB.getIndex<IMainGroup[]>(ObjectStoreNames.MainGroup, "Language", langReverse);
+    let mainGroupFecth = this.indexedDB.getIndex<IMainGroup[], ObjectStoreNames.MainGroup>(
+      ObjectStoreNames.MainGroup,
+      Indexes.MainGroup.Language,
+      langReverse
+    );
     let mgs = await firstValueFrom(mainGroupFecth.success$);
 
     for (const mg of mgs) {
-      let groupFetch = this.indexedDB.getIndex<IGroup[]>(ObjectStoreNames.Group, "MainGroup", [langReverse, mg.OriginalName]);
+      let groupFetch = this.indexedDB.getIndex<IGroup[], ObjectStoreNames.Group>(
+        ObjectStoreNames.Group,
+        Indexes.Group.MainGroup,
+        [langReverse, mg.OriginalName]
+      );
       let groups = await firstValueFrom(groupFetch.success$);
       let dAtranslatedFiles = 0;
 
       for (const group of groups) {
-        let dasFetch = this.indexedDB.getIndex<IDialogAsset[]>(ObjectStoreNames.DialogAsset, "Group", [langReverse, mg.OriginalName, group.OriginalName]);
+        let dasFetch = this.indexedDB.getIndex<IDialogAsset[], ObjectStoreNames.DialogAsset>(
+          ObjectStoreNames.DialogAsset,
+          Indexes.DialogAsset.Group,
+          [langReverse, mg.OriginalName, group.OriginalName]
+        );
         let das = await firstValueFrom(dasFetch.success$);
         let groupTranslatedFiles = 0;
 
@@ -368,7 +418,11 @@ export class ImportAllService {
     let categories = await firstValueFrom(categoriesFetch.success$);
 
     for (const category of categories) {
-      let keyFetch = this.indexedDB.getIndex<ILocalizationKey[]>(ObjectStoreNames.LocalizationKey, "Category", category.Name);
+      let keyFetch = this.indexedDB.getIndex<ILocalizationKey[], ObjectStoreNames.LocalizationKey>(
+        ObjectStoreNames.LocalizationKey,
+        Indexes.LocalizationKey.Category,
+        category.Name
+      );
       let keys = await firstValueFrom(keyFetch.success$);
 
       category.Keys[lang] = keys.length;

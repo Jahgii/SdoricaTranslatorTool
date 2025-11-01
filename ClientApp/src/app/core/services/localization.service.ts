@@ -11,7 +11,7 @@ import { LocalizationCategoriesService } from 'src/app/localization/localization
 import { LocalStorageService } from './local-storage.service';
 import { AppModes } from '../enums/app-modes';
 import { IndexDBService } from './index-db.service';
-import { ObjectStoreNames } from '../interfaces/i-indexed-db';
+import { Indexes, ObjectStoreNames } from '../interfaces/i-indexed-db';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
@@ -159,7 +159,11 @@ export class LocalizationService implements OnDestroy {
     this.selectedCategory$.next(true);
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
-      let r = this.indexedDB.getIndex<ILocalizationKey[]>(ObjectStoreNames.LocalizationKey, "Category", category.Name);
+      let r = this.indexedDB.getIndex<ILocalizationKey[], ObjectStoreNames.LocalizationKey>(
+        ObjectStoreNames.LocalizationKey,
+        Indexes.LocalizationKey.Category,
+        category.Name
+      );
       this.keys$ = r.success$;
     }
     else if (this.lStorage.getAppMode() === AppModes.Online)
@@ -275,7 +279,11 @@ export class LocalizationService implements OnDestroy {
   }
 
   private async onCategoryUpdateOffline(key: ILocalizationKey, lang: string) {
-    let r = this.indexedDB.getIndex<ILocalizationCategory[]>(ObjectStoreNames.LocalizationCategory, "Name", key.Category);
+    let r = this.indexedDB.getIndex<ILocalizationCategory[], ObjectStoreNames.LocalizationCategory>(
+      ObjectStoreNames.LocalizationCategory,
+      Indexes.LocalizationCategory.Name,
+      key.Category
+    );
     let categories = await firstValueFrom(r.success$);
     let category = categories[0];
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors, Indexes } from '../interfaces/i-indexed-db';
+import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors, Indexes, StoreIndexMap } from '../interfaces/i-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -386,7 +386,7 @@ export class IndexDBService {
     return { success$: success$, error$: error$ };
   }
 
-  public getIndex<T>(storeName: ObjectStoreNames, index: string, searchValue: any, onlyOne: boolean = false) {
+  public getIndex<T, S extends ObjectStoreNames>(storeName: S, index: StoreIndexMap[S], searchValue: any, onlyOne: boolean = false) {
     let success$ = new Subject<T>();
     let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
 
@@ -403,9 +403,9 @@ export class IndexDBService {
     };
 
     const objectStore = transaction.objectStore(storeName);
-    let request = objectStore.index(index).getAll(searchValue);
+    let request = objectStore.index(index.toString()).getAll(searchValue);
 
-    if (onlyOne) request = objectStore.index(index).get(searchValue);
+    if (onlyOne) request = objectStore.index(index.toString()).get(searchValue);
 
 
     request.onsuccess = (event) => {

@@ -85,7 +85,23 @@ export namespace Indexes {
         Language = "Language",
     }
 
+    export enum User { }
+
     export enum UserDirectories {
         Name = "Name",
     }
+}
+
+export type StoreIndexMap = {
+    [ObjectStoreNames.CommonWord]: Indexes.CommonWord,
+    [ObjectStoreNames.DialogAsset]: Indexes.DialogAsset,
+    [ObjectStoreNames.GamedataCategory]: Indexes.GamedataCategory,
+    [ObjectStoreNames.GamedataValue]: Indexes.GamedataValue,
+    [ObjectStoreNames.Group]: Indexes.Group,
+    [ObjectStoreNames.Languages]: Indexes.Languages,
+    [ObjectStoreNames.LocalizationCategory]: Indexes.LocalizationCategory,
+    [ObjectStoreNames.LocalizationKey]: Indexes.LocalizationKey,
+    [ObjectStoreNames.MainGroup]: Indexes.MainGroup,
+    [ObjectStoreNames.User]: Indexes.User,
+    [ObjectStoreNames.UserDirectories]: Indexes.UserDirectories,
 }

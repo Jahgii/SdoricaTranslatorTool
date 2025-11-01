@@ -9,7 +9,7 @@ import { LibreTranslateService } from 'src/app/core/services/libre-translate.ser
 import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { AppModes } from 'src/app/core/enums/app-modes';
-import { ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
+import { Indexes, ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 import { TranslateService } from '@ngx-translate/core';
 import { GeminiApiService } from 'src/app/core/services/gemini-api.service';
 
@@ -70,7 +70,11 @@ export class DialogAssetService {
       .subscribe((lang: string) => {
         let dialogs$: Observable<IDialogAsset[]> | Subject<IDialogAsset[]> | undefined;
         if (this.lStorage.getAppMode() === AppModes.Offline) {
-          let r = this.indexedDB.getIndex<IDialogAsset[]>(ObjectStoreNames.DialogAsset, "Group", [lang, this.mainGroup, this.group]);
+          let r = this.indexedDB.getIndex<IDialogAsset[], ObjectStoreNames.DialogAsset>(
+            ObjectStoreNames.DialogAsset,
+            Indexes.DialogAsset.Group,
+            [lang, this.mainGroup, this.group]
+          );
           dialogs$ = r.success$;
         }
         else if (this.lStorage.getAppMode() === AppModes.Online) {
@@ -121,7 +125,11 @@ export class DialogAssetService {
     let langs$: Observable<any> | undefined;
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
-      let r = this.indexedDB.getIndex<IDialogAsset[]>(ObjectStoreNames.DialogAsset, "Content", [this.mainGroup, this.group, number]);
+      let r = this.indexedDB.getIndex<IDialogAsset[], ObjectStoreNames.DialogAsset>(
+        ObjectStoreNames.DialogAsset,
+        Indexes.DialogAsset.Content,
+        [this.mainGroup, this.group, number]
+      );
       langs$ = r.success$.pipe(
         map(dialogs => {
           let languageText: any = {};
