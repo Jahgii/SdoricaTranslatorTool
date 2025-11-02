@@ -39,6 +39,27 @@ public class DialogAssetsController(ICustomMongoClient cMongoClient, IMemoryCach
         return Ok(data);
     }
 
+    [HttpGet("searchlang")]
+    public async Task<ActionResult> SearchLang(
+            [FromHeader] string language,
+            [FromHeader] string mainGroup,
+            [FromHeader] string group,
+            [FromHeader] int number
+        )
+    {
+        var cursor = await _cMongoClient.GetCollection<DialogAsset>()
+            .FindAsync(e =>
+                e.Language != language &&
+                e.MainGroup == mainGroup &&
+                e.Group == group &&
+                e.Number == number
+            );
+
+        var result = await cursor.FirstOrDefaultAsync();
+
+        return Ok(result);
+    }
+
     [HttpGet("searchothers")]
     public async Task<ActionResult> SearchOtherText(
         [FromHeader] string language,

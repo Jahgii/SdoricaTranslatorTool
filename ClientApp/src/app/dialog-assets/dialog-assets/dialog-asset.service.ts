@@ -2,7 +2,7 @@ import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
-import { IDialogAsset, IDialogAssetExport, TriggerChange } from 'src/app/core/interfaces/i-dialog-asset';
+import { IDialog, IDialogAsset, IDialogAssetExport, TriggerChange } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
@@ -226,53 +226,66 @@ export class DialogAssetService {
   public async onGeminiTranslateFromOriginLang(lang: string, data: IDialogAsset[]) {
     const dialog = data[this.activeItemIndex];
     const dialogCopy = structuredClone(dialog);
+    let request;
 
     if (this.lStorage.getAppMode() === AppModes.Offline) {
-      let r = this.indexedDB.getIndex<IDialogAsset, ObjectStoreNames.DialogAsset>(
+      request = this.indexedDB.getIndex<IDialogAsset, ObjectStoreNames.DialogAsset>(
         ObjectStoreNames.DialogAsset,
         Indexes.DialogAsset.Dialog,
         [lang, this.mainGroup, this.group, dialog.Number],
         true
-      );
-
-      firstValueFrom(r.success$).then(async dialogsFrom => {
-        console.log(dialogsFrom);
-
-        let index = 0;
-        for (const dialogFrom of dialogsFrom.Model.$content) {
-          if (dialogCopy.Model.$content.length > index)
-            dialogCopy.Model.$content[index].OriginalText = dialogFrom.OriginalText;
-
-          index++;
-        }
-
-        const content = this.onCreateSimpleConversation(dialogCopy);
-        const response = await this.gemini.get(content);
-        const conversation: { [dialogID: string]: string } = this.tryParseJson(response);
-
-        if (!conversation) {
-          this.alerts
-            .open(undefined, {
-              label: this.translate.instant('invalid-gemini-response')
-              , appearance: 'warning'
-              , autoClose: 3000
-            })
-            .subscribe();
-
-          return;
-        }
-
-        for (const d of dialog.Model.$content) {
-          if (!conversation[d.ID]) continue;
-          d.Text = conversation[d.ID];
-          d[TriggerChange]?.set(d[TriggerChange]() + 1);
-        }
-
-        this.pendingChanges$.next(true);
-        this.changes$.next(dialog);
-
+      ).success$;
+    }
+    else {
+      request = this.api.getWithHeaders<IDialogAsset>('dialogAssets/searchlang', {
+        language: lang,
+        mainGroup: this.mainGroup,
+        group: this.group,
+        number: dialog.Number
       });
     }
+
+    firstValueFrom(request).then(async dialogsFrom => {
+      if (!dialogsFrom) {
+        this.pendingChanges$.next(true);
+        this.changes$.next(dialog);
+        return;
+      }
+
+      let index = 0;
+      for (const dialogFrom of dialogsFrom.Model.$content) {
+        if (dialogCopy.Model.$content.length > index)
+          dialogCopy.Model.$content[index].OriginalText = dialogFrom.OriginalText;
+
+        index++;
+      }
+
+      const content = this.onCreateSimpleConversation(dialogCopy);
+      const response = await this.gemini.get(content);
+      const conversation: { [dialogID: string]: string } = this.tryParseJson(response);
+
+      if (!conversation) {
+        this.alerts
+          .open(undefined, {
+            label: this.translate.instant('invalid-gemini-response')
+            , appearance: 'warning'
+            , autoClose: 3000
+          })
+          .subscribe();
+
+        return;
+      }
+
+      for (const d of dialog.Model.$content) {
+        if (!conversation[d.ID]) continue;
+        d.Text = conversation[d.ID];
+        d[TriggerChange]?.set(d[TriggerChange]() + 1);
+      }
+
+      this.pendingChanges$.next(true);
+      this.changes$.next(dialog);
+
+    });
 
   }
 
