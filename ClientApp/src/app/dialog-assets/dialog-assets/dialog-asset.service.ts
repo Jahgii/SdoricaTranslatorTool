@@ -159,7 +159,7 @@ export class DialogAssetService {
       });
     }
 
-    if (langs$ === undefined) langs$ = of({});
+    langs$ ??= of({});
 
     return langs$;
   }
@@ -221,6 +221,59 @@ export class DialogAssetService {
 
     this.pendingChanges$.next(true);
     this.changes$.next(dialog);
+  }
+
+  public async onGeminiTranslateFromOriginLang(lang: string, data: IDialogAsset[]) {
+    const dialog = data[this.activeItemIndex];
+    const dialogCopy = structuredClone(dialog);
+
+    if (this.lStorage.getAppMode() === AppModes.Offline) {
+      let r = this.indexedDB.getIndex<IDialogAsset, ObjectStoreNames.DialogAsset>(
+        ObjectStoreNames.DialogAsset,
+        Indexes.DialogAsset.Dialog,
+        [lang, this.mainGroup, this.group, dialog.Number],
+        true
+      );
+
+      firstValueFrom(r.success$).then(async dialogsFrom => {
+        console.log(dialogsFrom);
+
+        let index = 0;
+        for (const dialogFrom of dialogsFrom.Model.$content) {
+          if (dialogCopy.Model.$content.length > index)
+            dialogCopy.Model.$content[index].OriginalText = dialogFrom.OriginalText;
+
+          index++;
+        }
+
+        const content = this.onCreateSimpleConversation(dialogCopy);
+        const response = await this.gemini.get(content);
+        const conversation: { [dialogID: string]: string } = this.tryParseJson(response);
+
+        if (!conversation) {
+          this.alerts
+            .open(undefined, {
+              label: this.translate.instant('invalid-gemini-response')
+              , appearance: 'warning'
+              , autoClose: 3000
+            })
+            .subscribe();
+
+          return;
+        }
+
+        for (const d of dialog.Model.$content) {
+          if (!conversation[d.ID]) continue;
+          d.Text = conversation[d.ID];
+          d[TriggerChange]?.set(d[TriggerChange]() + 1);
+        }
+
+        this.pendingChanges$.next(true);
+        this.changes$.next(dialog);
+
+      });
+    }
+
   }
 
   public onCopySimpleConversation(dialogAsset: IDialogAsset) {

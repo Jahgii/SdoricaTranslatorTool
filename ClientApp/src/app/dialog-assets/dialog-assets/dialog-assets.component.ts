@@ -3,17 +3,19 @@ import { TuiTable } from "@taiga-ui/addon-table";
 import { TuiActiveZone, TuiItem, TuiStringHandler } from "@taiga-ui/cdk";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, SkipSelf } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TUI_ICON_RESOLVER, TuiScrollable, TuiScrollbar } from '@taiga-ui/core';
+import { TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TUI_ICON_RESOLVER, TuiScrollable, TuiScrollbar, TuiDataList } from '@taiga-ui/core';
 import { IDialog, IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { TranslateModule } from '@ngx-translate/core';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
-import { TuiSwitch, TuiTabs } from '@taiga-ui/kit';
+import { TuiDataListDropdownManager, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
 import { CommonModule } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
 import { DialogAssetService } from './dialog-asset.service';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-single.component";
+import { LanguageOriginService } from "src/app/core/services/language-origin.service";
+import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
 
 @Component({
   selector: 'app-dialog-assets',
@@ -41,7 +43,6 @@ import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-s
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
-    
     TuiScrollbar,
     TuiScrollable,
     TuiTabs,
@@ -55,15 +56,18 @@ import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-s
     TuiDropdown,
     TuiBlockStatus,
     TuiActiveZone,
-
+    TuiDataList,
+    TuiDataListDropdownManager,
     DialogAssetSingleComponent,
-  ],
+    TuiTextfieldControllerModule
+],
 })
 export class DialogAssetsComponent implements OnDestroy {
   public openOption: boolean = false;
   public focusRow: string = "";
 
   constructor(
+    protected readonly languageOrigin: LanguageOriginService,
     private readonly portraitsService: PortraitsService,
     private readonly ref: ChangeDetectorRef,
     @Inject(DialogAssetService) readonly dAS: DialogAssetService,
@@ -97,6 +101,10 @@ export class DialogAssetsComponent implements OnDestroy {
 
   public async onGeminiTranslate(data: IDialogAsset[]) {
     this.dAS.onGeminiTranslate(data);
+  }
+
+  public async onGeminiTranslateFromOriginLang(lang: string, data: IDialogAsset[]) {
+    this.dAS.onGeminiTranslateFromOriginLang(lang, data);
   }
 
   public onCopyToClipboard(dialogAsset: IDialogAsset) {

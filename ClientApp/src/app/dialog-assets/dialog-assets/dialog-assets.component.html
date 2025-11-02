@@ -89,7 +89,18 @@
         <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="dAS.gemini.ready$() ?
                         ('gemini-button-ready' | translate):
                         ('gemini-button-disabled' | translate)" (click)="onGeminiTranslate(data)"
-          [disabled]="!dAS.gemini.ready$()" size="xs" aria-label="Gemini Button">
+          [disabled]="!dAS.gemini.ready$()" size="xs" aria-label="Gemini Button" tuiDropdownContext
+          [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+          <ng-template #contextMenu>
+            <tui-data-list role="menu" tuiDataListDropdownManager class="context-menu" size="s">
+              @for (lang of languageOrigin.languages; track $index) {
+              <button tuiOption new type="button"
+                (click)="onGeminiTranslateFromOriginLang(lang, data); dropdown.toggle(false)">
+                {{ lang | translate }}
+              </button>
+              }
+            </tui-data-list>
+          </ng-template>
         </button>
       </tui-loader>
       }
