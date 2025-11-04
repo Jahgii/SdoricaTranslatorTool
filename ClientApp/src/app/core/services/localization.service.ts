@@ -5,13 +5,13 @@ import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localiz
 import { LanguageOriginService } from './language-origin.service';
 import { LibreTranslateService } from './libre-translate.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { TuiAlertService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalizationCategoriesService } from 'src/app/localization/localization-categories.service';
 import { LocalStorageService } from './local-storage.service';
 import { AppModes } from '../enums/app-modes';
 import { IndexDBService } from './index-db.service';
 import { Indexes, ObjectStoreNames } from '../interfaces/i-indexed-db';
+import { AlertService } from './alert.service';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
@@ -67,6 +67,7 @@ export class LocalizationService implements OnDestroy {
   private subsSearchKey!: Subscription;
   private subsSearchTranslation!: Subscription;
   private subsTranslatedColumn$!: Subscription;
+  private langOriginSub$!: Subscription;
 
   constructor(
     private readonly api: ApiService,
@@ -74,12 +75,12 @@ export class LocalizationService implements OnDestroy {
     private readonly lStorage: LocalStorageService,
     private readonly lCS: LocalizationCategoriesService,
     private readonly languageOrigin: LanguageOriginService,
+    private readonly alert: AlertService,
     public libreTranslate: LibreTranslateService,
     private readonly translate: TranslateService,
-    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
     this.language = this.languageOrigin.localizationLang;
-    this.languageOrigin
+    this.langOriginSub$ = this.languageOrigin
       .language
       .valueChanges
       .subscribe(_ => {
@@ -112,6 +113,14 @@ export class LocalizationService implements OnDestroy {
     this.onTranslatedColumnCheckboxChange();
   }
 
+  ngOnDestroy(): void {
+    this.langOriginSub$.unsubscribe();
+    this.subsSearch.unsubscribe();
+    this.subsSearchKey.unsubscribe();
+    this.subsSearchTranslation.unsubscribe();
+    this.subsTranslatedColumn$.unsubscribe();
+  }
+
   public loadStore() {
     if (!this.categories$)
       this.lCS
@@ -136,13 +145,6 @@ export class LocalizationService implements OnDestroy {
       this.onSelectCategory(category);
     }
 
-  }
-
-  ngOnDestroy(): void {
-    this.subsSearch.unsubscribe();
-    this.subsSearchKey.unsubscribe();
-    this.subsSearchTranslation.unsubscribe();
-    this.subsTranslatedColumn$.unsubscribe();
   }
 
   public async onSelectCategory(category: ILocalizationCategory) {
@@ -263,17 +265,12 @@ export class LocalizationService implements OnDestroy {
           this.onCategoryUpdateOffline(key, this.language);
         }
       }, _ => {
-        this.alerts.open(this.translate.instant('alert-error-label'),
-          {
-            label: this.translate.instant('alert-error'),
-            autoClose: 3_000,
-            closeable: false,
-            appearance: 'error'
-          }
-        ).subscribe({
-          complete: () => {
-          },
-        });
+        this.alert.showAlert(
+          'alert-error-label',
+          'alert-error',
+          'accent',
+          'triangle-alert'
+        );
       }
       );
   }

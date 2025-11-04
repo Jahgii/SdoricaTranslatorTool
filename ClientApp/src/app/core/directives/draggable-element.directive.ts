@@ -1,11 +1,11 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { AfterViewInit, Directive, HostListener, Input } from '@angular/core';
 import { Observable, fromEvent, take, takeWhile } from 'rxjs';
 
 @Directive({
   selector: '[appDraggableElement]',
   standalone: true
 })
-export class DraggableElementDirective {
+export class DraggableElementDirective implements AfterViewInit {
   @Input() elementRef!: HTMLElement;
   @Input() elementAnchorRef!: HTMLElement;
   @Input() draggableElementState: DraggableElementState = {
@@ -121,14 +121,14 @@ export class DraggableElementDirective {
 
   private moveOnAxisX(xCoordinate: number) {
     let elementWidth = this.elementRef.offsetWidth;
-    let leftLimit = window.innerWidth - elementWidth - this.margin - this.boundings.left;
+    let leftLimit = globalThis.innerWidth - elementWidth - this.margin - this.boundings.left;
     let rightLimit = Math.max(this.margin - this.boundings.right, xCoordinate);
     return Math.min(rightLimit, leftLimit);
   }
 
   private moveOnAxisY(yCoordinate: number) {
     let elementHeight = this.elementRef.offsetHeight;
-    let bottomLimit = window.innerHeight - elementHeight - this.draggableElementState.yBottomMargin - this.boundings.bottom;
+    let bottomLimit = globalThis.innerHeight - elementHeight - this.draggableElementState.yBottomMargin - this.boundings.bottom;
     let topLimit = Math.max(this.draggableElementState.yTopMargin - this.boundings.top, yCoordinate);
     return Math.min(topLimit, bottomLimit);
   }

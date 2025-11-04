@@ -173,7 +173,7 @@ export class ResizerDirective implements OnChanges {
   }
 
   private moveOnAxisX(xCoordinate: number) {
-    let px_totalContent: number = window.innerWidth - 48;
+    let px_totalContent: number = globalThis.innerWidth - 48;
     let px_resize = px_totalContent * (this.resizerState.combinePercentage / 100);
 
     let px_leftWidth = px_resize * (this.resizerState.previousLeftWidth / 100);

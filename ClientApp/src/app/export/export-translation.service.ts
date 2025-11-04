@@ -1,8 +1,7 @@
-import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, OnDestroy, signal, WritableSignal } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { TuiAlertService } from '@taiga-ui/core';
 import { TuiFileLike } from '@taiga-ui/kit';
-import { switchMap, of, Observable, firstValueFrom, BehaviorSubject, combineLatest, zip, map, shareReplay } from 'rxjs';
+import { switchMap, of, Observable, BehaviorSubject, combineLatest, zip, map, shareReplay, Subscription } from 'rxjs';
 import { ILocalization, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { decode } from '@msgpack/msgpack';
 import { IGamedata } from '../core/interfaces/i-gamedata';
@@ -19,10 +18,11 @@ import { ObjectStoreNames } from '../core/interfaces/i-indexed-db';
 import { IFileControl } from '../core/interfaces/i-file-control';
 import { LanguageType } from '../core/enums/languages';
 import { LanguageOriginService } from '../core/services/language-origin.service';
+import { AlertService } from '../core/services/alert.service';
 import JSZip from 'jszip';
 
 @Injectable()
-export class ExportTranslationService {
+export class ExportTranslationService implements OnDestroy {
   private zipObb!: JSZip;
   private dataLoc!: ILocalization;
   private dataGam!: IGamedata;
@@ -94,14 +94,14 @@ export class ExportTranslationService {
   );
 
   public progressPerc$!: Observable<IExportPercentages>;
-
   public exportStatus = signal(ProgressStatus.waiting);
+  private langOriginSubs$!: Subscription;
 
   constructor(
-    @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
     private readonly ddS: DeviceDetectorService,
     private readonly lStorage: LocalStorageService,
     private readonly indexedDB: IndexDBService,
+    private readonly alert: AlertService,
     readonly languageOrigin: LanguageOriginService,
     private readonly api: ApiService,
     private readonly translate: TranslateService
@@ -109,8 +109,12 @@ export class ExportTranslationService {
     this.init();
   }
 
+  ngOnDestroy(): void {
+    this.langOriginSubs$.unsubscribe();
+  }
+
   private init() {
-    this.languageOrigin.language$
+    this.langOriginSubs$ = this.languageOrigin.language$
       .subscribe((langReverse: string) => {
         const lang = (LanguageType as any)[this.lStorage.getDefaultLang()];
 
@@ -151,7 +155,6 @@ export class ExportTranslationService {
     this.localization.loadedFile$ = this.localization.control
       .valueChanges
       .pipe(
-
         switchMap(file =>
         (file ?
           this.onLoadFile(file, this.localization) :
@@ -180,17 +183,12 @@ export class ExportTranslationService {
   }
 
   public onReject(file: TuiFileLike | readonly TuiFileLike[]): void {
-    let alert = this.alerts
-      .open(
-        this.translate.instant('alert-wrong-file-label'),
-        {
-          label: 'Error',
-          appearance: 'error',
-          autoClose: 3_000
-        }
-      );
-
-    firstValueFrom(alert);
+    this.alert.showAlert(
+      'alert-error',
+      'alert-wrong-file-label',
+      'accent',
+      'triangle-alert'
+    );
   }
 
   public onLoadFile(file: TuiFileLike, fileControl: IFileControl): Observable<TuiFileLike | null> {
@@ -205,22 +203,17 @@ export class ExportTranslationService {
    * Verified if Obb have the required directories
    */
   public async onVerificationObb(file: File, fileControl: IFileControl) {
-    let alert = this.alerts
-      .open(
-        this.translate.instant('error-file-obb'),
-        {
-          label: 'Error',
-          appearance: 'error',
-          autoClose: 3_000
-        }
-      );
-
     this.zipObb = new JSZip();
     try {
       await this.zipObb.loadAsync(file, {});
     } catch {
       fileControl.verifyingFile$.next(false);
-      firstValueFrom(alert);
+      this.alert.showAlert(
+        'alert-error',
+        'error-file-obb',
+        'accent',
+        'triangle-alert'
+      );
       fileControl.control.setValue(null);
       return;
     }
@@ -229,7 +222,12 @@ export class ExportTranslationService {
 
     fileControl.verifyingFile$.next(false);
     if (!dialogFolder) {
-      firstValueFrom(alert);
+      this.alert.showAlert(
+        'alert-error',
+        'error-file-obb',
+        'accent',
+        'triangle-alert'
+      );
       fileControl.control.setValue(null);
       return;
     }
@@ -243,37 +241,35 @@ export class ExportTranslationService {
    * @param fileControl 
    */
   public async onVerificationLocalization(file: File, fileControl: IFileControl) {
-    let alert = this.alerts
-      .open(
-        this.translate.instant('error-file-localization'),
-        {
-          label: 'Error',
-          appearance: 'error',
-          autoClose: 3_000
-        }
-      );
-
-    let reader = new FileReader();
-    reader.onload = (ev: ProgressEvent<FileReader>) => {
+    file.arrayBuffer().then(buffer => {
       try {
-        this.dataLoc = decode(reader.result as ArrayBuffer) as ILocalization;
+        this.dataLoc = decode(buffer) as ILocalization;
       } catch {
         fileControl.verifyingFile$.next(false);
-        firstValueFrom(alert);
+        this.alert.showAlert(
+          'alert-error',
+          'error-file-localization',
+          'accent',
+          'triangle-alert'
+        );
         fileControl.control.setValue(null);
         return;
       }
 
       fileControl.verifyingFile$.next(false);
-      if (!this.dataLoc || !this.dataLoc.C || !this.dataLoc.C['BaseBuff']) {
-        firstValueFrom(alert);
+      if (!this.dataLoc?.C?.['BaseBuff']) {
+        this.alert.showAlert(
+          'alert-error',
+          'error-file-localization',
+          'accent',
+          'triangle-alert'
+        );
         fileControl.control.setValue(null);
         return;
       }
 
       fileControl.verifiedFile$.next(true);
-    };
-    reader.readAsArrayBuffer(file);
+    });
   }
 
   /**
@@ -282,37 +278,35 @@ export class ExportTranslationService {
    * @param fileControl 
    */
   public async onVerificationGamedata(file: File, fileControl: IFileControl) {
-    let alert = this.alerts
-      .open(
-        this.translate.instant('error-file-gamedata'),
-        {
-          label: 'Error',
-          appearance: 'error',
-          autoClose: 3_000
-        }
-      );
-
-    let reader = new FileReader();
-    reader.onload = (ev: ProgressEvent<FileReader>) => {
+    file.arrayBuffer().then(buffer => {
       try {
-        this.dataGam = decode(reader.result as ArrayBuffer) as ILocalization;
+        this.dataGam = decode(buffer) as ILocalization;
       } catch {
         fileControl.verifyingFile$.next(false);
-        firstValueFrom(alert);
+        this.alert.showAlert(
+          'alert-error',
+          'error-file-gamedata',
+          'accent',
+          'triangle-alert'
+        );
         fileControl.control.setValue(null);
         return;
       }
 
       fileControl.verifyingFile$.next(false);
-      if (!this.dataGam || !this.dataGam.C || !this.dataGam.C['BuffInfo']) {
-        firstValueFrom(alert);
+      if (!this.dataGam?.C?.['BuffInfo']) {
+        this.alert.showAlert(
+          'alert-error',
+          'error-file-gamedata',
+          'accent',
+          'triangle-alert'
+        );
         fileControl.control.setValue(null);
         return;
       }
 
       fileControl.verifiedFile$.next(true);
-    };
-    reader.readAsArrayBuffer(file);
+    });
   }
 
   /**
@@ -320,8 +314,8 @@ export class ExportTranslationService {
    */
   public onApplyTranslation() {
     this.isTranslating$.next(true);
-    if (typeof Worker !== 'undefined') this.onApplyTranslationWorkers();
-    else this.onApplyTranslationNormal();
+    if (typeof Worker === 'undefined') this.onApplyTranslationNormal();
+    else this.onApplyTranslationWorkers();
   }
 
   private onApplyTranslationWorkers() {
@@ -386,7 +380,7 @@ export class ExportTranslationService {
 
   private onMessage(message: IOnMessage, fileControl: IFileControl) {
     if (message.pgState == ProgressStatus.finish && message.blob) {
-      fileControl.url = window.URL.createObjectURL(message.blob);
+      fileControl.url = globalThis.URL.createObjectURL(message.blob);
       this.onAutoDownload(fileControl);
     }
 
@@ -449,7 +443,7 @@ export class ExportTranslationService {
     this.exportStatus.set(message.pgState);
     this.exportMessages.set([...this.exportMessages(), message.pgState]);
 
-    const url = window.URL.createObjectURL(message.blob);
+    const url = globalThis.URL.createObjectURL(message.blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'Data';

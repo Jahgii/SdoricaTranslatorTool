@@ -12,6 +12,7 @@ import { AppModes } from 'src/app/core/enums/app-modes';
 import { Indexes, ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 import { TranslateService } from '@ngx-translate/core';
 import { GeminiApiService } from 'src/app/core/services/gemini-api.service';
+import { AlertService } from 'src/app/core/services/alert.service';
 
 @Injectable()
 export class DialogAssetService {
@@ -42,10 +43,10 @@ export class DialogAssetService {
     private readonly indexedDB: IndexDBService,
     private readonly lStorage: LocalStorageService,
     private readonly translate: TranslateService,
+    private readonly alert: AlertService,
     public readonly gemini: GeminiApiService,
     public libreTranslate: LibreTranslateService,
     readonly languageOrigin: LanguageOriginService,
-    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) { }
 
   public onDestroy() {
@@ -202,13 +203,12 @@ export class DialogAssetService {
     const conversation: { [dialogID: string]: string } = this.tryParseJson(response);
 
     if (!conversation) {
-      this.alerts
-        .open(undefined, {
-          label: this.translate.instant('invalid-gemini-response')
-          , appearance: 'warning'
-          , autoClose: 3000
-        })
-        .subscribe();
+      this.alert.showAlert(
+        'alert-error',
+        'invalid-gemini-response',
+        'accent',
+        'triangle-alert'
+      );
 
       return;
     }
@@ -265,13 +265,12 @@ export class DialogAssetService {
       const conversation: { [dialogID: string]: string } = this.tryParseJson(response);
 
       if (!conversation) {
-        this.alerts
-          .open(undefined, {
-            label: this.translate.instant('invalid-gemini-response')
-            , appearance: 'warning'
-            , autoClose: 3000
-          })
-          .subscribe();
+        this.alert.showAlert(
+          'alert-error',
+          'invalid-gemini-response',
+          'accent',
+          'triangle-alert'
+        );
 
         return;
       }
@@ -296,13 +295,19 @@ export class DialogAssetService {
       .clipboard
       .writeText(exportConversation)
       .then(_ => {
-        this.alerts
-          .open(undefined, { label: this.translate.instant('copy-to-clipboard'), appearance: 'success', autoClose: 3_000 })
-          .subscribe();
+        this.alert.showAlert(
+          'alert-success',
+          'copy-to-clipboard',
+          'positive',
+          'circle-check-big'
+        );
       }, err => {
-        this.alerts
-          .open(undefined, { label: this.translate.instant('copy-to-clipboard-error'), appearance: 'error', autoClose: 3_000 })
-          .subscribe();
+        this.alert.showAlert(
+          'alert-error',
+          'copy-to-clipboard-error',
+          'accent',
+          'triangle-alert'
+        );
       });
   }
 
@@ -323,13 +328,12 @@ export class DialogAssetService {
         let conversation: { [dialogID: string]: string } = this.tryParseJson(text);
 
         if (!conversation) {
-          this.alerts
-            .open(undefined, {
-              label: this.translate.instant('invalid-json')
-              , appearance: 'warning'
-              , autoClose: 3000
-            })
-            .subscribe();
+          this.alert.showAlert(
+            'alert-error',
+            'invalid-json',
+            'accent',
+            'triangle-alert'
+          );
 
           return;
         }
@@ -340,15 +344,21 @@ export class DialogAssetService {
           d.Text = conversation[d.ID];
         }
 
-        this.alerts
-          .open(undefined, { label: this.translate.instant('paste-correctly'), appearance: 'success', autoClose: 3000 })
-          .subscribe();
+        this.alert.showAlert(
+          'alert-success',
+          'paste-correctly',
+          'positive',
+          'circle-check-big'
+        );
 
         return true;
       }, _ => {
-        this.alerts
-          .open(undefined, { label: this.translate.instant('paste-clipboard-error'), appearance: 'error', autoClose: 3_000 })
-          .subscribe();
+        this.alert.showAlert(
+          'alert-error',
+          'paste-clipboard-error',
+          'accent',
+          'triangle-alert'
+        );
 
         return false;
       });
@@ -388,7 +398,7 @@ export class DialogAssetService {
       type: 'dialog'
     });
 
-    const url = window.URL.createObjectURL(blob)
+    const url = globalThis.URL.createObjectURL(blob)
 
     this.downloadURL(url, dialogFileName ?? "RENAME THE FILE TO CORRECT DIALOG NAME FILE");
   }

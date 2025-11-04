@@ -42,7 +42,7 @@ export class GeminiApiService {
     this.lStorage.setGeminiApiKey(this.key);
     this.lStorage.setGeminiTranslateLang(this.lang);
     this.lStorage.setGeminiModel(this.model);
-    this.alert.showAlert('alert-gemini-activated', 'alert-gemini-activated-description', 'info');
+    this.alert.showAlert('alert-gemini-activated', 'alert-gemini-activated-description', 'info', 'triangle-alert');
     this.onInit();
   }
 
@@ -59,7 +59,7 @@ export class GeminiApiService {
       r => r,
       (error: ApiError) => {
         let message = error.message ?? 'alert-error-label';
-        this.alert.showAlert('alert-error', message, 'accent');
+        this.alert.showAlert('alert-error', message, 'accent', 'triangle-alert');
         return undefined;
       }
     );

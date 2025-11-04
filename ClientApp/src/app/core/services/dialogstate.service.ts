@@ -7,8 +7,6 @@ import { DialogState } from '../interfaces/i-dialog';
 export class DialogstateService {
   private dialogStates: { [componentName: string]: DialogState } = {}
 
-  constructor() { }
-
   public addState(key: string, state: DialogState) {
     this.dialogStates[key] = state;
   }

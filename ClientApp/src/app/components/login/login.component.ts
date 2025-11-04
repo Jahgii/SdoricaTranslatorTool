@@ -49,13 +49,13 @@ export class LoginComponent {
           this.lStorage.setToken(user.Token);
           this.appState.initializeApp();
         }, _ => {
-          this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+          this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
         }
       );
   }
 
   protected onSwitchOffline() {
     this.lStorage.setAppMode(AppModes.Offline);
-    window.location.reload();
+    globalThis.location.reload();
   }
 }

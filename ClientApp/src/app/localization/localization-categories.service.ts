@@ -15,9 +15,9 @@ import { IndexDBService } from '../core/services/index-db.service';
 export class LocalizationCategoriesService extends StoreService<ILocalizationCategory> {
 
   constructor(
-    private api: ApiService,
-    private indexedDB: IndexDBService,
-    private lStorage: LocalStorageService,
+    private readonly api: ApiService,
+    private readonly indexedDB: IndexDBService,
+    private readonly lStorage: LocalStorageService,
     readonly languageOrigin: LanguageOriginService,
   ) {
     super();

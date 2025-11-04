@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { ApiService } from './api.service';
-import { LocalStorageService } from './local-storage.service';
-import { LanguageOriginService } from './language-origin.service';
-import { TuiAlertService } from '@taiga-ui/core';
-import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +9,6 @@ export class AuthService {
   public authenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public rol!: 'guest' | 'admin';
-  private userDB!: IUser;
-
-  constructor(
-    private local: LocalStorageService,
-    private api: ApiService,
-    private languageOrigin: LanguageOriginService,
-    private alert: TuiAlertService,
-    private translate: TranslateService
-  ) {
-
-  }
 }
 
 interface IUser {

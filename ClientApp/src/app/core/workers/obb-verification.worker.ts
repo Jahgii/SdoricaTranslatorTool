@@ -32,7 +32,7 @@ addEventListener('message', async ({ data }) => {
         dialogFile.name
       );
     }
-  } catch (error) {
+  } catch {
     response.message = 'file-error';
     postMessage(response);
     return;

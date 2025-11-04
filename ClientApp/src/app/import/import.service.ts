@@ -1,11 +1,9 @@
-import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, OnDestroy, signal, WritableSignal } from '@angular/core';
 import { ApiService } from '../core/services/api.service';
 import { ILocalization, ILocalizationCategory, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { IGamedata, IGamedataCategory, IGamedataValue } from '../core/interfaces/i-gamedata';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, combineLatest, firstValueFrom, map, of, switchMap } from 'rxjs';
-import { TuiAlertService } from '@taiga-ui/core';
-import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable, Subscription, combineLatest, firstValueFrom, map, of, switchMap } from 'rxjs';
 import { decode } from '@msgpack/msgpack';
 import { ProgressStatus } from '../core/interfaces/i-export-progress';
 import { TuiFileLike } from '@taiga-ui/kit';
@@ -23,10 +21,11 @@ import { AppModes } from '../core/enums/app-modes';
 import { IFileControl } from '../core/interfaces/i-file-control';
 import { ApiSuccess } from '../core/interfaces/i-api';
 import { LanguageOriginService } from '../core/services/language-origin.service';
+import { AlertService } from '../core/services/alert.service';
 import JSZip from 'jszip';
 
 @Injectable()
-export class ImportService {
+export class ImportService implements OnDestroy {
   private zipObb!: JSZip;
   private dataLoc!: ILocalization;
   private dataGam!: IGamedata;
@@ -101,6 +100,7 @@ export class ImportService {
   public multiLanguage$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public defaultLanguage: FormControl = this.fB.control(undefined, Validators.required);
   public languageSelected = false;
+  private defaultLangSubs$!: Subscription;
 
   public dialogAssets: { [language: string]: IDialogAsset[] } = {};
   public dialogAssetsInclude: { [language: string]: boolean } = {};
@@ -144,11 +144,14 @@ export class ImportService {
     private readonly iDB: IndexDBService,
     private readonly fB: FormBuilder,
     private readonly ddS: DeviceDetectorService,
-    private readonly translate: TranslateService,
     private readonly langService: LanguageOriginService,
-    @Inject(TuiAlertService) private readonly alerts: TuiAlertService,
+    private readonly alert: AlertService,
   ) {
     this.init();
+  }
+
+  ngOnDestroy(): void {
+    this.defaultLangSubs$.unsubscribe();
   }
 
   private init() {
@@ -156,7 +159,7 @@ export class ImportService {
 
     if (this.langService.languages) this.canSkip$.set(true);
 
-    this.defaultLanguage
+    this.defaultLangSubs$ = this.defaultLanguage
       .valueChanges
       .subscribe(lang => {
         this.lStorage.setDefaultLang(lang);
@@ -198,13 +201,6 @@ export class ImportService {
       this.obb.verifiedFile$.next(true);
       this.obb.progressStatus$.next(ProgressStatus.finish);
     }
-
-    this.filesVerified$
-      .subscribe(verified => {
-        if (verified) {
-
-        }
-      });
   }
 
   private async switchUploadKeysUrl() {
@@ -229,31 +225,13 @@ export class ImportService {
     return of(file);
   }
 
-  private openAlert(alert: Observable<void>) {
-    alert.subscribe({
-      complete: () => {
-      },
-    });
-  }
-
   /**
    * Verified if Obb have the required directories
    */
   public async onVerificationObb(file: File, fileControl: IFileControl) {
-    let alert = this.alerts
-      .open(
-        this.translate.instant('error-file-obb'),
-        {
-          label: this.translate.instant('alert-error'),
-          appearance: 'error',
-          autoClose: 3_000,
-          closeable: false
-        }
-      );
-
     if (file.size === 0) {
       fileControl.verifyingFile$.next(false);
-      this.openAlert(alert);
+      this.alert.showAlert('alert-error', 'error-file-obb', 'accent', 'triangle-alert');
       setTimeout(() => {
         fileControl.control.setValue(null, { emitEvent: true });
       }, 1);
@@ -262,7 +240,7 @@ export class ImportService {
 
     if (typeof Worker !== 'undefined') {
       const obbWorker = new Worker(new URL('../core/workers/obb-verification.worker', import.meta.url));
-      obbWorker.onmessage = ({ data }) => this.onVerificationObbWorkerMessage(data, alert, fileControl);
+      obbWorker.onmessage = ({ data }) => this.onVerificationObbWorkerMessage(data, fileControl);
 
       let message: ImportOBBVerificationPostMessage = {
         file: this.obb.control.value
@@ -287,9 +265,9 @@ export class ImportService {
           dialogFile.name
         );
       }
-    } catch (error) {
+    } catch {
       fileControl.verifyingFile$.next(false);
-      this.openAlert(alert);
+      this.alert.showAlert('alert-error', 'error-file-obb', 'accent', 'triangle-alert');
       fileControl.control.setValue(null);
       return;
     }
@@ -298,7 +276,7 @@ export class ImportService {
 
     fileControl.verifyingFile$.next(false);
     if (!dialogFolder) {
-      this.openAlert(alert);
+      this.alert.showAlert('alert-error', 'error-file-obb', 'accent', 'triangle-alert');
       fileControl.control.setValue(null);
       return;
     }
@@ -309,10 +287,10 @@ export class ImportService {
   /**
    * onmessage callback of Verified Obb Worker
    */
-  private onVerificationObbWorkerMessage(data: any, alert: Observable<void>, fileControl: IFileControl) {
+  private onVerificationObbWorkerMessage(data: any, fileControl: IFileControl) {
     let dType: WorkerImportOBBVerificationPostMessage = data;
     if (dType.message === 'file-error') {
-      this.openAlert(alert);
+      this.alert.showAlert('alert-error', 'error-file-obb', 'accent', 'triangle-alert');
       fileControl.verifyingFile$.next(false);
       fileControl.control.setValue(null);
     }
@@ -332,48 +310,36 @@ export class ImportService {
    * @param fileControl 
    */
   public async onVerificationLocalization(file: File, fileControl: IFileControl) {
-    let alert = this.alerts
-      .open(
-        this.translate.instant('error-file-localization'),
-        {
-          label: this.translate.instant('alert-error'),
-          appearance: 'error',
-          autoClose: 3_000,
-          closeable: false
-        }
-      );
-
     if (file.size === 0) {
       fileControl.verifyingFile$.next(false);
-      this.openAlert(alert);
+      this.alert.showAlert('alert-error', 'error-file-localization', 'accent', 'triangle-alert');
       setTimeout(() => {
         fileControl.control.setValue(null, { emitEvent: true });
       }, 1);
       return;
     }
 
-    let reader = new FileReader();
-    reader.onload = (ev: ProgressEvent<FileReader>) => {
+    file.arrayBuffer().then(buffer => {
       try {
-        this.dataLoc = decode(reader.result as ArrayBuffer) as ILocalization;
-      } catch (error) {
+        this.dataLoc = decode(buffer) as ILocalization;
+      } catch {
         fileControl.verifyingFile$.next(false);
-        this.openAlert(alert);
+        this.alert.showAlert('alert-error', 'error-file-localization', 'accent', 'triangle-alert');
         fileControl.control.setValue(null);
         return;
       }
 
       fileControl.verifyingFile$.next(false);
-      if (!this.dataLoc || !this.dataLoc.C || !this.dataLoc.C['BaseBuff']) {
-        this.openAlert(alert);
+      if (!this.dataLoc?.C?.['BaseBuff']) {
+        this.alert.showAlert('alert-error', 'error-file-localization', 'accent', 'triangle-alert');
         fileControl.control.setValue(null);
         return;
       }
 
       this.onDecodeLocalization();
       fileControl.verifiedFile$.next(true);
-    };
-    reader.readAsArrayBuffer(file);
+
+    });
   }
 
   /**
@@ -382,48 +348,36 @@ export class ImportService {
    * @param fileControl 
    */
   public async onVerificationGamedata(file: File, fileControl: IFileControl) {
-    let alert = this.alerts
-      .open(
-        this.translate.instant('error-file-gamedata'),
-        {
-          label: this.translate.instant('alert-error'),
-          appearance: 'error',
-          autoClose: 3_000,
-          closeable: false
-        }
-      );
-
     if (file.size === 0) {
       fileControl.verifyingFile$.next(false);
-      this.openAlert(alert);
+      this.alert.showAlert('alert-error', 'error-file-gamedata', 'accent', 'triangle-alert');
       setTimeout(() => {
         fileControl.control.setValue(null, { emitEvent: true });
       }, 1);
       return;
     }
 
-    let reader = new FileReader();
-    reader.onload = (_: ProgressEvent<FileReader>) => {
+    file.arrayBuffer().then(buffer => {
       try {
-        this.dataGam = decode(reader.result as ArrayBuffer) as ILocalization;
-      } catch (error) {
+        this.dataGam = decode(buffer) as ILocalization;
+      } catch {
         fileControl.verifyingFile$.next(false);
-        this.openAlert(alert);
+        this.alert.showAlert('alert-error', 'error-file-gamedata', 'accent', 'triangle-alert');
         fileControl.control.setValue(null);
         return;
       }
 
       fileControl.verifyingFile$.next(false);
-      if (!this.dataGam || !this.dataGam.C || !this.dataGam.C['BuffInfo']) {
-        this.openAlert(alert);
+      if (!this.dataGam?.C?.['BuffInfo']) {
+        this.alert.showAlert('alert-error', 'error-file-gamedata', 'accent', 'triangle-alert');
         fileControl.control.setValue(null);
         return;
       }
 
       this.onDecodeGamedata(this.dataGam, 'BuffInfo');
       fileControl.verifiedFile$.next(true);
-    };
-    reader.readAsArrayBuffer(file);
+
+    });
   }
 
   public onSkipFile(fileControl: IFileControl) {
@@ -731,7 +685,7 @@ export class ImportService {
   }
 
   private onDecodeLocalization() {
-    for (let categoryName in this.dataLoc.C) {
+    for (const categoryName in this.dataLoc.C) {
       let new_category: ILocalizationCategory = {
         Name: categoryName,
         Keys: {},

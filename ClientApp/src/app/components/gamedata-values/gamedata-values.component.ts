@@ -138,7 +138,7 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
   public onShowCreateNew(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
     firstValueFrom(this.breakpointService$)
       .then(v => {
-        if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
+        if (globalThis.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.dialogState.isHidden = !this.dialogState.isHidden;
           this.changeIndex(this.dialogState);
@@ -165,7 +165,7 @@ export class GamedataValuesComponent implements OnInit, OnDestroy {
   public onShowList(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
     firstValueFrom(this.breakpointService$)
       .then(v => {
-        if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
+        if (globalThis.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.listDialogState.isHidden = !this.listDialogState.isHidden;
           this.changeIndex(this.listDialogState);

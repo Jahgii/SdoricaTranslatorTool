@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
 import { ApiService } from './api.service';
-import { TuiBreakpointService, TuiDialogService } from '@taiga-ui/core';
+import { TuiBreakpointService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IGamedataValue } from '../interfaces/i-gamedata';
 import { StoreService } from './store.service';
@@ -132,9 +132,9 @@ export class GamedataService {
       .then(_ => {
         this.createOther$.next(true);
         this.onCreateOther();
-        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-created', 'positive');
+        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-created', 'positive', 'circle-check-big');
       }, _ => {
-        this.alert.showAlert('alert-error', 'error-create-gamedata', 'accent');
+        this.alert.showAlert('alert-error', 'error-create-gamedata', 'accent', 'triangle-alert');
       });
 
     this.creating$.next(false);
@@ -178,9 +178,9 @@ export class GamedataService {
     await this.store.updateFromHttp(update$, index)
       .then(_ => {
         this.createOther$.next(true);
-        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-updated', 'positive');
+        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-updated', 'positive', 'circle-check-big');
       }, _ => {
-        this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+        this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
       });
 
     (value as any)['loader'].next(false);
@@ -211,9 +211,9 @@ export class GamedataService {
 
     await this.store.removeFromHttp(delete$, index)
       .then(_ => {
-        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-deleted', 'positive');
+        this.alert.showAlert('alert-success', 'alert-success-label-gamedata-deleted', 'positive', 'circle-check-big');
       }, _ => {
-        this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+        this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
       });
 
     this.deleting$.next(false);

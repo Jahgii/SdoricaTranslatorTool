@@ -13,11 +13,18 @@ export class AlertService {
   public showAlert(
     title: string,
     message: string,
-    appearance: Appearance
+    appearance: Appearance,
+    icon: string
   ) {
     this.alerts
-      .open(this.translate.instant(message), { label: this.translate.instant(title), appearance: appearance })
-      .subscribe();
+      .open(
+        this.translate.instant(message),
+        {
+          label: this.translate.instant(title),
+          appearance: appearance,
+          icon: icon
+        }
+      ).subscribe();
   }
 }
 

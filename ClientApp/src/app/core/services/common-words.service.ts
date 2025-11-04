@@ -46,7 +46,7 @@ export class CommonWordsService {
       .then(
         words => { this.words.set(words) },
         _ => {
-          this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+          this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
         }
       );
   }
@@ -70,11 +70,11 @@ export class CommonWordsService {
           this.words.set([...this.words(), createdWord]);
           this.createOther$.next(true);
           this.creating$.next(false);
-          this.alert.showAlert('alert-success', 'alert-success-label-commonword-created', 'positive');
+          this.alert.showAlert('alert-success', 'alert-success-label-commonword-created', 'positive', 'triangle-alert');
           return true;
         },
         _ => {
-          this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+          this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
           this.creating$.next(false);
           return false;
         }
@@ -100,11 +100,11 @@ export class CommonWordsService {
           this.words.set([...this.words(), createdWord]);
           this.createOther$.next(true);
           this.creating$.next(false);
-          this.alert.showAlert('alert-success', 'alert-success-label-commonword-created', 'positive');
+          this.alert.showAlert('alert-success', 'alert-success-label-commonword-created', 'positive', 'circle-check-big');
           return true;
         },
         _ => {
-          this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+          this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
           this.creating$.next(false);
           return false;
         }
@@ -112,9 +112,8 @@ export class CommonWordsService {
   }
 
   public async update(word: ICommonWord) {
-    if (!(word as any)['loader'])
-      (word as any)['loader'] = new BehaviorSubject<Boolean>(true);
-    else (word as any)['loader'].next(true);
+    if ((word as any)['loader']) (word as any)['loader'].next(true);
+    else (word as any)['loader'] = new BehaviorSubject<Boolean>(true);
 
     let tempWord: ICommonWord = {
       Id: word.Id,
@@ -137,9 +136,9 @@ export class CommonWordsService {
     await firstValueFrom(request$)
       .then(_ => {
         this.change$.next(true);
-        this.alert.showAlert('alert-success', 'alert-success-label-commonword-updated', 'positive');
+        this.alert.showAlert('alert-success', 'alert-success-label-commonword-updated', 'positive', 'circle-check-big');
       }, _ => {
-        this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+        this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
       }
       );
 
@@ -172,9 +171,9 @@ export class CommonWordsService {
         this.words().splice(index, 1);
         this.words.set([...this.words()]);
         this.change$.next(true);
-        this.alert.showAlert('alert-success', 'alert-success-label-commonword-deleted', 'positive');
+        this.alert.showAlert('alert-success', 'alert-success-label-commonword-deleted', 'positive', 'circle-check-big');
       }, _ => {
-        this.alert.showAlert('alert-error', 'alert-error-label', 'accent');
+        this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
       }
       );
 

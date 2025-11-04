@@ -155,7 +155,7 @@ export class FileReaderGamedataService {
       type: 'application/octet-stream'
     });
 
-    const url = window.URL.createObjectURL(blob)
+    const url = globalThis.URL.createObjectURL(blob)
 
     this.url = url;
 

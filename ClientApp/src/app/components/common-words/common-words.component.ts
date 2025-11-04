@@ -85,11 +85,11 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
   private dialog: 'list' | 'create' | undefined;
 
   constructor(
-    public commonWords: CommonWordsService,
-    private fB: FormBuilder,
-    private cd: ChangeDetectorRef,
-    private translate: TranslateService,
-    private dStateService: DialogstateService,
+    public readonly commonWords: CommonWordsService,
+    private readonly fB: FormBuilder,
+    private readonly cd: ChangeDetectorRef,
+    private readonly translate: TranslateService,
+    private readonly dStateService: DialogstateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
   ) {
@@ -98,32 +98,29 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsBreakpoint = this.breakpointService$
-      .subscribe(v => {
-        if (v == 'mobile') {
-          if (this.dialogState.isHidden === false) {
-            this.dialogState.isHidden = true;
-            if (this.dialogState.zIndex$.value === 2)
-              this.onShowCreateNew(this.createTemplateView, 'm');
-            this.cd.detectChanges();
-          }
-          if (this.listDialogState.isHidden === false) {
-            this.listDialogState.isHidden = true;
-            if (this.listDialogState.zIndex$.value === 2)
-              this.onShowList(this.listTemplateView, 'm');
-            this.cd.detectChanges();
-          }
+    this.subsBreakpoint = this.breakpointService$.subscribe(v => {
+      if (v == 'mobile') {
+        if (this.dialogState.isHidden === false) {
+          this.dialogState.isHidden = true;
+          if (this.dialogState.zIndex$.value === 2)
+            this.onShowCreateNew(this.createTemplateView, 'm');
+          this.cd.detectChanges();
         }
-        else {
-          if (this.subsDialog) {
-            this.subsDialog.unsubscribe();
-            this.subsDialog = undefined;
-            if (this.dialog == 'create') this.dialogState.isHidden = false;
-            else if (this.dialog == 'list') this.listDialogState.isHidden = false;
-            this.cd.detectChanges();
-          }
+        if (this.listDialogState.isHidden === false) {
+          this.listDialogState.isHidden = true;
+          if (this.listDialogState.zIndex$.value === 2)
+            this.onShowList(this.listTemplateView, 'm');
+          this.cd.detectChanges();
         }
-      });
+      }
+      else if (this.subsDialog) {
+        this.subsDialog.unsubscribe();
+        this.subsDialog = undefined;
+        if (this.dialog == 'create') this.dialogState.isHidden = false;
+        else if (this.dialog == 'list') this.listDialogState.isHidden = false;
+        this.cd.detectChanges();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -133,7 +130,7 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
   public onShowCreateNew(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
     firstValueFrom(this.breakpointService$)
       .then(v => {
-        if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
+        if (globalThis.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.dialogState.isHidden = !this.dialogState.isHidden;
           this.changeIndex(this.dialogState);
@@ -142,16 +139,15 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
         else {
           this.menuOpen = false;
           this.dialog = 'create';
-          this.subsDialog = this.dialogs
-            .open(content, {
-              label: this.translate.instant('common-word-form'),
-              size: size,
-            })
-            .subscribe({
-              complete: () => {
-                this.subsDialog = undefined;
-              },
-            });
+          this.subsDialog = this.dialogs.open(content, {
+            label: this.translate.instant('common-word-form'),
+            size: size,
+          }).subscribe({
+            complete: () => {
+              this.subsDialog = undefined;
+            },
+          });
+
           this.cd.detectChanges();
         }
       });
@@ -160,7 +156,7 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
   public onShowList(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
     firstValueFrom(this.breakpointService$)
       .then(v => {
-        if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
+        if (globalThis.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.menuOpen = false;
           this.listDialogState.isHidden = !this.listDialogState.isHidden;
           this.changeIndex(this.listDialogState);
@@ -169,16 +165,15 @@ export class CommonWordsComponent implements OnInit, OnDestroy {
         else {
           this.menuOpen = false;
           this.dialog = 'list';
-          this.subsDialog = this.dialogs
-            .open(content, {
-              label: this.translate.instant('dictionary'),
-              size: size,
-            })
-            .subscribe({
-              complete: () => {
-                this.subsDialog = undefined;
-              },
-            });
+          this.subsDialog = this.dialogs.open(content, {
+            label: this.translate.instant('dictionary'),
+            size: size,
+          }).subscribe({
+            complete: () => {
+              this.subsDialog = undefined;
+            },
+          });
+
           this.cd.detectChanges();
         }
       });

@@ -84,7 +84,7 @@ export class ImportAllService {
     this.status.set(ExportStatus.ReadingFile);
     if (file.size === 0) {
       fileControl.verifyingFile$.next(false);
-      this.alert.showAlert('alert-error', 'error-file-data', 'accent');
+      this.alert.showAlert('alert-error', 'error-file-data', 'accent', 'triangle-alert');
 
       setTimeout(() => {
         fileControl.control.setValue(null, { emitEvent: true });
@@ -94,20 +94,19 @@ export class ImportAllService {
       return;
     }
 
-    let reader = new FileReader();
-    reader.onload = (ev: ProgressEvent<FileReader>) => {
+    file.arrayBuffer().then(buffer => {
       try {
-        this.data = decode(reader.result as ArrayBuffer) as IExportAll;
+        this.data = decode(buffer) as IExportAll;
       } catch {
         fileControl.verifyingFile$.next(false);
-        this.alert.showAlert('alert-error', 'error-file-data', 'accent');
+        this.alert.showAlert('alert-error', 'error-file-data', 'accent', 'triangle-alert');
         fileControl.control.setValue(null);
         return;
       }
 
       fileControl.verifyingFile$.next(false);
       if (!this.data?.GV || !this.data?.DA || !this.data?.K || !this.data?.C) {
-        this.alert.showAlert('alert-error', 'error-file-data', 'accent');
+        this.alert.showAlert('alert-error', 'error-file-data', 'accent', 'triangle-alert');
         fileControl.control.setValue(null);
         return;
       }
@@ -120,8 +119,7 @@ export class ImportAllService {
         this.localizationKeys(),
         this.commonWords()
       ]).then(_ => this.status.set(ExportStatus.ImportFile));
-    };
-    reader.readAsArrayBuffer(file);
+    });
   }
 
   private async gamedataValues() {

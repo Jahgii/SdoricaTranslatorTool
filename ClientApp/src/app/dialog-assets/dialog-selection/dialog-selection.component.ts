@@ -57,8 +57,14 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
     this.onInit();
   }
 
+  ngOnDestroy(): void {
+    this.nodeSelected?.selected?.next(false);
+    this.subsCheck?.unsubscribe();
+  }
+
   private onInit() {
-    if (!this.treeNodes$)
+    if (this.treeNodes$) this.initLastGroupSelected();
+    else
       this.groupService
         .loadingStore$
         .pipe(takeWhile(_ => !this.treeNodes$))
@@ -67,9 +73,6 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
           this.treeNodes$ = this.groupService.store$;
           this.initLastGroupSelected();
         });
-    else {
-      this.initLastGroupSelected();
-    }
 
     this.subsCheck = this.dialogs
       .dAS
@@ -91,11 +94,6 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
       ?.find(e => e.Id?.toString() === this.autoLoadGroupId);
 
     if (group) this.onSelectGroup(group);
-  }
-
-  ngOnDestroy(): void {
-    this.nodeSelected?.selected?.next(false);
-    this.subsCheck?.unsubscribe();
   }
 
   public onSelectGroup(node: TreeNode) {

@@ -87,6 +87,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
   private subsKeyName!: Subscription | undefined;
   private subsBreakpoint!: Subscription | undefined;
   private subsDialog!: Subscription | undefined;
+  private subsCategories!: Subscription | undefined;
 
   constructor(
     private readonly api: ApiService,
@@ -109,7 +110,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
       let r = this.indexedDB.getAll<ILocalizationCategory[]>(ObjectStoreNames.LocalizationCategory);
       this.categories$ = r.success$;
 
-      this.categories$.subscribe(e => this.categories$ = of(e));
+      this.subsCategories = this.categories$.subscribe(e => this.categories$ = of(e));
     }
     else if (this.lStorage.getAppMode() === AppModes.Online) {
       this.categories$ = this.api.get<ILocalizationCategory[]>('localizationcategories');
@@ -139,18 +140,17 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
           this.cd.detectChanges();
         }
       }
-      else {
-        if (this.subsDialog) {
-          this.subsDialog.unsubscribe();
-          this.subsDialog = undefined;
-          this.dialogState.isHidden = false;
-          this.cd.detectChanges();
-        }
+      else if (this.subsDialog) {
+        this.subsDialog.unsubscribe();
+        this.subsDialog = undefined;
+        this.dialogState.isHidden = false;
+        this.cd.detectChanges();
       }
     });
   }
 
   ngOnDestroy(): void {
+    this.subsCategories?.unsubscribe();
     this.subsCategory?.unsubscribe();
     this.subsKeyName?.unsubscribe();
     this.subsBreakpoint?.unsubscribe();
@@ -159,7 +159,7 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
   public onShowCreate(content: PolymorpheusContent<TuiDialogContext>, size: TuiDialogSize) {
     firstValueFrom(this.breakpointService$)
       .then(v => {
-        if (window.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
+        if (globalThis.innerHeight > 500 && (v == 'desktopLarge' || v == 'desktopSmall')) {
           this.dialogState.isHidden = !this.dialogState.isHidden;
           this.changeIndex(this.dialogState);
         }
@@ -255,11 +255,11 @@ export class LocalizationKeyComponent implements OnInit, OnDestroy {
         _ => {
           this.createOther$.next(true);
           this.lCS.addCategoryKeys(key);
-          this.alertS.showAlert('alert-success', 'success-create-key', 'positive');
+          this.alertS.showAlert('alert-success', 'success-create-key', 'positive', 'circle-check-big');
           this.onCreateOther();
         },
         _ => {
-          this.alertS.showAlert('alert-error-label', 'error-create-key', 'accent');
+          this.alertS.showAlert('alert-error-label', 'error-create-key', 'accent', 'triangle-alert');
         }
       );
     this.creating$.next(false);

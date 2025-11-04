@@ -1,6 +1,6 @@
-import { TuiAlertService, TuiButton, TuiIcon, TuiLoader, TuiTextfield } from "@taiga-ui/core";
+import { TuiButton, TuiIcon, TuiLoader, TuiTextfield } from "@taiga-ui/core";
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TuiBlock, TuiPassword, TuiRadio } from '@taiga-ui/kit';
 import { WizardService } from '../wizard.service';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,6 +13,7 @@ import { ViewersService } from "src/app/core/services/viewers.service";
 import { AppViews, viewers } from "src/app/core/viewers";
 import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
 import { PasswordHideTextDirective } from "src/app/core/directives/password-hide-text.directive";
+import { AlertService } from "src/app/core/services/alert.service";
 
 @Component({
   selector: 'app-mode-selector',
@@ -41,13 +42,12 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
   private readonly wizardService = inject(WizardService);
   private readonly lStorage = inject(LocalStorageService);
   private readonly api = inject(ApiService);
+  private readonly alert = inject(AlertService);
 
   private modeSubs: Subscription | undefined;
   private apiUrlSubs: Subscription | undefined;
   private apiKeySubs: Subscription | undefined;
   private readonly urlRegex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
-  private readonly alerts = inject(TuiAlertService);
-  private readonly translate = inject(TranslateService);
   public modes = AppModes;
   public modeForm = this.wizardService.modeForm;
   public modeControl = this.modeForm.get('mode');
@@ -123,13 +123,14 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
     this.testApi.set(true);
     let status = await firstValueFrom(this.api.get<{ version: string, status: string }>("status"))
       .then(
-        status => status, error => {
-          this.alerts.open(
-            this.translate.instant('api-connection-error'),
-            { appearance: 'accent', icon: 'triangle-alert' }
-          ).subscribe({
-            complete: () => { },
-          });
+        status => status,
+        _ => {
+          this.alert.showAlert(
+            'alert-error',
+            'api-connection-error',
+            'accent',
+            'triangle-alert'
+          );
         }
       );
     this.testApi.set(false);

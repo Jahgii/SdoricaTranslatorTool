@@ -73,7 +73,7 @@ export class SidebarComponent {
         takeWhile(() => this.open),
         skip(1)
       )
-      .subscribe(breakpoint => {
+      .subscribe(_ => {
         this.open = false;
       });
   }

@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, Subject, firstValueFrom, map, mergeMap, of
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { IGroup, IMainGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { Indexes, ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
+import { AlertService } from 'src/app/core/services/alert.service';
 import { ApiService } from 'src/app/core/services/api.service';
 import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
@@ -25,12 +26,12 @@ export interface TreeNode extends IMainGroup {
 export class DGroupsService extends StoreService<TreeNode> {
 
   constructor(
-    private api: ApiService,
-    private indexedDB: IndexDBService,
-    private lStorage: LocalStorageService,
-    private translate: TranslateService,
+    private readonly api: ApiService,
+    private readonly indexedDB: IndexDBService,
+    private readonly lStorage: LocalStorageService,
+    private readonly translate: TranslateService,
+    private readonly alert: AlertService,
     readonly languageOrigin: LanguageOriginService,
-    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {
     super();
     this.init();
@@ -151,30 +152,20 @@ export class DGroupsService extends StoreService<TreeNode> {
 
     await firstValueFrom(request$)
       .then(_ => {
-        this.alerts.open(this.translate.instant('alert-success-label'),
-          {
-            label: this.translate.instant('alert-success'),
-            autoClose: 3_000,
-            closeable: false,
-            appearance: 'success'
-          }
-        ).subscribe({
-          complete: () => {
-          },
-        });
+        this.alert.showAlert(
+          'alert-success',
+          'alert-success-label',
+          'positive',
+          'circle-check-big'
+        );
       }, _ => {
         (input as any).control?.patchValue(oldName, { emitEvent: false });
-        this.alerts.open(this.translate.instant('alert-error-label'),
-          {
-            label: this.translate.instant('alert-error'),
-            autoClose: 3_000,
-            closeable: false,
-            appearance: 'error'
-          }
-        ).subscribe({
-          complete: () => {
-          },
-        });
+        this.alert.showAlert(
+          'alert-error',
+          'alert-error-label',
+          'positive',
+          'circle-check-big'
+        );
       });
   }
 

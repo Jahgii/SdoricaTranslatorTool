@@ -112,7 +112,7 @@ export class HeaderMenuComponent {
 
   protected onSwitchAppMode(mode: AppModes) {
     this.lStorage.setAppMode(mode);
-    window.location.reload();
+    globalThis.location.reload();
   }
 
   protected onMainTour() {
@@ -145,9 +145,9 @@ export class HeaderMenuComponent {
 
   protected onRestartApp() {
     this.indexDB.destroyDB();
-    window.localStorage.clear();
+    globalThis.localStorage.clear();
 
-    window.location.reload();
+    globalThis.location.reload();
   }
 
   protected onOpenSettings(event: MouseEvent, toogle: boolean) {
