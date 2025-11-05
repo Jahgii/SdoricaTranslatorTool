@@ -72,7 +72,7 @@ export class ViewersService {
     this.onChangeActiveView(view);
 
     this.activeView = view;
-    this.activeView.instance.active = true;
+    this.activeView.instance.active.set(true);
     this.activeView.instance.viewIndex = this.views.length - 1;
     this.activeView.instance.setActiveViewer = () => this.onChangeActiveView(view);
 
@@ -149,8 +149,8 @@ export class ViewersService {
   }
 
   private onChangeActiveView(view: ComponentRef<ViewerComponent>) {
-    for (const v of this.views) v.instance.active = false;
-    view.instance.active = true;
+    for (const v of this.views) v.instance.active.set(false);
+    view.instance.active.set(true);
     this.activeView = view;
   }
 }

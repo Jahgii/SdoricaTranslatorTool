@@ -1,6 +1,6 @@
 import { TuiBlockStatus } from "@taiga-ui/layout";
 import { TuiIcon, TuiScrollbar } from "@taiga-ui/core";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, effect, HostBinding, HostListener, OnInit, Type, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, effect, HostBinding, HostListener, OnInit, signal, Type, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdHostDirective } from 'src/app/core/directives/host-directive';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,7 +31,7 @@ export class ViewerComponent {
 
   public componentLoadedName?: string;
   public componentLoaded: ComponentRef<any> | undefined;
-  public active: boolean = false;
+  public active = signal(false);
   public viewIndex = -1;
 
   constructor(

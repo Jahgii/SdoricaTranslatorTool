@@ -1,4 +1,4 @@
-<tui-scrollbar class="viewer-container" [hidden]="true" [ngClass]="{'active': active}">
+<tui-scrollbar class="viewer-container" [hidden]="true" [ngClass]="{'active': active()}">
     <ng-template adHost></ng-template>
     @if (!componentLoaded) {
     <div class="component-not-loaded">
