@@ -240,7 +240,7 @@ export class ImportService implements OnDestroy {
 
     if (typeof Worker !== 'undefined') {
       const obbWorker = new Worker(new URL('../core/workers/obb-verification.worker', import.meta.url));
-      obbWorker.onmessage = ({ data }) => this.onVerificationObbWorkerMessage(data, fileControl);
+      obbWorker.onmessage = ({ data }) => this.onVerificationObbWorkerMessage(data, fileControl, obbWorker);
 
       let message: ImportOBBVerificationPostMessage = {
         file: this.obb.control.value
@@ -287,7 +287,7 @@ export class ImportService implements OnDestroy {
   /**
    * onmessage callback of Verified Obb Worker
    */
-  private onVerificationObbWorkerMessage(data: any, fileControl: IFileControl) {
+  private onVerificationObbWorkerMessage(data: any, fileControl: IFileControl, worker: Worker) {
     let dType: WorkerImportOBBVerificationPostMessage = data;
     if (dType.message === 'file-error') {
       this.alert.showAlert('alert-error', 'error-file-obb', 'accent', 'triangle-alert');
@@ -301,6 +301,7 @@ export class ImportService implements OnDestroy {
       this.dialogAssetsMainGroups = dType.dialogAssetsMainGroups ?? {};
       this.dialogAssetsGroups = dType.dialogAssetsGroups ?? {};
       fileControl.verifiedFile$.next(true);
+      worker.terminate();
     }
   }
 

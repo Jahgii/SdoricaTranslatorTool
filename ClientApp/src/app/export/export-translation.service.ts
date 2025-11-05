@@ -324,9 +324,9 @@ export class ExportTranslationService implements OnDestroy {
     const locWorker = new Worker(new URL('../core/workers/export-loc.worker', import.meta.url));
     const gamWorker = new Worker(new URL('../core/workers/export-gam.worker', import.meta.url));
 
-    obbWorker.onmessage = ({ data }) => this.onMessage(data, this.obb);
-    locWorker.onmessage = ({ data }) => this.onMessage(data, this.localization);
-    gamWorker.onmessage = ({ data }) => this.onMessage(data, this.gamedata);
+    obbWorker.onmessage = ({ data }) => this.onMessage(data, this.obb, obbWorker);
+    locWorker.onmessage = ({ data }) => this.onMessage(data, this.localization, locWorker);
+    gamWorker.onmessage = ({ data }) => this.onMessage(data, this.gamedata, gamWorker);
 
     if (!this.obb.skip?.value) {
       let message: ExportPostMessage = {
@@ -343,7 +343,7 @@ export class ExportTranslationService implements OnDestroy {
       };
 
       obbWorker.postMessage(message);
-    }
+    } else obbWorker.terminate();
     if (!this.localization.skip?.value) {
       let message: ExportPostMessage = {
         dbName: this.indexedDB.dbName,
@@ -359,7 +359,7 @@ export class ExportTranslationService implements OnDestroy {
       };
 
       locWorker.postMessage(message);
-    }
+    } else locWorker.terminate();
     if (!this.gamedata.skip?.value) {
       let message: ExportPostMessage = {
         dbName: this.indexedDB.dbName,
@@ -375,13 +375,15 @@ export class ExportTranslationService implements OnDestroy {
       };
 
       gamWorker.postMessage(message);
-    }
+    } else gamWorker.terminate();
   }
 
-  private onMessage(message: IOnMessage, fileControl: IFileControl) {
+  private onMessage(message: IOnMessage, fileControl: IFileControl, worker: Worker) {
     if (message.pgState == ProgressStatus.finish && message.blob) {
       fileControl.url = globalThis.URL.createObjectURL(message.blob);
       this.onAutoDownload(fileControl);
+
+      worker.terminate();
     }
 
     fileControl.progress$.next(message.pg);
@@ -413,7 +415,7 @@ export class ExportTranslationService implements OnDestroy {
   public onExportTranslation() {
     const lang = (LanguageType as any)[this.lStorage.getDefaultLang()];
     const allWorker = new Worker(new URL('../core/workers/export-all.worker', import.meta.url));
-    allWorker.onmessage = ({ data }) => this.onMessageAll(data);
+    allWorker.onmessage = ({ data }) => this.onMessageAll(data, allWorker);
     this.exportStatus.set(ProgressStatus.retrivingServerData);
 
     let message: ExportPostMessage = {
@@ -432,7 +434,7 @@ export class ExportTranslationService implements OnDestroy {
     allWorker.postMessage(message);
   }
 
-  private onMessageAll(message: IOnMessage | string) {
+  private onMessageAll(message: IOnMessage | string, worker: Worker) {
     if (typeof message === 'string') {
       this.exportMessages.set([...this.exportMessages(), message]);
 
@@ -452,6 +454,8 @@ export class ExportTranslationService implements OnDestroy {
     a.style.display = 'none';
     a.click();
     a.remove();
+
+    worker.terminate();
   }
 
 }
