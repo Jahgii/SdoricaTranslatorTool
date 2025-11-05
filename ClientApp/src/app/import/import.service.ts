@@ -3,7 +3,7 @@ import { ApiService } from '../core/services/api.service';
 import { ILocalization, ILocalizationCategory, ILocalizationKey } from '../core/interfaces/i-localizations';
 import { IGamedata, IGamedataCategory, IGamedataValue } from '../core/interfaces/i-gamedata';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, Subscription, combineLatest, firstValueFrom, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, firstValueFrom, map, of, skipUntil, skipWhile, switchMap, take, takeLast, takeUntil } from 'rxjs';
 import { decode } from '@msgpack/msgpack';
 import { ProgressStatus } from '../core/interfaces/i-export-progress';
 import { TuiFileLike } from '@taiga-ui/kit';
@@ -293,6 +293,7 @@ export class ImportService implements OnDestroy {
       this.alert.showAlert('alert-error', 'error-file-obb', 'accent', 'triangle-alert');
       fileControl.verifyingFile$.next(false);
       fileControl.control.setValue(null);
+      worker.terminate();
     }
     else if (dType.message === 'file-verifying-complete') fileControl.verifyingFile$.next(false);
     else if (dType.message === 'file-verified') {
@@ -396,13 +397,9 @@ export class ImportService implements OnDestroy {
   }
 
   private onImportWorkers() {
-    const importWorker = new Worker(new URL('../core/workers/import.worker', import.meta.url));
+    let importWorker = new Worker(new URL('../core/workers/import.worker', import.meta.url));
     importWorker.onmessage = ({ data }) => {
       let message: IndexedDBbCustomRequestWorker<IDialogAsset | ILanguage | IMainGroup | IGroup> = data;
-
-      if (message.file === 'obb') this.obb.progressStatus$.next(ProgressStatus.finish);
-      if (message.file === 'gamedata') this.gamedata.progressStatus$.next(ProgressStatus.finish);
-      if (message.file === 'localization') this.localization.progressStatus$.next(ProgressStatus.finish);
 
       let op: OperationLog = {
         file: message.file,
@@ -412,6 +409,16 @@ export class ImportService implements OnDestroy {
       };
 
       this.operations$.next([...this.operations$.value, op]);
+
+      if (message.file === 'obb') this.obb.progressStatus$.next(ProgressStatus.finish);
+      if (message.file === 'gamedata') this.gamedata.progressStatus$.next(ProgressStatus.finish);
+      if (message.file === 'localization') this.localization.progressStatus$.next(ProgressStatus.finish);
+
+      if (
+        this.obb.progressStatus$.value === ProgressStatus.finish &&
+        this.gamedata.progressStatus$.value === ProgressStatus.finish &&
+        this.localization.progressStatus$.value === ProgressStatus.finish
+      ) importWorker.terminate();
     };
 
     let dialogAU: string[] = [];
