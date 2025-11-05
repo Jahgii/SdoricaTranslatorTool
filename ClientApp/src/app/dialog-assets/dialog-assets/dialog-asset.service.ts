@@ -1,10 +1,9 @@
-import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
-import { IDialog, IDialogAsset, IDialogAssetExport, TriggerChange } from 'src/app/core/interfaces/i-dialog-asset';
+import { IDialogAsset, IDialogAssetExport, TriggerChange } from 'src/app/core/interfaces/i-dialog-asset';
 import { ApiService } from 'src/app/core/services/api.service';
-import { TuiAlertService } from '@taiga-ui/core';
 import { LibreTranslateService } from 'src/app/core/services/libre-translate.service';
 import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
@@ -111,13 +110,11 @@ export class DialogAssetService {
 
         if (dialog$ === undefined) return;
 
-        await firstValueFrom(dialog$)
-          .then(r => {
+        await firstValueFrom(dialog$).then(r => {
 
-          }, error => {
+        }, error => {
 
-          }
-          );
+        });
         this.pendingChanges$.next(false);
       });
   }

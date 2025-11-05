@@ -1,6 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { TuiAlertService } from '@taiga-ui/core';
+import { Injectable } from '@angular/core';
 import { TuiInputInline } from '@taiga-ui/kit';
 import { BehaviorSubject, Observable, Subject, firstValueFrom, map, mergeMap, of, toArray } from 'rxjs';
 import { AppModes } from 'src/app/core/enums/app-modes';
@@ -29,7 +27,6 @@ export class DGroupsService extends StoreService<TreeNode> {
     private readonly api: ApiService,
     private readonly indexedDB: IndexDBService,
     private readonly lStorage: LocalStorageService,
-    private readonly translate: TranslateService,
     private readonly alert: AlertService,
     readonly languageOrigin: LanguageOriginService,
   ) {
@@ -171,17 +168,45 @@ export class DGroupsService extends StoreService<TreeNode> {
 
   public onCheckTranslated(node: TreeNode, translated: boolean) {
     if ((node as IGroup).MainGroup) {
-      let mainGroup = (node as IGroup).MainGroup;
+      let mainGroupName = (node as IGroup).MainGroup;
       let addOrSubs = translated === true ? 1 : -1;
       node.TranslatedFiles += addOrSubs;
 
       let nodes = this.getData();
-      let parentIndex = nodes.findIndex(e => e.OriginalName === mainGroup);
+      let parentIndex = nodes.findIndex(e => e.OriginalName === mainGroupName);
       let parentNode = nodes[parentIndex];
 
       if (parentNode) {
         parentNode.TranslatedFiles += addOrSubs;
         this.update(parentNode, parentIndex);
+      }
+
+      if (this.lStorage.getAppMode() === AppModes.Offline) {
+        let mainGroup: IMainGroup = {
+          Id: parentNode.Id,
+          Language: parentNode.Language,
+          OriginalName: parentNode.OriginalName,
+          Name: parentNode.Name,
+          ImageLink: parentNode.ImageLink,
+          Files: parentNode.Files,
+          TranslatedFiles: parentNode.TranslatedFiles,
+          Order: parentNode.Order
+        };
+
+        let group: IGroup = {
+          Id: node.Id,
+          Language: node.Language,
+          MainGroup: mainGroupName,
+          OriginalName: node.OriginalName,
+          Name: node.Name,
+          ImageLink: node.ImageLink,
+          Files: node.Files,
+          TranslatedFiles: node.TranslatedFiles,
+          Order: node.Order
+        };
+
+        this.indexedDB.put(ObjectStoreNames.MainGroup, mainGroup);
+        this.indexedDB.put(ObjectStoreNames.Group, group);
       }
     }
   }
