@@ -43,10 +43,10 @@ export class ViewersService {
     if (c1 === AppViews.wizard) c1 = undefined;
     if (c2 === AppViews.wizard) c2 = undefined;
 
-    if (c1) this.loadComponent(c1 as AppViews, await viewers[c1], {});
+    if (c1) this.loadComponent(c1 as AppViews, await viewers[c1](), {});
     if (c2 && await firstValueFrom(this.breakpointService$) !== 'mobile') {
       this.splitMode();
-      this.loadComponent(c2 as AppViews, await viewers[c2], {});
+      this.loadComponent(c2 as AppViews, await viewers[c2](), {});
     }
 
     let element = document.querySelector(':root') as HTMLElement;
@@ -117,7 +117,7 @@ export class ViewersService {
 
     for (const k of Object.keys(viewers)) {
       if (k === AppViews.login || k === AppViews.loading) continue;
-      if (await viewers[k] === component) {
+      if (await viewers[k]() === component) {
         if (this.activeView == this.views[0])
           this.lStorage.setC1(k);
         else if (this.views[1] && this.activeView == this.views[1])

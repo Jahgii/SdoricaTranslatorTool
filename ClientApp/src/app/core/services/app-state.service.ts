@@ -24,7 +24,7 @@ export class AppStateService {
   ) { }
 
   public async init() {
-    this.vS.loadComponent(AppViews.loading, await viewers.loading, {});
+    this.vS.loadComponent(AppViews.loading, await viewers.loading(), {});
 
     this.indexedDB.dbLoaded$.pipe(
       shareReplay(),
@@ -32,7 +32,7 @@ export class AppStateService {
     ).subscribe(async _ => {
       if (!_) return;
       if (this.lStorage.getAppWizardDone() === 1) this.initializeApp();
-      else this.vS.loadComponent(AppViews.wizard, await viewers.wizard, {});
+      else this.vS.loadComponent(AppViews.wizard, await viewers.wizard(), {});
     });
   }
 
@@ -40,12 +40,12 @@ export class AppStateService {
     let languagesRetrive = await this.langService.onRetriveLanguages();
 
     if (!languagesRetrive && this.lStorage.getAppMode() === AppModes.Online) {
-      this.vS.loadComponent(AppViews.login, await viewers.login, {});
+      this.vS.loadComponent(AppViews.login, await viewers.login(), {});
       return;
     }
 
     if (!languagesRetrive && this.lStorage.getAppMode() === AppModes.Offline) {
-      this.vS.loadComponent(AppViews.wizard, await viewers.wizard, {});
+      this.vS.loadComponent(AppViews.wizard, await viewers.wizard(), {});
       return;
     }
 

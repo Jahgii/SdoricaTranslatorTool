@@ -136,7 +136,7 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
     this.testApi.set(false);
 
     if (status && status.status === "Alive") {
-      this.vS.loadComponent(AppViews.login, await viewers.login, {});
+      this.vS.loadComponent(AppViews.login, await viewers.login(), {});
     } else this.apiAlive.set(false);
   }
 

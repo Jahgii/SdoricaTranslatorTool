@@ -29,9 +29,9 @@
                         <app-common-word-table-cell-editable #cell [focusTemplate]="focus"
                             [unfocusTemplate]="unfocus" />
                         <ng-template #focus>
-                            <tui-input [(ngModel)]="word.Translation" tuiTextfieldSize="s">
-                                <input tuiTextfieldLegacy appAutoFocus [cell]="cell" />
-                            </tui-input>
+                            <tui-textfield tuiTextfieldSize="s">
+                                <input tuiTextfield [(ngModel)]="word.Translation" appAutoFocus [cell]="cell" />
+                            </tui-textfield>
                         </ng-template>
                         <ng-template #unfocus>
                             <span class="span-unfocus">{{word.Translation}}</span>

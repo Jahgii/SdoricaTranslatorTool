@@ -1,14 +1,13 @@
 import { TuiTable } from "@taiga-ui/addon-table";
-import { TuiTextfieldControllerModule, TuiInputModule, TuiInputNumberModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiButton, TuiHint, TuiTextfield, TuiScrollable } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiButton, TuiHint, TuiTextfield, TuiScrollable, TuiIcon } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { PolymorpheusContent } from '@taiga-ui/polymorpheus';
 import { GamedataService } from 'src/app/core/services/gamedata.service';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
-import { TuiCheckbox, TuiBlock, TuiButtonLoading } from '@taiga-ui/kit';
+import { TuiCheckbox, TuiBlock, TuiButtonLoading, TuiTooltip, TuiInputNumber } from '@taiga-ui/kit';
 import { DraggableElementDirective } from '../../core/directives/draggable-element.directive';
 import { AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DialogState } from 'src/app/core/interfaces/i-dialog';
@@ -25,22 +24,24 @@ import { CommonWordTableCellEditableComponent } from "../common-words/common-wor
   imports: [
     NgStyle,
     AsyncPipe,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
     NgTemplateOutlet,
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
+    FormsModule,
+    ReactiveFormsModule,
+    
+    TranslateModule,
+    
     TuiDropdown,
     TuiButton,
     TuiDataList,
     TuiScrollable,
     TuiScrollbar,
-    TuiInputModule,
-    TuiTextfieldControllerModule,
     TuiTextfield,
-    TuiInputNumberModule,
+    TuiInputNumber,
+    TuiIcon,
+    TuiTooltip,
     TuiHint,
     TuiBlock,
     TuiCheckbox,
@@ -48,6 +49,7 @@ import { CommonWordTableCellEditableComponent } from "../common-words/common-wor
     TuiTable,
     TuiButtonLoading,
     TuiBlockStatus,
+
     DraggableElementDirective,
     CommonWordTableCellEditableComponent,
     AutoFocusDirective,

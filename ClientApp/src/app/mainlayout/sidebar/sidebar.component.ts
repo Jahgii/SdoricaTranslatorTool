@@ -79,7 +79,7 @@ export class SidebarComponent {
   }
 
   public async loadComponent(viewerKey: AppViews) {
-    this.viewersService.loadComponent(viewerKey, await viewers[viewerKey], {});
+    this.viewersService.loadComponent(viewerKey, await viewers[viewerKey](), {});
     this.open = false;
   }
 

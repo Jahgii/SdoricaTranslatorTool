@@ -1,9 +1,4 @@
 import {
-  TuiInputModule,
-  TuiTextareaModule,
-  TuiTextfieldControllerModule,
-} from "@taiga-ui/legacy";
-import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -14,7 +9,7 @@ import {
   ViewChild,
   ViewChildren,
 } from "@angular/core";
-import { EMPTY_QUERY, TuiBooleanHandler, tuiPure } from "@taiga-ui/cdk";
+import { EMPTY_QUERY, TuiBooleanHandler, TuiMapper, TuiMapperPipe, tuiPure } from "@taiga-ui/cdk";
 import {
   TuiAppearance,
   TuiDataList,
@@ -27,6 +22,7 @@ import {
   TuiOption,
   TuiScrollable,
   TuiScrollbar,
+  TuiTextfield,
 } from "@taiga-ui/core";
 import { BehaviorSubject, Observable, pairwise, Subscription } from "rxjs";
 import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
@@ -37,16 +33,13 @@ import { LocalizationService } from "src/app/core/services/localization.service"
 import { TranslateModule } from "@ngx-translate/core";
 import { TuiAppBar, TuiBlockStatus } from "@taiga-ui/layout";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TuiCheckbox, TuiSwitch } from "@taiga-ui/kit";
-import {
-  CdkFixedSizeVirtualScroll,
-  CdkVirtualForOf,
-  CdkVirtualScrollViewport,
-} from "@angular/cdk/scrolling";
+import { TuiCheckbox, TuiSwitch, TuiTextarea } from "@taiga-ui/kit";
+import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 import { TuiTable, TuiTableFilters } from "@taiga-ui/addon-table";
 import { ElementBreakpointService } from "src/app/core/services/element-breakpoint.service";
 import { CommonDictionaryDirective } from "src/app/core/directives/common-dictionary.directive";
 import { AsyncPipe, KeyValuePipe, NgTemplateOutlet } from "@angular/common";
+import { TranslationFocusChangeDirective } from "./translation-focus-change.directive";
 
 const ESPECIAL_CHARACTER = "@";
 
@@ -62,30 +55,34 @@ const ESPECIAL_CHARACTER = "@";
     KeyValuePipe,
     AsyncPipe,
     NgTemplateOutlet,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
-    TuiTableFilters,
+    FormsModule,
+    ReactiveFormsModule,
+
+    TranslateModule,
+
     TuiScrollbar,
     TuiScrollable,
     TuiTable,
+    TuiTableFilters,
     TuiSwitch,
     TuiIcon,
-    TuiInputModule,
-    TuiTextfieldControllerModule,
+    TuiTextfield,
+    TuiTextarea,
     TuiCheckbox,
     TuiHint,
-    TuiTextareaModule,
     TuiDropdown,
+    TuiMapperPipe,
     TuiDataList,
     TuiBlockStatus,
     TuiAppBar,
     TuiLoader,
-    CommonDictionaryDirective,
     TuiAppearance,
+
+    CommonDictionaryDirective,
+    TranslationFocusChangeDirective,
   ]
 })
 export class LocalizationTableComponent implements OnInit, OnDestroy {
@@ -198,16 +195,29 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
     textarea: HTMLTextAreaElement,
   ): void {
     name = `$BUFF:(${name})`;
+    const currentCaretPosition = textarea.selectionStart;
     const search = this.getCurrentSearch(textarea);
     const value = key.Translations[this.languageOrigin.localizationLang]
       .replace(search, name);
-    const caret = value.indexOf(name) + name.length;
+    const caret = value.indexOf(name, currentCaretPosition - name.length) + name.length;
 
     key.Translations[this.languageOrigin.localizationLang] = value;
     textarea.focus();
     textarea.value = value;
     textarea.setSelectionRange(caret, caret);
   }
+
+  protected search(textarea: any): string {
+    return textarea.value.slice(textarea.value.indexOf('@'), textarea.selectionStart) || '';
+  }
+
+  protected readonly filter: TuiMapper<[readonly IGamedataValue[], string], readonly IGamedataValue[]> = (
+    items,
+    search,
+  ) =>
+    items.filter(
+      ({ Name }) => Name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+    );
 
   @tuiPure
   private getFilteredItems(

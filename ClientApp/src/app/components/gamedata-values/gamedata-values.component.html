@@ -44,40 +44,41 @@
                         {{'content' | translate}}
                     </h4>
                     <div class="tui-form__row">
-                        <tui-input formControlName="id" tuiTextfieldSize="m"
-                            [tuiTextfieldIcon]="availableKeyNameTemplate">
-                            {{'id' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
+                        <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="false">
+                            <label tuiLabel>{{'id' | translate}}</label>
+                            <input tuiTextfield formControlName="id" />
+                            <ng-container [ngTemplateOutlet]="availableKeyNameTemplate" />
                             <span class="tui-required"></span>
-                        </tui-input>
+                        </tui-textfield>
                     </div>
                     <div class="tui-form__row">
-                        <tui-input formControlName="iconKey" tuiTextfieldSize="m">
-                            {{'iconkey' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
+                        <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="false">
+                            <label tuiLabel>{{'iconKey' | translate}}</label>
+                            <input tuiTextfield formControlName="iconKey" />
                             <span class="tui-required"></span>
-                        </tui-input>
+                        </tui-textfield>
                     </div>
                     <div class="tui-form__row">
-                        <tui-input formControlName="localizationInfoKey" tuiTextfieldSize="m">
-                            {{'localizationinfokey' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
+                        <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="false">
+                            <label tuiLabel>{{'localizationinfokey' | translate}}</label>
+                            <input tuiTextfield formControlName="localizationInfoKey" />
                             <span class="tui-required"></span>
-                        </tui-input>
+                        </tui-textfield>
                     </div>
                     <div class="tui-form__row">
-                        <tui-input formControlName="localizationNameKey" tuiTextfieldSize="m">
-                            {{'localizationnamekey' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
+                        <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="false">
+                            <label tuiLabel>{{'localizationnamekey' | translate}}</label>
+                            <input tuiTextfield formControlName="localizationNameKey" />
                             <span class="tui-required"></span>
-                        </tui-input>
+                        </tui-textfield>
                     </div>
                     <div class="tui-form__row">
-                        <tui-input-number tuiHintContent="{{'order-hint' | translate}}" formControlName="order"
-                            [tuiTextfieldSize]="'m'" tuiHintAppearance="dark">
-                            {{'order' | translate}}
+                        <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="false">
+                            <label tuiLabel>{{'order' | translate}}</label>
+                            <input tuiInputNumber formControlName="order" />
+                            <tui-icon tuiTooltip="{{'order-hint' | translate}}" />
                             <span class="tui-required"></span>
-                        </tui-input-number>
+                        </tui-textfield>
                     </div>
                     <div class="tui-form__row">
                         <label tuiBlock="s">
@@ -95,8 +96,7 @@
                 (click)="gamedataService.onCreateKey()" size="m"
                 [loading]="(gamedataService.creating$ | async) ?? false"
                 [disabled]="(gamedataService.availableKeyName$ | async) != 'valid' || gamedataService.buffInfoForm.invalid"
-                [tuiHint]="((gamedataService.availableKeyName$ | async) == 'invalid' || gamedataService.buffInfoForm.invalid) ? ('form-error' | translate) : undefined"
-                tuiHintAppearance="error">
+                [tuiHint]="((gamedataService.availableKeyName$ | async) == 'invalid' || gamedataService.buffInfoForm.invalid) ? ('form-error' | translate) : undefined">
                 {{'create' | translate}}
             </button>
             }
@@ -203,9 +203,10 @@
                             <app-common-word-table-cell-editable #cellIconKey [focusTemplate]="focusIconKey"
                                 [unfocusTemplate]="unfocusIconKey" />
                             <ng-template #focusIconKey>
-                                <tui-input [(ngModel)]="v.Content.iconKey" tuiTextfieldSize="s">
-                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cellIconKey" />
-                                </tui-input>
+                                <tui-textfield tuiTextfieldSize="s">
+                                    <input tuiTextfield [(ngModel)]="v.Content.iconKey" appAutoFocus
+                                        [cell]="cellIconKey" />
+                                </tui-textfield>
                             </ng-template>
                             <ng-template #unfocusIconKey>
                                 <span class="span-unfocus">{{v.Content.iconKey}}</span>
@@ -215,9 +216,10 @@
                             <app-common-word-table-cell-editable #cellInfoKey [focusTemplate]="focusInfoKey"
                                 [unfocusTemplate]="unfocusInfoKey" />
                             <ng-template #focusInfoKey>
-                                <tui-input [(ngModel)]="v.Content.localizationInfoKey" tuiTextfieldSize="s">
-                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cellInfoKey" />
-                                </tui-input>
+                                <tui-textfield tuiTextfieldSize="s">
+                                    <input tuiTextfield [(ngModel)]="v.Content.localizationInfoKey" appAutoFocus
+                                        [cell]="cellInfoKey" />
+                                </tui-textfield>
                             </ng-template>
                             <ng-template #unfocusInfoKey>
                                 <span class="span-unfocus">{{v.Content.localizationInfoKey}}</span>
@@ -227,9 +229,10 @@
                             <app-common-word-table-cell-editable #cellNameKey [focusTemplate]="focusNameKey"
                                 [unfocusTemplate]="unfocusNameKey" />
                             <ng-template #focusNameKey>
-                                <tui-input [(ngModel)]="v.Content.localizationNameKey" tuiTextfieldSize="s">
-                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cellNameKey" />
-                                </tui-input>
+                                <tui-textfield tuiTextfieldSize="s">
+                                    <input tuiTextfield [(ngModel)]="v.Content.localizationNameKey" appAutoFocus
+                                        [cell]="cellNameKey" />
+                                </tui-textfield>
                             </ng-template>
                             <ng-template #unfocusNameKey>
                                 <span class="span-unfocus">{{v.Content.localizationNameKey}}</span>
@@ -239,9 +242,10 @@
                             <app-common-word-table-cell-editable #cellOrder [focusTemplate]="focusOrder"
                                 [unfocusTemplate]="unfocusOrder" />
                             <ng-template #focusOrder>
-                                <tui-input-number [(ngModel)]="v.Content.order" tuiTextfieldSize="s">
-                                    <input placeholder="***" tuiTextfieldLegacy appAutoFocus [cell]="cellOrder" />
-                                </tui-input-number>
+                                <tui-textfield tuiTextfieldSize="s">
+                                    <input tuiInputNumber [(ngModel)]="v.Content.order" appAutoFocus
+                                        [cell]="cellOrder" />
+                                </tui-textfield>
                             </ng-template>
                             <ng-template #unfocusOrder>
                                 <span class="span-unfocus">{{v.Content.order}}</span>

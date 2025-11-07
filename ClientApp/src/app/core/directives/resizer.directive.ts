@@ -88,7 +88,7 @@ export class ResizerDirective implements OnChanges {
         e.preventDefault();
         this.resizerState.isResizing = false;
         this.removeActiveClass();
-        this.elementRef.parentElement?.removeChild(this.ghostElement!);
+        this.ghostElement?.remove();
         this.ghostElement = undefined;
         this.changeDocumentEvents('');
         this.moveAxis(e.pageX, e.pageY);
@@ -141,7 +141,7 @@ export class ResizerDirective implements OnChanges {
         e.preventDefault();
         this.resizerState.isResizing = false;
         this.removeActiveClass();
-        this.elementRef.parentElement?.removeChild(this.ghostElement!);
+        this.ghostElement?.remove();
         this.ghostElement = undefined;
         this.changeDocumentEvents('');
         this.moveAxis(e.changedTouches[0].pageX, e.changedTouches[0].pageY);

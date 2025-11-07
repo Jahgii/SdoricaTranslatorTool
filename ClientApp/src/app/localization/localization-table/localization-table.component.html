@@ -67,23 +67,26 @@
                         </tr>
                         <tr tuiThGroup #filterHeader>
                             <th tuiTh *tuiHead="'Language'" [sticky]="true" style="transform: translate(0);"
-                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44" [sorter]="null">
-                                <tui-input tuiTableFilter="Original"
-                                    [formControl]="localization.filterForm.controls['original']"
-                                    [tuiGenericFilter]="localization.filterOriginalColumn" [tuiTextfieldSize]="'m'"
-                                    [tuiTextfieldIconLeft]="'filter'">
-                                    {{'search-by-original-column' | translate}}
-                                </tui-input>
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44"
+                                [sorter]="null">
+                                <tui-textfield tuiTextfieldSize="s">
+                                    <tui-icon icon="filter" />
+                                    <input tuiTextfield tuiTableFilter="Original"
+                                        [tuiGenericFilter]="localization.filterOriginalColumn"
+                                        [formControl]="localization.filterForm.controls['original']"
+                                        placeholder="{{'search-by-original-column' | translate}}" />
+                                </tui-textfield>
                             </th>
                             <th tuiTh *tuiHead="'Translation'" [sticky]="true"
                                 [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44" [sorter]="null"
                                 style="width: 60%; max-width: 60%; transform: translate(0);">
-                                <tui-input tuiTableFilter="Translations"
-                                    [formControl]="localization.filterForm.controls['translation']"
-                                    [tuiGenericFilter]="localization.filterTranslationColumn" [tuiTextfieldSize]="'m'"
-                                    [tuiTextfieldIconLeft]="'filter'">
-                                    {{'search-by-translation-column' | translate}}
-                                </tui-input>
+                                <tui-textfield tuiTextfieldSize="s">
+                                    <tui-icon icon="filter" />
+                                    <input tuiTextfield tuiTableFilter="Translations"
+                                        [tuiGenericFilter]="localization.filterTranslationColumn"
+                                        [formControl]="localization.filterForm.controls['translation']"
+                                        placeholder="{{'search-by-translation-column' | translate}}" />
+                                </tui-textfield>
                             </th>
                             <th tuiTh *tuiHead="'Translated'" [sticky]="true"
                                 [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44" [sorter]="null"
@@ -131,7 +134,7 @@
                                         <tui-icon class="tooltip-arrow popin enter" icon="move-down" />
                                         }
                                     </ng-template>
-                                    @if (localization.focusRow === item.Id) {
+                                    @if (localization.focusRow() === item.Id) {
                                     <tui-scrollbar class="translation-content-cell">
                                         <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
                                         </span>
@@ -142,7 +145,7 @@
                                         <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                     </tui-scrollbar>
                                     }
-                                    @if (localization.focusRow !== item.Id) {
+                                    @if (localization.focusRow() !== item.Id) {
                                     <span
                                         class="tooltip-span-name-cell tooltip-important-text-colored tui-text_body-xs">
                                         @if (localization.selectedCategory.Name == 'SEARCH') {
@@ -157,31 +160,27 @@
                                     }
                                 </td>
                                 <td *tuiCell="'Translation'" tuiTd>
-                                    <tui-textarea #tranlationTextArea
-                                        [(ngModel)]="item.Translations[localization.language]" [expandable]="true"
-                                        (focusedChange)="localization.focusRow = item.Id" [tuiTextfieldSize]="'m'"
-                                        (ngModelChange)="localization.onTranslationChange($event, localization.keys!, item)"
-                                        [rows]="4" tuiDropdownSelectionPosition="word" [tuiDropdown]="buffSelection"
-                                        [tuiDropdownSelection]="predicate"
-                                        (keydown.arrowDown)="onArrow($event, 'first')"
-                                        (keydown.arrowUp)="onArrow($event, 'last')">
-                                    </tui-textarea>
-                                    <ng-template #buffSelection>
-                                        @if (tranlationTextArea.nativeFocusableElement) {
-                                        <tui-data-list size="s" class="menu"
-                                            (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
-                                            @for (buff of filterItems(tranlationTextArea.nativeFocusableElement);
-                                            track
-                                            $index) {
-                                            <button tuiOption new
-                                                (click)="onClick(item, buff.Name, tranlationTextArea.nativeFocusableElement)">
+                                    <tui-textfield tuiTextfieldSize="m" tuiDropdownLimitWidth="auto"
+                                        tuiDropdownSelectionPosition="word" [tuiDropdownSelection]="predicate">
+                                        <textarea #translationTextarea tuiTextarea
+                                            [(ngModel)]="item.Translations[localization.language]" [max]="4"
+                                            (focusedChange)="localization.focusRow.set(item.Id);"
+                                            (ngModelChange)="localization.onTranslationChange($event, localization.keys!, item)"
+                                            (keydown.arrowDown)="onArrow($event, 'first')"
+                                            (keydown.arrowUp)="onArrow($event, 'last')" appTranslationFocusChange
+                                            [textarea]="translationTextarea" [signal]="localization.focusRow"
+                                            [id]="item.Id"></textarea>
+
+                                        <tui-data-list *tuiTextfieldDropdown>
+                                            @for (buff of buffInfService.store.getData() | tuiMapper: filter :
+                                            search($any(translationTextarea).el).replace('@', ''); track $index) {
+                                            <button new tuiOption type="button"
+                                                (click)="onClick(item, buff.Name, $any(translationTextarea).el)">
                                                 {{ buff.Name }}
                                             </button>
                                             }
-
                                         </tui-data-list>
-                                        }
-                                    </ng-template>
+                                    </tui-textfield>
                                 </td>
                                 <td *tuiCell="'Translated'" tuiTd>
                                     <div class="translated-checkbox-container">
@@ -215,19 +214,21 @@
                             <th tuiTh *tuiHead="'Language'" [sticky]="true" class="header-content-cell"
                                 [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 1" [sorter]="null">
                                 <div class="header-content">
-                                    <tui-input tuiTableFilter="Original" style="transform: translate(0); flex: 1;"
-                                        [formControl]="localization.filterForm.controls['original']"
-                                        [tuiGenericFilter]="localization.filterOriginalColumn" [tuiTextfieldSize]="'m'"
-                                        [tuiTextfieldIconLeft]="'filter'">
-                                        {{'search-by-original-column-short' | translate}}
-                                    </tui-input>
-                                    <tui-input tuiTableFilter="Translations" style="transform: translate(0); flex: 1;"
-                                        [formControl]="localization.filterForm.controls['translation']"
-                                        [tuiGenericFilter]="localization.filterTranslationColumn"
-                                        [tuiTextfieldSize]="'m'" [tuiTextfieldIconLeft]="'filter'">
-                                        {{'search-by-translation-column-short' | translate}}
-                                    </tui-input>
-                                    <input tuiCheckbox type="checkbox" style="padding-left: 0.75rem;"
+                                    <tui-textfield tuiTextfieldSize="m" style="transform: translate(0); flex: 1;">
+                                        <tui-icon icon="filter" />
+                                        <input tuiTextfield tuiTableFilter="Original"
+                                            [tuiGenericFilter]="localization.filterOriginalColumn"
+                                            [formControl]="localization.filterForm.controls['original']"
+                                            placeholder="{{'search-by-original-column' | translate}}" />
+                                    </tui-textfield>
+                                    <tui-textfield tuiTextfieldSize="m" style="transform: translate(0); flex: 1;">
+                                        <tui-icon icon="filter" />
+                                        <input tuiTextfield tuiTableFilter="Translations"
+                                            [tuiGenericFilter]="localization.filterTranslationColumn"
+                                            [formControl]="localization.filterForm.controls['translation']"
+                                            placeholder="{{'search-by-translation-column' | translate}}" />
+                                    </tui-textfield>
+                                    <input tuiCheckbox type="checkbox" style="margin-left: 0.75rem;"
                                         [formControl]="localization.filterForm.controls['translated']"
                                         tuiTableFilter="Translated"
                                         [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right"
@@ -245,7 +246,7 @@
                                     <div #parent class="cell-content-original" [tuiHint]="tooltip"
                                         [tuiHintShowDelay]="200">
                                         <div>
-                                            @if (localization.focusRow === item.Id) {
+                                            @if (localization.focusRow() === item.Id) {
                                             <tui-scrollbar class="translation-content-cell">
                                                 <div appCommonDictionary
                                                     [text]="onRenderDefaultLanguage(item.Original)">
@@ -257,7 +258,7 @@
                                                 <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                             </tui-scrollbar>
                                             }
-                                            @if (localization.focusRow !== item.Id) {
+                                            @if (localization.focusRow() !== item.Id) {
                                             <span
                                                 class="tooltip-span-name-cell tooltip-important-text-colored tui-text_body-xs">
                                                 @if (localization.selectedCategory.Name == 'SEARCH') {
@@ -305,30 +306,28 @@
                                         </ng-template>
                                     </div>
                                     <div>
-                                        <tui-textarea #tranlationTextArea style="transform: translate(0);"
-                                            [(ngModel)]="item.Translations[localization.language]" [expandable]="false"
-                                            (focusedChange)="localization.focusRow = item.Id" [tuiTextfieldSize]="'m'"
-                                            (ngModelChange)="localization.onTranslationChange($event, localization.keys, item)"
-                                            [rows]="4" tuiDropdownSelectionPosition="word" [tuiDropdown]="buffSelection"
-                                            [tuiDropdownSelection]="predicate"
-                                            (keydown.arrowDown)="onArrow($event, 'first')"
-                                            (keydown.arrowUp)="onArrow($event, 'last')">
-                                        </tui-textarea>
-                                        <ng-template #buffSelection>
-                                            @if (tranlationTextArea.nativeFocusableElement) {
-                                            <tui-data-list size="s" class="menu"
-                                                (keydown.escape)="tranlationTextArea.nativeFocusableElement.focus()">
-                                                @for (buff of filterItems(tranlationTextArea.nativeFocusableElement);
-                                                track $index) {
-                                                <button tuiOption new
-                                                    (click)="onClick(item, buff.Name, tranlationTextArea.nativeFocusableElement)">
+                                        <tui-textfield tuiTextfieldSize="m" tuiDropdownLimitWidth="auto"
+                                            style="transform: translate(0);" tuiDropdownSelectionPosition="word"
+                                            [tuiDropdownSelection]="predicate">
+                                            <textarea #translationTextarea tuiTextarea
+                                                [(ngModel)]="item.Translations[localization.language]" [min]="6"
+                                                [max]="6" (focusedChange)="localization.focusRow.set(item.Id)"
+                                                (ngModelChange)="localization.onTranslationChange($event, localization.keys!, item)"
+                                                (keydown.arrowDown)="onArrow($event, 'first')"
+                                                (keydown.arrowUp)="onArrow($event, 'last')" appTranslationFocusChange
+                                                [textarea]="translationTextarea" [signal]="localization.focusRow"
+                                                [id]="item.Id"></textarea>
+
+                                            <tui-data-list *tuiTextfieldDropdown>
+                                                @for (buff of buffInfService.store.getData() | tuiMapper: filter :
+                                                search($any(translationTextarea).el).replace('@', ''); track $index) {
+                                                <button new tuiOption type="button"
+                                                    (click)="onClick(item, buff.Name, $any(translationTextarea).el)">
                                                     {{ buff.Name }}
                                                 </button>
                                                 }
-
                                             </tui-data-list>
-                                            }
-                                        </ng-template>
+                                        </tui-textfield>
                                     </div>
                                 </div>
                             </td>

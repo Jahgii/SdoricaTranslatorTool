@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy, signal } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, of, takeWhile } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localizations';
@@ -54,7 +54,7 @@ export class LocalizationService implements OnDestroy {
   public selectedCategoryIndex!: number;
   public propagateTranslation: boolean = true;
   public language: string = '';
-  public focusRow: string = '';
+  public focusRow = signal('');
   public searchTotalTranslated = 0;
   public controlCheckbox = 1;
   private autoLoadCategoryId: string | undefined = undefined;

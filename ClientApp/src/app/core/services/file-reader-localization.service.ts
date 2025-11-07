@@ -192,7 +192,7 @@ export class FileReaderLocalizationService {
       let spliceCount = Math.ceil(this.localizationKeys.length / this.maxThreads);
       let workers: Worker[] = [];
       for (let threadIndex = 0; threadIndex < this.maxThreads; threadIndex++) {
-        workers.push(new Worker(new URL('../../keys.worker', import.meta.url)));
+        workers.push(new Worker(new URL('../workers/keys.worker', import.meta.url)));
         workers[threadIndex].onmessage = ({ data }) => {
           if (data.finish) {
             workers[data.i].terminate();

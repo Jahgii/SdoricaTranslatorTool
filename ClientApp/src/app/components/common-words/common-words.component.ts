@@ -1,10 +1,9 @@
 import { TuiButtonLoading } from "@taiga-ui/kit";
 import { TuiBlockStatus } from "@taiga-ui/layout";
 import { TuiTable } from "@taiga-ui/addon-table";
-import { TuiTextfieldControllerModule, TuiInputModule } from "@taiga-ui/legacy";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiButton, TuiHint } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDialogContext, TuiDialogService, TuiDialogSize, TuiDataList, TuiLoader, TuiScrollbar, TuiDropdown, TuiButton, TuiHint, TuiTextfield } from '@taiga-ui/core';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { ICommonWord } from 'src/app/core/interfaces/i-common-word';
 import { CommonWordsService } from 'src/app/core/services/common-words.service';
@@ -25,21 +24,23 @@ import { CommonWordTableComponent } from "./common-word-table/common-word-table.
     NgStyle,
     AsyncPipe,
     NgTemplateOutlet,
+
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-    CommonWordTableComponent,
+
+    TuiTextfield,
     TuiDropdown,
     TuiButton,
     TuiDataList,
     TuiScrollbar,
-    TuiInputModule,
-    TuiTextfieldControllerModule,
     TuiHint,
     TuiTable,
     TuiLoader,
     TuiBlockStatus,
     TuiButtonLoading,
+
+    CommonWordTableComponent,
     DraggableElementDirective,
   ]
 })

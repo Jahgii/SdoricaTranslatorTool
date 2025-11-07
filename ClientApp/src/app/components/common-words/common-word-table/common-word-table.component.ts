@@ -6,7 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { TuiBreakpointService, TuiButton, TuiLoader, TuiScrollable, TuiScrollbar, TuiTextfield } from '@taiga-ui/core';
 import { TuiButtonLoading } from '@taiga-ui/kit';
-import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ICommonWord } from 'src/app/core/interfaces/i-common-word';
 import { CommonWordsService } from 'src/app/core/services/common-words.service';
 import { CommonWordTableCellEditableComponent } from './common-word-table-cell-editable/common-word-table-cell-editable.component';
@@ -18,21 +17,22 @@ import { AutoFocusDirective } from 'src/app/core/directives/auto-focus.directive
   styleUrl: './common-word-table.component.scss',
   imports: [
     NgTemplateOutlet,
-    FormsModule,
     AsyncPipe,
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,
+    FormsModule,
+    
     TranslateModule,
+
     TuiScrollable,
     TuiScrollbar,
     TuiTable,
-    TuiInputModule,
     TuiTextfield,
-    TuiTextfieldControllerModule,
     TuiLoader,
     TuiButton,
     TuiButtonLoading,
+
     CommonWordTableCellEditableComponent,
     AutoFocusDirective,
   ],

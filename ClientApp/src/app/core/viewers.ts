@@ -1,16 +1,16 @@
 import { Type } from "@angular/core"
 
-export interface Viewers { [component: string]: Promise<Type<any>> };
+export interface Viewers { [component: string]: () => Promise<Type<any>> };
 
 export const viewers: Viewers = {
-    login: import('../components/login/login.component').then(({ LoginComponent }) => LoginComponent),
-    localization: import('../localization/localization.component').then(({ LocalizationComponent }) => LocalizationComponent),
-    dialogs: import('../dialog-assets/dialog-main/dialog-main.component').then(({ DialogMainComponent }) => DialogMainComponent),
-    import: import('../import/import-main/import-main.component').then(({ ImportMainComponent }) => ImportMainComponent),
-    importall: import('../import/import-all/import-all.component').then(({ ImportAllComponent }) => ImportAllComponent),
-    export: import('../export/export-main/export-main.component').then(({ ExportTranslationGuestComponent }) => ExportTranslationGuestComponent),
-    wizard: import('../components/wizard-initial/wizard-initial.component').then(({ WizardInitialComponent }) => WizardInitialComponent),
-    loading: import('../components/app-loading/app-loading.component').then(({ AppLoadingComponent }) => AppLoadingComponent),
+    login: async () => (await import('../components/login/login.component')).LoginComponent,
+    localization: async () => (await import('../localization/localization.component')).LocalizationComponent,
+    dialogs: async () => (await import('../dialog-assets/dialog-main/dialog-main.component')).DialogMainComponent,
+    import: async () => (await import('../import/import-main/import-main.component')).ImportMainComponent,
+    importall: async () => (await import('../import/import-all/import-all.component')).ImportAllComponent,
+    export: async () => (await import('../export/export-main/export-main.component')).ExportTranslationGuestComponent,
+    wizard: async () => (await import('../components/wizard-initial/wizard-initial.component')).WizardInitialComponent,
+    loading: async () => (await import('../components/app-loading/app-loading.component')).AppLoadingComponent,
 };
 
 export enum AppViews {

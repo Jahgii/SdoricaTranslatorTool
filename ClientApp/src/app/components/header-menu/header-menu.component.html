@@ -52,22 +52,22 @@
         <p class="tui-text_body-xs common-word">
           {{'origin-language-description' | translate}}
         </p>
-        <tui-select class="tui-space_top-2" tuiTextfieldSize="s" [formControl]="languageOrigin.language"
-          [valueContent]="originLang">
-          {{'language' | translate}}
-          <input tuiTextfieldLegacy placeholder="..." />
-          <tui-data-list-wrapper *tuiDataList [items]="languageOrigin.languages" [itemContent]="originLang">
-          </tui-data-list-wrapper>
+        <tui-textfield class="tui-space_top-2" tuiChevron tuiTextfieldSize="s" [tuiTextfieldCleaner]="false"
+          [content]="originLang">
+          <input placeholder="..." tuiSelect [formControl]="languageOrigin.language" />
+
+          <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="languageOrigin.languages"
+            [itemContent]="originLang" />
           <ng-template #originLang let-data>
             {{data | translate}}
           </ng-template>
-        </tui-select>
+        </tui-textfield>
       </div>
 
       <h3 class="tui-space_top-9">{{'portraits-dir' | translate}}</h3>
       <div id="appPortraitSetting">
         <button tuiButton size="xs" type="button" class="w-100" appearance="outline"
-          (click)="portraitsService.onFolderChange()" aria-label="change portrait directory button">
+          (click)="portraitsService.onFolderChange()">
           @if (portraitsService.dirName$ | async; as dirName) {
           {{dirName}}
           }
@@ -80,12 +80,11 @@
       <h3 class="tui-space_top-9">{{'libretranslate-configuration' | translate}}</h3>
       <div id="appLibreTranslateSetting">
         <h4>{{'libretranslate-url' | translate}}</h4>
-        <tui-input class="tui-space_top-2" [(ngModel)]="libreTranslate.url" tuiTextfieldSize="s"
-          (ngModelChange)="libreTranslate.onUrlChange($event)">
-          {{'libretranslate-url' | translate}}
-          <input tuiTextfieldLegacy type="url" attr.aria-label="{{'libretranslate-url' | translate}}"
-            aria-label="libre translate url" />
-        </tui-input>
+        <tui-textfield class="tui-space_top-2" tuiTextfieldSize="s" [tuiTextfieldCleaner]="false">
+          <input tuiTextfield type="url" attr.aria-label="{{'libretranslate-url' | translate}}"
+            aria-label="libre translate url" [(ngModel)]="libreTranslate.url"
+            (ngModelChange)="libreTranslate.onUrlChange($event)" />
+        </tui-textfield>
         <h4>{{'libretranslate-apikey' | translate}}</h4>
         <label tuiLabel appPasswordHideText>
           {{'libretranslate-apikey' | translate}}
@@ -107,42 +106,45 @@
         }
         @if ((libreTranslate.serverAlive$ | async)) {
         <div class="tui-space_top-2">
-          <tui-badge appearance="success" class="w-100">{{'libretranslate-serveralive' | translate}}
+          <tui-badge appearance="success" class="w-100">
+            {{'libretranslate-serveralive' | translate}}
           </tui-badge>
         </div>
         <h4>{{'libretranslate-origin-target' | translate}}</h4>
         @if (libreTranslate.languages) {
         <div tuiGroup class="tui-space_top-2">
           <div>
-            <tui-select *tuiLet="libreTranslate.languages as languages" tuiTextfieldSize="s"
-              [(ngModel)]="libreTranslate.source" class="tui-group__inherit-item"
-              (ngModelChange)="libreTranslate.onSourceChange($event)" [tuiTextfieldLabelOutside]="true"
-              [valueContent]="languages ? stringify(languages) : undefined">
-              <input tuiTextfieldLegacy placeholder="{{'libretranslate-source' | translate}}" />
+            @let languages = libreTranslate.languages;
+            <label tuiLabel>
               {{'libretranslate-source' | translate}}
-              <ng-template tuiDataList>
-                <tui-data-list>
-                  @for (language of languages; track language) {
-                  <button tuiOption [value]="language.code" type="button">
-                    {{ language.name | translate }}
+
+              <tui-textfield tuiChevron tuiTextfieldSize="s" [tuiTextfieldCleaner]="false"
+                [content]="languages ? stringify(languages) : undefined">
+                <input placeholder="{{'libretranslate-source' | translate}}" tuiSelect
+                  [(ngModel)]="libreTranslate.source" (ngModelChange)="libreTranslate.onSourceChange($event)" />
+
+                <tui-data-list *tuiTextfieldDropdown tuiDataListDropdownManager>
+                  @for (lang of languages; track $index) {
+                  <button new tuiOption type="button" [value]="lang.code">
+                    {{ lang.name | translate }}
                   </button>
                   }
                 </tui-data-list>
-              </ng-template>
-            </tui-select>
+              </tui-textfield>
+            </label>
           </div>
           @if (libreTranslate.targetLanguages) {
           <div>
-            <tui-select tuiTextfieldSize="s" [(ngModel)]="libreTranslate.target" class="tui-group__inherit-item"
-              [tuiTextfieldLabelOutside]="true" (ngModelChange)="libreTranslate.onTargetChange($event)">
-              <input tuiTextfieldLegacy placeholder="{{'libretranslate-target' | translate}}" />
+            <label tuiLabel>
               {{'libretranslate-target' | translate}}
-              <tui-data-list-wrapper *tuiDataList [items]="libreTranslate.targetLanguages">
-              </tui-data-list-wrapper>
-              <ng-template #selectSource>
-                {{'libretranslate-target' | translate}}
-              </ng-template>
-            </tui-select>
+
+              <tui-textfield tuiChevron tuiTextfieldSize="s" [tuiTextfieldCleaner]="false">
+                <input placeholder="{{'libretranslate-target' | translate}}" tuiSelect
+                  [(ngModel)]="libreTranslate.target" (ngModelChange)="libreTranslate.onTargetChange($event)" />
+
+                <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="libreTranslate.targetLanguages" />
+              </tui-textfield>
+            </label>
           </div>
           }
         </div>
@@ -185,15 +187,15 @@
           </tui-textfield>
         </label>
         <h4>{{'gemini-lang' | translate}}</h4>
-        <tui-input class="tui-space_top-2" [(ngModel)]="geminiApi.lang" tuiTextfieldSize="s">
-          {{'gemini-lang' | translate}}
-          <input tuiTextfieldLegacy attr.aria-label="{{'gemini-lang' | translate}}" aria-label="gemini lang" />
-        </tui-input>
+        <tui-textfield class="tui-space_top-2" tuiTextfieldSize="s" [tuiTextfieldCleaner]="false">
+          <input tuiTextfield type="text" attr.aria-label="{{'gemini-lang' | translate}}" aria-label="gemini lang"
+            [(ngModel)]="geminiApi.lang" />
+        </tui-textfield>
         <h4>{{'gemini-model' | translate}}</h4>
-        <tui-input class="tui-space_top-2 tui-space_bottom-8" [(ngModel)]="geminiApi.model" tuiTextfieldSize="s">
-          {{'gemini-model' | translate}}
-          <input tuiTextfieldLegacy attr.aria-label="{{'gemini-model' | translate}}" aria-label="gemini model" />
-        </tui-input>
+        <tui-textfield class="tui-space_top-2 tui-space_bottom-8" tuiTextfieldSize="s" [tuiTextfieldCleaner]="false">
+          <input tuiTextfield type="text" attr.aria-label="{{'gemini-model' | translate}}" aria-label="gemini model"
+            [(ngModel)]="geminiApi.model" />
+        </tui-textfield>
         <button appearance="outline" class="w-100" tuiButton [iconStart]="'@tui.activity'" size="xs"
           (click)="geminiApi.onChange()" [disabled]="!geminiApi.key || !geminiApi.model">
           {{'gemini-testserver' | translate}}

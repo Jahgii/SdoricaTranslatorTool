@@ -30,47 +30,8 @@
             (touchstart)="dialogState.isHidden = !dialogState.isHidden" aria-label="Close dialog">
         </button>
     </div>
-    <tui-scrollbar class="main-form-content">
-        <form [formGroup]="commonWordForm" style="padding: 0 1rem;">
-            <div>
-                <div>
-                    <h3 class="tui-form__header tui-form__header_margin-top_none tui-space_top-4">
-                        {{'content' | translate}}
-                    </h3>
-                    <div class="tui-form__row">
-                        <tui-input formControlName="Original" tuiTextfieldSize="m">
-                            {{'original-word' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
-                            <span class="tui-required"></span>
-                        </tui-input>
-                    </div>
-                    <div class="tui-form__row">
-                        <tui-input formControlName="Translation" tuiTextfieldSize="m">
-                            {{'translation' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
-                            <span class="tui-required"></span>
-                        </tui-input>
-                    </div>
-                </div>
-            </div>
-        </form>
 
-        <div class="main-form-actions tui-space_top-3 tui-space_bottom-3">
-            @if (!(commonWords.createOther$ | async)) {
-            <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
-                [loading]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
-                [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined" tuiHintAppearance="error"
-                appearance="outline">
-                {{'create' | translate}}
-            </button>
-            }
-            @else{
-            <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateOther()" size="m" appearance="outline">
-                {{'created-other' | translate}}
-            </button>
-            }
-        </div>
-    </tui-scrollbar>
+    <ng-container [ngTemplateOutlet]="createTemplate" />
 </main>
 }
 
@@ -83,18 +44,18 @@
                         {{'content' | translate}}
                     </h3>
                     <div class="tui-form__row">
-                        <tui-input formControlName="Original" tuiTextfieldSize="m">
-                            {{'original-word' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
+                        <tui-textfield tuiTextfieldSize="m">
+                            <label tuiLabel>{{'original-word' | translate}}</label>
+                            <input tuiTextfield formControlName="Original" />
                             <span class="tui-required"></span>
-                        </tui-input>
+                        </tui-textfield>
                     </div>
                     <div class="tui-form__row">
-                        <tui-input formControlName="Translation" tuiTextfieldSize="m">
-                            {{'translation' | translate}}
-                            <input placeholder="***" tuiTextfieldLegacy />
+                        <tui-textfield tuiTextfieldSize="m">
+                            <label tuiLabel>{{'translation' | translate}}</label>
+                            <input tuiTextfield formControlName="Translation" />
                             <span class="tui-required"></span>
-                        </tui-input>
+                        </tui-textfield>
                     </div>
                 </div>
             </div>
@@ -104,8 +65,7 @@
             @if (!(commonWords.createOther$ | async)) {
             <button tuiButton [iconStart]="'@tui.circle-check'" (click)="onCreateKey()" size="m"
                 [loading]="(commonWords.creating$ | async) ?? false" [disabled]="commonWordForm.invalid"
-                [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined" tuiHintAppearance="error"
-                appearance="outline">
+                [tuiHint]="(commonWordForm.invalid) ? ('form-error' | translate) : undefined" appearance="outline">
                 {{'create' | translate}}
             </button>
             }
@@ -131,7 +91,7 @@
         </button>
     </div>
 
-    <ng-container [ngTemplateOutlet]="listTemplate"></ng-container>
+    <ng-container [ngTemplateOutlet]="listTemplate" />
 </main>
 }
 
