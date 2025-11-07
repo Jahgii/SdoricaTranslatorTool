@@ -60,6 +60,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.nodeSelected?.selected?.next(false);
     this.subsCheck?.unsubscribe();
+    this.subsName?.unsubscribe();
   }
 
   private onInit() {
@@ -126,6 +127,7 @@ export class DialogSelectionComponent implements OnInit, OnDestroy {
   public onFocusName(focus: boolean, input: TuiInputInline, node: TreeNode) {
     if (focus) {
       let oldName = `${node.Name}`;
+      if (this.subsName) this.subsName.unsubscribe();
       this.subsName = (input as any).control?.valueChanges
         .pipe(
           tap(_ => node.saving?.next(true)),
