@@ -234,4 +234,9 @@ _Pvt_Extensions
 # Development appsettings
 appsettings.Development.json
 appsettings.Production.json
-ClientApp/.env
+
+# Wails
+Wails/build/*
+!Wails/build/appicon.png
+Wails/frontend/dist
+Angular/wailsjs

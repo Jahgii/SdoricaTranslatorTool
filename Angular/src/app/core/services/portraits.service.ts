@@ -8,6 +8,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { AlertPortraitMode, AlertPortraitsComponent } from 'src/app/components/alert-portraits/alert-portraits.component';
 import { PersistentModes } from '../enums/persistent-modes';
 import { LocalStorageService } from './local-storage.service';
+import { GetImages, PickFolder } from 'wailsjs/go/main/App';
 
 @Injectable({
   providedIn: 'root'
@@ -168,20 +169,19 @@ export class PortraitsService {
   }
 
   private async onFolderChangeFallback() {
-    return false;
-    // return await PickFolder().then(async (path: string) => {
-    //   if (!path) return false;
+    return await PickFolder().then(async (path: string) => {
+      if (!path) return false;
 
-    //   return await GetImages(path).then(async files => {
-    //     this.local.setPortraitPersistentMode(PersistentModes.Fallback);
-    //     this.local.setPortraitFallbackPath(path);
-    //     this.dirName$.next(path);
+      return await GetImages(path).then(async files => {
+        this.local.setPortraitPersistentMode(PersistentModes.Fallback);
+        this.local.setPortraitFallbackPath(path);
+        this.dirName$.next(path);
 
-    //     this.imageDir = files;
+        this.imageDir = files;
 
-    //     return true;
-    //   });
-    // });
+        return true;
+      });
+    });
   }
   //#endregion
 
