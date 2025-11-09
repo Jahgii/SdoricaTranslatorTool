@@ -9,7 +9,6 @@ import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { AppModes } from 'src/app/core/enums/app-modes';
 import { Indexes, ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
-import { TranslateService } from '@ngx-translate/core';
 import { GeminiApiService } from 'src/app/core/services/gemini-api.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 
@@ -41,7 +40,6 @@ export class DialogAssetService {
     private readonly api: ApiService,
     private readonly indexedDB: IndexDBService,
     private readonly lStorage: LocalStorageService,
-    private readonly translate: TranslateService,
     private readonly alert: AlertService,
     public readonly gemini: GeminiApiService,
     public libreTranslate: LibreTranslateService,

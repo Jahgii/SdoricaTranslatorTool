@@ -16,6 +16,7 @@ import { PortraitsService } from 'src/app/core/services/portraits.service';
 import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-single.component";
 import { LanguageOriginService } from "src/app/core/services/language-origin.service";
 import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
+import { GeminiApiService } from "src/app/core/services/gemini-api.service";
 
 @Component({
   selector: 'app-dialog-assets',
@@ -24,6 +25,7 @@ import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     DialogAssetService,
+    GeminiApiService,
     ElementBreakpointService,
     {
       provide: TUI_ICON_RESOLVER,
@@ -60,7 +62,7 @@ import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
     TuiDataListDropdownManager,
     DialogAssetSingleComponent,
     TuiTextfieldControllerModule
-],
+  ],
 })
 export class DialogAssetsComponent implements OnDestroy {
   public openOption: boolean = false;
