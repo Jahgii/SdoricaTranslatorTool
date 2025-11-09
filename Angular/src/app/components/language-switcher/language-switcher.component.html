@@ -1,16 +1,11 @@
-<tui-badged-content>
-    <img alt="" size="s" tuiBadge tuiSlot="bottom"
-        [src]="flags.get(language.value ?? '') || flags.get(switcher.language) | tuiFlag" />
-
-    <button appearance="outline-grayscale" size="s" tuiButtonSelect tuiIconButton type="button" [formControl]="language"
-        [iconStart]="icons.languages" aria-label="Language">
-        <tui-data-list size="s" *tuiTextfieldDropdown>
-            @for (name of names; track $index) {
-            <button tuiOption new type="button" [value]="name | titlecase" (click)="setLang(name)">
-                <img alt="" class="t-flag" [src]="flags.get(name) | tuiFlag" />
-                {{ name + "-i18n" | translate }}
-            </button>
-            }
-        </tui-data-list>
-    </button>
-</tui-badged-content>
+<button appearance="outline-grayscale" size="s" tuiButtonSelect tuiButton type="button" [formControl]="language"
+    [iconStart]="icons.languages" [textContent]="" aria-label="Language">
+    <tui-data-list size="s" *tuiTextfieldDropdown>
+        @for (name of names; track $index) {
+        <button tuiOption new type="button" [value]="name | titlecase" (click)="setLang(name)">
+            {{ name + "-i18n" | translate }}
+        </button>
+        }
+    </tui-data-list>
+    {{ (language.value | lowercase) + "-i18n" | translate }}
+</button>
