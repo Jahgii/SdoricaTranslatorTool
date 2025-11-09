@@ -20,5 +20,5 @@ cd Dotnet && dotnet run
 ## Build
 Wails
 ```sh
-cd Wails && wails build --platform windows -upx
+cd Wails && make windows
 ```

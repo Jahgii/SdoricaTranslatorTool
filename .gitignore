@@ -238,5 +238,5 @@ appsettings.Production.json
 # Wails
 Wails/build/*
 !Wails/build/appicon.png
-Wails/frontend/dist
+Wails/frontend
 Angular/wailsjs
