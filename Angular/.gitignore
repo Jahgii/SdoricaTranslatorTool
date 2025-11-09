@@ -47,3 +47,5 @@ Thumbs.db
 /src/assets/images/chapters
 # Ignore Characters Images
 /src/assets/images/characters
+# Ignore Taiga Icons
+/src/assets/taiga-ui

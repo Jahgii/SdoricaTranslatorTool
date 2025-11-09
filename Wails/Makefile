@@ -6,7 +6,7 @@ release: windows linux
 
 frontend:
 	@echo "• Building Angular frontend..."
-	@cd ../Angular && ng build --configuration production
+	@cd ../Angular && node scan-taiga-icons.js && ng build --configuration production
 	@echo "• Angular build: Done."
 
 	@echo "• Copying build output to Wails project..."
