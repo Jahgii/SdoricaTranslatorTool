@@ -1,11 +1,10 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { shareReplay, takeWhile } from 'rxjs';
 import { ViewersService } from './viewers.service';
 import { LocalStorageService } from './local-storage.service';
 import { AppViews, viewers } from '../viewers';
 import { IndexDBService } from './index-db.service';
 import { LanguageOriginService } from './language-origin.service';
-import { TourService } from './tour.service';
 import { AppModes } from '../enums/app-modes';
 
 @Injectable({
@@ -13,14 +12,13 @@ import { AppModes } from '../enums/app-modes';
 })
 export class AppStateService {
   public initialized$ = signal(false);
-  public isOnTour$ = computed(() => this.tour.isOnTour$());
+  public isOnTour$ = signal(false);
 
   constructor(
     private readonly vS: ViewersService,
     private readonly indexedDB: IndexDBService,
     private readonly langService: LanguageOriginService,
     private readonly lStorage: LocalStorageService,
-    public readonly tour: TourService,
   ) { }
 
   public async init() {
@@ -52,12 +50,7 @@ export class AppStateService {
     this.lStorage.setAppWizardDone();
     await this.vS.initViewer();
     this.initialized$.set(true);
-    this.initializeTour();
   }
 
-  private initializeTour() {
-    if (!this.lStorage.getAppMainTourDone())
-      this.tour.start();
-  }
 }
 

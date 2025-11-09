@@ -5,11 +5,10 @@ import { TuiBreakpointService } from '@taiga-ui/core';
 import { firstValueFrom, pairwise, takeWhile } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { ViewersService } from './viewers.service';
+import { AppStateService } from './app-state.service';
 import Shepherd, { StepOptions, Tour } from 'shepherd.js';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TourService {
   protected translate = inject(TranslateService);
   public isOnTour$: WritableSignal<boolean> = signal(false);
@@ -18,6 +17,7 @@ export class TourService {
   constructor(
     private readonly viewers: ViewersService,
     private readonly lStorage: LocalStorageService,
+    private readonly appState: AppStateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 
@@ -25,6 +25,7 @@ export class TourService {
     let tour = await this.createMainAppSteps();
     this.createTour(tour);
     this.viewers.restartView();
+    this.appState.isOnTour$ = this.isOnTour$;
   }
 
   public async start() {
@@ -75,7 +76,7 @@ export class TourService {
         if (dialog && targetContainer) {
           targetContainer.appendChild(dialog);
         }
-      }, 1);
+      }, 2);
     });
   }
 
@@ -210,7 +211,8 @@ export class TourService {
         advanceOn: {
           selector: '#mainMenuButton',
           event: 'click'
-        }
+        },
+
       },
       {
         id: 'sidebar-actions-mobile',
@@ -223,6 +225,16 @@ export class TourService {
         attachTo: {
           element: '.mobile-menu',
           on: 'bottom'
+        },
+        beforeShowPromise: () => {
+          return new Promise(resolve => {
+            const checkExist = setInterval(() => {
+              if (document.querySelector('.mobile-menu')) {
+                clearInterval(checkExist);
+                resolve(true);
+              }
+            }, 1);
+          });
         },
         buttons: [
           {

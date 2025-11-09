@@ -53,9 +53,9 @@ export class SidebarComponent {
   public componentOpens = this.viewersService.componentOpens;
 
   constructor(
-    public auth: AuthService,
-    private viewersService: ViewersService,
-    public appState: AppStateService,
+    protected readonly auth: AuthService,
+    protected readonly viewersService: ViewersService,
+    protected readonly appState: AppStateService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) { }
 

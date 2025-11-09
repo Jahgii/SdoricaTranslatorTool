@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Inject, signal, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { tuiPure, TuiStringHandler, TuiContext } from '@taiga-ui/cdk';
@@ -18,16 +18,20 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
 import { LanguageSwitcherComponent } from "../language-switcher/language-switcher.component";
 import { IndexDBService } from "src/app/core/services/index-db.service";
 import { PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
-import { GeminiApiService } from "src/app/core/services/gemini-api.service";
 import { AppModes } from "src/app/core/enums/app-modes";
 import { LocalStorageService } from "src/app/core/services/local-storage.service";
 import { PasswordHideTextDirective } from "src/app/core/directives/password-hide-text.directive";
+import { TourService } from 'src/app/core/services/tour.service';
+import { GeminiApiConfigurationService } from 'src/app/core/services/gemini-api-configuration.service';
 
 @Component({
   selector: 'app-header-menu',
   templateUrl: './header-menu.component.html',
   styleUrls: ['./header-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    TourService
+  ],
   imports: [
     AsyncPipe,
     FormsModule,
@@ -56,7 +60,7 @@ import { PasswordHideTextDirective } from "src/app/core/directives/password-hide
     PasswordHideTextDirective,
   ]
 })
-export class HeaderMenuComponent {
+export class HeaderMenuComponent implements OnInit {
   @ViewChild('restartTemplate')
   protected restartTemplate?: TemplateRef<TuiAlertContext>;
 
@@ -80,7 +84,7 @@ export class HeaderMenuComponent {
   constructor(
     public readonly languageOrigin: LanguageOriginService,
     public readonly libreTranslate: LibreTranslateService,
-    public readonly geminiApi: GeminiApiService,
+    public readonly geminiConfig: GeminiApiConfigurationService,
     public readonly portraitsService: PortraitsService,
     public readonly translate: TranslateService,
     public readonly authService: AuthService,
@@ -89,10 +93,16 @@ export class HeaderMenuComponent {
     public readonly appState: AppStateService,
     public readonly indexDB: IndexDBService,
     private readonly lStorage: LocalStorageService,
+    private readonly tour: TourService,
     @Inject(TuiLanguageSwitcherService) readonly switcher: TuiLanguageSwitcherService,
     @Inject(TuiBreakpointService) readonly breakpointService$: TuiBreakpointService,
   ) {
     this.currentMode = this.lStorage.getAppMode() ?? AppModes.Offline;
+  }
+
+  ngOnInit(): void {
+    if (!this.lStorage.getAppMainTourDone())
+      this.tour.start();
   }
 
   protected onToogleSettings() {
@@ -117,11 +127,11 @@ export class HeaderMenuComponent {
 
   protected onMainTour() {
     this.openSetting.set(false);
-    this.appState.tour.start();
+    this.tour.start();
   }
 
   private onTourOnGoing() {
-    if (!this.appState.isOnTour$()) return;
+    if (!this.tour.isOnTour$()) return;
 
     this.breakpointService$
       .pipe(
