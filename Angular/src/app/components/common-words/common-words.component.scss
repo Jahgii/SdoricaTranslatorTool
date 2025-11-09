@@ -1,4 +1,4 @@
-@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+@use '@taiga-ui/core/styles/variables/media.scss' as media;
 
 .main-form {
     position: absolute;
@@ -107,7 +107,7 @@
         width: 30ch;
         overflow: hidden;
 
-        @media #{$tui-mobile} {
+        @media #{media.$tui-mobile} {
             width: 10ch;
         }
     }

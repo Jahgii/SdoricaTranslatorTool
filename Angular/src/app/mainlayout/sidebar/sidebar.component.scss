@@ -1,4 +1,4 @@
-@import '@taiga-ui/core/styles/taiga-ui-local.scss';
+@use '@taiga-ui/core/styles/variables/media.scss' as media;
 
 .sidebar-container {
     position: relative;
@@ -54,7 +54,7 @@
             }
         }
 
-        @media #{$tui-mobile} {
+        @media #{media.$tui-mobile} {
             left: 44px;
 
             .avatar {

@@ -1,5 +1,8 @@
-@import '@taiga-ui/core/styles/taiga-ui-local.scss';
-@import 'style-animations.scss';
+@use '@taiga-ui/core/styles/variables/media.scss' as media;
+@use 'style-animations.scss' as anim;
+
+@include anim.popin-animations;
+@include anim.fadein-animations;
 
 /* You can add global styles to this file, and also import other style files */
 :root {
@@ -89,7 +92,7 @@ code {
     "sidebar header"
     "sidebar content";
 
-  @media #{$tui-mobile} {
+  @media #{media.$tui-mobile} {
     grid-template-columns: 0 1fr;
     overflow: hidden;
   }

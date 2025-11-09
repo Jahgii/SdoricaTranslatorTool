@@ -1,4 +1,4 @@
-@import 'node_modules/@taiga-ui/core/styles/taiga-ui-local.scss';
+@use '@taiga-ui/core/styles/variables/media.scss' as media;
 
 $border-height: 2px;
 
@@ -12,7 +12,7 @@ $border-height: 2px;
     width: 100%;
     height: calc(100svh - var(--header-height) - 3.5rem);
 
-    @media #{$tui-mobile} {
+    @media #{media.$tui-mobile} {
         margin: 0 0;
     }
 }

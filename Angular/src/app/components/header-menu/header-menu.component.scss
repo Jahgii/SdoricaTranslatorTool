@@ -1,5 +1,4 @@
-@import '@taiga-ui/core/styles/taiga-ui-local.scss';
-
+@use '@taiga-ui/core/styles/variables/media.scss' as media;
 
 .header {
     z-index: 1;
@@ -11,7 +10,7 @@
 }
 
 .split-button {
-    @media #{$tui-mobile} {
+    @media #{media.$tui-mobile} {
         display: none;
     }
 }
