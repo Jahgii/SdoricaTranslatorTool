@@ -121,7 +121,12 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
 
   public async onTestServer() {
     this.testApi.set(true);
-    let status = await firstValueFrom(this.api.get<{ version: string, status: string }>("status"))
+    let status = await firstValueFrom(this.api.get<{
+      version: string,
+      status: string,
+      production: string,
+      token: string
+    }>("status"))
       .then(
         status => status,
         _ => {
@@ -135,9 +140,15 @@ export class ModeSelectorComponent implements OnInit, OnDestroy {
       );
     this.testApi.set(false);
 
-    if (status && status.status === "Alive") {
+
+    if (status && status.status === "Alive" && status.production === "Empty") {
+      this.lStorage.setToken(status.token);
+      this.onNext();
+    }
+    else if (status && status.status === "Alive")
       this.vS.loadComponent(AppViews.login, await viewers.login(), {});
-    } else this.apiAlive.set(false);
+    else
+      this.apiAlive.set(false);
   }
 
   public onNext() {

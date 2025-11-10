@@ -8,9 +8,10 @@ namespace SdoricaTranslatorTool.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class StatusController(ICustomMongoClient cMongoClient) : ControllerBase
+public class StatusController(ICustomMongoClient cMongoClient, IJwt jwt) : ControllerBase
 {
     readonly ICustomMongoClient _cMongoClient = cMongoClient;
+    readonly IJwt _jwt = jwt;
 
     [AllowAnonymous]
     [HttpGet]
@@ -20,7 +21,8 @@ public class StatusController(ICustomMongoClient cMongoClient) : ControllerBase
         {
             version = "1.0.0",
             status = "Alive",
-            production = "Ready"
+            production = "Ready",
+            token = "",
         };
 
         var users = await _cMongoClient
@@ -29,7 +31,11 @@ public class StatusController(ICustomMongoClient cMongoClient) : ControllerBase
             .Match(e => true)
             .ToListAsync();
 
-        if (users.Count == 0) status = status with { production = "Empty" };
+        if (users.Count == 0)
+        {
+            status = status with { token = _jwt.GenerateToken(0.12) };
+            status = status with { production = "Empty" };
+        }
 
         return Ok(status);
     }
