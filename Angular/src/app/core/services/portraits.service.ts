@@ -61,33 +61,45 @@ export class PortraitsService {
 
   //#region File System Access API
   private async folderInitFileSystemAPI() {
+    this.loading$.set(true);
+
     let request = this.indexDB
       .getAll<FileSystemDirectoryHandle[]>(ObjectStoreNames.UserDirectories)
       .success$;
 
     await firstValueFrom(request)
       .then(async handles => {
-        if (handles.length === 0) return;
+        if (handles.length === 0) {
+          this.loading$.set(false);
+          return;
+        }
 
         let handle = handles[0];
         let permissionVerified = await this.verifyPermission(handle);
-        if (permissionVerified === false) return;
+        if (permissionVerified === false) {
+          this.loading$.set(false);
+          return;
+        }
 
         this.dirHandle = handle;
         this.dirName$.next(handle.name);
         this.loadFilesFileSystemAPI();
       });
+
+    this.loading$.set(false);
   }
 
   private async onFolderChangeFileSystemAPI() {
     this.dirHandle = await (window as any).showDirectoryPicker();
 
     if (this.dirHandle) {
+      this.loading$.set(true);
       this.local.setPortraitPersistentMode(PersistentModes.FileSystemAPI);
       this.dirName$.next(this.dirHandle.name);
       this.indexDB.clear(ObjectStoreNames.UserDirectories);
       this.indexDB.post(ObjectStoreNames.UserDirectories, this.dirHandle);
       this.loadFilesFileSystemAPI();
+      this.loading$.set(false);
       return true;
     }
 
@@ -158,19 +170,31 @@ export class PortraitsService {
 
   //#region File System Access API Fallback
   private async folderInitFallback() {
+    this.loading$.set(true);
+
     let path = this.local.getPortraitFallbackPath();
-    if (!path) return;
+    if (!path) {
+      this.loading$.set(false);
+      return;
+    }
 
-    // await GetImages(path).then(files => {
-    //   this.dirName$.next(path);
+    await GetImages(path).then(files => {
+      this.dirName$.next(path);
 
-    //   this.imageDir = files;
-    // });
+      this.imageDir = files;
+    });
+
+    this.loading$.set(false);
   }
 
   private async onFolderChangeFallback() {
+    this.loading$.set(true);
+
     return await PickFolder().then(async (path: string) => {
-      if (!path) return false;
+      if (!path) {
+        this.loading$.set(false);
+        return false;
+      }
 
       return await GetImages(path).then(async files => {
         this.local.setPortraitPersistentMode(PersistentModes.Fallback);
@@ -179,6 +203,7 @@ export class PortraitsService {
 
         this.imageDir = files;
 
+        this.loading$.set(false);
         return true;
       });
     });
