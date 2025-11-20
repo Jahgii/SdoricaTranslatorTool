@@ -28,7 +28,6 @@
       <span class="tui-text_body-s tui-space_right-4 text-bold">
         {{'file-number' |translate}}:
       </span>
-      @if (dAS.dialogAssetsChange$ | async) {
       <tui-tabs-with-more [itemsLimit]="5" [(activeItemIndex)]="dAS.activeItemIndex" class="tabs"
         [moreContent]="moreContentIcon" size="m">
         @for (item of data; track item.Id) {
@@ -40,7 +39,6 @@
         </button>
         }
       </tui-tabs-with-more>
-      }
     </div>
     <div class="option-child">
       @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) ===
@@ -169,7 +167,6 @@
 <ng-template #moreContentIcon>
   <tui-icon icon="@tui.ellipsis"></tui-icon>
 </ng-template>
-
 
 <ng-template #propagationTooltip>
   {{'propagation' | translate}}: {{'propagation-dialog-description-0' | translate}}
