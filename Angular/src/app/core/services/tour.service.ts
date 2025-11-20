@@ -165,7 +165,7 @@ export class TourService {
         canClickTarget: false,
         showOn: () => !mobile,
         attachTo: {
-          element: '.active',
+          element: 'app-viewer:nth-of-type(2)',
           on: 'left'
         },
         buttons: [
