@@ -85,8 +85,6 @@ export class PortraitsService {
         this.dirName$.next(handle.name);
         this.loadFilesFileSystemAPI();
       });
-
-    this.loading$.set(false);
   }
 
   private async onFolderChangeFileSystemAPI() {
@@ -99,7 +97,6 @@ export class PortraitsService {
       this.indexDB.clear(ObjectStoreNames.UserDirectories);
       this.indexDB.post(ObjectStoreNames.UserDirectories, this.dirHandle);
       this.loadFilesFileSystemAPI();
-      this.loading$.set(false);
       return true;
     }
 
@@ -117,6 +114,8 @@ export class PortraitsService {
     for (const file of files) {
       this.imageDir[file.name] = URL.createObjectURL(file);
     }
+
+    this.loading$.set(false);
   }
 
   private async verifyPermission(handler: any) {
