@@ -11,12 +11,12 @@
       <img class="dialog-translation-background scalex" src="assets/images/dialog_paper.png" alt="dialot_paper">
     </div>
     @if (item.IconLocate === 2) {
-    @if (item.IconName) {
+    @if (item.OriginalIconName) {
     <div class="dialog-translation-portrait-container">
       <img class="dialog-translation-portrait" src="assets/images/figure_base2.png" alt="base" loading="lazy">
       <tui-loader class="dialog-translation-portrait" [showLoader]="portraitsService.loading$()" [overlay]="true">
         <img class="dialog-translation-portrait" style="left: 0; top: 0;"
-          [src]="item.IconName | portraitUrl : portraitsService.imageDir"
+          [src]="item.OriginalIconName | portraitUrl : portraitsService.imageDir"
           onerror="this.src='assets/images/portrait-miss.svg'" alt="portrait not found" width="100" height="120"
           loading="lazy">
       </tui-loader>
