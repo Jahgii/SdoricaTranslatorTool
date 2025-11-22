@@ -68,7 +68,7 @@ export function addDialogAsset(
         dialogAssetsInclude[dialogAsset.Language] = false;
     }
 
-    if (dialogAsset.Number == null) return;
+    if (dialogAsset.Number == null || Number.isNaN(dialogAsset.Number)) return;
 
     dialogAssets[dialogAsset.Language].push(dialogAsset);
 }
