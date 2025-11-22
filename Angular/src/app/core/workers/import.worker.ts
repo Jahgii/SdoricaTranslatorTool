@@ -1,5 +1,7 @@
 /// <reference lib="webworker" />
 
+import { encode } from '@msgpack/msgpack';
+import { gzip } from "pako";
 import { IndexDBErrors, IndexDBSucess, ObjectStoreNames } from "../interfaces/i-indexed-db";
 import { ILanguage } from "../interfaces/i-dialog-group";
 import { AppModes } from "../enums/app-modes";
@@ -456,37 +458,43 @@ async function onUploadObbServer(message: ImportPostMessage) {
 async function onUploadDialogAssetsServer(message: ImportPostMessage, lang: string) {
   let dialogAssets = message.dialogAssets[lang];
 
-  while (dialogAssets.length > 0) {
-    let dialogsSet = dialogAssets.splice(0, 100);
-
-    let promise = fetch(message.apiUrl + "api/dialogassets", {
-      method: 'POST',
-      body: JSON.stringify(dialogsSet),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "stt-api-key": message.apiKey,
-        "Authorization": `Bearer ${message.token}`
-      }
-    });
-
-    await promise.then(
-      async res => {
-        let r: { FileSkip: number } = await res.json();
-
-        let completeMessage: WorkerImportPostMessage<any> = {
-          file: 'obb-main',
-          message: lang,
-          translateKey: r.FileSkip > 0 ? ApiSuccess.SkipFiles : ApiSuccess.DialogUpdated,
-          data: r.FileSkip
-        }
-
-        postMessage(completeMessage);
-      },
-      error => {
-        console.log("ERRROR -> ", error);
-      }
-    );
+  for (const d of dialogAssets) {
+    d.Number = Math.trunc(d.Number);
+    for (const dI of d.Model.$content) dI.IconLocate = Math.trunc(dI.IconLocate);
   }
+
+  let encodeDAs = encode(dialogAssets);
+  let compressDAs = gzip(encodeDAs) as any;
+
+  let promise = fetch(message.apiUrl + "api/dialogassets", {
+    method: 'POST',
+    body: compressDAs,
+    headers: {
+      "Content-Type": "application/x-msgpack",
+      "Content-Encoding": "gzip",
+      "stt-api-key": message.apiKey,
+      "Authorization": `Bearer ${message.token}`,
+      "lang": lang
+    }
+  });
+
+  await promise.then(
+    async res => {
+      let r: { FileSkip: number } = await res.json();
+
+      let completeMessage: WorkerImportPostMessage<any> = {
+        file: 'obb-main',
+        message: lang,
+        translateKey: r.FileSkip > 0 ? ApiSuccess.SkipFiles : ApiSuccess.DialogUpdated,
+        data: r.FileSkip
+      }
+
+      postMessage(completeMessage);
+    },
+    error => {
+      console.log("ERRROR -> ", error);
+    }
+  );
 }
 
 async function onUploadGroupsServer(message: ImportPostMessage) {

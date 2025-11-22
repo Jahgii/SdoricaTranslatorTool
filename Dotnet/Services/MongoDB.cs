@@ -5,9 +5,9 @@ namespace SdoricaTranslatorTool.Services;
 
 public class CustomMongoClient : ICustomMongoClient
 {
-    IMongoClient _mongoClient;
-    IMongoDatabase _mongoDB;
-    private IConfiguration _config;
+    private readonly IMongoClient _mongoClient;
+    private readonly IMongoDatabase _mongoDB;
+    private readonly IConfiguration _config;
 
     public CustomMongoClient(IMongoClient mongoClient, IConfiguration config)
     {

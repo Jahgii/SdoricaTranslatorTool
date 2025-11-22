@@ -111,19 +111,40 @@ public class DialogAssetsController(ICustomMongoClient cMongoClient, IMemoryCach
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post(List<DialogAsset> dialogAssets)
+    [Consumes("application/x-msgpack")]
+    [RequestSizeLimit(100 * 1024 * 1024)]
+    public async Task<ActionResult> Post([FromHeader] string lang, [FromBody] List<DialogAsset> dialogAssets)
     {
+        var dialogLangData = await _cMongoClient
+            .GetCollection<DialogAsset>()
+            .Aggregate()
+            .Match(d => d.Language == lang)
+            .Project(e => new { e.OriginalFilename })
+            .ToListAsync();
+
+        int dialogsToSkip = 0;
+        List<DialogAsset> dialogsToCreate = [];
+
+        for (int i = 0; i < dialogAssets.Count; i++)
+        {
+            var dialogToCreate = dialogAssets[i];
+            var dialogToUpdate = dialogLangData
+                .Find(e => e.OriginalFilename == dialogToCreate.OriginalFilename);
+
+            if (dialogToUpdate is not null) dialogsToSkip++;
+            else dialogsToCreate.Add(dialogToCreate);
+        }
+
         using var session = await _cMongoClient.StartSessionAsync();
         session.StartTransaction();
 
-        int FileSkip = await SkipAssets(dialogAssets);
-        if (dialogAssets.Count > 0)
+        if (dialogsToCreate.Count > 0)
         {
-            await _cMongoClient.Create<DialogAsset>(session, dialogAssets);
+            await _cMongoClient.Create<DialogAsset>(session, dialogsToCreate);
             await session.CommitTransactionAsync();
         }
 
-        return Ok(new { FileSkip });
+        return Ok(new { FileSkip = dialogsToSkip });
     }
 
     [HttpPut]
@@ -172,29 +193,5 @@ public class DialogAssetsController(ICustomMongoClient cMongoClient, IMemoryCach
 
         return Ok(dialogAsset);
     }
-
-    private async Task<int> SkipAssets(List<DialogAsset> dialogAssets)
-    {
-        var skip = 0;
-        for (var index = dialogAssets.Count - 1; index >= 0; index--)
-        {
-            DialogAsset dialogAsset = dialogAssets[index];
-            if (await SkipAsset(dialogAsset))
-            {
-                dialogAssets.RemoveAt(index);
-                skip += 1;
-            }
-        }
-
-        return skip;
-    }
-
-    private async Task<bool> SkipAsset(DialogAsset dialogAssets)
-    {
-        var filter = Builders<DialogAsset>.Filter.Eq(d => d.Filename, dialogAssets.Filename ?? "");
-        var query = await _cMongoClient.GetCollection<DialogAsset>().FindAsync<DialogAsset>(filter);
-        var skip = await query.FirstOrDefaultAsync();
-
-        return skip != null;
-    }
+    
 }

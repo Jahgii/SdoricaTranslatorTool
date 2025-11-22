@@ -1,3 +1,5 @@
+using MessagePack;
+using MessagePack.AspNetCoreMvcFormatter;
 using SdoricaTranslatorTool.Extensions;
 
 var cors = "CustomCors";
@@ -8,13 +10,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add services to the container.
-builder.Services
-    .AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = null;
-    });
-
 // JWT
 builder.Services.ConfigureJwt(builder.Configuration);
 
@@ -33,6 +28,28 @@ builder.Services
                     .AllowAnyMethod();
             });
     });
+
+// MP
+var mpOptions = MessagePackSerializerOptions
+    .Standard
+    .WithResolver(MessagePack.Resolvers.ContractlessStandardResolver.Instance);
+
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    })
+    .AddMvcOptions(options =>
+    {
+        options.InputFormatters.Insert(
+            0,
+            new MessagePackInputFormatter(mpOptions)
+        );
+    });
+
+//Decompression
+builder.Services.AddRequestDecompression();
 
 // Add MongoClient as Singleton
 builder.Services.ConfigureMongoDB(builder.Configuration);
@@ -61,6 +78,7 @@ app.UseMiddleware<ApiKeyMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRequestDecompression();
 
 app.MapControllerRoute(
         name: "default",
