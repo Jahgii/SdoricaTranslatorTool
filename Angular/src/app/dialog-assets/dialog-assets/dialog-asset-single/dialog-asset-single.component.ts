@@ -5,7 +5,7 @@ import { IDialog, IDialogAsset, TriggerChange } from 'src/app/core/interfaces/i-
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, KeyValue, KeyValuePipe, NgStyle } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
-import { TuiHint, TuiIcon, TuiLoader, TuiScrollable, TuiScrollbar, TuiTextfield } from '@taiga-ui/core';
+import { TuiButton, TuiHint, TuiIcon, TuiLoader, TuiScrollable, TuiScrollbar, TuiTextfield } from '@taiga-ui/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiBlockStatus } from '@taiga-ui/layout';
@@ -15,6 +15,7 @@ import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } 
 import { TuiFilterPipe } from '@taiga-ui/cdk';
 import { GroupByRowPipe } from './group-by-row.pipe';
 import { PortraitUrlPipe } from './portrait-url.pipe';
+import { AlertService } from 'src/app/core/services/alert.service';
 
 @Component({
   selector: 'app-dialog-asset-single',
@@ -38,6 +39,7 @@ import { PortraitUrlPipe } from './portrait-url.pipe';
     TuiFilterPipe,
     TuiTextfield,
     TuiLoader,
+    TuiButton,
 
     CommonDictionaryDirective,
     GroupByRowPipe,
@@ -66,6 +68,7 @@ export class DialogAssetSingleComponent implements OnChanges {
 
   constructor(
     protected readonly portraitsService: PortraitsService,
+    private readonly alert: AlertService,
     @Inject(DialogAssetService) public readonly dAS: DialogAssetService,
     @Inject(ElementBreakpointService) readonly breakpointService: ElementBreakpointService
   ) { }
@@ -92,6 +95,27 @@ export class DialogAssetSingleComponent implements OnChanges {
   protected onChangeIconName(name: string) {
     if (this.currentSelectedItem) this.currentSelectedItem.IconName = name.split('.png')[0];
     this.toggle();
+  }
+
+  protected onCopyOriginalTextToClipboard(text: string) {
+    navigator
+      .clipboard
+      .writeText(text)
+      .then(_ => {
+        this.alert.showAlert(
+          'alert-success',
+          'copy-to-clipboard',
+          'positive',
+          'circle-check-big'
+        );
+      }, err => {
+        this.alert.showAlert(
+          'alert-error',
+          'copy-to-clipboard-error',
+          'accent',
+          'triangle-alert'
+        );
+      });
   }
 
   protected onTooltipCheck(scrollTooltip?: TuiScrollbar) {

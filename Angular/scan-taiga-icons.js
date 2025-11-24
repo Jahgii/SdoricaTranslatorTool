@@ -65,6 +65,7 @@ function addRequiredIcons() {
     icons.add("languages");
     icons.add("minus");
     icons.add("triangle-alert");
+    icons.add("circle-check-big");
 }
 
 scanDir(htmlDir);
