@@ -1,6 +1,8 @@
 @if (dAS.mainGroup) {
 @if (dAS.dialogAssets$(); as data) {
-<ng-container [ngTemplateOutlet]="simpleUI" [ngTemplateOutletContext]="{$implicit: data}" />
+<tui-loader [showLoader]="dAS.loading$()" [overlay]="true">
+  <ng-container [ngTemplateOutlet]="simpleUI" [ngTemplateOutletContext]="{$implicit: data}" />
+</tui-loader>
 } @else {
 <div class="loading-container">
   <tui-loader [showLoader]="true" [overlay]="true" [size]="'xxl'">

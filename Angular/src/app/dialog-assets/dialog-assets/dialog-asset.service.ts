@@ -30,6 +30,7 @@ export class DialogAssetService {
   public tempId!: string;
   public tempNumber!: number;
 
+  public loading$ = signal(false);
   public dialogAssets$: WritableSignal<IDialogAsset[] | undefined> = signal(undefined);
   public dialogAssetsChange$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public activeItemIndex: number = 0;
@@ -53,11 +54,11 @@ export class DialogAssetService {
 
   public onSelectGroup(node: IGroup) {
     this.dialogAssetsChange$.next(false);
-
+    
+    if (this.mainGroup == node.MainGroup && this.group == node.OriginalName) return;
+    
     if (this.subsLanguage) this.subsChanges.unsubscribe();
     if (this.subsChanges) this.subsChanges.unsubscribe();
-
-    if (this.mainGroup == node.MainGroup && this.group == node.OriginalName) return;
 
     this.mainGroup = node.MainGroup;
     this.group = node.OriginalName;
@@ -66,6 +67,7 @@ export class DialogAssetService {
 
     this.subsLanguage = this.languageOrigin.language$
       .subscribe((lang: string) => {
+        this.loading$.set(true);
         let dialogs$: Observable<IDialogAsset[]> | Subject<IDialogAsset[]> | undefined;
         if (this.lStorage.getAppMode() === AppModes.Offline) {
           let r = this.indexedDB.getIndex<IDialogAsset[], ObjectStoreNames.DialogAsset>(
@@ -88,6 +90,7 @@ export class DialogAssetService {
         firstValueFrom(dialogs$).then(d => {
           this.dialogAssets$.set(d);
           this.dialogAssetsChange$.next(true);
+          this.loading$.set(false);
         })
       });
 
