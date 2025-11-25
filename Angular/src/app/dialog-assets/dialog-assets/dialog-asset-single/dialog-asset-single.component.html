@@ -5,7 +5,7 @@
         breakpointService.x() > 320 ? breakpointService.x() / 660 :
         320 / 660
 }">
-  <div class="dialog" [tuiHint]="otherLanguages" [tuiHintContext]="{$implicit: (otherText$ | async)}">
+  <div class="dialog" [tuiHint]="otherLanguages">
     <div class="dialog-translation-container">
       <img class="dialog-translation-background" src="assets/images/dialog_paper.png" alt="dialot_paper">
       <img class="dialog-translation-background scalex" src="assets/images/dialog_paper.png" alt="dialot_paper">
@@ -84,7 +84,8 @@
     </div>
     }
   </div>
-  <ng-template #otherLanguages let-data>
+  <ng-template #otherLanguages>
+    @let data = (otherText$ | async);
     <tui-scrollbar #scrollTooltip class="other-languages-container" [hidden]="true"
       (mouseenter)="onTooltipCheck(scrollTooltip)" (mouseleave)="onTooltipCheck()">
       <ul>
@@ -105,6 +106,9 @@
     </tui-scrollbar>
     @if (showTooltipArrow$ | async) {
     <tui-icon class="tooltip-arrow popin enter" icon="@tui.move-down" />
+    }
+    @if (!data) {
+    <tui-loader class="loader-inverted" [inheritColor]="true" />
     }
   </ng-template>
 </div>

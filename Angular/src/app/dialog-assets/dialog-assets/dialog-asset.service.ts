@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of, shareReplay } from 'rxjs';
 import { IGroup } from 'src/app/core/interfaces/i-dialog-group';
 import { LanguageOriginService } from 'src/app/core/services/language-origin.service';
 import { IDialogAsset, IDialogAssetExport, TriggerChange } from 'src/app/core/interfaces/i-dialog-asset';
@@ -142,7 +142,8 @@ export class DialogAssetService {
           }
 
           return languageText;
-        })
+        }),
+        shareReplay()
       );
     }
     else if (this.lStorage.getAppMode() === AppModes.Online) {
@@ -152,7 +153,7 @@ export class DialogAssetService {
         group: this.group,
         number: number,
         id: id
-      });
+      }).pipe(shareReplay());
     }
 
     langs$ ??= of({});

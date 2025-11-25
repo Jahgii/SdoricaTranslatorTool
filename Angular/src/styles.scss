@@ -13,6 +13,7 @@
   --min-width-viewer: 4rem;
   --stt-primary: black;
   --stt-secondary: white;
+  --stt-primary-inverted: white;
 
   --tui-text-action-hover: white;
   --tui-background-accent-1: black;
@@ -25,6 +26,8 @@
 [tuiTheme='dark'] {
   --important-text: #ffc700;
   --blend-mode: difference;
+  --stt-primary-inverted: black;
+
   --tui-background-accent-1: white;
   --tui-text-primary-invert: black;
   --tui-background-accent-1-hover: white;
