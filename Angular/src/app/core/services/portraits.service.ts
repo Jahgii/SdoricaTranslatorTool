@@ -187,14 +187,13 @@ export class PortraitsService {
   }
 
   private async onFolderChangeFallback() {
-    this.loading$.set(true);
-
     return await PickFolder().then(async (path: string) => {
       if (!path) {
-        this.loading$.set(false);
         return false;
       }
 
+      this.loading$.set(true);
+      
       return await GetImages(path).then(async files => {
         this.local.setPortraitPersistentMode(PersistentModes.Fallback);
         this.local.setPortraitFallbackPath(path);
