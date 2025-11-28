@@ -17,6 +17,7 @@ import { CommonWordsService } from '../core/services/common-words.service';
 import { IGroup, IMainGroup } from '../core/interfaces/i-dialog-group';
 import { LanguageTypeReverse } from '../core/enums/languages';
 import { LanguageOriginService } from '../core/services/language-origin.service';
+import { ungzip } from 'pako';
 
 @Injectable()
 export class ImportAllService {
@@ -96,7 +97,8 @@ export class ImportAllService {
 
     file.arrayBuffer().then(buffer => {
       try {
-        this.data = decode(buffer) as IExportAll;
+        const uncompress = ungzip(buffer);
+        this.data = decode(uncompress) as IExportAll;
       } catch {
         fileControl.verifyingFile$.next(false);
         this.alert.showAlert('alert-error', 'error-file-data', 'accent', 'triangle-alert');

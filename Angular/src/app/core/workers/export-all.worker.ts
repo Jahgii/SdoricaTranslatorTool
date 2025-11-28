@@ -1,6 +1,7 @@
 /// <reference lib="webworker" />
 
 import { encode } from '@msgpack/msgpack';
+import { gzip } from "pako";
 import { ExportMessages, IOnMessage, ProgressStatus } from '../interfaces/i-export-progress';
 import { ExportPostMessage } from '../interfaces/i-export';
 import { AppModes } from '../enums/app-modes';
@@ -62,6 +63,7 @@ function onExportOffline(db: IDBDatabase, completeMessage: IOnMessage, message: 
       K: valuesK,
       C: valuesC
     };
+
     onCreate(completeMessage, message, values);
     postMessage(completeMessage);
   };
@@ -305,8 +307,9 @@ async function onCreate(completeMessage: IOnMessage, message: ExportPostMessage,
   postMessage(completeMessage);
 
   let encodeResult = encode(values) as any;
+  let compress = gzip(encodeResult);
 
-  const blob = new Blob([encodeResult], {
+  const blob = new Blob([compress], {
     type: 'application/octet-stream'
   });
 
