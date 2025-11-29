@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, AsyncSubject } from 'rxjs';
 import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors, Indexes, StoreIndexMap } from '../interfaces/i-indexed-db';
 
 @Injectable({
@@ -130,8 +130,8 @@ export class IndexDBService {
   }
 
   public post<T>(storeName: ObjectStoreNames, data: T, propIdToSet?: keyof T) {
-    let success$ = new Subject<T>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
     let dataLength = 1;
     let operationCompleted = 0;
 
@@ -193,8 +193,8 @@ export class IndexDBService {
   }
 
   public postMany<T>(storeName: ObjectStoreNames, data: T[], propIdToSet?: keyof T) {
-    let success$ = new Subject<any>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<any>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
     let dataLength = 1;
     let operationCompleted = 0;
 
@@ -259,8 +259,8 @@ export class IndexDBService {
   }
 
   public getCursor<T>(storeName: ObjectStoreNames, filter: (d: T) => boolean) {
-    let success$ = new Subject<T[]>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T[]>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
 
     const transaction = this.db.transaction([storeName]);
 
@@ -323,8 +323,8 @@ export class IndexDBService {
   }
 
   public getCursorCount<T>(storeName: ObjectStoreNames, filter: (d: T) => boolean) {
-    let success$ = new Subject<number>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<number>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
 
     const transaction = this.db.transaction([storeName]);
 
@@ -387,8 +387,8 @@ export class IndexDBService {
   }
 
   public getIndex<T, S extends ObjectStoreNames>(storeName: S, index: StoreIndexMap[S], searchValue: any, onlyOne: boolean = false) {
-    let success$ = new Subject<T>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
 
     const transaction = this.db.transaction([storeName]);
 
@@ -443,8 +443,8 @@ export class IndexDBService {
   }
 
   public getIndexCursor<T>(storeName: ObjectStoreNames, index: string, filter: (d: T) => boolean) {
-    let success$ = new Subject<T[]>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T[]>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
 
     const transaction = this.db.transaction([storeName]);
 
@@ -507,8 +507,8 @@ export class IndexDBService {
   }
 
   public getAll<T>(storeName: ObjectStoreNames) {
-    let success$ = new Subject<T>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
 
     const transaction = this.db.transaction([storeName]);
 
@@ -560,8 +560,8 @@ export class IndexDBService {
   }
 
   public getCount<T>(storeName: ObjectStoreNames) {
-    let success$ = new Subject<T>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
 
     const transaction = this.db.transaction([storeName]);
 
@@ -613,8 +613,8 @@ export class IndexDBService {
   }
 
   public put<T>(storeName: ObjectStoreNames, data: T) {
-    let success$ = new Subject<T>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
     let dataLength = 1;
     let operationCompleted = 0;
 
@@ -672,8 +672,8 @@ export class IndexDBService {
   }
 
   public putCustom<T>(storeName: ObjectStoreNames[]) {
-    let success$ = new Subject<T>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
     let dataLength = 1;
     let operationCompleted = 0;
 
@@ -695,8 +695,8 @@ export class IndexDBService {
   }
 
   public delete<T>(storeName: ObjectStoreNames, data: T, id: keyof T) {
-    let success$ = new Subject<T>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
     let dataLength = 1;
     let operationCompleted = 0;
 
@@ -753,8 +753,8 @@ export class IndexDBService {
   }
 
   public clear<T>(storeName: ObjectStoreNames) {
-    let success$ = new Subject<T>();
-    let error$ = new Subject<IndexedDBbCustomRequestError<T>>();
+    let success$ = new AsyncSubject<T>();
+    let error$ = new AsyncSubject<IndexedDBbCustomRequestError<T>>();
     let dataLength = 1;
     let operationCompleted = 0;
 
