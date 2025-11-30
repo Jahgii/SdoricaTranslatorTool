@@ -86,7 +86,7 @@
         </button>
       </tui-loader>
       <tui-loader [showLoader]="dAS.gemini.waiting$()" [inheritColor]="true" [overlay]="true">
-        <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="dAS.gemini.ready$() ?
+        <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="dAS.gemini.ready$() ?
                         ('gemini-button-ready' | translate):
                         ('gemini-button-disabled' | translate)" (click)="onGeminiTranslate(data)"
           [disabled]="!dAS.gemini.ready$()" size="xs" aria-label="Gemini Button" tuiDropdownContext
@@ -140,7 +140,7 @@
             </button>
           </tui-loader>
           <tui-loader [showLoader]="dAS.gemini.waiting$()" [inheritColor]="true" [overlay]="true">
-            <button tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="dAS.gemini.ready$() ?
+            <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="dAS.gemini.ready$() ?
                         ('gemini-button-ready' | translate):
                         ('gemini-button-disabled' | translate)" (click)="onGeminiTranslate(data)"
               [disabled]="!dAS.gemini.ready$()" size="xs" aria-label="Gemini Button">

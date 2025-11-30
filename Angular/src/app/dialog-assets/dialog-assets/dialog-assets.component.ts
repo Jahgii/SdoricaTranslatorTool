@@ -1,9 +1,9 @@
 import { TuiBlockStatus } from "@taiga-ui/layout";
 import { TuiTable } from "@taiga-ui/addon-table";
-import { TuiActiveZone, TuiItem, TuiStringHandler } from "@taiga-ui/cdk";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, SkipSelf } from '@angular/core';
+import { TuiActiveZone, TuiItem } from "@taiga-ui/cdk";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TUI_ICON_RESOLVER, TuiScrollable, TuiScrollbar, TuiDataList } from '@taiga-ui/core';
+import { TuiLoader, TuiDropdown, TuiIcon, TuiButton, TuiHint, TuiScrollable, TuiScrollbar, TuiDataList } from '@taiga-ui/core';
 import { IDialog, IDialogAsset } from 'src/app/core/interfaces/i-dialog-asset';
 import { TranslateModule } from '@ngx-translate/core';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
@@ -17,6 +17,7 @@ import { DialogAssetSingleComponent } from "./dialog-asset-single/dialog-asset-s
 import { LanguageOriginService } from "src/app/core/services/language-origin.service";
 import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
 import { GeminiApiService } from "src/app/core/services/gemini-api.service";
+import { GeminiIconDirective } from "src/app/core/directives/gemini-icon.directive";
 
 @Component({
   selector: 'app-dialog-assets',
@@ -27,16 +28,6 @@ import { GeminiApiService } from "src/app/core/services/gemini-api.service";
     DialogAssetService,
     GeminiApiService,
     ElementBreakpointService,
-    {
-      provide: TUI_ICON_RESOLVER,
-      deps: [[new SkipSelf(), TUI_ICON_RESOLVER]],
-      useFactory(defaultResolver: TuiStringHandler<string>) {
-        return (name: string) =>
-          name.startsWith('@tui.')
-            ? defaultResolver(name)
-            : `/assets/icons/${name}.svg`;
-      },
-    },
   ],
   imports: [
     CommonModule,
@@ -59,9 +50,11 @@ import { GeminiApiService } from "src/app/core/services/gemini-api.service";
     TuiBlockStatus,
     TuiActiveZone,
     TuiDataList,
+    TuiTextfieldControllerModule,
     TuiDataListDropdownManager,
+
     DialogAssetSingleComponent,
-    TuiTextfieldControllerModule
+    GeminiIconDirective,
   ],
 })
 export class DialogAssetsComponent implements OnDestroy {
