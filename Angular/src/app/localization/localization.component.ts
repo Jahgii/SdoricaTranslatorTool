@@ -20,6 +20,8 @@ import { IndexDBService } from "../core/services/index-db.service";
 import { IGroup, IMainGroup } from "../core/interfaces/i-dialog-group";
 import { Indexes, ObjectStoreNames } from "../core/interfaces/i-indexed-db";
 import { IDialogAsset } from "../core/interfaces/i-dialog-asset";
+import { GeminiApiService } from "../core/services/gemini-api.service";
+import { GeminiIconDirective } from "../core/directives/gemini-icon.directive";
 
 @Component({
   selector: 'app-localization',
@@ -27,13 +29,15 @@ import { IDialogAsset } from "../core/interfaces/i-dialog-asset";
   styleUrls: ['./localization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    LocalizationService
+    LocalizationService,
+    GeminiApiService,
   ],
   imports: [
     AsyncPipe,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+
     TuiComboBoxModule,
     TuiTextfieldControllerModule,
     TuiDataList,
@@ -45,7 +49,9 @@ import { IDialogAsset } from "../core/interfaces/i-dialog-asset";
     TuiHint,
     TuiBlockStatus,
     TuiFilterByInputPipe,
-    LocalizationTableComponent
+
+    LocalizationTableComponent,
+    GeminiIconDirective,
   ]
 })
 export class LocalizationComponent implements OnInit {

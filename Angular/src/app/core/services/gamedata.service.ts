@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, firstValueFrom, map, of } from 'rxjs';
 import { ApiService } from './api.service';
 import { TuiBreakpointService } from '@taiga-ui/core';
-import { TranslateService } from '@ngx-translate/core';
 import { IGamedataValue } from '../interfaces/i-gamedata';
 import { StoreService } from './store.service';
 import { AppModes } from '../enums/app-modes';

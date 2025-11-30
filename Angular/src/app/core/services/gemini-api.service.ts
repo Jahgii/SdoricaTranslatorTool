@@ -1,13 +1,11 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { ApiError, GoogleGenAI } from "@google/genai";
-import { LocalStorageService } from './local-storage.service';
 import { AlertService } from './alert.service';
 import { GeminiApiConfigurationService } from './gemini-api-configuration.service';
 
 @Injectable()
 export class GeminiApiService {
   private readonly config = inject(GeminiApiConfigurationService);
-  private readonly lStorage = inject(LocalStorageService);
   private readonly alert = inject(AlertService);
 
   public readonly ready$ = signal(false);

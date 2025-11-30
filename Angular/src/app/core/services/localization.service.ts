@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnDestroy, signal } from '@angular/core';
+import { Injectable, OnDestroy, signal } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject, Observable, Subscription, debounceTime, firstValueFrom, of, takeWhile } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from '../interfaces/i-localizations';
@@ -12,6 +12,7 @@ import { AppModes } from '../enums/app-modes';
 import { IndexDBService } from './index-db.service';
 import { Indexes, ObjectStoreNames } from '../interfaces/i-indexed-db';
 import { AlertService } from './alert.service';
+import { GeminiApiService } from './gemini-api.service';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
@@ -67,7 +68,7 @@ export class LocalizationService implements OnDestroy {
   private subsSearchKey!: Subscription;
   private subsSearchTranslation!: Subscription;
   private subsTranslatedColumn$!: Subscription;
-  private langOriginSub$!: Subscription;
+  private readonly langOriginSub$!: Subscription;
 
   constructor(
     private readonly api: ApiService,
@@ -76,8 +77,8 @@ export class LocalizationService implements OnDestroy {
     private readonly lCS: LocalizationCategoriesService,
     private readonly languageOrigin: LanguageOriginService,
     private readonly alert: AlertService,
-    public libreTranslate: LibreTranslateService,
-    private readonly translate: TranslateService,
+    public readonly gemini: GeminiApiService,
+    public readonly libreTranslate: LibreTranslateService,
   ) {
     this.language = this.languageOrigin.localizationLang;
     this.langOriginSub$ = this.languageOrigin
@@ -293,8 +294,47 @@ export class LocalizationService implements OnDestroy {
   }
 
   public onMachineTranslate() {
-    if (this.keys)
-      this.libreTranslate.onTranslateKeys(this.keys, this.languageOrigin.localizationLang);
+    if (!this.keys) return;
+    this.libreTranslate.onTranslateKeys(this.keys, this.languageOrigin.localizationLang);
+  }
+
+  public async onGeminiTranslate() {
+    if (!this.keys) return;
+
+    const lang = this.languageOrigin.localizationLang;
+    const filters = this.filterForm.getRawValue();
+    let filterKeys = this.keys
+      .filter(k => k.Original[lang].toLowerCase().includes((filters.original ?? "").toLowerCase()))
+      .filter(k => k.Translations[lang].toLowerCase().includes((filters.translation ?? "").toLowerCase()))
+
+    if (filters.translated !== null)
+      filterKeys = filterKeys.filter(k => k.Translated[lang] === filters.translated);
+
+    const keysDictionary = Object.fromEntries(filterKeys.map(k => [`${k.Category}_${k.Name}`, k.Original[lang]]));
+
+    if (Object.keys(keysDictionary).length === 0) return;
+
+    const content = JSON.stringify(keysDictionary)
+    const response = await this.gemini.get(content);
+    const keysTranslated: { [dialogID: string]: string } = this.tryParseJson(response);
+
+    if (!keysTranslated) {
+      this.alert.showAlert(
+        'alert-error',
+        'invalid-gemini-response',
+        'accent',
+        'triangle-alert'
+      );
+
+      return;
+    }
+
+    for (const k of this.keys)
+      if (keysTranslated[`${k.Category}_${k.Name}`])
+        k.Translations[lang] = keysTranslated[`${k.Category}_${k.Name}`];
+
+    // this.pendingChanges$.next(true);
+    // this.changes$.next(dialog);
   }
 
   private onTranslatedColumnCheckboxChange() {
@@ -325,6 +365,15 @@ export class LocalizationService implements OnDestroy {
     this.filterForm.patchValue({
       translated: null
     }, { emitEvent: false });
+  }
+
+  private tryParseJson(text: string) {
+    try {
+      return JSON.parse(text)
+    }
+    catch {
+      return undefined;
+    }
   }
 
   //#region Search
