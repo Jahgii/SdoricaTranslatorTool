@@ -175,7 +175,9 @@
                                                     <span class="tooltip-important-text">
                                                         {{$any(key.key) | translate}}:
                                                     </span>
-                                                    {{key.value}}
+                                                    <tui-copy>
+                                                        {{key.value}}
+                                                    </tui-copy>
                                                 </li>
                                                 }
                                             </ul>
@@ -385,7 +387,9 @@
                                                             {{$any(key.key) |
                                                             translate}}:
                                                         </span>
+                                                        <tui-copy>
                                                         {{key.value}}
+                                                    </tui-copy>
                                                     </li>
                                                     }
                                                 </ul>

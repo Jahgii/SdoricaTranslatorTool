@@ -27,22 +27,23 @@
       <button class="tui-space_right-4" tuiIconButton appearance="icon" shape="square" iconStart="list-restart"
         (click)="onResetCategories()" [loading]="reset$()" size="xs"
         [tuiHint]="'reset-categories-count' | translate"></button>
-      <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="localization.gemini.ready$() ?
+      <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color"
+        [tuiHint]="localization.gemini.ready$() ?
                           ('gemini-button-ready' | translate):
                           ('gemini-button-disabled' | translate)" (click)="localization.onGeminiTranslate()"
         [disabled]="!localization.gemini.ready$()" size="xs" aria-label="Gemini Button"
-        [loading]="localization.gemini.waiting$()">
-        <!-- tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown" -->
-        <!-- <ng-template #contextMenu>
-              <tui-data-list role="menu" tuiDataListDropdownManager class="context-menu" size="s">
-                @for (lang of languageOrigin.languages; track $index) {
-                <button tuiOption new type="button"
-                  (click)="onGeminiTranslateFromOriginLang(lang, data); dropdown.toggle(false)">
-                  {{ lang | translate }}
-                </button>
-                }
-              </tui-data-list>
-            </ng-template> -->
+        [loading]="localization.gemini.waiting$()" tuiDropdownContext [tuiDropdown]="contextMenu"
+        #dropdown="tuiDropdown">
+        <ng-template #contextMenu>
+          <tui-data-list role="menu" tuiDataListDropdownManager class="context-menu" size="s">
+            @for (lang of languageOrigin.languages; track $index) {
+            <button tuiOption new type="button"
+              (click)="localization.onGeminiTranslateFromOriginLang(lang); dropdown.toggle(false)">
+              {{ lang | translate }}
+            </button>
+            }
+          </tui-data-list>
+        </ng-template>
       </button>
       @if (localization.searchCategory$ | async) {
       <div tuiDropdownOpen bottomRight [tuiDropdown]="content" class="tui-space_left-4">

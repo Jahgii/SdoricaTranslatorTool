@@ -16,6 +16,7 @@ import { TuiFilterPipe } from '@taiga-ui/cdk';
 import { GroupByRowPipe } from './group-by-row.pipe';
 import { PortraitUrlPipe } from './portrait-url.pipe';
 import { AlertService } from 'src/app/core/services/alert.service';
+import { TuiCopy } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-dialog-asset-single',
@@ -40,6 +41,7 @@ import { AlertService } from 'src/app/core/services/alert.service';
     TuiTextfield,
     TuiLoader,
     TuiButton,
+    TuiCopy,
 
     CommonDictionaryDirective,
     GroupByRowPipe,
@@ -95,27 +97,6 @@ export class DialogAssetSingleComponent implements OnChanges {
   protected onChangeIconName(name: string) {
     if (this.currentSelectedItem) this.currentSelectedItem.IconName = name.split('.png')[0];
     this.toggle();
-  }
-
-  protected onCopyOriginalTextToClipboard(text: string) {
-    navigator
-      .clipboard
-      .writeText(text)
-      .then(_ => {
-        this.alert.showAlert(
-          'alert-success',
-          'copy-to-clipboard',
-          'positive',
-          'circle-check-big'
-        );
-      }, err => {
-        this.alert.showAlert(
-          'alert-error',
-          'copy-to-clipboard-error',
-          'accent',
-          'triangle-alert'
-        );
-      });
   }
 
   protected onTooltipCheck(scrollTooltip?: TuiScrollbar) {

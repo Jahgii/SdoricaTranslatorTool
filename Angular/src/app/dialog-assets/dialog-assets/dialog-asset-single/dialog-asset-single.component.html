@@ -94,12 +94,9 @@
           <span class="tooltip-important-text">
             {{$any(key.key) | translate}}
           </span>:
-          {{key.value}}
-        </li>
-        <li class="tui-space_bottom-2" style="display: flex; justify-content: flex-end;">
-          <button tuiButton type="button" appearance="action-inverted" size="xs" iconStart="@tui.clipboard-copy"
-            (click)="onCopyOriginalTextToClipboard($any(key.value))">
-          </button>
+          <tui-copy>
+            {{key.value}}
+          </tui-copy>
         </li>
         }
       </ul>

@@ -14,6 +14,7 @@ import { Indexes, ObjectStoreNames } from '../interfaces/i-indexed-db';
 import { AlertService } from './alert.service';
 import { GeminiApiService } from './gemini-api.service';
 import { flags } from '../interfaces/i-regex';
+import { LanguageType, LanguageTypeReverse } from '../enums/languages';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
@@ -343,9 +344,45 @@ export class LocalizationService implements OnDestroy {
     for (const k of filterKeys)
       if (keysTranslated[`${k.Category}_${k.Name}`])
         k.Translations[lang] = keysTranslated[`${k.Category}_${k.Name}`];
+  }
 
-    // this.pendingChanges$.next(true);
-    // this.changes$.next(dialog);
+  public async onGeminiTranslateFromOriginLang(_lang: string) {
+    if (!this.keys) return;
+
+    const lang = (LanguageType as any)[_lang];
+    if (!lang) return;
+
+    const currentLang = this.languageOrigin.localizationLang;
+    const filters = this.filterForm.getRawValue();
+    let filterKeys = this.keys
+      .filter(k => k.Original[currentLang].toLowerCase().includes((filters.original ?? "").toLowerCase()))
+      .filter(k => k.Translations[currentLang].toLowerCase().includes((filters.translation ?? "").toLowerCase()))
+
+    if (filters.translated !== null)
+      filterKeys = filterKeys.filter(k => k.Translated[currentLang] === filters.translated);
+
+    const keysDictionary = Object.fromEntries(filterKeys.map(k => [`${k.Category}_${k.Name}`, k.Original[lang]]));
+
+    if (Object.keys(keysDictionary).length === 0) return;
+
+    const content = JSON.stringify(keysDictionary)
+    const response = await this.gemini.get(content);
+    const keysTranslated: { [dialogID: string]: string } = this.tryParseJson(response);
+
+    if (!keysTranslated) {
+      this.alert.showAlert(
+        'alert-error',
+        'invalid-gemini-response',
+        'accent',
+        'triangle-alert'
+      );
+
+      return;
+    }
+
+    for (const k of filterKeys)
+      if (keysTranslated[`${k.Category}_${k.Name}`])
+        k.Translations[currentLang] = keysTranslated[`${k.Category}_${k.Name}`];
   }
 
   public updateRegexFlags() {

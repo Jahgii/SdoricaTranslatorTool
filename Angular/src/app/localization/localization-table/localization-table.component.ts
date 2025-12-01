@@ -20,7 +20,7 @@ import { LocalizationService } from "src/app/core/services/localization.service"
 import { TranslateModule } from "@ngx-translate/core";
 import { TuiAppBar, TuiBlockStatus } from "@taiga-ui/layout";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TuiCheckbox, TuiSwitch, TuiTextarea } from "@taiga-ui/kit";
+import { TuiCheckbox, TuiCopy, TuiSwitch, TuiTextarea } from "@taiga-ui/kit";
 import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 import { TuiTable, TuiTableFilters } from "@taiga-ui/addon-table";
 import { ElementBreakpointService } from "src/app/core/services/element-breakpoint.service";
@@ -70,6 +70,7 @@ const ESPECIAL_CHARACTER = "@";
     TuiButton,
     TuiLabel,
     TuiTitle,
+    TuiCopy,
 
     CommonDictionaryDirective,
     TranslationFocusChangeDirective,
