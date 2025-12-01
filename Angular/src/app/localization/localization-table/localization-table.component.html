@@ -4,12 +4,14 @@
 <tui-loader />
 }
 @else {
-@if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) === 'desktopSmall') {
-<ng-container [ngTemplateOutlet]="desktopTable" />
-}
-@else if ((breakpointService.mode$ | async) === 'mobile') {
-<ng-container [ngTemplateOutlet]="mobileTable" />
-}
+<tui-loader [showLoader]="localization.gemini.waiting$()" [inheritColor]="true" [overlay]="true">
+    @if ((breakpointService.mode$ | async) === 'desktopLarge' || (breakpointService.mode$ | async) === 'desktopSmall') {
+    <ng-container [ngTemplateOutlet]="desktopTable" />
+    }
+    @else if ((breakpointService.mode$ | async) === 'mobile') {
+    <ng-container [ngTemplateOutlet]="mobileTable" />
+    }
+</tui-loader>
 }
 }
 @else {
