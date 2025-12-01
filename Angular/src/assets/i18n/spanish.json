@@ -136,8 +136,8 @@
     "propagation-keys-description-2": "con el mismo valor en el texto",
     "propagation-keys-description-3": "Original",
     "propagation-keys-description-4": "en el lenguaje actual, aplica a las columnas de Traducción y Traducido",
-    "search-by-original-column": "Buscar en Columna Original",
-    "search-by-translation-column": "Buscar en Columna Traducción",
+    "search-by-original-column": "Buscar en Original",
+    "search-by-translation-column": "Buscar en Traducción",
     "search-by-original-column-short": "Original",
     "search-by-translation-column-short": "Traducción",
     "loading-categories": "Cargando Categorias",
@@ -393,5 +393,15 @@
     "hide-api-key": "Ocultar Api Key",
     "search-by-file-name": "Buscar por Nombre de Archivo",
     "empty-portraits": "Sin Retratos",
-    "empty-portraits-filter": "Sin Retratos para el filtro -> {{filter}}"
+    "empty-portraits-filter": "Sin Retratos para el filtro -> {{filter}}",
+    "regex-pattern": "Regex",
+    "regex-transform": "Remplazar Con",
+    "regex-flags": "Flags",
+    "alert-regex-pattern": "Regex Invalido",
+    "regex-flag-g": "Realiza una búsqueda global, encontrando todas las coincidencias en el texto en lugar de solo la primera.",
+    "regex-flag-i": "Hace que la búsqueda no distinga entre mayúsculas y minúsculas.",
+    "regex-flag-m": "Cambia el comportamiento de los anclajes ^ y $ para que coincidan con el inicio y el final de cada línea dentro de un texto multilínea, además del inicio y el final de todo el texto.",
+    "regex-flag-s": "Permite que el carácter . (punto) coincida con cualquier carácter, incluidos los terminadores de línea (como los saltos de línea).",
+    "regex-flag-u": "Habilita el soporte completo de Unicode, tratando el patrón como una secuencia de puntos de código Unicode. Esto es importante para coincidir correctamente con caracteres fuera del alfabeto latino básico.",
+    "regex-flag-v": "Una mejora del modo u, que ofrece funciones Unicode más avanzadas y notación de conjuntos para clases de caracteres.\n (Nota: u y v no pueden usarse juntos)."
 }

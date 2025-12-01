@@ -136,8 +136,8 @@
     "propagation-keys-description-2": "with the same",
     "propagation-keys-description-3": "Original",
     "propagation-keys-description-4": "value, in the current language, applies to the Translation and Translated(checkbox) columns.",
-    "search-by-original-column": "Search by Original Column",
-    "search-by-translation-column": "Search by Translation Column",
+    "search-by-original-column": "Search by Original",
+    "search-by-translation-column": "Search by Translation",
     "search-by-original-column-short": "Original",
     "search-by-translation-column-short": "Translation",
     "loading-categories": "Loading Categories",
@@ -393,5 +393,15 @@
     "hide-api-key": "Hide Api Key",
     "search-by-file-name": "Search by File Name",
     "empty-portraits": "Empty Portraits",
-    "empty-portraits-filter": "No Portraits for the filter -> {{filter}}"
+    "empty-portraits-filter": "No Portraits for the filter -> {{filter}}",
+    "regex-pattern": "Regex",
+    "regex-transform": "Replace With",
+    "regex-flags": "Flags",
+    "alert-regex-pattern": "Invalid Regex",
+    "regex-flag-g": "Performs a global search, finding all matches in the text rather than just the first.",
+    "regex-flag-i": "Makes the search case-insensitive.",
+    "regex-flag-m": "Changes the behavior of ^ and $ anchors to match the start and end of each line within a multiline text, in addition to the start and end of the entire text.",
+    "regex-flag-s": "Allows the . (dot) character to match any character, including line terminators (like newline characters).",
+    "regex-flag-u": "Enables full Unicode support, treating the pattern as a sequence of Unicode code points. This is important for correctly matching characters outside the basic Latin alphabet.",
+    "regex-flag-v": "An upgrade to u mode, offering more advanced Unicode features and set notation for character classes.\n (Note: u and v cannot be used together)."
 }

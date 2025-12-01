@@ -10,20 +10,7 @@ import {
   ViewChildren,
 } from "@angular/core";
 import { EMPTY_QUERY, TuiBooleanHandler, TuiMapper, TuiMapperPipe, tuiPure } from "@taiga-ui/cdk";
-import {
-  TuiAppearance,
-  TuiDataList,
-  TuiDriver,
-  TuiDropdown,
-  tuiGetWordRange,
-  TuiHint,
-  TuiIcon,
-  TuiLoader,
-  TuiOption,
-  TuiScrollable,
-  TuiScrollbar,
-  TuiTextfield,
-} from "@taiga-ui/core";
+import { TuiAppearance, TuiDataList, TuiDriver, TuiDropdown, tuiGetWordRange, TuiHint, TuiIcon, TuiLoader, TuiOption, TuiScrollable, TuiScrollbar, TuiTextfield, TuiButton, TuiLabel, TuiTitle } from "@taiga-ui/core";
 import { BehaviorSubject, Observable, pairwise, Subscription } from "rxjs";
 import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
 import { ILocalizationKey } from "src/app/core/interfaces/i-localizations";
@@ -80,6 +67,9 @@ const ESPECIAL_CHARACTER = "@";
     TuiAppBar,
     TuiLoader,
     TuiAppearance,
+    TuiButton,
+    TuiLabel,
+    TuiTitle,
 
     CommonDictionaryDirective,
     TranslationFocusChangeDirective,
@@ -97,6 +87,7 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
     tuiGetWordRange(range).toString().startsWith(ESPECIAL_CHARACTER);
 
   private subsBreakpoint!: Subscription;
+  protected open = false;
 
   constructor(
     public localization: LocalizationService,

@@ -44,7 +44,7 @@
 
 .header-content-cell {
     transform: translate(0);
-    padding-left: 0;
+    padding-left: 0 !important;
 
     .header-content {
         display: flex;
@@ -78,4 +78,15 @@
 
 .head-toogle {
     position: absolute;
+}
+
+.regex-label {
+    padding: 0.5rem 1rem;
+    min-width: calc(100% - 2rem);
+    transition: all 0.25s;
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--tui-background-neutral-1-hover);
+    }
 }

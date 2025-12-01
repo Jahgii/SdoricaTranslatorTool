@@ -61,7 +61,7 @@
                                 style="transform: translate(0); width: 32px;"
                                 [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)" [sorter]="null">
                                 <div class="translated-checkbox-container align-center">
-                                    <tui-icon icon="circle-check" tuiTextfieldSize="s"></tui-icon>
+                                    <tui-icon icon="circle-check" [style.font-size.rem]="1" />
                                 </div>
                             </th>
                         </tr>
@@ -70,7 +70,7 @@
                                 [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44"
                                 [sorter]="null">
                                 <tui-textfield tuiTextfieldSize="s">
-                                    <tui-icon icon="filter" />
+                                    <tui-icon icon="filter" [style.font-size.rem]="1" />
                                     <input tuiTextfield tuiTableFilter="Original"
                                         [tuiGenericFilter]="localization.filterOriginalColumn"
                                         [formControl]="localization.filterForm.controls['original']"
@@ -81,7 +81,7 @@
                                 [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 44" [sorter]="null"
                                 style="width: 60%; max-width: 60%; transform: translate(0);">
                                 <tui-textfield tuiTextfieldSize="s">
-                                    <tui-icon icon="filter" />
+                                    <tui-icon icon="filter" [style.font-size.rem]="1" />
                                     <input tuiTextfield tuiTableFilter="Translations"
                                         [tuiGenericFilter]="localization.filterTranslationColumn"
                                         [formControl]="localization.filterForm.controls['translation']"
@@ -97,6 +97,54 @@
                                         tuiTableFilter="Translated"
                                         [tuiGenericFilter]="localization.filterTranslatedColumn"
                                         [formControl]="localization.filterForm.controls['translated']" />
+                                </div>
+                            </th>
+                        </tr>
+                        <tr tuiThGroup #regexHeader>
+                            <th tuiTh *tuiHead="'Language'" [sticky]="true" style="transform: translate(0);"
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 88"
+                                [sorter]="null">
+                                <tui-textfield tuiTextfieldSize="s">
+                                    <button tuiButton [tuiDropdown]="dropdownFlags" tuiDropdownOpen
+                                        [tuiDropdownLimitWidth]="'auto'" [tuiDropdownAlign]="'right'">
+                                        /{{localization.regexForm.controls['flags'].value}}
+                                        <ng-template #dropdownFlags>
+                                            <div class="tui-space_vertical-1">
+                                                @for (f of localization.regexFlags; track $index) {
+                                                <label tuiLabel class="regex-label"
+                                                    (click)="f.selected = !f.selected; localization.updateRegexFlags(); $event.preventDefault();">
+                                                    <input new tuiOption [checked]="f.selected" tuiCheckbox
+                                                        type="checkbox" size="s">
+                                                    <span tuiTitle="s">
+                                                        {{f.value}} ({{f.name}})
+                                                        <span tuiSubtitle style="max-width: 300px;">
+                                                            {{f.descKey |translate}}
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                                }
+                                            </div>
+                                        </ng-template>
+                                    </button>
+                                    <input tuiTextfield [formControl]="localization.regexForm.controls['pattern']"
+                                        placeholder="{{'regex-pattern' | translate}}" />
+                                </tui-textfield>
+                            </th>
+                            <th tuiTh *tuiHead="'Translation'" [sticky]="true" style="transform: translate(0);"
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 88"
+                                [sorter]="null">
+                                <tui-textfield tuiTextfieldSize="s">
+                                    <input tuiTextfield [formControl]="localization.regexForm.controls['transform']"
+                                        placeholder="{{'regex-transform' | translate}}" />
+                                </tui-textfield>
+                            </th>
+                            <th tuiTh *tuiHead="'Translated'" [sticky]="true"
+                                style="transform: translate(0); padding: 0;"
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 88"
+                                [sorter]="null">
+                                <div class="translated-checkbox-container align-center">
+                                    <button tuiIconButton appearance="icon" size="xs" iconStart="replace-all"
+                                        (click)="localization.onApplyRegex()"></button>
                                 </div>
                             </th>
                         </tr>
@@ -208,21 +256,22 @@
             <cdk-virtual-scroll-viewport #viewport tuiScrollable class="viewport tui-zero-scrollbar" [itemSize]="213"
                 [maxBufferPx]="500" [minBufferPx]="400">
 
-                <table class="tui-table popin enter" style="table-layout: fixed;" tuiTable [columns]="['Language']">
+                <table class="tui-table popin enter" style="table-layout: fixed;" tuiTable [columns]="['Language']"
+                    size="s">
                     <thead>
                         <tr tuiThGroup #filterHeader>
                             <th tuiTh *tuiHead="'Language'" [sticky]="true" class="header-content-cell"
-                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 1" [sorter]="null">
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)" [sorter]="null">
                                 <div class="header-content">
-                                    <tui-textfield tuiTextfieldSize="m" style="transform: translate(0); flex: 1;">
-                                        <tui-icon icon="filter" />
+                                    <tui-textfield tuiTextfieldSize="s" style="transform: translate(0); flex: 1;">
+                                        <tui-icon icon="filter" [style.font-size.rem]="1" />
                                         <input tuiTextfield tuiTableFilter="Original"
                                             [tuiGenericFilter]="localization.filterOriginalColumn"
                                             [formControl]="localization.filterForm.controls['original']"
                                             placeholder="{{'search-by-original-column' | translate}}" />
                                     </tui-textfield>
-                                    <tui-textfield tuiTextfieldSize="m" style="transform: translate(0); flex: 1;">
-                                        <tui-icon icon="filter" />
+                                    <tui-textfield tuiTextfieldSize="s" style="transform: translate(0); flex: 1;">
+                                        <tui-icon icon="filter" [style.font-size.rem]="1" />
                                         <input tuiTextfield tuiTableFilter="Translations"
                                             [tuiGenericFilter]="localization.filterTranslationColumn"
                                             [formControl]="localization.filterForm.controls['translation']"
@@ -234,6 +283,45 @@
                                         [tuiGenericFilter]="localization.filterTranslatedColumn" contentAlign="right"
                                         size="s" aria-label="Translated Filter" />
 
+                                </div>
+                            </th>
+                        </tr>
+                        <tr tuiThGroup #regexHeader>
+                            <th tuiTh *tuiHead="'Language'" [sticky]="true" class="header-content-cell"
+                                [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0) + 34"
+                                [sorter]="null">
+                                <div class="header-content">
+                                    <tui-textfield tuiTextfieldSize="s" style="transform: translate(0); flex: 1;">
+                                        <button tuiButton [tuiDropdown]="dropdownFlags" tuiDropdownOpen
+                                            [tuiDropdownLimitWidth]="'auto'" [tuiDropdownAlign]="'right'">
+                                            /{{localization.regexForm.controls['flags'].value}}
+                                            <ng-template #dropdownFlags>
+                                                <div class="tui-space_vertical-1">
+                                                    @for (f of localization.regexFlags; track $index) {
+                                                    <label tuiLabel class="regex-label"
+                                                        (click)="f.selected = !f.selected; localization.updateRegexFlags(); $event.preventDefault();">
+                                                        <input new tuiOption [checked]="f.selected" tuiCheckbox
+                                                            type="checkbox" size="s">
+                                                        <span tuiTitle="s">
+                                                            {{f.value}} ({{f.name}})
+                                                            <span tuiSubtitle style="max-width: 300px;">
+                                                                {{f.descKey |translate}}
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                    }
+                                                </div>
+                                            </ng-template>
+                                        </button>
+                                        <input tuiTextfield [formControl]="localization.regexForm.controls['pattern']"
+                                            placeholder="{{'regex-pattern' | translate}}" />
+                                    </tui-textfield>
+                                    <tui-textfield tuiTextfieldSize="s" style="transform: translate(0); flex: 1;">
+                                        <input tuiTextfield [formControl]="localization.regexForm.controls['transform']"
+                                            placeholder="{{'regex-transform' | translate}}" />
+                                    </tui-textfield>
+                                    <button tuiIconButton appearance="icon" size="xs" iconStart="replace-all"
+                                        style="margin-left: 0.25rem;" (click)="localization.onApplyRegex()"></button>
                                 </div>
                             </th>
                         </tr>

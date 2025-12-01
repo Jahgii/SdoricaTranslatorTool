@@ -13,6 +13,7 @@ import { IndexDBService } from './index-db.service';
 import { Indexes, ObjectStoreNames } from '../interfaces/i-indexed-db';
 import { AlertService } from './alert.service';
 import { GeminiApiService } from './gemini-api.service';
+import { flags } from '../interfaces/i-regex';
 
 @Injectable()
 export class LocalizationService implements OnDestroy {
@@ -41,6 +42,16 @@ export class LocalizationService implements OnDestroy {
     return item[this.languageOrigin.localizationLang] === value;
   };
 
+  //#endregion
+
+  //#region Table Regex
+  readonly regexForm = new FormGroup({
+    pattern: new FormControl(""),
+    flags: new FormControl(""),
+    transform: new FormControl(""),
+  });
+
+  readonly regexFlags = flags();
   //#endregion
 
   public keys$!: Observable<ILocalizationKey[]>;
@@ -329,12 +340,57 @@ export class LocalizationService implements OnDestroy {
       return;
     }
 
-    for (const k of this.keys)
+    for (const k of filterKeys)
       if (keysTranslated[`${k.Category}_${k.Name}`])
         k.Translations[lang] = keysTranslated[`${k.Category}_${k.Name}`];
 
     // this.pendingChanges$.next(true);
     // this.changes$.next(dialog);
+  }
+
+  public updateRegexFlags() {
+    this.regexForm.get('flags')!
+      .setValue(this.regexFlags
+        .filter(f => f.selected)
+        .reduce((acc, f) => acc += f.value, "")
+      );
+  }
+
+  public async onApplyRegex() {
+    if (!this.keys) return;
+
+    const apply = this.regexForm.getRawValue();
+    if (!apply.pattern) return;
+    if (!apply.transform) apply.transform = "";
+
+    const regex = this.toRegExp(apply.pattern, apply.flags!);
+    if (!regex) return;
+
+    const filters = this.filterForm.getRawValue();
+    const lang = this.languageOrigin.localizationLang;
+    let filterKeys = this.keys
+      .filter(k => k.Original[lang].toLowerCase().includes((filters.original ?? "").toLowerCase()))
+      .filter(k => k.Translations[lang].toLowerCase().includes((filters.translation ?? "").toLowerCase()))
+
+    if (filters.translated !== null)
+      filterKeys = filterKeys.filter(k => k.Translated[lang] === filters.translated);
+
+    for (const k of filterKeys)
+      k.Translations[lang] = k.Translations[lang].replace(regex, apply.transform);
+  }
+
+  private toRegExp(pattern: string, flags?: string): RegExp | null {
+    try {
+      return new RegExp(pattern, flags);
+    } catch {
+      this.alert.showAlert(
+        "alert-error",
+        "alert-regex-pattern",
+        "warning",
+        "triangle-alert"
+      );
+      return null;
+    }
   }
 
   private onTranslatedColumnCheckboxChange() {
