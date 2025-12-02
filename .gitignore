@@ -240,3 +240,4 @@ Wails/build/*
 !Wails/build/appicon.png
 Wails/frontend
 Angular/wailsjs
+Angular/package.json.md5
