@@ -74,9 +74,24 @@ code {
   color: #e01a76;
 }
 
+[data-appearance="dark"] {
+  @include mixins.browser("AppleWebKit", "WebKitGTK") {
+    filter: none !important;
+  }
+}
+
 .blur-fallback {
-  @include mixins.browser("AppleWebKit", "WebKitGTK", "IE", "Opera Mini", "UC Browser", "QQBrowser", "KaiOS") {
+  @include mixins.browser("AppleWebKit", "WebKitGTK") {
     background: var(--tui-background-base) !important;
+  }
+}
+
+.mask-fallback {
+  @include mixins.browser("AppleWebKit", "WebKitGTK") {
+    span {
+      -webkit-mask: none !important;
+      mask: none !important;
+    }
   }
 }
 
