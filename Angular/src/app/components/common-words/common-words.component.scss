@@ -84,31 +84,3 @@
 .viewport-dialog {
     height: 50vh;
 }
-
-.confirm-delete-column {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-    left: 0;
-    width: 100%;
-    height: calc(var(--tui-height-s));
-    background: var(--tui-status-negative-pale);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    margin: 0;
-    padding: 0;
-
-    .text {
-        font-weight: bold;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 30ch;
-        overflow: hidden;
-
-        @media #{media.$tui-mobile} {
-            width: 10ch;
-        }
-    }
-}

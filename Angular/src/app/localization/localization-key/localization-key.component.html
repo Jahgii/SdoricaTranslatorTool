@@ -5,7 +5,7 @@
 @if (!dialogState.isHidden) {
 <main class="main-form" #draggableElement [ngStyle]="{'z-index': dialogState.zIndex$ | async}"
     (mousedown)="changeIndex(dialogState)" (touchstart)="changeIndex(dialogState)">
-    <div class="main-form-header" appDraggableElement [elementRef]="draggableElement" [elementAnchorRef]="anchor"
+    <div class="main-form-header blur-fallback" appDraggableElement [elementRef]="draggableElement" [elementAnchorRef]="anchor"
         [draggableElementState]="dialogState">
         <p>{{'new-key-form' | translate}}</p>
         <button tuiIconButton class="tui-space_right-2" appearance="icon" [iconStart]="'@tui.x'" size="xs"

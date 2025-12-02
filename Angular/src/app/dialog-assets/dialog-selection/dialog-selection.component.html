@@ -1,8 +1,8 @@
 @if ((hiddenScroll$ | async) && (groupSelected$ | async)) {
-<tui-icon icon="@tui.mouse-pointer-2" class="hidden-arrow" />
+<tui-icon icon="@tui.mouse-pointer-2" class="hidden-arrow blur-fallback" />
 }
 
-<tui-scrollbar #scrollbar class="group-tree" [hidden]="(hiddenScroll$ | async) === true"
+<tui-scrollbar #scrollbar class="group-tree blur-fallback" [hidden]="(hiddenScroll$ | async) === true"
     [ngClass]="{'group-tree-hide': groupSelected$ | async}" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
 
     @if (loadingNodes$ | async) {

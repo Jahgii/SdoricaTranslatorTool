@@ -60,7 +60,7 @@
                         [ngTemplateOutletContext]="{$implicit: word, i: i}" />
 
                     <ng-template #confirmDelete let-word let-i="i">
-                        <td *tuiCell="'confirmDelete'" class="confirm-delete-column fade enter">
+                        <td *tuiCell="'confirmDelete'" class="confirm-delete-column blur-fallback fade enter">
                             <p class="text">{{'confirm-text-delete-word' | translate}}</p>
                             <button tuiButton size="xs" class="tui-space_left-2" (click)="commonWords.delete(word, i)"
                                 [loading]="(commonWords.deleting$ | async) ?? false" appearance="accent">
