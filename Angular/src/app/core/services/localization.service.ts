@@ -273,9 +273,9 @@ export class LocalizationService implements OnDestroy {
     if (request$ === undefined) return;
 
     await firstValueFrom(request$)
-      .then(_ => {
+      .then(async _ => {
         if (this.lStorage.getAppMode() === AppModes.Offline) {
-          this.onCategoryUpdateOffline(key, this.language);
+          await this.onCategoryUpdateOffline(key, this.language);
         }
       }, _ => {
         this.alert.showAlert(
@@ -414,6 +414,46 @@ export class LocalizationService implements OnDestroy {
 
     for (const k of filterKeys)
       k.Translations[lang] = k.Translations[lang].replace(regex, apply.transform);
+  }
+
+  public async onCheckAll() {
+    if (!this.keys) return;
+
+    const lang = this.languageOrigin.localizationLang;
+    const filters = this.filterForm.getRawValue();
+    let filterKeys = this.keys
+      .filter(k => k.Original[lang].toLowerCase().includes((filters.original ?? "").toLowerCase()))
+      .filter(k => k.Translations[lang].toLowerCase().includes((filters.translation ?? "").toLowerCase()))
+      .filter(k => k.Translated[lang] === false);
+
+    this.saving$.next(true);
+    for (const k of filterKeys) {
+      k.Translated[lang] = true;
+      this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, true, k);
+      this.searchTotalTranslated++;
+      await this.onKeyTranslated(k);
+    }
+    this.saving$.next(false);
+  }
+
+  public async onUncheckAll() {
+    if (!this.keys) return;
+
+    const lang = this.languageOrigin.localizationLang;
+    const filters = this.filterForm.getRawValue();
+    let filterKeys = this.keys
+      .filter(k => k.Original[lang].toLowerCase().includes((filters.original ?? "").toLowerCase()))
+      .filter(k => k.Translations[lang].toLowerCase().includes((filters.translation ?? "").toLowerCase()))
+      .filter(k => k.Translated[lang] === true);
+
+    this.saving$.next(true);
+    for (const k of filterKeys) {
+      k.Translated[lang] = false;
+      this.lCS.updateCategoryKeys(this.selectedCategory, this.selectedCategoryIndex, false, k);
+      this.searchTotalTranslated--;
+      await this.onKeyTranslated(k);
+    }
+    this.saving$.next(false);
   }
 
   private toRegExp(pattern: string, flags?: string): RegExp | null {

@@ -219,7 +219,7 @@
     <button tuiButton appearance="outline" [loading]="(eTS.isTranslating$ | async) ?? false"
       (click)="eTS.onApplyTranslation()" [disabled]="!(eTS.filesVerified$ | async)"
       [tuiHint]="!(eTS.filesVerified$ | async) ? ('missing-files' | translate) : undefined"
-      [tuiHintAppearance]="!(eTS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
+      [tuiHintAppearance]="'onDark'" [tuiHintShowDelay]="100">
       {{'apply-translation' | translate}}
     </button>
     }

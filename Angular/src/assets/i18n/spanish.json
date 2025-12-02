@@ -226,8 +226,8 @@
     "home": "Página Principal",
     "translation-progress": "Progreso de Traducción",
     "translation-progress-description": "Aqui puedes ver el porcentaje de la traducción, es recomendable guardar los porcentajes y comparar la siguiente vez que vuelvas por aquí. Los porcentajes son generales.",
-    "translation-ui": "IU: Corresponde a menus, descripciones de objetos, habilidades, personajes, etc.",
-    "translation-dialogs": "Dialogos: Corresponde a la historia principal, de personajes y eventos.",
+    "translation-ui": "IU: Menus, descripciones de objetos, habilidades, personajes, etc.",
+    "translation-dialogs": "Dialogos: Historia principal, de personajes y eventos.",
     "to-translate": "A Traducir",
     "to-translate-description": "Es hora de traducir, arrastra o da click sobre los recuadros de la parte inferior y proporciona los archivos especificados, una vez hecho da click en 'Aplicar Traducción'.",
     "to-share": "A Compartir",
@@ -403,5 +403,7 @@
     "regex-flag-m": "Cambia el comportamiento de los anclajes ^ y $ para que coincidan con el inicio y el final de cada línea dentro de un texto multilínea, además del inicio y el final de todo el texto.",
     "regex-flag-s": "Permite que el carácter . (punto) coincida con cualquier carácter, incluidos los terminadores de línea (como los saltos de línea).",
     "regex-flag-u": "Habilita el soporte completo de Unicode, tratando el patrón como una secuencia de puntos de código Unicode. Esto es importante para coincidir correctamente con caracteres fuera del alfabeto latino básico.",
-    "regex-flag-v": "Una mejora del modo u, que ofrece funciones Unicode más avanzadas y notación de conjuntos para clases de caracteres.\n (Nota: u y v no pueden usarse juntos)."
+    "regex-flag-v": "Una mejora del modo u, que ofrece funciones Unicode más avanzadas y notación de conjuntos para clases de caracteres.\n (Nota: u y v no pueden usarse juntos).",
+    "check-all": "Marcar Todos",
+    "uncheck-all": "Desmarcar Todos"
 }

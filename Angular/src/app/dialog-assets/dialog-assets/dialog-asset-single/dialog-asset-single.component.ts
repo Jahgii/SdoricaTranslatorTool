@@ -5,7 +5,7 @@ import { IDialog, IDialogAsset, TriggerChange } from 'src/app/core/interfaces/i-
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, KeyValue, KeyValuePipe, NgStyle } from '@angular/common';
 import { ElementBreakpointService } from 'src/app/core/services/element-breakpoint.service';
-import { TuiButton, TuiHint, TuiIcon, TuiLoader, TuiScrollable, TuiScrollbar, TuiTextfield } from '@taiga-ui/core';
+import { TuiHint, TuiIcon, TuiLoader, TuiScrollable, TuiScrollbar, TuiTextfield } from '@taiga-ui/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiBlockStatus } from '@taiga-ui/layout';
@@ -40,7 +40,6 @@ import { TuiCopy } from '@taiga-ui/kit';
     TuiFilterPipe,
     TuiTextfield,
     TuiLoader,
-    TuiButton,
     TuiCopy,
 
     CommonDictionaryDirective,

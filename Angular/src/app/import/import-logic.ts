@@ -78,6 +78,8 @@ export function addDialogAssetGroup(
     dialogAssetsGroups: { [language: string]: { [mainGroup: string]: { [group: string]: IGroup } } },
     dialogAsset: IDialogAsset
 ) {
+    if (dialogAsset.Number == null || Number.isNaN(dialogAsset.Number)) return;
+    
     dialogAssetsMainGroups[dialogAsset.Language] ??= {};
 
     if (dialogAssetsMainGroups[dialogAsset.Language][dialogAsset.MainGroup] == null) {

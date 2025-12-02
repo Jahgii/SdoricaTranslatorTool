@@ -226,8 +226,8 @@
     "home": "Home",
     "translation-progress": "Translation Progress",
     "translation-progress-description": "Here you can see the percentage of the translation, it is advisable to save the percentages and compare the next time you come back here. The percentages are general.",
-    "translation-ui": "UI: It corresponds to menus, descriptions of objects, skills, characters, etc.",
-    "translation-dialogs": "Dialogs: It corresponds to the main story, of characters and events.",
+    "translation-ui": "UI: Menus, descriptions of objects, skills, characters, etc.",
+    "translation-dialogs": "Dialogs: Main, characters and events story.",
     "to-translate": "To translate",
     "to-translate-description": "It's time to translate, drag or click on the boxes at the bottom and provide the specified files, once done click on 'Apply Translation'.",
     "to-share": "Let's Share",
@@ -403,5 +403,7 @@
     "regex-flag-m": "Changes the behavior of ^ and $ anchors to match the start and end of each line within a multiline text, in addition to the start and end of the entire text.",
     "regex-flag-s": "Allows the . (dot) character to match any character, including line terminators (like newline characters).",
     "regex-flag-u": "Enables full Unicode support, treating the pattern as a sequence of Unicode code points. This is important for correctly matching characters outside the basic Latin alphabet.",
-    "regex-flag-v": "An upgrade to u mode, offering more advanced Unicode features and set notation for character classes.\n (Note: u and v cannot be used together)."
+    "regex-flag-v": "An upgrade to u mode, offering more advanced Unicode features and set notation for character classes.\n (Note: u and v cannot be used together).",
+    "check-all": "Check All",
+    "uncheck-all": "Uncheck All"
 }

@@ -9,14 +9,16 @@
 @if (localization.categories$ | async; as categories) {
 <div class="localization-container">
   <div class="localization-data-actions tui-space_bottom-4">
-    <tui-combo-box class="category-input" [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'s'"
-      [valueContent]="categoryInputContent" [stringify]="stringify"
-      (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
-      {{'categories' | translate}}
-      <input placeholder="{{'type-name' | translate}}" tuiTextfieldLegacy />
-      <tui-data-list-wrapper *tuiDataList [itemContent]="categoryInputContent"
-        [items]="categories | tuiFilterByInput"></tui-data-list-wrapper>
-    </tui-combo-box>
+    <div class="category-input">
+      <tui-combo-box [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'s'"
+        [valueContent]="categoryInputContent" [stringify]="stringify"
+        (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
+        {{'categories' | translate}}
+        <input placeholder="{{'type-name' | translate}}" tuiTextfieldLegacy />
+        <tui-data-list-wrapper *tuiDataList [itemContent]="categoryInputContent"
+          [items]="categories | tuiFilterByInput"></tui-data-list-wrapper>
+      </tui-combo-box>
+    </div>
     <ng-template #categoryInputContent let-data>
       <div>
         {{data.Name}} [{{data.KeysTranslated[localization.language]}}/{{data.Keys[localization.language]}}]
@@ -24,9 +26,15 @@
     </ng-template>
     @if (localization.keys$) {
     <div style="display: flex; align-items: center;">
-      <button class="tui-space_right-4" tuiIconButton appearance="icon" shape="square" iconStart="list-restart"
+      <button class="tui-space_horizontal-4" tuiIconButton appearance="icon" shape="square" iconStart="list-restart"
         (click)="onResetCategories()" [loading]="reset$()" size="xs"
         [tuiHint]="'reset-categories-count' | translate"></button>
+      <button class="tui-space_right-4" tuiIconButton appearance="icon" shape="square" iconStart="list-checks"
+        (click)="localization.onCheckAll()" [loading]="localization.saving$ | async" size="xs"
+        [tuiHint]="'check-all' | translate"></button>
+      <button class="tui-space_right-4" tuiIconButton appearance="icon" shape="square" iconStart="list-x"
+        (click)="localization.onUncheckAll()" [loading]="localization.saving$ | async" size="xs"
+        [tuiHint]="'uncheck-all' | translate"></button>
       <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color"
         [tuiHint]="localization.gemini.ready$() ?
                           ('gemini-button-ready' | translate):

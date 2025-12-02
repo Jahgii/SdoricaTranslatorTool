@@ -48,7 +48,7 @@
         [loading]="(importS.isImporting$ | async) ?? false" (click)="importS.onImportBegins()"
         [disabled]="!(importS.filesVerified$ | async)"
         [tuiHint]="!(importS.filesVerified$ | async) ? ('missing-files-import' | translate) : undefined"
-        [tuiHintAppearance]="!(importS.filesVerified$ | async) ? 'error' : 'onDark'" [tuiHintShowDelay]="100">
+        [tuiHintAppearance]="'onDark'" [tuiHintShowDelay]="100">
         {{'begin-import' | translate}}
       </button>
       }
