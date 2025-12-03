@@ -284,7 +284,7 @@
                             [ngTemplateOutletContext]="{$implicit: v, i: i}" />
 
                         <ng-template #confirmDelete let-v let-i="i">
-                            <td *tuiCell="'confirmDelete'" class="confirm-delete-column fade enter">
+                            <td *tuiCell="'confirmDelete'" class="confirm-delete-column blur-fallback fade enter">
                                 <p class="text">{{'confirm-text-delete-gamevalue' | translate}}</p>
                                 <button tuiButton size="xs" class="tui-space_left-2"
                                     (click)="gamedataService.onDelete(v, i)"
