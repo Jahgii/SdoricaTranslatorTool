@@ -34,20 +34,18 @@ export class AppComponent implements OnInit {
   private setBrowserFlag(): void {
     const ua = navigator.userAgent;
 
-    let browser = '';
-    if (ua.includes('Firefox')) browser += 'Firefox ';
-    if (ua.includes('WebKitGTK')) browser += 'WebKitGTK ';
-    if (ua.includes('Chrome')) browser += 'Chrome ';
-    if (ua.includes('Safari')) browser += 'Safari ';
-    if (ua.includes('AppleWebKit')) browser += 'AppleWebKit ';
-    if (ua.includes('Edg')) browser += 'Edge ';
-    if (ua.includes('MSIE') || ua.includes('Trident')) browser += 'IE ';
-    if (ua.includes('Opera Mini')) browser += 'Opera Mini ';
-    if (ua.includes('UCBrowser')) browser += 'UC Browser ';
-    if (ua.includes('QQBrowser')) browser += 'QQBrowser ';
-    if (ua.includes('KaiOS')) browser += 'KaiOS ';
-
-    if (browser === '') browser = 'unknown';
+    let browser = 'unknown';
+    if (ua.includes('Firefox')) browser = 'Firefox';
+    else if (ua.includes('WebKitGTK')) browser = 'WebKitGTK';
+    else if (ua.includes('Chrome')) browser = 'Chrome';
+    else if (ua.includes('Edg')) browser = 'Edge';
+    else if (ua.includes('Safari')) browser = 'Safari';
+    else if (ua.includes('AppleWebKit')) browser = 'AppleWebKit';
+    else if (ua.includes('MSIE') || ua.includes('Trident')) browser = 'IE';
+    else if (ua.includes('Opera Mini')) browser = 'Opera Mini';
+    else if (ua.includes('UCBrowser')) browser = 'UC Browser';
+    else if (ua.includes('QQBrowser')) browser = 'QQBrowser';
+    else if (ua.includes('KaiOS')) browser = 'KaiOS';
 
     document.documentElement.dataset.browser = browser;
   }
