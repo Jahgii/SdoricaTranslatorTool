@@ -65,6 +65,14 @@
   }
 }
 
+tui-copy {
+  button {
+    &:before {
+      color: var(--tui-text-primary-invert) !important;
+    }
+  }
+}
+
 /* Provide sufficient contrast against white background */
 a {
   color: #0366d6;
