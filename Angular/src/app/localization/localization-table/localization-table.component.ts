@@ -10,7 +10,7 @@ import {
   ViewChildren,
 } from "@angular/core";
 import { EMPTY_QUERY, TuiBooleanHandler, TuiMapper, TuiMapperPipe, tuiPure } from "@taiga-ui/cdk";
-import { TuiAppearance, TuiDataList, TuiDriver, TuiDropdown, tuiGetWordRange, TuiHint, TuiIcon, TuiLoader, TuiOption, TuiScrollable, TuiScrollbar, TuiTextfield, TuiButton, TuiLabel, TuiTitle } from "@taiga-ui/core";
+import { TuiAppearance, TuiDataList, TuiDriver, TuiDropdown, tuiGetWordRange, TuiHint, TuiIcon, TuiLoader, TuiScrollable, TuiScrollbar, TuiTextfield, TuiButton, TuiLabel, TuiTitle, TuiOptionNew } from "@taiga-ui/core";
 import { BehaviorSubject, Observable, pairwise, Subscription } from "rxjs";
 import { IGamedataValue } from "src/app/core/interfaces/i-gamedata";
 import { ILocalizationKey } from "src/app/core/interfaces/i-localizations";
@@ -77,7 +77,7 @@ const ESPECIAL_CHARACTER = "@";
   ]
 })
 export class LocalizationTableComponent implements OnInit, OnDestroy {
-  @ViewChildren(TuiOption, { read: ElementRef })
+  @ViewChildren(TuiOptionNew, { read: ElementRef })
   private readonly options: QueryList<ElementRef<HTMLElement>> = EMPTY_QUERY;
   @ViewChild(TuiDriver)
   readonly driver?: Observable<boolean>;
@@ -165,6 +165,7 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
     const item = this.options[which];
 
     if (!item) {
+      event.stopImmediatePropagation();
       return;
     }
 
@@ -200,7 +201,7 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
   }
 
   protected search(textarea: any): string {
-    return textarea.value.slice(textarea.value.indexOf('@'), textarea.selectionStart) || '';
+    return textarea.value.slice(textarea.value.indexOf(ESPECIAL_CHARACTER), textarea.selectionStart) || '';
   }
 
   protected readonly filter: TuiMapper<[readonly IGamedataValue[], string], readonly IGamedataValue[]> = (
@@ -223,7 +224,7 @@ export class LocalizationTableComponent implements OnInit, OnDestroy {
     return textarea.value.slice(
       textarea.value.indexOf(ESPECIAL_CHARACTER),
       textarea.selectionStart,
-    );
+    ) || '';
   }
   //#endregion
 
