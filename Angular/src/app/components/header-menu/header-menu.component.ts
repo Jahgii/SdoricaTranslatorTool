@@ -166,7 +166,7 @@ export class HeaderMenuComponent implements OnInit {
   }
 
   protected onOpenSettings(event: MouseEvent, toogle: boolean) {
-    if (event.isTrusted) this.openSetting.set(toogle);
+    this.openSetting.set(toogle);
   }
 
   @tuiPure
