@@ -1,7 +1,6 @@
 import { TuiBlockStatus } from "@taiga-ui/layout";
-import { TuiTextfieldControllerModule, TuiComboBoxModule, TuiInputModule } from "@taiga-ui/legacy";
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
-import { TuiDataList, TuiDropdown, TuiButton, TuiHint } from '@taiga-ui/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, signal, ViewChild } from '@angular/core';
+import { TuiDataList, TuiDropdown, TuiButton, TuiHint, TuiTextfield } from '@taiga-ui/core';
 import { firstValueFrom } from 'rxjs';
 import { ILocalizationCategory, ILocalizationKey } from 'src/app/core/interfaces/i-localizations';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -11,7 +10,7 @@ import { LocalizationService } from 'src/app/core/services/localization.service'
 import { TranslateModule } from '@ngx-translate/core';
 import { LocalizationTableComponent } from './localization-table/localization-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiButtonLoading, TuiDataListWrapper, TuiFilterByInputPipe } from '@taiga-ui/kit';
+import { TuiButtonLoading, TuiComboBox, TuiDataListWrapper, TuiFilterByInputPipe, TuiChevron } from '@taiga-ui/kit';
 import { AsyncPipe } from '@angular/common';
 import { LocalStorageService } from "../core/services/local-storage.service";
 import { AppModes } from "../core/enums/app-modes";
@@ -22,6 +21,7 @@ import { Indexes, ObjectStoreNames } from "../core/interfaces/i-indexed-db";
 import { IDialogAsset } from "../core/interfaces/i-dialog-asset";
 import { GeminiApiService } from "../core/services/gemini-api.service";
 import { GeminiIconDirective } from "../core/directives/gemini-icon.directive";
+import { AppStateService } from "../core/services/app-state.service";
 
 @Component({
   selector: 'app-localization',
@@ -38,31 +38,37 @@ import { GeminiIconDirective } from "../core/directives/gemini-icon.directive";
     ReactiveFormsModule,
     TranslateModule,
 
-    TuiComboBoxModule,
-    TuiTextfieldControllerModule,
+    TuiTextfield,
+    TuiComboBox,
     TuiDataList,
     TuiDataListWrapper,
     TuiDropdown,
     TuiButton,
     TuiButtonLoading,
-    TuiInputModule,
     TuiHint,
     TuiBlockStatus,
     TuiFilterByInputPipe,
+    TuiChevron,
 
     LocalizationTableComponent,
     GeminiIconDirective,
   ]
 })
-export class LocalizationComponent implements OnInit {
+export class LocalizationComponent implements OnInit, AfterViewInit {
+  @ViewChild(TuiComboBox)
+  categoriesComboBox!: TuiComboBox<any>;
+
   viewIndex: number = -1;
 
   protected reset$ = signal(false);
+  protected open = false;
+  protected openSearch = false;
 
   constructor(
     private readonly api: ApiService,
     private readonly lStorage: LocalStorageService,
     private readonly indexedDB: IndexDBService,
+    public readonly appState: AppStateService,
     public readonly languageOrigin: LanguageOriginService,
     public readonly libreTranslate: LibreTranslateService,
     public readonly localization: LocalizationService,
@@ -72,6 +78,14 @@ export class LocalizationComponent implements OnInit {
   ngOnInit(): void {
     this.localization.viewIndex = this.viewIndex;
     this.localization.loadStore();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.appState.isOnTour$()) {
+      console.log("COMBO BOX", this.categoriesComboBox);
+      (this.categoriesComboBox as any).blurEffect = undefined;
+      (this.categoriesComboBox as any).dropdown.drivers[0].closed = false;
+    }
   }
 
   public async onResetCategories() {

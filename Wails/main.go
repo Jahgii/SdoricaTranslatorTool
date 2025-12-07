@@ -20,7 +20,7 @@ func main() {
 		Title:            "STT",
 		Width:            1024,
 		Height:           768,
-		MinWidth:         360,
+		MinWidth:         600,
 		MinHeight:        600,
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
 		OnStartup:        app.startup,

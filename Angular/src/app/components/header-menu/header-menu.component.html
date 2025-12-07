@@ -19,8 +19,18 @@
     }
     }
 
-    <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="@tui.circle-help"
-      (click)="onMainTour()" [tuiHint]="'tour-mode' | translate" size="xs" aria-label="tour button">
+    <button id="tourButton" tuiIconButton appearance="icon" type="button" iconStart="@tui.circle-help" size="xs"
+      aria-label="tour button" [tuiDropdown]="contextMenu" [(tuiDropdownOpen)]="open">
+
+      <ng-template #contextMenu>
+        <tui-data-list role="menu" tuiDataListDropdownManager class="context-menu" size="s">
+          @for (t of tours; track $index) {
+          <button tuiOption new type="button" (click)="onMainTour(t)">
+            {{ 'tour-opt-' + t | translate }}
+          </button>
+          }
+        </tui-data-list>
+      </ng-template>
     </button>
 
     <button id="themeButton" aria-label="toogle night mode" type="button" tuiIconButton appearance="icon"

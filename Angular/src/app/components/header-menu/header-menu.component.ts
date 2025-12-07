@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, Inject, OnInit, signal, Tem
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { tuiPure, TuiStringHandler, TuiContext } from '@taiga-ui/cdk';
-import { TuiBreakpointService, TuiDataList, TuiGroup, TuiButton, TuiHint, TuiTextfield, TuiPopup, TuiAlertService, TuiAlertContext, TuiIcon, TuiLabel } from '@taiga-ui/core';
+import { TuiBreakpointService, TuiDataList, TuiGroup, TuiButton, TuiHint, TuiTextfield, TuiPopup, TuiAlertService, TuiAlertContext, TuiIcon, TuiLabel, TuiDropdown } from '@taiga-ui/core';
 import { TuiLanguageSwitcherService } from '@taiga-ui/i18n';
 import { ILibreTranslateLanguages } from 'src/app/core/interfaces/i-libre-translate';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -23,6 +23,7 @@ import { LocalStorageService } from "src/app/core/services/local-storage.service
 import { PasswordHideTextDirective } from "src/app/core/directives/password-hide-text.directive";
 import { TourService } from 'src/app/core/services/tour.service';
 import { GeminiApiConfigurationService } from 'src/app/core/services/gemini-api-configuration.service';
+import { Tours } from 'src/app/core/enums/tours';
 
 @Component({
   selector: 'app-header-menu',
@@ -55,6 +56,7 @@ import { GeminiApiConfigurationService } from 'src/app/core/services/gemini-api-
     TuiHint,
     TuiPassword,
     TuiIcon,
+    TuiDropdown,
 
     LanguageSwitcherComponent,
     PasswordHideTextDirective,
@@ -77,6 +79,9 @@ export class HeaderMenuComponent implements OnInit {
     { lang: 'en', value: 'en' },
     { lang: 'es', value: 'es' }
   ];
+
+  protected tours = Object.values(Tours);
+  protected open = false;
 
   protected img$ = new BehaviorSubject<string>("");
   protected count = 0;
@@ -102,7 +107,7 @@ export class HeaderMenuComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.lStorage.getAppMainTourDone())
-      this.tour.start();
+      this.tour.start(Tours.Main);
   }
 
   protected onToogleSettings() {
@@ -125,9 +130,9 @@ export class HeaderMenuComponent implements OnInit {
     globalThis.location.reload();
   }
 
-  protected onMainTour() {
+  protected onMainTour(tour: Tours) {
     this.openSetting.set(false);
-    this.tour.start();
+    this.tour.start(tour);
   }
 
   private onTourOnGoing() {

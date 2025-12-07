@@ -7,12 +7,15 @@ import { ViewersService } from './viewers.service';
 import { AppStateService } from './app-state.service';
 import Shepherd, { StepOptions, Tour } from 'shepherd.js';
 import { MainTour } from '../tours/tour-main';
+import { LocalizationTour } from '../tours/tour-localization';
+import { Tours } from '../enums/tours';
 
 @Injectable()
 export class TourService {
   protected translate = inject(TranslateService);
   public isOnTour$: WritableSignal<boolean> = signal(false);
   protected tour?: Tour;
+  protected _tour?: Tours;
 
   constructor(
     private readonly viewers: ViewersService,
@@ -22,15 +25,29 @@ export class TourService {
   ) { }
 
   private async init() {
-    let tour = await MainTour(this.translate, this.breakpointService$);
+    let tour = await this.getTour();
     this.createTour(tour);
     this.viewers.restartView();
+    this.lStorage.resetCategories();
     this.appState.isOnTour$ = this.isOnTour$;
   }
 
-  public async start() {
+  private async getTour() {
+    switch (this._tour) {
+      case Tours.Main:
+        return await MainTour(this.translate, this.breakpointService$);
+      case Tours.Localization:
+        return await LocalizationTour(this.translate, this.breakpointService$);
+      default:
+        return await MainTour(this.translate, this.breakpointService$);
+    }
+  }
+
+  public async start(_tour: Tours) {
+    this._tour = _tour;
     await this.init();
     this.isOnTour$.update(_ => true);
+    this.disableScrollWheel();
     this.tour?.start();
 
     this.onBreakpointChange();
@@ -54,6 +71,7 @@ export class TourService {
   private onTourFinish() {
     this.lStorage.setAppMainTourDone();
     this.isOnTour$.update(_ => false);
+    this.enableScrollWheel();
   }
 
   private createTour(tour: { defaultStepOptions: StepOptions, defaultSteps: StepOptions[] }) {
@@ -87,5 +105,22 @@ export class TourService {
     this.isOnTour$.update(_ => true);
     this.tour?.start();
   }
+
+  private preventScroll(e: Event) {
+    e.preventDefault();
+  }
+
+  private disableScrollWheel() {
+    globalThis.addEventListener('wheel', this.preventScroll, { passive: false });
+    globalThis.addEventListener('mousewheel', this.preventScroll, { passive: false });
+    globalThis.addEventListener('DOMMouseScroll', this.preventScroll, { passive: false });
+  }
+
+  private enableScrollWheel() {
+    globalThis.removeEventListener('wheel', this.preventScroll);
+    globalThis.removeEventListener('mousewheel', this.preventScroll);
+    globalThis.removeEventListener('DOMMouseScroll', this.preventScroll);
+  }
+
 
 }

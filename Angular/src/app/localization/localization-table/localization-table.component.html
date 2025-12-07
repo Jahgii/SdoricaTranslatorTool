@@ -158,8 +158,8 @@
                                 [ngTemplateOutletContext]="{$implicit: item}" />
 
                             <ng-template #rowTemplate let-item>
-                                <td *tuiCell="'Language'" tuiTd [tuiHint]="tooltip" [tuiHintShowDelay]="200"
-                                    class="tooltip-name-cell">
+                                <td *tuiCell="'Language'" tuiTd class="tooltip-name-cell" [tuiHint]="tooltip"
+                                    [tuiHintShowDelay]="200">
                                     <ng-template #tooltip>
                                         <tui-scrollbar #scrollTooltip class="tooltip-original-cell" [hidden]="true"
                                             (mouseenter)="onTooltipCheck(scrollTooltip)"
@@ -388,8 +388,8 @@
                                                             translate}}:
                                                         </span>
                                                         <tui-copy class="mask-fallback">
-                                                        {{key.value}}
-                                                    </tui-copy>
+                                                            {{key.value}}
+                                                        </tui-copy>
                                                     </li>
                                                     }
                                                 </ul>

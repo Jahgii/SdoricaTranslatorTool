@@ -131,6 +131,11 @@ export class LocalStorageService {
     localStorage.setItem('Category' + view, categoryId);
   }
 
+  resetCategories() {
+    localStorage.removeItem('Category0');
+    localStorage.removeItem('Category1');
+  }
+
   getCategorySearch(search: string) {
 
   }

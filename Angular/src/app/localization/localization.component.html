@@ -10,22 +10,45 @@
 <div class="localization-container">
   <div class="localization-data-actions tui-space_bottom-4">
     <div class="category-input">
-      <tui-combo-box [(ngModel)]="localization.selectedCategory" [tuiTextfieldSize]="'s'"
-        [valueContent]="categoryInputContent" [stringify]="stringify"
-        (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
-        {{'categories' | translate}}
-        <input placeholder="{{'type-name' | translate}}" tuiTextfieldLegacy />
-        <tui-data-list-wrapper *tuiDataList [itemContent]="categoryInputContent"
-          [items]="categories | tuiFilterByInput"></tui-data-list-wrapper>
-      </tui-combo-box>
+      @if(appState.isOnTour$()){
+      <div style="position: absolute; width: 100%;" tuiDropdownLimitWidth="fixed" [tuiDropdownOffset]="12" tuiGroup
+        [tuiDropdown]="dropdown" [tuiDropdownManual]="open">
+        <button id="categoriesInputButton" appearance="flat" #tuiDropdownHost size="xs" tuiIconButton type="button"
+          [style.flex]="'0 0 auto'" (click)="open = true">
+        </button>
+      </div>
+      <ng-template #dropdown>
+        <tui-data-list size="s">
+          @for (item of categories; track $index) {
+          <button tuiOption new tuiTextfieldSize="s" type="button"
+            (click)="localization.selectedCategory = item; localization.onSelectCategory(localization.selectedCategory); open = false">
+            {{ item.Name }}
+            [{{item.KeysTranslated[localization.language]}}/{{item.Keys[localization.language]}}]
+          </button>
+          }
+        </tui-data-list>
+      </ng-template>
+      }
+      <tui-textfield id="categoriesInput" tuiChevron tuiTextfieldSize="s" [content]="categoryInputContent"
+        [stringify]="stringify">
+        <input tuiComboBox [(ngModel)]="localization.selectedCategory" placeholder="{{'categories' | translate}}"
+          (ngModelChange)="localization.onSelectCategory(localization.selectedCategory)">
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [itemContent]="categoryInputContent"
+          [items]="categories | tuiFilterByInput" />
+      </tui-textfield>
     </div>
     <ng-template #categoryInputContent let-data>
       <div>
-        {{data.Name}} [{{data.KeysTranslated[localization.language]}}/{{data.Keys[localization.language]}}]
+        <span class="localization-category-name">
+          {{data.Name}}
+        </span>
+        <span class="localization-translated-totals">
+          [{{data.KeysTranslated[localization.language]}}/{{data.Keys[localization.language]}}]
+        </span>
       </div>
     </ng-template>
     @if (localization.keys$) {
-    <div style="display: flex; align-items: center;">
+    <div style="display: flex; align-items: center; position: relative;">
       <button class="tui-space_horizontal-4" tuiIconButton appearance="icon" shape="square" iconStart="list-restart"
         (click)="onResetCategories()" [loading]="reset$()" size="xs"
         [tuiHint]="'reset-categories-count' | translate"></button>
@@ -54,7 +77,18 @@
         </ng-template>
       </button>
       @if (localization.searchCategory$ | async) {
-      <div tuiDropdownOpen bottomRight [tuiDropdown]="content" class="tui-space_left-4">
+      @if(appState.isOnTour$()){
+      <div style="position: absolute; width: 100%;" tuiDropdownLimitWidth="fixed" [tuiDropdownOffset]="12" tuiGroup
+        [tuiDropdown]="content" [tuiDropdownManual]="openSearch">
+        <button id="searchInputButton" appearance="flat" #tuiDropdownHost size="xs" tuiIconButton type="button"
+          [style.flex]="'0 0 auto'" (click)="openSearch = true">
+        </button>
+        <button id="searchInputHideButton" appearance="flat" #tuiDropdownHost size="xs" tuiIconButton type="button"
+          [style.flex]="'0 0 auto'" (click)="openSearch = false">
+        </button>
+      </div>
+      }
+      <div id="category-search" tuiDropdownOpen bottomRight [tuiDropdown]="content" class="tui-space_left-4">
         <button tuiButton appearance="flat" type="button" iconStart="@tui.filter" size="s"
           attr.aria-label="{{'filters' | translate}}">
           <span>{{'results' | translate}}:</span>
@@ -66,21 +100,17 @@
           <p class="limit-width tui-space_bottom-6">
             {{'filters-localization-description' | translate}}
           </p>
-          <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.search" [tuiTextfieldSize]="'s'"
-            [tuiTextfieldIcon]="'@tui.scan-search'">
-            {{'search-by-text' | translate}}
-            <input tuiTextfieldLegacy type="text" aria-label="text search" />
-          </tui-input>
-          <tui-input class="tui-space_bottom-3 limit-width" [formControl]="localization.searchTranslation"
-            [tuiTextfieldSize]="'s'" [tuiTextfieldIcon]="'@tui.scan-search'">
-            {{'search-by-translation' | translate}}
-            <input tuiTextfieldLegacy type="text" aria-label="translation text search" />
-          </tui-input>
-          <tui-input class="limit-width" [formControl]="localization.searchKey" [tuiTextfieldSize]="'s'"
-            [tuiTextfieldIcon]="'@tui.scan-search'">
-            {{'search-by-key' | translate}}
-            <input tuiTextfieldLegacy type="text" aria-label="key text search" />
-          </tui-input>
+          <tui-textfield class="tui-space_bottom-3 limit-width" iconStart="@tui.scan-search" tuiTextfieldSize="s">
+            <input tuiTextfield placeholder="{{'search-by-text' | translate}}" [formControl]="localization.search" />
+          </tui-textfield>
+          <tui-textfield class="tui-space_bottom-3 limit-width" iconStart="@tui.scan-search" tuiTextfieldSize="s">
+            <input tuiTextfield placeholder="{{'search-by-translation' | translate}}"
+              [formControl]="localization.searchTranslation" />
+          </tui-textfield>
+          <tui-textfield class="tui-space_bottom-3 limit-width" iconStart="@tui.scan-search" tuiTextfieldSize="s">
+            <input id="searchByKey" tuiTextfield placeholder="{{'search-by-key' | translate}}"
+              [formControl]="localization.searchKey" />
+          </tui-textfield>
         </div>
       </ng-template>
       } @else {
