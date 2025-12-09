@@ -115,14 +115,27 @@
         tuiHint="{{'chapter-dialog-localization' | translate}}" [tuiHintShowDelay]="100"
         [ngClass]="((componentOpens[appViews.dialogs] | async) ?? 0) > 0 ? 'button-side': undefined">
     </button>
+    @if (appState.isOnTour$()) {
+    <button id="importButton" tuiIconButton aria-label="import-button" appearance="{{
+                (((componentOpens[appViews.import] | async) ?? 0) > 0 || ((componentOpens[appViews.importall] | async) ?? 0) > 0) ? 
+                'selected':
+                'outline'
+            }}" type="button" size="s" [iconStart]="'@tui.upload'"
+        [ngClass]="(((componentOpens[appViews.import] | async) ?? 0) > 0 || ((componentOpens[appViews.importall] | async) ?? 0) > 0) ? 'button-side': undefined"
+        tuiDropdownAlign="right" [tuiDropdown]="importMenu" [tuiDropdownSided]="true" [tuiDropdownManual]="importOpen"
+        (click)="onOpenImportMenu()">
+    </button>
+    }
+    @else {
     <button tuiIconButton aria-label="import-button" appearance="{{
-            (((componentOpens[appViews.import] | async) ?? 0) > 0 || ((componentOpens[appViews.importall] | async) ?? 0) > 0) ? 
-            'selected':
-            'outline'
-        }}" type="button" size="s" [iconStart]="'@tui.upload'"
+                (((componentOpens[appViews.import] | async) ?? 0) > 0 || ((componentOpens[appViews.importall] | async) ?? 0) > 0) ? 
+                'selected':
+                'outline'
+            }}" type="button" size="s" [iconStart]="'@tui.upload'"
         [ngClass]="(((componentOpens[appViews.import] | async) ?? 0) > 0 || ((componentOpens[appViews.importall] | async) ?? 0) > 0) ? 'button-side': undefined"
         tuiDropdownAlign="right" [tuiDropdown]="importMenu" [tuiDropdownSided]="true" [(tuiDropdownOpen)]="importOpen">
     </button>
+    }
 
     <ng-template #importMenu>
         <h4 style="padding-left: var(--tui-padding-s);">
@@ -133,7 +146,7 @@
                 <button tuiOption new iconStart="files" (click)="loadComponent(appViews.import); importOpen = false;">
                     {{'re-import-game-files' | translate}}
                 </button>
-                <button tuiOption new iconStart="file" (click)="loadComponent(appViews.importall); importOpen = false;">
+                <button id="importTranslationFile" tuiOption new iconStart="file" (click)="loadComponent(appViews.importall); importOpen = false;">
                     {{'re-import-translation-file' | translate}}
                 </button>
             </tui-opt-group>

@@ -9,6 +9,7 @@ import Shepherd, { StepOptions, Tour } from 'shepherd.js';
 import { MainTour } from '../tours/tour-main';
 import { LocalizationTour } from '../tours/tour-localization';
 import { Tours } from '../enums/tours';
+import { ImportTranslationTour } from '../tours/tour-import-translation';
 
 @Injectable()
 export class TourService {
@@ -38,6 +39,8 @@ export class TourService {
         return await MainTour(this.translate, this.breakpointService$);
       case Tours.Localization:
         return await LocalizationTour(this.translate, this.breakpointService$);
+      case Tours.ImportTranslation:
+        return await ImportTranslationTour(this.translate, this.breakpointService$);
       default:
         return await MainTour(this.translate, this.breakpointService$);
     }

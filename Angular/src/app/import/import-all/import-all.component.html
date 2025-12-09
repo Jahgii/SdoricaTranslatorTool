@@ -4,7 +4,7 @@
     {{'importall-description' | translate}}
   </p>
 
-    <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="fileInput" [ngTemplateOutletContext]="{
             $implicit: importAllS.dataFile,
             filesize:(1024*1024*1024*2),
             accept: '*',
@@ -28,87 +28,87 @@
   </tui-tabs-with-more>
 
   @switch (activeItemIndex) {
-    @case (0) {
-    <ng-container [ngTemplateOutlet]="gvT" [ngTemplateOutletContext]="{
+  @case (0) {
+  <ng-container [ngTemplateOutlet]="gvT" [ngTemplateOutletContext]="{
         $implicit: importAllS.gVReplace,
         title: 'to-import',
         appearance: 'info',
         hint: 'import-count'
         }" />
-    <ng-container [ngTemplateOutlet]="gvT" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="gvT" [ngTemplateOutletContext]="{
         $implicit: importAllS.gVReplaceConflict,
         title: 'in-conflict',
         appearance: 'warning',
         hint: 'conflict-count'
         }" />
-    }
-    @case (1) {
-    <ng-container [ngTemplateOutlet]="daT" [ngTemplateOutletContext]="{
+  }
+  @case (1) {
+  <ng-container [ngTemplateOutlet]="daT" [ngTemplateOutletContext]="{
         $implicit: importAllS.dAReplace,
         title: 'to-import',
         appearance: 'info',
         hint: 'import-count'
         }" />
-    <ng-container [ngTemplateOutlet]="daT" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="daT" [ngTemplateOutletContext]="{
         $implicit: importAllS.dAReplaceConflict,
         title: 'in-conflict',
         appearance: 'warning',
         hint: 'conflict-count'
         }" />
-    }
-    @case(2){
-    <ng-container [ngTemplateOutlet]="kT" [ngTemplateOutletContext]="{
+  }
+  @case(2){
+  <ng-container [ngTemplateOutlet]="kT" [ngTemplateOutletContext]="{
         $implicit: importAllS.kReplace,
         title: 'to-import',
         appearance: 'info',
         hint: 'import-count'
         }" />
-    <ng-container [ngTemplateOutlet]="kT" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="kT" [ngTemplateOutletContext]="{
         $implicit: importAllS.kReplaceConflict,
         title: 'in-conflict',
         appearance: 'warning',
         hint: 'conflict-count'
         }" />
-    }
-    @case(3){
-    <ng-container [ngTemplateOutlet]="cT" [ngTemplateOutletContext]="{
+  }
+  @case(3){
+  <ng-container [ngTemplateOutlet]="cT" [ngTemplateOutletContext]="{
         $implicit: importAllS.cReplace,
         title: 'to-import',
         appearance: 'info',
         hint: 'import-count'
         }" />
-    <ng-container [ngTemplateOutlet]="cT" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="cT" [ngTemplateOutletContext]="{
         $implicit: importAllS.cReplaceConflict,
         title: 'in-conflict',
         appearance: 'warning',
         hint: 'conflict-count'
         }" />
-    }
+  }
   }
 
   <div class="import-button tui-space_vertical-6">
     @switch (importAllS.status()) {
-      @case ('waiting-file') {
-        <button tuiButton appearance="outline" disabled>
-          {{'waiting-file' | translate}}
-        </button>
-      }
-      @case ('reading-file') {
-        <button tuiButton appearance="outline" [loading]="true"></button>
-      }
-      @case ('import-file') {
-        <button tuiButton appearance="outline" (click)="importAllS.onImport()">
-          {{'import' | translate}}
-        </button>
-      }
-      @case ('importing-file') {
-        <button tuiButton appearance="outline" [loading]="true"></button>
-      }
-      @case ('file-imported') {
-        <button tuiButton appearance="outline">
-          {{'file-imported' | translate}}
-        </button>
-      }
+    @case ('waiting-file') {
+    <button tuiButton appearance="outline" disabled>
+      {{'waiting-file' | translate}}
+    </button>
+    }
+    @case ('reading-file') {
+    <button tuiButton appearance="outline" [loading]="true"></button>
+    }
+    @case ('import-file') {
+    <button id="importFileButton" tuiButton appearance="outline" (click)="importAllS.onImport()">
+      {{'import' | translate}}
+    </button>
+    }
+    @case ('importing-file') {
+    <button tuiButton appearance="outline" [loading]="true"></button>
+    }
+    @case ('file-imported') {
+    <button tuiButton appearance="outline">
+      {{'file-imported' | translate}}
+    </button>
+    }
     }
 
   </div>
@@ -117,7 +117,7 @@
 
 <ng-template #fileInput let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
   <div class="file-input-empty">
-        <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
+    <ng-container [ngTemplateOutlet]="file" [ngTemplateOutletContext]="{
             $implicit: filecontrol,
             filesize:filesize,
             accept: accept,
@@ -129,88 +129,88 @@
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename">
   @if (filecontrol.skip | async) {
-    @if (filecontrol.notSupported && filecontrol.notSupported | async) {
-      <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided"
-        >
-        <header tuiHeader>
-          <h2 tuiTitle>
-            {{'not-support' | translate}}
-            <span tuiSubtitle>{{filename}}</span>
-          </h2>
-        </header>
-        <section>
-          <span>{{'not-support-mobile' | translate}}</span>
-        </section>
-        <footer>
-        </footer>
-      </div>
-    } @else {
-      <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
-        <header tuiHeader>
-          <h2 tuiTitle>
-            {{'file-skip' | translate}}
-            <span tuiSubtitle>{{filename}}</span>
-          </h2>
-        </header>
-        <section>
-          <span>{{'file-import-skip-description' | translate}}</span>
-        </section>
-        <footer>
-        </footer>
-      </div>
-    }
+  @if (filecontrol.notSupported && filecontrol.notSupported | async) {
+  <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
+    <header tuiHeader>
+      <h2 tuiTitle>
+        {{'not-support' | translate}}
+        <span tuiSubtitle>{{filename}}</span>
+      </h2>
+    </header>
+    <section>
+      <span>{{'not-support-mobile' | translate}}</span>
+    </section>
+    <footer>
+    </footer>
+  </div>
+  } @else {
+  <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
+    <header tuiHeader>
+      <h2 tuiTitle>
+        {{'file-skip' | translate}}
+        <span tuiSubtitle>{{filename}}</span>
+      </h2>
+    </header>
+    <section>
+      <span>{{'file-import-skip-description' | translate}}</span>
+    </section>
+    <footer>
+    </footer>
+  </div>
+  }
   }
   @else {
   @if (!filecontrol.control.value) {
-    <label tuiInputFiles class="file-input">
-      <input tuiInputFiles [formControl]="filecontrol.control" [accept]="accept" />
-      <ng-template let-dragged>
-        @if (dragged) {
-          <div>
-            <tui-avatar class="file-avatar" src="@tui.droplet" />
-            <div>{{'drop' | translate}}</div>
-          </div>
-        } @else {
-          <div class="content">
-            <tui-avatar class="file-avatar" src="@tui.cloud-upload" />
-            <div>{{filename}}</div>
-          </div>
-        }
-      </ng-template>
-    </label>
+  <label tuiInputFiles class="file-input">
+    <input tuiInputFiles [formControl]="filecontrol.control" [accept]="accept" />
+    <ng-template let-dragged>
+      @if (dragged) {
+      <div>
+        <tui-avatar class="file-avatar" src="@tui.droplet" />
+        <div>{{'drop' | translate}}</div>
+      </div>
+      } @else {
+      <div class="content">
+        <tui-avatar class="file-avatar" src="@tui.cloud-upload" />
+        <div>{{filename}}</div>
+      </div>
+      }
+    </ng-template>
+  </label>
   }
   @if (filecontrol.loadedFile$ | async; as file) {
-    <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
-      <header tuiHeader>
-        <h2 tuiTitle>
-          {{'archive' | translate}}
-          <span tuiSubtitle>{{filename}}</span>
-        </h2>
-        <aside tuiAccessories>
-          <tui-loader class="file-verified-loader" [overlay]="true"
-            [showLoader]="(filecontrol.verifyingFile$ | async) ?? false">
-            <tui-icon [icon]="'@tui.circle-check'" />
-          </tui-loader>
-        </aside>
-      </header>
-      <section>
-        <p>
-          {{
-          (filecontrol.verifyingFile$ | async) ?? false ?
-          ('file-import-verifying' | translate) :
-          ('file-import-verified' | translate)
-          }}
-        </p>
-      </section>
-      <footer>
-      </footer>
-    </div>
+  <div tuiCardMedium="compact" tuiAppearance="neutral" class="file-input file-input-provided">
+    <header tuiHeader>
+      <h2 tuiTitle>
+        {{'archive' | translate}}
+        <span tuiSubtitle>{{filename}}</span>
+      </h2>
+      <aside tuiAccessories>
+        <tui-loader class="file-verified-loader" [overlay]="true"
+          [showLoader]="(filecontrol.verifyingFile$ | async) ?? false">
+          <tui-icon id="file-verified" [icon]="'@tui.circle-check'" />
+        </tui-loader>
+      </aside>
+    </header>
+    <section>
+      @let verifying = (filecontrol.verifyingFile$ | async) ?? false;
+      <p>
+        {{
+        verifying ?
+        ('file-import-verifying' | translate) :
+        ('file-import-verified' | translate)
+        }}
+      </p>
+    </section>
+    <footer>
+    </footer>
+  </div>
   }
-}
+  }
 </ng-template>
 
 <ng-template #gvT let-data let-title="title" let-appearance="appearance" let-hint="hint">
-    <ng-container [ngTemplateOutlet]="tableTitle" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="tableTitle" [ngTemplateOutletContext]="{
         $implicit: data,
         title: title,
         appearance: appearance,
@@ -236,8 +236,7 @@
           <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
             <td class="tui-table__td">
               <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
-                  aria-label="viewable checkbox" />
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s" aria-label="viewable checkbox" />
               </div>
             </td>
             <td class="tui-table__td tui-table__td_text_overflow">
@@ -254,7 +253,7 @@
 </ng-template>
 
 <ng-template #daT let-data let-title="title" let-appearance="appearance" let-hint="hint">
-    <ng-container [ngTemplateOutlet]="tableTitle" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="tableTitle" [ngTemplateOutletContext]="{
         $implicit: data,
         title: title,
         appearance: appearance,
@@ -277,8 +276,7 @@
           <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
             <td class="tui-table__td">
               <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
-                  aria-label="viewable checkbox" />
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s" aria-label="viewable checkbox" />
               </div>
             </td>
             <td class="tui-table__td tui-table__td_text_overflow">
@@ -292,7 +290,7 @@
 </ng-template>
 
 <ng-template #kT let-data let-title="title" let-appearance="appearance" let-hint="hint">
-    <ng-container [ngTemplateOutlet]="tableTitle" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="tableTitle" [ngTemplateOutletContext]="{
         $implicit: data,
         title: title,
         appearance: appearance,
@@ -318,8 +316,7 @@
           <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
             <td class="tui-table__td">
               <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
-                  aria-label="viewable checkbox" />
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s" aria-label="viewable checkbox" />
               </div>
             </td>
             <td class="tui-table__td tui-table__td_text_overflow">
@@ -336,7 +333,7 @@
 </ng-template>
 
 <ng-template #cT let-data let-title="title" let-appearance="appearance" let-hint="hint">
-    <ng-container [ngTemplateOutlet]="tableTitle" [ngTemplateOutletContext]="{
+  <ng-container [ngTemplateOutlet]="tableTitle" [ngTemplateOutletContext]="{
         $implicit: data,
         title: title,
         appearance: appearance,
@@ -359,8 +356,7 @@
           <tr *cdkVirtualFor="let item of data()" class="tui-table__tr tui-table__tr_border_none">
             <td class="tui-table__td">
               <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s"
-                  aria-label="viewable checkbox" />
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.import" size="s" aria-label="viewable checkbox" />
               </div>
             </td>
             <td class="tui-table__td tui-table__td_text_overflow">

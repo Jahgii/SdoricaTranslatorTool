@@ -42,8 +42,8 @@ export class SidebarComponent {
   @ViewChild(GamedataValuesComponent) gamedataDialog!: GamedataValuesComponent;
   @ViewChild(CommonWordsComponent) dictionaryDialog!: CommonWordsComponent;
 
-  public importOpen: boolean = false;
   public open: boolean = false;
+  public importOpen: boolean = false;
   public gamedataOpen: boolean = false;
   public commonOpen: boolean = false;
 
@@ -65,6 +65,12 @@ export class SidebarComponent {
     this.onTourOnGoing();
   }
 
+  public onOpenImportMenu() {
+    this.importOpen = !this.importOpen;
+
+    this.onTourOnGoingImport();
+  }
+
   private onTourOnGoing() {
     if (!this.appState.isOnTour$()) return;
 
@@ -75,6 +81,19 @@ export class SidebarComponent {
       )
       .subscribe(_ => {
         this.open = false;
+      });
+  }
+
+  private onTourOnGoingImport() {
+    if (!this.appState.isOnTour$()) return;
+
+    this.breakpointService$
+      .pipe(
+        takeWhile(() => this.importOpen),
+        skip(1)
+      )
+      .subscribe(_ => {
+        this.importOpen = false;
       });
   }
 

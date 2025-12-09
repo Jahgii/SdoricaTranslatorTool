@@ -468,8 +468,6 @@ export async function LocalizationTour(
             buttons: [
                 {
                     action() {
-                        let button = document.getElementById('settingsButton');
-                        button?.click();
                         return this.next();
                     },
                     text: endTranslateText
