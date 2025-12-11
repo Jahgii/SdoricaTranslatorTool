@@ -10,6 +10,7 @@ import { MainTour } from '../tours/tour-main';
 import { LocalizationTour } from '../tours/tour-localization';
 import { Tours } from '../enums/tours';
 import { ImportTranslationTour } from '../tours/tour-import-translation';
+import { ExportTranslationTour } from '../tours/tour-export-translation';
 
 @Injectable()
 export class TourService {
@@ -41,6 +42,8 @@ export class TourService {
         return await LocalizationTour(this.translate, this.breakpointService$);
       case Tours.ImportTranslation:
         return await ImportTranslationTour(this.translate, this.breakpointService$);
+      case Tours.ExportTranslation:
+        return await ExportTranslationTour(this.translate, this.breakpointService$);
       default:
         return await MainTour(this.translate, this.breakpointService$);
     }

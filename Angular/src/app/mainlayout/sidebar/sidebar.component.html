@@ -152,7 +152,8 @@
             </tui-opt-group>
         </tui-data-list>
     </ng-template>
-    <button tuiIconButton aria-label="export-button"
+
+    <button id="exportButton" tuiIconButton aria-label="export-button"
         appearance="{{((componentOpens[appViews.export] | async) ?? 0) > 0 ? 'selected': 'outline' }}" type="button"
         size="s" [iconStart]="'@tui.download'" (click)="loadComponent(appViews.export)"
         tuiHint="{{'export-files' | translate}}" [tuiHintShowDelay]="100"
