@@ -19,7 +19,15 @@ addEventListener('message', async ({ data }) => {
   let zipObb = new JSZip();
   try {
     await zipObb.loadAsync(file, {});
+
     let files = zipObb.filter((relativePath, file) => relativePath.includes("assets/DialogAssets/") && !file.dir);
+
+    if (files.length === 0) {
+      response.message = 'file-error';
+      postMessage(response);
+      return;
+    }
+
     for (const dF of files) {
       let dialogFile = dF;
       const content = await dialogFile.async("string");
@@ -38,15 +46,8 @@ addEventListener('message', async ({ data }) => {
     return;
   }
 
-  let dialogFolder = zipObb.files['assets/DialogAssets/'];
-
   response.message = 'file-verifying-complete';
   postMessage(response);
-  if (!dialogFolder) {
-    response.message = 'file-error';
-    postMessage(response);
-    return;
-  }
 
   response = {
     message: 'file-verified',

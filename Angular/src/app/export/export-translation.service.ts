@@ -218,7 +218,7 @@ export class ExportTranslationService implements OnDestroy {
       return;
     }
 
-    let dialogFolder = this.zipObb.files['assets/DialogAssets/'];
+    let dialogFolder = Object.keys(this.zipObb.files).some(name => name.startsWith('assets/DialogAssets/'));
 
     fileControl.verifyingFile$.next(false);
     if (!dialogFolder) {

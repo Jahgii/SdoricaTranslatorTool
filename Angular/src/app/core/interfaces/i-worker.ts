@@ -40,7 +40,7 @@ export interface ImportOBBVerificationPostMessage {
 }
 
 export interface WorkerImportOBBVerificationPostMessage {
-    message: 'file-error' | 'file-verifying-complete' | 'file-verified',
+    message: 'file-error' | 'file-verifying-complete' | 'reading-content' | 'file-verified',
     dialogAssets?: { [language: string]: IDialogAsset[] };
     dialogAssetsInclude?: { [language: string]: boolean };
     dialogAssetsMainGroups?: { [language: string]: { [mainGroup: string]: IMainGroup } };

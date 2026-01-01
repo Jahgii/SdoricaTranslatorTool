@@ -229,6 +229,7 @@ export class ImportService implements OnDestroy {
    * Verified if Obb have the required directories
    */
   public async onVerificationObb(file: File, fileControl: IFileControl) {
+    console.log("VERIFIEND");
     if (file.size === 0) {
       fileControl.verifyingFile$.next(false);
       this.alert.showAlert('alert-error', 'error-file-obb', 'accent', 'triangle-alert');
@@ -237,6 +238,8 @@ export class ImportService implements OnDestroy {
       }, 1);
       return;
     }
+
+    console.log({ size: file.size });
 
     if (typeof Worker !== 'undefined') {
       const obbWorker = new Worker(new URL('../core/workers/obb-verification.worker', import.meta.url));
