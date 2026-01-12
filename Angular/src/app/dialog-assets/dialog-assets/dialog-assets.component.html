@@ -86,7 +86,8 @@
         </button>
       </tui-loader>
       <tui-loader [showLoader]="dAS.gemini.waiting$()" [inheritColor]="true" [overlay]="true">
-        <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="dAS.gemini.ready$() ?
+        <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color"
+          [tuiHint]="dAS.gemini.ready$() ?
                         ('gemini-button-ready' | translate):
                         ('gemini-button-disabled' | translate)" (click)="onGeminiTranslate(data)"
           [disabled]="!dAS.gemini.ready$()" size="xs" aria-label="Gemini Button" tuiDropdownContext
@@ -113,9 +114,10 @@
         </span>
         }
       </tui-loader>
-      <button tuiIconButton type="button" appearance="icon" shape="square" [tuiDropdown]="dropdownContent"
-        [tuiDropdownManual]="openOption" (click)="openOption = !openOption" (tuiActiveZoneChange)="onActiveZone($event)"
-        iconStart="@tui.ellipsis-vertical" aria-label="options" size="xs">
+      <button id="dialogActionsButton" tuiIconButton type="button" appearance="icon" shape="square"
+        [tuiDropdown]="dropdownContent" [tuiDropdownManual]="openOption" (click)="openOption = !openOption"
+        (tuiActiveZoneChange)="appState.isOnTour$() ? null : onActiveZone($event)" iconStart="@tui.ellipsis-vertical"
+        aria-label="options" size="xs">
       </button>
       <ng-template #dropdownContent>
         <div class="mobile-dropdown-container">
@@ -140,7 +142,8 @@
             </button>
           </tui-loader>
           <tui-loader [showLoader]="dAS.gemini.waiting$()" [inheritColor]="true" [overlay]="true">
-            <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color" [tuiHint]="dAS.gemini.ready$() ?
+            <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color"
+              [tuiHint]="dAS.gemini.ready$() ?
                         ('gemini-button-ready' | translate):
                         ('gemini-button-disabled' | translate)" (click)="onGeminiTranslate(data)"
               [disabled]="!dAS.gemini.ready$()" size="xs" aria-label="Gemini Button">

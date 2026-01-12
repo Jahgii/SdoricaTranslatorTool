@@ -11,6 +11,7 @@ import { LocalizationTour } from '../tours/tour-localization';
 import { Tours } from '../enums/tours';
 import { ImportTranslationTour } from '../tours/tour-import-translation';
 import { ExportTranslationTour } from '../tours/tour-export-translation';
+import { DialogTour } from '../tours/tour-dialog';
 
 @Injectable()
 export class TourService {
@@ -31,6 +32,7 @@ export class TourService {
     this.createTour(tour);
     this.viewers.restartView();
     this.lStorage.resetCategories();
+    this.lStorage.resetGroups();
     this.appState.isOnTour$ = this.isOnTour$;
   }
 
@@ -40,6 +42,8 @@ export class TourService {
         return await MainTour(this.translate, this.breakpointService$);
       case Tours.Localization:
         return await LocalizationTour(this.translate, this.breakpointService$);
+      case Tours.Dialog:
+        return await DialogTour(this.translate, this.breakpointService$);
       case Tours.ImportTranslation:
         return await ImportTranslationTour(this.translate, this.breakpointService$);
       case Tours.ExportTranslation:

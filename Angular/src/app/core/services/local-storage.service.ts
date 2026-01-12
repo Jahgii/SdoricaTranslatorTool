@@ -152,6 +152,11 @@ export class LocalStorageService {
     localStorage.setItem('Group' + view, groupId);
   }
 
+  resetGroups() {
+    localStorage.removeItem('Group0');
+    localStorage.removeItem('Group1');
+  }
+
   getPortraitPersistentMode(): PersistentModes | undefined {
     return (localStorage.getItem('PortraitPersistentMode') as PersistentModes) ?? undefined;
   }

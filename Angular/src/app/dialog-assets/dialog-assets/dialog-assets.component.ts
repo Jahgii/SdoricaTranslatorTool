@@ -18,6 +18,7 @@ import { LanguageOriginService } from "src/app/core/services/language-origin.ser
 import { TuiTextfieldControllerModule } from "@taiga-ui/legacy";
 import { GeminiApiService } from "src/app/core/services/gemini-api.service";
 import { GeminiIconDirective } from "src/app/core/directives/gemini-icon.directive";
+import { AppStateService } from "src/app/core/services/app-state.service";
 
 @Component({
   selector: 'app-dialog-assets',
@@ -62,6 +63,7 @@ export class DialogAssetsComponent implements OnDestroy {
   public focusRow: string = "";
 
   constructor(
+    protected readonly appState: AppStateService,
     protected readonly languageOrigin: LanguageOriginService,
     private readonly portraitsService: PortraitsService,
     private readonly ref: ChangeDetectorRef,
