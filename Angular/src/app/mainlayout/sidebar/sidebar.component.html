@@ -159,4 +159,11 @@
         tuiHint="{{'export-files' | translate}}" [tuiHintShowDelay]="100"
         [ngClass]="((componentOpens[appViews.export] | async) ?? 0) > 0 ? 'button-side': undefined">
     </button>
+
+    <button id="userLangButton" tuiIconButton aria-label="user-lang-button"
+        appearance="{{((componentOpens[appViews.userlang] | async) ?? 0) > 0 ? 'selected': 'outline' }}" type="button"
+        size="s" iconStart="languages" (click)="loadComponent(appViews.userlang)"
+        tuiHint="{{'user-lang' | translate}}" [tuiHintShowDelay]="100"
+        [ngClass]="((componentOpens[appViews.userlang] | async) ?? 0) > 0 ? 'button-side': undefined">
+    </button>
 </ng-template>

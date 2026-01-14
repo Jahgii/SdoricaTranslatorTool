@@ -1,9 +1,14 @@
 <button appearance="outline-grayscale" size="s" tuiButtonSelect tuiButton type="button" [formControl]="language"
     [iconStart]="icons.languages" [textContent]="" aria-label="Language">
     <tui-data-list size="s" *tuiTextfieldDropdown>
-        @for (name of names; track $index) {
+        @for (name of langService.names(); track $index) {
         <button tuiOption new type="button" [value]="name | titlecase" (click)="setLang(name)">
             {{ name + "-i18n" | translate }}
+        </button>
+        }
+        @for (name of langService.customNames(); track $index) {
+        <button tuiOption new type="button" [value]="name | titlecase" (click)="setCustomLang(name)">
+            {{ name }}
         </button>
         }
     </tui-data-list>

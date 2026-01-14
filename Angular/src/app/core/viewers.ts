@@ -9,6 +9,7 @@ export const viewers: Viewers = {
     import: async () => (await import('../import/import-main/import-main.component')).ImportMainComponent,
     importall: async () => (await import('../import/import-all/import-all.component')).ImportAllComponent,
     export: async () => (await import('../export/export-main/export-main.component')).ExportTranslationGuestComponent,
+    userlang: async () => (await import('../user-language/user-language.component')).UserLanguageComponent,
     wizard: async () => (await import('../components/wizard-initial/wizard-initial.component')).WizardInitialComponent,
     loading: async () => (await import('../components/app-loading/app-loading.component')).AppLoadingComponent,
 };
@@ -20,6 +21,7 @@ export enum AppViews {
     import = "import",
     importall = "importall",
     export = "export",
+    userlang = "userlang",
     wizard = 'wizard',
     loading = 'loading'
 }

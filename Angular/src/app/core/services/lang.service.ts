@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiLanguageName } from '@taiga-ui/i18n';
 import { LocalStorageService } from './local-storage.service';
@@ -9,6 +9,13 @@ import { LocalStorageService } from './local-storage.service';
 export class LangService {
   protected readonly lStorage = inject(LocalStorageService);
   protected readonly translate = inject(TranslateService);
+
+  public readonly names: WritableSignal<string[]> = signal([
+    'english',
+    'spanish'
+  ]);
+
+  public readonly customNames: WritableSignal<string[]> = signal([]);
 
   constructor() {
     let lang = this.lStorage.getAppLang();

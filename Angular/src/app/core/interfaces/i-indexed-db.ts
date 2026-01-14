@@ -35,7 +35,8 @@ export enum ObjectStoreNames {
     LocalizationKey = "LocalizationKey",
     MainGroup = "MainGroup",
     User = "User",
-    UserDirectories = "UserDirectories"
+    UserDirectories = "UserDirectories",
+    AppLanguages = "AppLanguages"
 }
 
 export namespace Indexes {
@@ -90,6 +91,11 @@ export namespace Indexes {
     export enum UserDirectories {
         Name = "Name",
     }
+
+    export enum AppLanguages {
+        Language = "Language",
+        Custom = "Custom",
+    }
 }
 
 export type StoreIndexMap = {
@@ -104,4 +110,5 @@ export type StoreIndexMap = {
     [ObjectStoreNames.MainGroup]: Indexes.MainGroup,
     [ObjectStoreNames.User]: Indexes.User,
     [ObjectStoreNames.UserDirectories]: Indexes.UserDirectories,
+    [ObjectStoreNames.AppLanguages]: Indexes.AppLanguages,
 }

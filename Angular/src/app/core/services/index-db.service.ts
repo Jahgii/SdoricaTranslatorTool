@@ -8,7 +8,7 @@ import { ObjectStoreNames, IndexedDBbCustomRequestError, IndexDBErrors, Indexes,
 export class IndexDBService {
   public dbLoaded$ = new BehaviorSubject<boolean>(false);
   public dbName = "Translations";
-  public dbVersion = 1;
+  public dbVersion = 4;
   private db!: IDBDatabase;
 
   constructor() {
@@ -123,6 +123,15 @@ export class IndexDBService {
 
     if (!storeP.indexNames.contains(Indexes.UserDirectories.Name))
       storeP.createIndex(Indexes.UserDirectories.Name, "Name", { unique: true });
+
+    const storeAppLang = this.db.objectStoreNames.contains(ObjectStoreNames.AppLanguages) ?
+      (event.target as any).transaction.objectStore(ObjectStoreNames.AppLanguages) :
+      this.db.createObjectStore(ObjectStoreNames.AppLanguages, { keyPath: "Id", autoIncrement: true });
+
+    if (!storeAppLang.indexNames.contains(Indexes.AppLanguages.Language))
+      storeAppLang.createIndex(Indexes.AppLanguages.Language, "Language", { unique: true });
+    if (!storeAppLang.indexNames.contains(Indexes.AppLanguages.Custom))
+      storeAppLang.createIndex(Indexes.AppLanguages.Custom, "Custom", { unique: false });
   }
 
   private onError(event: Event) {
