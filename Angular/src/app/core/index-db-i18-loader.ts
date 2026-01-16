@@ -44,6 +44,7 @@ export class IndexDBi18nLoader implements TranslateLoader {
                     Language: lang,
                     Custom: 0,
                     Content: i18n,
+                    Taiga: null
                 };
                 firstValueFrom(this.indexedDB.post<IAppText>(ObjectStoreNames.AppLanguages, langDB, 'Id').success$);
                 return i18n;
@@ -81,5 +82,4 @@ export class IndexDBi18nLoader implements TranslateLoader {
     updateCustomLang(oldLang: IAppText, updateLang: any) {
         for (const key in updateLang) oldLang.Content[key] ??= updateLang[key];
     }
-
 }

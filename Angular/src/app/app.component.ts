@@ -23,12 +23,13 @@ import { TuiSkeleton } from '@taiga-ui/kit';
 export class AppComponent implements OnInit {
   protected readonly app = inject(AppStateService);
   protected readonly theme = inject(ThemeService);
-  protected readonly translate = inject(LangService);
+  protected readonly langService = inject(LangService);
 
   public title = 'STT';
 
   ngOnInit(): void {
     this.setBrowserFlag();
+    this.langService.initialize();
   }
 
   private setBrowserFlag(): void {

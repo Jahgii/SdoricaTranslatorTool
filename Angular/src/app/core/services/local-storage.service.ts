@@ -99,6 +99,14 @@ export class LocalStorageService {
     localStorage.setItem('appLang', lang);
   }
 
+  getAppLangCustom() {
+    return localStorage.getItem('appLangCustom') ?? undefined;
+  }
+
+  setAppLangCustom(custom: boolean) {
+    localStorage.setItem('appLangCustom', custom ? "1" : "0");
+  }
+
   getToken() {
     return localStorage.getItem('token') ?? undefined;
   }
