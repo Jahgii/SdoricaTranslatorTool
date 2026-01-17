@@ -1,16 +1,37 @@
 @use '@taiga-ui/core/styles/variables/media.scss' as media;
 
 .main-container {
-    max-width: 60rem;
-    min-width: 20rem;
-    padding: 0 clamp(1em, 2.5%, 5em);
-    margin: 2rem auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 380px;
 }
 
-.options{
+.options-container {
     display: flex;
     gap: var(--tui-padding-s);
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1em;
+    height: 2.9375rem;
+
+    .options{
+        display: flex;
+        gap: var(--tui-padding-s);
+    }
+
+    .search-input{
+        width: 100%;
+        min-width: 120px;
+        max-width: 300px;
+    }
+}
+
+.lang-container {
+    max-width: 60rem;
+    min-width: 20rem;
+    margin: 0rem auto 0 auto;
+    width: 100%;
 }
 
 .viewport {

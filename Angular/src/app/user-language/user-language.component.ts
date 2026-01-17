@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 import { TuiButton, TuiIcon, TuiTextfield, TuiScrollbar, TuiScrollable, TuiHint, TuiDropdown, TuiDataList, TuiLoader } from '@taiga-ui/core';
 import { LangService } from '../core/services/lang.service';
 import { FormsModule } from '@angular/forms';
-import { TuiButtonLoading } from '@taiga-ui/kit';
+import { TuiButtonLoading, TuiFilterByInputPipe, TuiStatus } from '@taiga-ui/kit';
 import { NgTemplateOutlet } from '@angular/common';
 import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { TranslateModule } from '@ngx-translate/core';
 import { GeminiApiService } from '../core/services/gemini-api.service';
 import { AlertService } from '../core/services/alert.service';
 import { GeminiIconDirective } from '../core/directives/gemini-icon.directive';
+import { TuiFilterPipe } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-user-language',
@@ -19,9 +20,7 @@ import { GeminiIconDirective } from '../core/directives/gemini-icon.directive';
     CdkVirtualForOf,
     CdkVirtualScrollViewport,
     FormsModule,
-
     TranslateModule,
-
     TuiLoader,
     TuiButton,
     TuiButtonLoading,
@@ -32,9 +31,10 @@ import { GeminiIconDirective } from '../core/directives/gemini-icon.directive';
     TuiTextfield,
     TuiScrollable,
     TuiScrollbar,
-
+    TuiFilterPipe,
     GeminiIconDirective,
-  ],
+    TuiStatus
+],
   templateUrl: './user-language.component.html',
   styleUrl: './user-language.component.scss'
 })
@@ -42,6 +42,8 @@ export class UserLanguageComponent {
   protected readonly lS = inject(LangService);
   public readonly gemini = inject(GeminiApiService);
   private readonly alert = inject(AlertService);
+  
+  protected search: string = '';
 
   public async onGeminiTranslate() {
     const customLang = this.lS.languages().find(e => e.Custom === 1);
@@ -80,5 +82,8 @@ export class UserLanguageComponent {
   public trackByKey(index: number, key: string): string {
     return key;
   }
+
+  public searchByText = (key: string, search: string): boolean =>
+    this.lS.languages().some(e => (e.Content[key] as string)?.toLowerCase().includes(search.toLowerCase()));
 
 }
