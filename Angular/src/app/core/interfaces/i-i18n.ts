@@ -1,4 +1,4 @@
-export interface IAppText {
+export interface IAppLanguage {
     Id?: string;
     Custom: number, // IndexedDB Limitation
     Language: string;

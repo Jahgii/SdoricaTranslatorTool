@@ -184,18 +184,8 @@
 
   <tui-expand [expanded]="((eTS.filesVerified$ | async) && !(eTS.filesCompleted$ | async)) ?? false">
     <ng-template tuiExpandContent>
-      <!-- <p>
-        {{'before-translation-apply-0' | translate}}
-        <span class="important-text">Buy Me a Coffee</span>.
-        {{'before-translation-apply-1' | translate}}
-      </p>
-
-      <p>
-        {{'before-translation-apply-2' | translate}}
-      </p> -->
-
       <p class="important-text">
-        {{'before-translation-apply-3' | translate}}
+        {{'before-translation-apply-1' | translate}}
       </p>
     </ng-template>
   </tui-expand>
@@ -208,10 +198,6 @@
     <p>
       {{'after-translation-apply-1' | translate}}
     </p>
-
-    <!-- <p>
-      {{'after-translation-apply-2' | translate}}
-    </p> -->
   </tui-expand>
 
   <div class="translate-button tui-space_vertical-6">
@@ -225,7 +211,7 @@
     }
     @if ((eTS.filesCompleted$ | async)) {
     <button tuiButton appearance="outline">
-      {{'after-translation-apply-3' | translate}}
+      {{'after-translation-apply-2' | translate}}
     </button>
     }
   </div>

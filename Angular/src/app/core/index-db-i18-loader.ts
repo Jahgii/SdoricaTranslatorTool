@@ -3,7 +3,7 @@ import { IndexDBService } from "./services/index-db.service";
 import { TranslateLoader, TranslationObject } from "@ngx-translate/core";
 import { firstValueFrom, from, Observable, switchMap, takeWhile } from "rxjs";
 import { Indexes, ObjectStoreNames } from "./interfaces/i-indexed-db";
-import { IAppText } from "./interfaces/i-i18n";
+import { IAppLanguage } from "./interfaces/i-i18n";
 
 export class IndexDBi18nLoader implements TranslateLoader {
     constructor(private readonly http: HttpClient, private readonly indexedDB: IndexDBService) { }
@@ -18,7 +18,7 @@ export class IndexDBi18nLoader implements TranslateLoader {
     onLoadFromIndexDB(_: boolean, lang: string) {
         if (!_) return "";
 
-        let request$ = this.indexedDB.getIndex<IAppText, ObjectStoreNames.AppLanguages>(
+        let request$ = this.indexedDB.getIndex<IAppLanguage, ObjectStoreNames.AppLanguages>(
             ObjectStoreNames.AppLanguages,
             Indexes.AppLanguages.Language,
             lang,
@@ -40,19 +40,19 @@ export class IndexDBi18nLoader implements TranslateLoader {
     onLoadFallback(lang: string) {
         return this.http.get<TranslationObject>(`/assets/i18n/${lang}.json`).pipe(
             switchMap(async i18n => {
-                let langDB: IAppText = {
+                let langDB: IAppLanguage = {
                     Language: lang,
                     Custom: 0,
                     Content: i18n,
                     Taiga: null
                 };
-                firstValueFrom(this.indexedDB.post<IAppText>(ObjectStoreNames.AppLanguages, langDB, 'Id').success$);
+                firstValueFrom(this.indexedDB.post<IAppLanguage>(ObjectStoreNames.AppLanguages, langDB, 'Id').success$);
                 return i18n;
             })
         );
     }
 
-    onCheckVersion(lang: string, jsonOnDB: IAppText) {
+    onCheckVersion(lang: string, jsonOnDB: IAppLanguage) {
         if (jsonOnDB.Custom) lang = 'english';
 
         let request = this.http.get<TranslationObject>(`/assets/i18n/${lang}.json`).pipe(
@@ -61,7 +61,7 @@ export class IndexDBi18nLoader implements TranslateLoader {
 
                 if (jsonOnDB.Custom) this.updateCustomLang(jsonOnDB, i18n);
                 else jsonOnDB.Content = i18n;
-                firstValueFrom(this.indexedDB.put<IAppText>(ObjectStoreNames.AppLanguages, jsonOnDB).success$);
+                firstValueFrom(this.indexedDB.put<IAppLanguage>(ObjectStoreNames.AppLanguages, jsonOnDB).success$);
             })
         );
 
@@ -79,7 +79,7 @@ export class IndexDBi18nLoader implements TranslateLoader {
         return false;
     }
 
-    updateCustomLang(oldLang: IAppText, updateLang: any) {
+    updateCustomLang(oldLang: IAppLanguage, updateLang: any) {
         for (const key in updateLang) oldLang.Content[key] ??= updateLang[key];
     }
 }

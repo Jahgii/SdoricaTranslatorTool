@@ -6,17 +6,19 @@ import { HttpClient } from '@angular/common/http';
 import { IndexDBService } from './index-db.service';
 import { firstValueFrom, of, shareReplay, takeWhile } from 'rxjs';
 import { Indexes, ObjectStoreNames } from '../interfaces/i-indexed-db';
-import { IAppText } from '../interfaces/i-i18n';
+import { IAppLanguage } from '../interfaces/i-i18n';
 import { FormControl } from '@angular/forms';
+import { GeminiApiService } from './gemini-api.service';
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LangService {
+  private readonly http = inject(HttpClient);
   protected readonly tuiLangSwitcher = inject(TuiLanguageSwitcherService);
   protected readonly lStorage = inject(LocalStorageService);
   protected readonly translate = inject(TranslateService);
-  private readonly http = inject(HttpClient);
   protected readonly indexedDB = inject(IndexDBService);
 
   public readonly names: WritableSignal<string[]> = signal([
@@ -25,9 +27,9 @@ export class LangService {
   ]);
 
   public readonly customNames: WritableSignal<string[]> = signal([]);
-
+  public readonly savingChanges = signal(false);
   public readonly language = new FormControl(capitalize(this.tuiLangSwitcher.language));
-  public readonly languages: WritableSignal<IAppText[]> = signal([]);
+  public readonly languages: WritableSignal<IAppLanguage[]> = signal([]);
   public keys: string[] = [];
 
   public initialize() {
@@ -40,12 +42,23 @@ export class LangService {
     this.indexedDB.dbLoaded$.pipe(
       shareReplay(),
       takeWhile(e => !e, true),
-    ).subscribe(_ => {
+    ).subscribe(async _ => {
       if (!_) return;
 
       if (lang && custom === "1") this.setCustomLang(lang);
+      await this.createCustomLang();
       this.loadLanguages();
     })
+  }
+
+  private reInitialize() {
+    let lang = this.lStorage.getAppLang();
+    let custom = this.lStorage.getAppLangCustom();
+
+    if (lang && custom === "1") {
+      this.translate.reloadLang(lang);
+      this.setCustomLang(lang);
+    }
   }
 
   public setLang(lang: TuiLanguageName): void {
@@ -65,7 +78,7 @@ export class LangService {
     this.translate.use(lang);
 
     //Taiga
-    let request = this.indexedDB.getIndex<IAppText, ObjectStoreNames.AppLanguages>(
+    let request = this.indexedDB.getIndex<IAppLanguage, ObjectStoreNames.AppLanguages>(
       ObjectStoreNames.AppLanguages,
       Indexes.AppLanguages.Language,
       lang,
@@ -79,33 +92,46 @@ export class LangService {
     });
   }
 
-  public async createNew(name: string) {
+  public async saveChanges() {
+    this.savingChanges.set(true);
+    for (const l of this.languages().filter(_l => _l.Custom === 1)) {
+      await firstValueFrom(this.indexedDB.put<IAppLanguage>(ObjectStoreNames.AppLanguages, l).success$);
+    }
+    this.reInitialize();
+    this.savingChanges.set(false);
+  }
+
+  private async loadLanguages() {
+    const langs = await firstValueFrom(this.indexedDB.getAll<IAppLanguage[]>(ObjectStoreNames.AppLanguages).success$);
+
+    langs.sort((l1, l2) => l1.Custom - l2.Custom);
+    this.languages.set(langs);
+
+    if (this.languages().length === 0) return;
+    this.keys = Object.keys(this.languages().find(e => e.Custom === 0)?.Content).filter(key => !key.startsWith('_'));
+  }
+
+  private async createCustomLang() {
+    const langs = await firstValueFrom(this.indexedDB.getAll<IAppLanguage[]>(ObjectStoreNames.AppLanguages).success$);
+    const cLang = langs.find(e => e.Custom === 1);
+    if (cLang) return;
+    await this.createNew("userlang");
+  }
+
+  private async createNew(name: string) {
     const defaultLang = this.http.get<TranslationObject>(`/assets/i18n/english.json`);
     const lang = await firstValueFrom(defaultLang);
 
-    let langDB: IAppText = {
+    let langDB: IAppLanguage = {
       Language: name,
       Custom: 1,
       Content: lang,
       Taiga: TUI_ENGLISH_LANGUAGE
     };
 
-    await firstValueFrom(this.indexedDB.post<IAppText>(ObjectStoreNames.AppLanguages, langDB, 'Id').success$);
+    await firstValueFrom(this.indexedDB.post<IAppLanguage>(ObjectStoreNames.AppLanguages, langDB, 'Id').success$);
 
     this.customNames.set([...this.customNames(), name]);
-  }
-
-  public async saveChanges() {
-    for (const l of this.languages().filter(_l => _l.Custom === 1)) {
-      firstValueFrom(this.indexedDB.put<IAppText>(ObjectStoreNames.AppLanguages, l).success$);
-    }
-  }
-
-  private async loadLanguages() {
-    this.languages.set(await firstValueFrom(this.indexedDB.getAll<IAppText[]>(ObjectStoreNames.AppLanguages).success$));
-
-    if (this.languages().length === 0) return;
-    this.keys = Object.keys(this.languages().find(e => e.Custom === 0)?.Content).filter(key => !key.startsWith('_'));
   }
 }
 

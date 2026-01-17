@@ -9,7 +9,7 @@ import { LangService } from 'src/app/core/services/lang.service';
 import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { Indexes, ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 import { firstValueFrom } from 'rxjs';
-import { IAppText } from 'src/app/core/interfaces/i-i18n';
+import { IAppLanguage } from 'src/app/core/interfaces/i-i18n';
 import type { TuiLanguageName } from '@taiga-ui/i18n/types';
 
 @Component({
@@ -36,7 +36,7 @@ export class LanguageSwitcherComponent {
   protected open = false;
 
   constructor() {
-    let request = this.indexedDB.getIndex<IAppText[], ObjectStoreNames.AppLanguages>(
+    let request = this.indexedDB.getIndex<IAppLanguage[], ObjectStoreNames.AppLanguages>(
       ObjectStoreNames.AppLanguages,
       Indexes.AppLanguages.Custom,
       1

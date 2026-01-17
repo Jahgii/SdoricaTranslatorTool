@@ -1,4 +1,56 @@
-<p>user-language works!</p>
+<main class="main-container">
+    <div class="options">
+        <tui-loader [showLoader]="gemini.waiting$()" [inheritColor]="true" [overlay]="true">
+            <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color"
+                [tuiHint]="gemini.ready$() ?
+                            ('gemini-button-ready' | translate):
+                            ('gemini-button-disabled' | translate)" (click)="onGeminiTranslate()"
+                [disabled]="!gemini.ready$()" size="xs" aria-label="Gemini Button" tuiDropdownContext
+                [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+                <ng-template #contextMenu>
+                    <tui-data-list role="menu" tuiDataListDropdownManager class="context-menu" size="s">
+                        @for (lang of lS.languages(); track $index) {
+                        <button tuiOption new type="button" (click)="onGeminiTranslate(); dropdown.toggle(false)">
+                            {{ lang.Language| translate }}
+                        </button>
+                        }
+                    </tui-data-list>
+                </ng-template>
+            </button>
+        </tui-loader>
+        <button tuiIconButton appearance="icon" shape="square" iconStart="save" (click)="lS.saveChanges()" size="xs"
+            [loading]="lS.savingChanges()">
+        </button>
+    </div>
 
+    <tui-scrollbar>
+        <cdk-virtual-scroll-viewport itemSize="140" tuiScrollable class="viewport tui-zero-scrollbar">
+            <div *cdkVirtualFor="let k of lS.keys; trackBy: trackByKey" class="tui-space_vertical-6"
+                style="display: flex; flex-direction: column;">
+                <ng-container [ngTemplateOutlet]="keyTranslateRow" [ngTemplateOutletContext]="{$implicit: k}" />
+            </div>
+        </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
 
-<button tuiButton (click)="uLS.createNew('testing')">Create New</button>
+</main>
+
+<ng-template #keyTranslateRow let-key>
+    <div class="tooltip-important-text tui-space_vertical-3 ">
+        <tui-icon icon="key" style="font: inherit;" />
+        <span class="tui-space_left-3">{{key}}</span>
+    </div>
+    @for (lang of lS.languages(); track $index) {
+    <div class="lang-item tui-space_vertical-1 tui-space_horizontal-3">
+        <span class="tui-text_body-xs">{{lang.Language | translate}}</span>
+
+        @if(lang.Custom){
+        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldCleaner]="false">
+            <input tuiTextfield placeholder="..." [(ngModel)]="lang.Content[key]" />
+        </tui-textfield>
+        }
+        @else{
+        <span>{{lang.Content[key]}}</span>
+        }
+    </div>
+    }
+</ng-template>

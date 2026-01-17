@@ -1,0 +1,35 @@
+@use '@taiga-ui/core/styles/variables/media.scss' as media;
+
+.main-container {
+    max-width: 60rem;
+    min-width: 20rem;
+    padding: 0 clamp(1em, 2.5%, 5em);
+    margin: 2rem auto 0 auto;
+}
+
+.options{
+    display: flex;
+    gap: var(--tui-padding-s);
+    justify-content: flex-end;
+}
+
+.viewport {
+    width: 100%;
+    height: calc(100svh - var(--header-height) - 3.5rem);
+
+    @media #{media.$tui-mobile} {
+        margin: 0 0;
+    }
+}
+
+.lang-item {
+    display: grid;
+    gap: var(--tui-padding-s);
+    grid-template-columns: 60px 1fr;
+    align-items: center;
+}
+
+.tooltip-important-text {
+    font-weight: bold;
+    color: var(--tui-text-invert);
+}

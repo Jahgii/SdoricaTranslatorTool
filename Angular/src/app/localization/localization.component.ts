@@ -82,7 +82,6 @@ export class LocalizationComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.appState.isOnTour$()) {
-      console.log("COMBO BOX", this.categoriesComboBox);
       (this.categoriesComboBox as any).blurEffect = undefined;
       (this.categoriesComboBox as any).dropdown.drivers[0].closed = false;
     }

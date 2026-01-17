@@ -8,7 +8,7 @@
         }
         @for (name of langService.customNames(); track $index) {
         <button tuiOption new type="button" [value]="name | titlecase" (click)="setCustomLang(name)">
-            {{ name }}
+            {{ name + "-i18n" | translate }}
         </button>
         }
     </tui-data-list>
