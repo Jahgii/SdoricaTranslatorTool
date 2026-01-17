@@ -15,7 +15,7 @@ import { AppStateService } from 'src/app/core/services/app-state.service';
 })
 export class ViewerMainComponent implements OnInit {
   @HostBinding('class')
-  private classes = 'main-viewer';
+  public classes = 'main-viewer';
   @ViewChild(AdHostDirective, { static: true })
   private adHost!: AdHostDirective;
 

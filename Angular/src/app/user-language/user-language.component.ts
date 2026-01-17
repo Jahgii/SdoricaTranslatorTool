@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TuiButton, TuiIcon, TuiTextfield, TuiScrollbar, TuiScrollable, TuiHint, TuiDropdown, TuiDataList, TuiLoader } from '@taiga-ui/core';
 import { LangService } from '../core/services/lang.service';
 import { FormsModule } from '@angular/forms';
-import { TuiButtonLoading, TuiFilterByInputPipe, TuiStatus } from '@taiga-ui/kit';
+import { TuiButtonLoading } from '@taiga-ui/kit';
 import { NgTemplateOutlet } from '@angular/common';
 import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,6 +21,7 @@ import { TuiFilterPipe } from '@taiga-ui/cdk';
     CdkVirtualScrollViewport,
     FormsModule,
     TranslateModule,
+    
     TuiLoader,
     TuiButton,
     TuiButtonLoading,
@@ -32,8 +33,8 @@ import { TuiFilterPipe } from '@taiga-ui/cdk';
     TuiScrollable,
     TuiScrollbar,
     TuiFilterPipe,
+
     GeminiIconDirective,
-    TuiStatus
 ],
   templateUrl: './user-language.component.html',
   styleUrl: './user-language.component.scss'
