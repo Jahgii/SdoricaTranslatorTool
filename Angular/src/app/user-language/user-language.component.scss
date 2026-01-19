@@ -15,12 +15,12 @@
     padding: 0 1em;
     height: 2.9375rem;
 
-    .options{
+    .options {
         display: flex;
         gap: var(--tui-padding-s);
     }
 
-    .search-input{
+    .search-input {
         width: 100%;
         min-width: 120px;
         max-width: 300px;
@@ -32,6 +32,11 @@
     min-width: 20rem;
     margin: 0rem auto 0 auto;
     width: 100%;
+}
+
+.key-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .viewport {
@@ -50,7 +55,38 @@
     align-items: center;
 }
 
+.readonly-key {
+    display: grid;
+    grid-template-columns: 1fr 16px;
+    padding-block-start: .25rem;
+    padding-block-end: .25rem;
+    gap: var(--tui-padding-s);
+    cursor: pointer;
+
+    span {
+        padding-inline-start: 0.625rem;
+        padding-inline-end: 0.625rem;
+        min-width: 0;
+        max-width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+}
+
+.readonly-key-content {
+    padding-inline-start: 0.625rem;
+    padding-inline-end: 0.625rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .tooltip-important-text {
     font-weight: bold;
     color: var(--tui-text-invert);
+
+    tui-icon {
+        font: inherit;
+    }
 }

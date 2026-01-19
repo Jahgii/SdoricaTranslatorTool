@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TuiButton, TuiIcon, TuiTextfield, TuiScrollbar, TuiScrollable, TuiHint, TuiDropdown, TuiDataList, TuiLoader } from '@taiga-ui/core';
 import { LangService } from '../core/services/lang.service';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { GeminiApiService } from '../core/services/gemini-api.service';
 import { AlertService } from '../core/services/alert.service';
 import { GeminiIconDirective } from '../core/directives/gemini-icon.directive';
-import { TuiFilterPipe } from '@taiga-ui/cdk';
+import { TuiAutoFocus, TuiFilterPipe } from '@taiga-ui/cdk';
+import { CommonWordTableCellEditableComponent } from '../components/common-words/common-word-table/common-word-table-cell-editable/common-word-table-cell-editable.component';
 
 @Component({
   selector: 'app-user-language',
@@ -33,11 +34,14 @@ import { TuiFilterPipe } from '@taiga-ui/cdk';
     TuiScrollable,
     TuiScrollbar,
     TuiFilterPipe,
+    TuiAutoFocus,
 
     GeminiIconDirective,
+    CommonWordTableCellEditableComponent,
 ],
   templateUrl: './user-language.component.html',
-  styleUrl: './user-language.component.scss'
+  styleUrl: './user-language.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserLanguageComponent {
   protected readonly lS = inject(LangService);

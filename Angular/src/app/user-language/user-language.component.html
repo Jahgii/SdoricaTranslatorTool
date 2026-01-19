@@ -5,8 +5,8 @@
         </tui-textfield>
         <div class="options">
             <tui-loader [showLoader]="gemini.waiting$()" [inheritColor]="true" [overlay]="true">
-                <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square" iconStart="gemini-color"
-                    [tuiHint]="gemini.ready$() ?
+                <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square"
+                    iconStart="gemini-color" [tuiHint]="gemini.ready$() ?
                                 ('gemini-button-ready' | translate):
                                 ('gemini-button-disabled' | translate)" (click)="onGeminiTranslate()"
                     [disabled]="!gemini.ready$()" size="xs" aria-label="Gemini Button" tuiDropdownContext
@@ -29,9 +29,10 @@
     </div>
 
     <tui-scrollbar class="lang-container">
-        <cdk-virtual-scroll-viewport itemSize="140" tuiScrollable class="viewport tui-zero-scrollbar">
+        <cdk-virtual-scroll-viewport itemSize="140" minBufferPx="700" maxBufferPx="1400" tuiScrollable
+            class="viewport tui-zero-scrollbar">
             <div *cdkVirtualFor="let k of lS.keys | tuiFilter: searchByText : search; trackBy: trackByKey"
-                class="tui-space_vertical-6" style="display: flex; flex-direction: column;">
+                class="tui-space_vertical-6 key-container">
                 <ng-container [ngTemplateOutlet]="keyTranslateRow" [ngTemplateOutletContext]="{$implicit: k}" />
             </div>
         </cdk-virtual-scroll-viewport>
@@ -41,7 +42,7 @@
 
 <ng-template #keyTranslateRow let-key>
     <div class="tooltip-important-text tui-space_vertical-3 tui-space_horizontal-2">
-        <tui-icon icon="key" style="font: inherit;" />
+        <tui-icon icon="key" />
         <span class="tui-space_left-3">{{key}}</span>
     </div>
     @for (lang of lS.languages(); track $index) {
@@ -49,12 +50,21 @@
         <span class="tui-text_body-xs">{{lang.Language | translate}}</span>
 
         @if(lang.Custom){
-        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldCleaner]="false">
-            <input tuiTextfield placeholder="..." [(ngModel)]="lang.Content[key]" />
-        </tui-textfield>
+        <app-common-word-table-cell-editable #cellOrder [focusTemplate]="focusOrder" [unfocusTemplate]="unfocusOrder" />
+        <ng-template #focusOrder>
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldCleaner]="false">
+                <input tuiTextfield placeholder="..." [(ngModel)]="lang.Content[key]" [tuiAutoFocus]="true" />
+            </tui-textfield>
+        </ng-template>
+        <ng-template #unfocusOrder>
+            <div class="readonly-key">
+                <span [title]="lang.Content[key]">{{lang.Content[key]}}</span>
+                <tui-icon icon="pointer" [style.font-size.rem]="1" />
+            </div>
+        </ng-template>
         }
         @else{
-        <span>{{lang.Content[key]}}</span>
+        <span class="readonly-key-content" [title]="lang.Content[key]">{{lang.Content[key]}}</span>
         }
     </div>
     }
