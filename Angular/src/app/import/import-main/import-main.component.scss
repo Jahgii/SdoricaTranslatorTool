@@ -28,7 +28,7 @@
 .right-top-button {
     position: absolute;
     top: 4px;
-    right: 4px;
+    inset-inline-end: 4px;
 }
 
 .wizard-choose-lang {
@@ -51,7 +51,7 @@
 
 .file-verified-loader {
     position: absolute;
-    right: 0.5em;
+    inset-inline-end: 0.5em;
     top: 0.5em;
 
     tui-icon {

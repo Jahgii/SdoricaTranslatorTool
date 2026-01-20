@@ -54,7 +54,7 @@ tui-tabs-with-more {
 .skip-button {
     position: absolute;
     top: 4px;
-    right: 4px;
+    inset-inline-end: 4px;
 }
 
 .empty-language-container {
@@ -67,7 +67,7 @@ tui-tabs-with-more {
 
 .file-verified-loader {
     position: absolute;
-    right: 0.5em;
+    inset-inline-end: 0.5em;
     top: 0.5em;
 
     tui-icon {

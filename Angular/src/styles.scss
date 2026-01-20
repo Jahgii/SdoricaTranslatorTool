@@ -225,6 +225,12 @@ code {
   }
 }
 
+.stt-custom-shapherd-rtl {
+  .stt-custom-shapherd {
+    direction: rtl;
+  }
+}
+
 .stt-custom-shapherd-header-arrow {
   .shepherd-arrow {
     &:before {

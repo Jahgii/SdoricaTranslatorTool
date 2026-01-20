@@ -80,6 +80,7 @@ export class TourService {
 
   private onTourFinish() {
     document.body.removeAttribute('tuiTheme');
+    document.body.classList.remove('stt-custom-shapherd-rtl');
     this.lStorage.setAppMainTourDone();
     this.isOnTour$.update(_ => false);
     this.enableScrollWheel();
@@ -99,7 +100,9 @@ export class TourService {
     });
 
     const theme = tuiRoot?.getAttribute('tuiTheme');
+    const direction = tuiRoot?.getAttribute('dir');
     if (theme) document.body.setAttribute('tuiTheme', theme);
+    if (direction) document.body.classList.add('stt-custom-shapherd-rtl');
 
     this.tour.on('complete', this.onTourFinish.bind(this));
     this.tour.on('cancel', this.onTourFinish.bind(this));

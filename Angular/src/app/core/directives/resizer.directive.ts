@@ -173,6 +173,10 @@ export class ResizerDirective implements OnChanges {
   }
 
   private moveOnAxisX(xCoordinate: number) {
+    let tui_root = document.querySelector('tui-root');
+    if (!tui_root) return;
+    let rtl_ltr = Number(globalThis.getComputedStyle(tui_root).getPropertyValue('--tui-inline') ?? 1);
+
     let px_totalContent: number = globalThis.innerWidth - 48;
     let px_resize = px_totalContent * (this.resizerState.combinePercentage / 100);
 
@@ -182,12 +186,12 @@ export class ResizerDirective implements OnChanges {
     let px_newLeftWidth: number = px_leftWidth;
     let px_newRightWidth: number = px_rightWidth;
 
-    px_newLeftWidth += xCoordinate;
+    px_newLeftWidth += xCoordinate * rtl_ltr;
     px_newLeftWidth = Math.min(px_resize - this.px_minResizer, px_newLeftWidth);
     if (this.px_minResizer > px_newLeftWidth) px_newLeftWidth = this.px_minResizer;
     let percentage_newLeftWidth = (px_newLeftWidth * 100) / px_resize;
 
-    px_newRightWidth -= xCoordinate;
+    px_newRightWidth -= xCoordinate * rtl_ltr;
     px_newRightWidth = Math.min(px_resize - this.px_minResizer, px_newRightWidth);
     if (this.px_minResizer > px_newRightWidth) px_newRightWidth = this.px_minResizer;
     let percentage_newRightWidth = (px_newRightWidth * 100) / px_resize;

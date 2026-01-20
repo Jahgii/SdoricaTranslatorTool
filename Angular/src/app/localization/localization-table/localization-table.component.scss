@@ -1,3 +1,7 @@
+table._stuck._sticky:after, table._stuck   ._sticky:after {
+    opacity: var(--tui-inline);
+}
+
 .viewport {
     height: calc(100svh - var(--header-height) - 5.0rem);
     margin: 0 1.1em;
@@ -14,7 +18,7 @@
 .tooltip-span-name-cell {
     text-align: right;
     position: absolute;
-    right: 0.5em;
+    inset-inline-end: 0.5em;
     bottom: 0.1em;
     background: var(--tui-background-base);
     transition: opacity 300ms;

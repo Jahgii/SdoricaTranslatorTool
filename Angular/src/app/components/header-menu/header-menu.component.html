@@ -43,7 +43,7 @@
       [iconStart]="'@tui.settings'" (click)="onOpenSettings($event, !openSetting())" size="xs"
       aria-label="settings button">
     </button>
-    <tui-drawer *tuiPopup="openSetting()" style="inline-size: 25.25rem;">
+    <tui-drawer *tuiPopup="openSetting()" style="inline-size: 25.25rem;" [direction]="direction()">
       <header>
         <h2 tuiHeader>
           <div tuiTitle class="align-center">{{'settings' | translate}}</div>

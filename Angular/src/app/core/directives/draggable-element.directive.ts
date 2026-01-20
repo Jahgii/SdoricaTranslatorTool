@@ -121,9 +121,19 @@ export class DraggableElementDirective implements AfterViewInit {
 
   private moveOnAxisX(xCoordinate: number) {
     let elementWidth = this.elementRef.offsetWidth;
-    let leftLimit = globalThis.innerWidth - elementWidth - this.margin - this.boundings.left;
-    let rightLimit = Math.max(this.margin - this.boundings.right, xCoordinate);
-    return Math.min(rightLimit, leftLimit);
+    let inlineStartLimit = globalThis.innerWidth - elementWidth - this.margin - this.boundings.left;
+    let inlineEndLimit = Math.max(this.margin - this.boundings.right, xCoordinate);
+
+    let tui_root = document.querySelector('tui-root');
+    if (tui_root) {
+      let rtl_ltr = Number(globalThis.getComputedStyle(tui_root).getPropertyValue('--tui-inline') ?? 1);
+      if (rtl_ltr === -1) {
+        inlineStartLimit = globalThis.innerWidth - this.margin - this.boundings.left;
+        inlineEndLimit = Math.max(this.margin + elementWidth - this.boundings.right, xCoordinate);
+      }
+    }
+
+    return Math.min(inlineEndLimit, inlineStartLimit);
   }
 
   private moveOnAxisY(yCoordinate: number) {

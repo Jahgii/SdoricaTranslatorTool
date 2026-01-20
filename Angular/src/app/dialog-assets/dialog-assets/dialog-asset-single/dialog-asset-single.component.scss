@@ -148,6 +148,13 @@
     color: var(--tui-text-invert);
 }
 
+.text-block {
+    direction: auto;
+    unicode-bidi: isolate;
+    text-align: start;
+    margin-inline-start: 1rem;
+}
+
 .portrait {
     transform: perspective(1500px) rotateY(15deg);
     transition: all 0.5s;

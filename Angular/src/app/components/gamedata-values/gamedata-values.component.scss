@@ -9,6 +9,11 @@ table {
     }
 }
 
+table._stuck._sticky:after,
+table._stuck ._sticky:after {
+    opacity: var(--tui-inline);
+}
+
 .main-form {
     position: absolute;
     z-index: 1000;

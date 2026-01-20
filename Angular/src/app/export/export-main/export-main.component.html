@@ -6,7 +6,7 @@
       {{'translation-progress-description' | translate}}
     </p>
     @if ({values: eTS.progressPerc$ | async}; as progress;) {
-    <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s" [style.--tui-skeleton-radius.px]="4">
+    <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s" [style.--tui-skeleton-radius.px]="4" dir="rtl">
       <li class="tui-list__item">
         {{'translation-ui' | translate}}
         → <b [class.tui-skeleton]="!progress.values">

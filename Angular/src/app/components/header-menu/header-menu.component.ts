@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Inject, OnInit, signal, TemplateRef, ViewChild, WritableSignal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { tuiPure, TuiStringHandler, TuiContext } from '@taiga-ui/cdk';
@@ -68,6 +68,7 @@ export class HeaderMenuComponent implements OnInit {
 
   private readonly alerts = inject(TuiAlertService);
 
+  protected direction: WritableSignal<'left' | 'right'> = signal('right');
   protected openMenu: boolean = false;
   protected openSetting = signal(false);
   protected modes = AppModes;
@@ -166,6 +167,11 @@ export class HeaderMenuComponent implements OnInit {
   }
 
   protected onOpenSettings(event: MouseEvent, toogle: boolean) {
+    let tui_root = document.querySelector('tui-root');
+    if (!tui_root) return;
+    let rtl_ltr = Number(globalThis.getComputedStyle(tui_root).getPropertyValue('--tui-inline') ?? 1);
+    if (rtl_ltr === -1) this.direction.set('left');
+    else this.direction.set('right');
     this.openSetting.set(toogle);
   }
 

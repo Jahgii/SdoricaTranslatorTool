@@ -175,7 +175,7 @@
                                                     <span class="tooltip-important-text">
                                                         {{$any(key.key) | translate}}:
                                                     </span>
-                                                    <tui-copy class="mask-fallback">
+                                                    <tui-copy class="mask-fallback" dir="ltr">
                                                         {{key.value}}
                                                     </tui-copy>
                                                 </li>
@@ -187,13 +187,13 @@
                                         }
                                     </ng-template>
                                     @if (localization.focusRow() === item.Id) {
-                                    <tui-scrollbar class="translation-content-cell">
+                                    <tui-scrollbar class="translation-content-cell" dir="auto">
                                         <span appCommonDictionary [text]="onRenderDefaultLanguage(item.Original)">
                                         </span>
                                     </tui-scrollbar>
                                     }
                                     @else {
-                                    <tui-scrollbar class="translation-content-cell">
+                                    <tui-scrollbar class="translation-content-cell" dir="auto">
                                         <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                     </tui-scrollbar>
                                     }
@@ -339,14 +339,14 @@
                                         [tuiHintShowDelay]="200">
                                         <div>
                                             @if (localization.focusRow() === item.Id) {
-                                            <tui-scrollbar class="translation-content-cell">
+                                            <tui-scrollbar class="translation-content-cell" dir="auto">
                                                 <div appCommonDictionary
                                                     [text]="onRenderDefaultLanguage(item.Original)">
                                                 </div>
                                             </tui-scrollbar>
                                             }
                                             @else {
-                                            <tui-scrollbar class="translation-content-cell">
+                                            <tui-scrollbar class="translation-content-cell" dir="auto">
                                                 <span>{{onRenderDefaultLanguage(item.Original)}}</span>
                                             </tui-scrollbar>
                                             }
@@ -382,12 +382,12 @@
                                                         {{item.Name}}
                                                     </li>
                                                     @for (key of item.Original | keyvalue; track $index) {
-                                                    <li class="tui-space_bottom-2">
+                                                    <li class="tui-space_bottom-2" dir="auto">
                                                         <span class="tooltip-important-text">
                                                             {{$any(key.key) |
                                                             translate}}:
                                                         </span>
-                                                        <tui-copy class="mask-fallback">
+                                                        <tui-copy class="mask-fallback" dir="ltr">
                                                             {{key.value}}
                                                         </tui-copy>
                                                     </li>
