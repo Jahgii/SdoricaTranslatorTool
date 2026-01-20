@@ -79,33 +79,30 @@ export class TourService {
   }
 
   private onTourFinish() {
+    document.body.removeAttribute('tuiTheme');
     this.lStorage.setAppMainTourDone();
     this.isOnTour$.update(_ => false);
     this.enableScrollWheel();
   }
 
   private createTour(tour: { defaultStepOptions: StepOptions, defaultSteps: StepOptions[] }) {
+    const tuiRoot = document.querySelector('tui-root');
+    if (!tuiRoot) return;
+
     this.tour = new Shepherd.Tour({
       useModalOverlay: true,
       confirmCancel: false,
       keyboardNavigation: false,
-      modalContainer: (document.querySelector("tui-root") as HTMLElement),
+      modalContainer: tuiRoot as HTMLElement,
       defaultStepOptions: tour.defaultStepOptions,
       steps: tour.defaultSteps,
     });
 
+    const theme = tuiRoot?.getAttribute('tuiTheme');
+    if (theme) document.body.setAttribute('tuiTheme', theme);
+
     this.tour.on('complete', this.onTourFinish.bind(this));
     this.tour.on('cancel', this.onTourFinish.bind(this));
-    this.tour.on('show', () => {
-      setTimeout(() => {
-        const dialogs = document.querySelectorAll('.stt-custom-shapherd');
-        const dialog = dialogs[dialogs.length - 1];
-        const targetContainer = document.querySelector('tui-root');
-        if (dialog && targetContainer) {
-          targetContainer.appendChild(dialog);
-        }
-      }, 2);
-    });
   }
 
   private async restartTour() {
