@@ -121,6 +121,7 @@ export async function ExportTranslationTour(
         {
             title: translate.instant('tour-export-translation-05-title'),
             text: translate.instant('tour-export-translation-05'),
+            classes: 'stt-custom-shapherd-header-arrow',
             modalOverlayOpeningRadius: 8,
             canClickTarget: false,
             beforeShowPromise: () => {

@@ -1,16 +1,22 @@
-<button appearance="outline-grayscale" size="s" tuiButtonSelect tuiButton type="button" [formControl]="langService.language"
-    [iconStart]="icons.languages" [textContent]="" aria-label="Language">
-    <tui-data-list size="s" *tuiTextfieldDropdown>
+<button id="langSwitcherButton" tuiButton appearance="outline-grayscale" size="s" type="button"
+    [iconStart]="icons.languages" [textContent]="" aria-label="Language"
+    [tuiDropdown]="dropdownContent" [tuiDropdownManual]="open" (click)="open = !open"
+    (tuiActiveZoneChange)="app.isOnTour$() ? null : onActiveZone($event)">
+    {{ (langService.language.value | lowercase) + "-i18n" | translate }}
+</button>
+
+<ng-template #dropdownContent>
+    <tui-data-list size="s">
         @for (name of langService.names(); track $index) {
         <button tuiOption new type="button" [value]="name | titlecase" (click)="setLang(name)">
             {{ name + "-i18n" | translate }}
         </button>
         }
         @for (name of langService.customNames(); track $index) {
-        <button tuiOption new type="button" [value]="name | titlecase" (click)="setCustomLang(name)">
+        <button id="userLangOption" tuiOption new type="button" [value]="name | titlecase"
+            (click)="setCustomLang(name)">
             {{ name + "-i18n" | translate }}
         </button>
         }
     </tui-data-list>
-    {{ (langService.language.value | lowercase) + "-i18n" | translate }}
-</button>
+</ng-template>

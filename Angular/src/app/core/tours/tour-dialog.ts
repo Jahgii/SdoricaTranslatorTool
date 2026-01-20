@@ -200,7 +200,6 @@ export async function DialogTour(
             title: translate.instant('tour-dialog-10-title'),
             text: translate.instant('tour-dialog-10'),
             classes: 'stt-custom-shapherd-header-arrow',
-            canClickTarget: false,
             beforeShowPromise: () => new Promise(resolve => {
                 setTimeout(resolve, 1);
             }),

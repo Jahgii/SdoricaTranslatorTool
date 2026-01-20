@@ -300,7 +300,7 @@ export async function MainTour(translate: TranslateService, breakpointService$: 
             id: 'theme-button',
             title: translate.instant('tour-theme-button-title'),
             text: translate.instant('tour-theme-button'),
-            canClickTarget: true,
+            canClickTarget: false,
             classes: 'stt-custom-shapherd-header-arrow',
             modalOverlayOpeningRadius: 8,
             attachTo: {

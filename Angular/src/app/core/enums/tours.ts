@@ -4,4 +4,5 @@ export enum Tours {
     Dialog = 'dialog',
     ImportTranslation = 'import-translation',
     ExportTranslation = 'export-translation',
+    UserLang = 'user-lang',
 }

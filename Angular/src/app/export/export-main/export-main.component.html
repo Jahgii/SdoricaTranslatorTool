@@ -6,7 +6,7 @@
       {{'translation-progress-description' | translate}}
     </p>
     @if ({values: eTS.progressPerc$ | async}; as progress;) {
-    <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s" [style.--tui-skeleton-radius.px]="4" dir="rtl">
+    <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s" [style.--tui-skeleton-radius.px]="4">
       <li class="tui-list__item">
         {{'translation-ui' | translate}}
         → <b [class.tui-skeleton]="!progress.values">
@@ -47,7 +47,6 @@
   <h4 style="max-width: 500px;" tuiSlot="top">{{'empty-db-guest' | translate}}</h4>
 </tui-block-status>
 }
-
 
 <ng-template #file let-filecontrol let-filesize="filesize" let-accept="accept" let-filename="filename"
   let-onreject="onreject">

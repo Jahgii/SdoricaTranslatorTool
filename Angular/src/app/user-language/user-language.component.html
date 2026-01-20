@@ -1,16 +1,16 @@
 <main class="main-container">
     <div class="options-container">
-        <tui-textfield iconStart="@tui.search" tuiTextfieldSize="s" class="search-input">
+        <tui-textfield id="userLangFilter" iconStart="@tui.search" tuiTextfieldSize="s" class="search-input">
             <input tuiTextfield placeholder="..." [(ngModel)]="search" />
         </tui-textfield>
         <div class="options">
             <section>
-                <button tuiChip type="button" [value]="app.isRTL()" [appearance]="app.isRTL() ? 'primary' : 'outline'"
+                <button id="rtlButton" tuiChip type="button" [value]="app.isRTL()" [appearance]="app.isRTL() ? 'primary' : 'outline'"
                     [tuiHint]="'toggle-rtl' | translate" (click)="toggleRTL()" size="xs">
                     {{'toggle-rtl-btn' | translate}}
                 </button>
             </section>
-            <tui-loader [showLoader]="gemini.waiting$()" [inheritColor]="true" [overlay]="true">
+            <tui-loader id="geminiUserLangButton" [showLoader]="gemini.waiting$()" [inheritColor]="true" [overlay]="true">
                 <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square"
                     iconStart="gemini-color" [tuiHint]="gemini.ready$() ?
                                 ('gemini-button-ready' | translate):
@@ -28,7 +28,7 @@
                     </ng-template>
                 </button>
             </tui-loader>
-            <button tuiIconButton appearance="icon" shape="square" iconStart="save" (click)="lS.saveChanges()" size="xs"
+            <button id="saveChangesUserLangButton" tuiIconButton appearance="icon" shape="square" iconStart="save" (click)="lS.saveChanges()" size="xs"
                 [loading]="lS.savingChanges()">
             </button>
         </div>
