@@ -102,7 +102,7 @@ export class TourService {
     const theme = tuiRoot?.getAttribute('tuiTheme');
     const direction = tuiRoot?.getAttribute('dir');
     if (theme) document.body.setAttribute('tuiTheme', theme);
-    if (direction) document.body.classList.add('stt-custom-shapherd-rtl');
+    if (direction === 'rtl') document.body.classList.add('stt-custom-shapherd-rtl');
 
     this.tour.on('complete', this.onTourFinish.bind(this));
     this.tour.on('cancel', this.onTourFinish.bind(this));

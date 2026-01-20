@@ -4,6 +4,12 @@
             <input tuiTextfield placeholder="..." [(ngModel)]="search" />
         </tui-textfield>
         <div class="options">
+            <section>
+                <button tuiChip type="button" [value]="app.isRTL()" [appearance]="app.isRTL() ? 'primary' : 'outline'"
+                    [tuiHint]="'toggle-rtl' | translate" (click)="toggleRTL()" size="xs">
+                    {{'toggle-rtl-btn' | translate}}
+                </button>
+            </section>
             <tui-loader [showLoader]="gemini.waiting$()" [inheritColor]="true" [overlay]="true">
                 <button appGeminiIcon tuiIconButton type="button" appearance="icon" shape="square"
                     iconStart="gemini-color" [tuiHint]="gemini.ready$() ?

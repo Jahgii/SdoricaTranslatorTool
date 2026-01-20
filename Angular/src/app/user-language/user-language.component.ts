@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TuiButton, TuiIcon, TuiTextfield, TuiScrollbar, TuiScrollable, TuiHint, TuiDropdown, TuiDataList, TuiLoader } from '@taiga-ui/core';
 import { LangService } from '../core/services/lang.service';
 import { FormsModule } from '@angular/forms';
-import { TuiButtonLoading } from '@taiga-ui/kit';
+import { TuiButtonLoading, TuiChip } from '@taiga-ui/kit';
 import { NgTemplateOutlet } from '@angular/common';
 import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,6 +11,8 @@ import { AlertService } from '../core/services/alert.service';
 import { GeminiIconDirective } from '../core/directives/gemini-icon.directive';
 import { TuiAutoFocus, TuiFilterPipe } from '@taiga-ui/cdk';
 import { CommonWordTableCellEditableComponent } from '../components/common-words/common-word-table/common-word-table-cell-editable/common-word-table-cell-editable.component';
+import { AppStateService } from '../core/services/app-state.service';
+import { LocalStorageService } from '../core/services/local-storage.service';
 
 @Component({
   selector: 'app-user-language',
@@ -22,7 +24,7 @@ import { CommonWordTableCellEditableComponent } from '../components/common-words
     CdkVirtualScrollViewport,
     FormsModule,
     TranslateModule,
-    
+
     TuiLoader,
     TuiButton,
     TuiButtonLoading,
@@ -35,19 +37,22 @@ import { CommonWordTableCellEditableComponent } from '../components/common-words
     TuiScrollbar,
     TuiFilterPipe,
     TuiAutoFocus,
+    TuiChip,
 
     GeminiIconDirective,
     CommonWordTableCellEditableComponent,
-],
+  ],
   templateUrl: './user-language.component.html',
   styleUrl: './user-language.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserLanguageComponent {
   protected readonly lS = inject(LangService);
+  protected readonly app = inject(AppStateService);
   public readonly gemini = inject(GeminiApiService);
   private readonly alert = inject(AlertService);
-  
+  private readonly lStorage = inject(LocalStorageService);
+
   protected search: string = '';
 
   public async onGeminiTranslate() {
@@ -86,6 +91,17 @@ export class UserLanguageComponent {
 
   public trackByKey(index: number, key: string): string {
     return key;
+  }
+
+  public toggleRTL() {
+    if (this.app.isRTL()) {
+      this.lStorage.removeAppDirection();
+      this.app.isRTL.set(false);
+    }
+    else {
+      this.app.isRTL.set(true)
+      this.lStorage.setAppDirection('1');
+    }
   }
 
   public searchByText = (key: string, search: string): boolean =>

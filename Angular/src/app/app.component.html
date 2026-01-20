@@ -1,4 +1,4 @@
-<tui-root style="height: 100%;" [attr.tuiTheme]="theme.darkMode() ? 'dark' : null">
+<tui-root style="height: 100%;" [attr.tuiTheme]="theme.darkMode() ? 'dark' : null" [dir]="app.isRTL() ? 'rtl' : 'ltr'">
   <main class="main-grid">
     @if (app.initialized$()) {
 

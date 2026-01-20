@@ -513,5 +513,7 @@
     "regex-flag-u": "Enables full Unicode support, treating the pattern as a sequence of Unicode code points. This is important for correctly matching characters outside the basic Latin alphabet.",
     "regex-flag-v": "An upgrade to u mode, offering more advanced Unicode features and set notation for character classes.\n (Note: u and v cannot be used together).",
     "check-all": "Check All",
-    "uncheck-all": "Uncheck All"
+    "uncheck-all": "Uncheck All",
+    "toggle-rtl-btn": "RTL",
+    "toggle-rtl": "Toggle RTL (Right to Left) UI"
 }

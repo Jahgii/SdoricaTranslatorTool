@@ -99,6 +99,18 @@ export class LocalStorageService {
     localStorage.setItem('appLang', lang);
   }
 
+  getAppDirection() {
+    return localStorage.getItem('appDir') ?? undefined;
+  }
+
+  setAppDirection(dir: string) {
+    localStorage.setItem('appDir', dir);
+  }
+
+  removeAppDirection() {
+    localStorage.removeItem('appDir');
+  }
+
   getAppLangCustom() {
     return localStorage.getItem('appLangCustom') ?? undefined;
   }

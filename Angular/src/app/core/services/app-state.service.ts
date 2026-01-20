@@ -13,6 +13,7 @@ import { AppModes } from '../enums/app-modes';
 export class AppStateService {
   public initialized$ = signal(false);
   public isOnTour$ = signal(false);
+  public isRTL = signal(false);
 
   constructor(
     private readonly vS: ViewersService,
@@ -36,6 +37,7 @@ export class AppStateService {
 
   public async initializeApp() {
     let languagesRetrive = await this.langService.onRetriveLanguages();
+    let direction = this.lStorage.getAppDirection();
 
     if (!languagesRetrive && this.lStorage.getAppMode() === AppModes.Online) {
       this.vS.loadComponent(AppViews.login, await viewers.login(), {});
@@ -46,6 +48,8 @@ export class AppStateService {
       this.vS.loadComponent(AppViews.wizard, await viewers.wizard(), {});
       return;
     }
+
+    if (direction) this.isRTL.set(true);
 
     this.lStorage.setAppWizardDone();
     await this.vS.initViewer();
