@@ -7,13 +7,13 @@
     </p>
     @if ({values: eTS.progressPerc$ | async}; as progress;) {
     <ol class="tui-list tui-list_ordered tui-list_nested tui-text_body-s" [style.--tui-skeleton-radius.px]="4">
-      <li class="tui-list__item">
+      <li class="tui-list__item force-wrap">
         {{'translation-ui' | translate}}
         → <b [class.tui-skeleton]="!progress.values">
           {{progress.values?.Keys | number:'1.2-2'}}%
         </b>
       </li>
-      <li class="tui-list__item">
+      <li class="tui-list__item force-wrap">
         {{'translation-dialogs' | translate}}
         → <b [class.tui-skeleton]="!progress.values">
           {{progress.values?.Dialogs | number:'1.2-2'}}%
@@ -83,7 +83,7 @@
     }
     }
     @else if (!filecontrol.control.value) {
-    <label tuiInputFiles class="file-input">
+    <label tuiInputFiles class="file-input padding0">
       <input accept="image/*" tuiInputFiles [maxFileSize]="filesize" [accept]="accept" [multiple]="false"
         [formControl]="filecontrol.control" />
       <ng-template let-dragged>
@@ -148,10 +148,18 @@
   <h3 class="tui-space_top-6">{{'to-translate' | translate}}</h3>
   <p>{{'to-translate-description' | translate}}</p>
   <ul class="tui-list tui-list_ordered tui-list_nested tui-text_body-s">
-    <li class="tui-list__item"><b>OBB</b>: {{'obb-description' | translate}}
+    <li class="tui-list__item force-wrap">
+      <b>OBB</b>:
+      {{'obb-description' | translate}}
     </li>
-    <li class="tui-list__item"><b>Localization</b>: {{'localization-description' | translate}} </li>
-    <li class="tui-list__item"><b>Gamedata</b>: {{'gamedata-description' | translate}}</li>
+    <li class="tui-list__item force-wrap">
+      <b>Localization</b>:
+      {{'localization-description' | translate}}
+    </li>
+    <li class="tui-list__item force-wrap">
+      <b>Gamedata</b>:
+      {{'gamedata-description' | translate}}
+    </li>
   </ul>
 
   <div class="files-input tui-space_top-6">

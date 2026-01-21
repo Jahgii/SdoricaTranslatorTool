@@ -1,6 +1,6 @@
 .main-container {
     max-width: 60rem;
-    min-width: 20rem;
+    min-width: 15rem;
     padding: 0 clamp(1em, 2.5%, 5em);
     margin: 2rem auto 0 auto;
 }
@@ -17,8 +17,8 @@
 
 .file-input {
     min-width: 280px;
-    min-height: 108px;
-    max-height: 108px;
+    min-height: 140px;
+    max-height: 140px;
 }
 
 .file-input-provided {
@@ -35,7 +35,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     grid-gap: 1em;
-    grid-auto-rows: minmax(108px, auto);
+    grid-auto-rows: minmax(140px, auto);
     justify-content: space-between;
 }
 
@@ -84,4 +84,8 @@
 
 .width64 {
     width: 64px;
+}
+
+.force-wrap{
+    word-break: break-all;
 }
