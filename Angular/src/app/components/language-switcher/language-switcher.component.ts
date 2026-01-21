@@ -1,28 +1,26 @@
-import { LowerCasePipe, TitleCasePipe } from '@angular/common';
+import { LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TUI_DOC_ICONS } from '@taiga-ui/addon-doc/tokens';
 import { TuiButton, TuiDataList, TuiTextfield, TuiDropdownManual, TuiDropdown } from '@taiga-ui/core';
-import { TuiButtonSelect } from '@taiga-ui/kit';
 import { LangService } from 'src/app/core/services/lang.service';
 import { IndexDBService } from 'src/app/core/services/index-db.service';
 import { Indexes, ObjectStoreNames } from 'src/app/core/interfaces/i-indexed-db';
 import { firstValueFrom } from 'rxjs';
 import { IAppLanguage } from 'src/app/core/interfaces/i-i18n';
-import type { TuiLanguageName } from '@taiga-ui/i18n/types';
 import { AppStateService } from 'src/app/core/services/app-state.service';
 import { TuiActiveZone } from '@taiga-ui/cdk';
+import type { TuiLanguageName } from '@taiga-ui/i18n/types';
 
 @Component({
   selector: 'app-language-switcher',
   imports: [
     ReactiveFormsModule,
-    TitleCasePipe,
     LowerCasePipe,
-    
+
     TranslateModule,
-    
+
     TuiButton,
     TuiDataList,
     TuiTextfield,
@@ -55,11 +53,13 @@ export class LanguageSwitcherComponent {
   }
 
   public setLang(lang: TuiLanguageName): void {
+    this.langService.language.setValue(lang);
     this.langService.setLang(lang);
     this.open = false;
   }
 
   public setCustomLang(lang: TuiLanguageName): void {
+    this.langService.language.setValue(lang);
     this.langService.setCustomLang(lang);
     this.open = false;
   }

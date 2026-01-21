@@ -83,19 +83,19 @@ code {
 }
 
 [data-appearance="dark"] {
-  @include mixins.browser("AppleWebKit", "WebKitGTK") {
+  @include mixins.browser("AppleWebKit", "WebKitGTK", "Safari") {
     filter: none !important;
   }
 }
 
 .blur-fallback {
-  @include mixins.browser("AppleWebKit", "WebKitGTK") {
+  @include mixins.browser("AppleWebKit", "WebKitGTK", "Safari") {
     background: var(--tui-background-base) !important;
   }
 }
 
 .mask-fallback {
-  @include mixins.browser("AppleWebKit", "WebKitGTK") {
+  @include mixins.browser("AppleWebKit", "WebKitGTK", "Safari") {
     span {
       -webkit-mask: none !important;
       mask: none !important;
