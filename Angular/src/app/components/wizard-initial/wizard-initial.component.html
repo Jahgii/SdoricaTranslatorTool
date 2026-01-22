@@ -2,10 +2,10 @@
     <div class="step-container">
         @switch ((index$ | async) ?? -1) {
         @case (0) {
-        <app-mode-selector></app-mode-selector>
+        <app-mode-selector />
         }
         @case (1) {
-        <app-import-main [showSkipButton]="true" (next)="wizardEnd()"></app-import-main>
+        <app-import-main [showSkipButton]="true" (next)="wizardEnd()" />
         }
         }
     </div>

@@ -40,8 +40,8 @@ export class AppStateService {
     let direction = this.lStorage.getAppDirection();
 
     if (!languagesRetrive && this.lStorage.getAppMode() === AppModes.Online) {
-      this.vS.loadComponent(AppViews.login, await viewers.login(), {});
-      return;
+        this.vS.loadComponent(AppViews.login, await viewers.login(), {});
+        return;
     }
 
     if (!languagesRetrive && this.lStorage.getAppMode() === AppModes.Offline) {
@@ -49,6 +49,17 @@ export class AppStateService {
       return;
     }
 
+    if (direction) this.isRTL.set(true);
+
+    this.lStorage.setAppWizardDone();
+    await this.vS.initViewer();
+    this.initialized$.set(true);
+  }
+
+  public async InitializeAppAfterLogin() {
+    let languagesRetrive = await this.langService.onRetriveLanguages();
+    let direction = this.lStorage.getAppDirection();
+    if (languagesRetrive === false) return;
     if (direction) this.isRTL.set(true);
 
     this.lStorage.setAppWizardDone();

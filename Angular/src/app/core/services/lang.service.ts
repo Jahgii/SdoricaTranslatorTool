@@ -8,8 +8,6 @@ import { firstValueFrom, of, shareReplay, takeWhile } from 'rxjs';
 import { Indexes, ObjectStoreNames } from '../interfaces/i-indexed-db';
 import { IAppLanguage } from '../interfaces/i-i18n';
 import { FormControl } from '@angular/forms';
-import { GeminiApiService } from './gemini-api.service';
-import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'

@@ -47,7 +47,7 @@ export class LoginComponent {
       .then(
         user => {
           this.lStorage.setToken(user.Token);
-          this.appState.initializeApp();
+          this.appState.InitializeAppAfterLogin();
         }, _ => {
           this.alert.showAlert('alert-error', 'alert-error-label', 'accent', 'triangle-alert');
         }

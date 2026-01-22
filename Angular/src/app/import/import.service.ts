@@ -196,10 +196,10 @@ export class ImportService implements OnDestroy {
       );
 
     if (this.ddS.isMobile()) {
-      this.obb.skip.next(true);
-      this.obb.notSupported?.next(true);
-      this.obb.verifiedFile$.next(true);
-      this.obb.progressStatus$.next(ProgressStatus.finish);
+      // this.obb.skip.next(true);
+      // this.obb.notSupported?.next(true);
+      // this.obb.verifiedFile$.next(true);
+      // this.obb.progressStatus$.next(ProgressStatus.finish);
     }
   }
 
